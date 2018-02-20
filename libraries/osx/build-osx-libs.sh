@@ -21,13 +21,13 @@
 # --------------------------------------------------------------
 # Library versions for ease of updating:
 ZLIB_VERSION="zlib-1.2.11"
-CURL_VERSION="curl-7.54.0"
+CURL_VERSION="curl-7.58.0"
 ICONV_VERSION="libiconv-1.15"
 XML2_VERSION="libxml2-2.9.4"
 SDL2_VERSION="SDL2-2.0.5"
 BOOST_VERSION="boost_1_64_0"
 # NOTE: remember to also update LIB_URL below when changing version
-WXWIDGETS_VERSION="wxWidgets-3.0.3.1"
+WXWIDGETS_VERSION="wxWidgets-3.1.1-rc"
 # libpng was included as part of X11 but that's removed from Mountain Lion
 # (also the Snow Leopard version was ancient 1.2)
 PNG_VERSION="libpng-1.6.29"
@@ -195,7 +195,7 @@ then
   tar -xf $LIB_ARCHIVE
   pushd $LIB_DIRECTORY
 
-  (./configure CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS" --prefix="$INSTALL_DIR" --enable-ipv6 --without-gnutls --without-gssapi --without-libmetalink --without-librtmp --without-libssh2 --without-nss --without-polarssl --without-spnego --without-ssl --disable-ares --disable-ldap --disable-ldaps --without-libidn --with-zlib="${ZLIB_DIR}" --enable-shared=no && make ${JOBS} && make install) || die "libcurl build failed"
+  (./configure CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS" --prefix="$INSTALL_DIR" --enable-ipv6 --without-gnutls --without-gssapi --without-nghttp2 --without-libmetalink --without-librtmp --without-libssh2 --without-nss --without-polarssl --without-spnego --without-ssl --disable-ares --disable-ldap --disable-ldaps --without-libidn --without-libidn2 --with-zlib="${ZLIB_DIR}" --enable-shared=no && make ${JOBS} && make install) || die "libcurl build failed"
   popd
   touch .already-built
 else
@@ -335,7 +335,7 @@ echo -e "Building wxWidgets..."
 LIB_VERSION="${WXWIDGETS_VERSION}"
 LIB_ARCHIVE="$LIB_VERSION.tar.bz2"
 LIB_DIRECTORY="$LIB_VERSION"
-LIB_URL="http://github.com/wxWidgets/wxWidgets/releases/download/v3.0.3.1/"
+LIB_URL="http://github.com/wxWidgets/wxWidgets/releases/download/v3.1.1-rc/"
 
 mkdir -p wxwidgets
 pushd wxwidgets > /dev/null
@@ -354,7 +354,8 @@ then
   mkdir -p build-release
   pushd build-release
 
-  CONF_OPTS="--prefix=$INSTALL_DIR --disable-shared --enable-macosx_arch=$ARCH --enable-unicode --with-cocoa --with-opengl --with-libiconv-prefix=${ICONV_DIR} --with-expat=builtin --with-png=builtin --without-libtiff --without-sdl --without-x --disable-webview --disable-webkit --disable-webviewwebkit --disable-webviewie"
+  # --with-png=builtin
+  CONF_OPTS="--prefix=$INSTALL_DIR --disable-shared --enable-macosx_arch=$ARCH --enable-unicode --with-cocoa --with-opengl --with-libiconv-prefix=${ICONV_DIR} --with-expat=builtin --without-libtiff --without-sdl --without-x --disable-webview --disable-webkit --disable-webviewwebkit --disable-webviewie"
   # wxWidgets configure now defaults to targeting 10.5, if not specified,
   # but that conflicts with our flags
   if [[ $MIN_OSX_VERSION && ${MIN_OSX_VERSION-_} ]]; then
