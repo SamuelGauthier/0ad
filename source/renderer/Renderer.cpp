@@ -421,7 +421,7 @@ CRenderer::CRenderer()
 	m_Width = 0;
 	m_Height = 0;
 	m_TerrainRenderMode = SOLID;
-	m_WaterRenderMode = SOLID;
+	m_WaterRenderMode = WIREFRAME;// SOLID
 	m_ModelRenderMode = SOLID;
 	m_ClearColor[0] = m_ClearColor[1] = m_ClearColor[2] = m_ClearColor[3] = 0;
 
@@ -1859,6 +1859,7 @@ void CRenderer::RenderScene(Scene& scene)
 	}
 
 	CBoundingBoxAligned waterScissor;
+    ///*
 	if (m_WaterManager->m_RenderWater)
 	{
 		waterScissor = m->terrainRenderer.ScissorWater(CULL_DEFAULT, m_ViewCamera.GetViewProjection());
@@ -1888,6 +1889,7 @@ void CRenderer::RenderScene(Scene& scene)
 		// Render the waves to the Fancy effects texture
 		m_WaterManager->RenderWaves(frustum);
 	}
+    ///*
 
 	m_CurrentCullGroup = -1;
 
