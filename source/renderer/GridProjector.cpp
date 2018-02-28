@@ -1,5 +1,4 @@
 /* Copyright (C) 2017 Wildfire Games.
- * This file is part of 0 A.D.
  *
  * 0 A.D. is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,18 +14,11 @@
  * along with 0 A.D.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef INCLUDED_PROJECTIONSYSTEM
-#define INCLUDED_PROJECTIONSYSTEM
 
-#include "graphics/Camera.h"
+#include "GridProjector.h"
 
-class ProjectionSystem
-{
-public:
-	virtual ~ProjectionSystem() {}
+GridProjector::GridProjector() {
+	m_vertices = 0;
+}
 
-	virtual void Render(CCamera camera) = 0;
-};
-
-#endif // !INCLUDED_PROJECTIONSYSTEM
-
+GridProjector::~GridProjector() {}
