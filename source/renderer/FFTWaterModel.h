@@ -14,19 +14,3 @@
  * You should have received a copy of the GNU General Public License
  * along with 0 A.D.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-#ifndef INCLUDED_PROJECTIONSYSTEM
-#define INCLUDED_PROJECTIONSYSTEM
-
-#include "graphics/Camera.h"
-
-class ProjectionSystem
-{
-public:
-	virtual ~ProjectionSystem() {}
-
-	virtual void Render(CCamera camera) = 0;
-};
-
-#endif // !INCLUDED_PROJECTIONSYSTEM
-
