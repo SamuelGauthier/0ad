@@ -15,10 +15,18 @@
  * along with 0 A.D.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "precompiled.h"
 
-
+#include "renderer/FFTWaterModel.h"
 #include "renderer/Water.h"
 
-Water::Water() {}
+Water::Water() : m_waterModel{ FFTWaterModel() } {
+	m_heightfield = 0;
+	m_area = 0;
+	m_color = CColor();
+	m_tint = CColor();
+
+	m_waterModel = FFTWaterModel();
+}
 
 Water::~Water() {}

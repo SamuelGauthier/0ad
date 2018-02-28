@@ -14,3 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with 0 A.D.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+#include "renderer/PhysicalWaterModel.h"
+
+class FFTWaterModel : public PhysicalWaterModel {
+public:
+	FFTWaterModel();
+	~FFTWaterModel();
+	void Update(double time);
+};
