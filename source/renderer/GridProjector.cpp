@@ -14,11 +14,23 @@
  * along with 0 A.D.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "precompiled.h"
 
 #include "GridProjector.h"
 
 GridProjector::GridProjector() {
+	m_time = 0;
+	m_camera = CCamera();
 	m_vertices = 0;
+	m_vertices = 0;
+
+	m_M_projector = CMatrix3D();
+	m_M_range = CMatrix3D();
 }
 
 GridProjector::~GridProjector() {}
+
+void GridProjector::Render(CCamera& camera) {
+	m_time = 0;
+
+}

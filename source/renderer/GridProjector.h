@@ -18,22 +18,27 @@
 #define INCLUDED_GRIDPROJECTOR
 
 #include "graphics/Camera.h"
+#include "maths/Matrix3D.h"
 #include "VertexBuffer.h"
 
-#include "ProjectionSystem.h"
+#include "renderer/ProjectionSystem.h"
 
-class GridProjector : ProjectionSystem
+class GridProjector : public ProjectionSystem
 {
 public:
 	GridProjector();
 	~GridProjector();
 
-	void Render(CCamera camera) override;
+	void Render(CCamera& camera) override;
 
 private:
 	double m_time;
 	CCamera m_camera;
-	CVertexBuffer m_vertices;
+	CVertexBuffer::VBChunk* m_vertices;
+
+	CMatrix3D m_M_projector;
+	CMatrix3D m_M_range;
+
 
 };
 

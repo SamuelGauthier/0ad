@@ -20,14 +20,16 @@
 
 //#include "lib/ogl.h"
 #include "graphics/TextureManager.h"
+#include "renderer/PhysicalWaterModel.h"
 #include "ps/Shapes.h"
-#include "PhysicalWaterModel.h"
 
 class Water
 {
 public:
-	CTexture m_heightfield;
-	CTexture m_area;
+	//CTexture m_heightfield;
+	//CTexture m_area;
+	int* m_heightfield;
+	int* m_area;
 	CColor m_color;
 	CColor m_tint;
     
@@ -36,7 +38,7 @@ public:
 	~Water();
 
 private:
-	PhysicalWaterModel& waterModel;
+	PhysicalWaterModel& m_waterModel;
 };
 
 #endif // INCLUDED_WATER
