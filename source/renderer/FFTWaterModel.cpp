@@ -23,6 +23,7 @@ FFTWaterModel::FFTWaterModel() {}
 
 FFTWaterModel::~FFTWaterModel() {}
 
-void FFTWaterModel::Update(double time) {
+void FFTWaterModel::Update(double time)
+{
 
 }

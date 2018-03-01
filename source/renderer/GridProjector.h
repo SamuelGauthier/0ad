@@ -19,6 +19,7 @@
 
 #include "graphics/Camera.h"
 #include "maths/Matrix3D.h"
+#include "maths/Vector2D.h"
 #include "VertexBuffer.h"
 
 #include "renderer/ProjectionSystem.h"
@@ -26,19 +27,27 @@
 class GridProjector : public ProjectionSystem
 {
 public:
+	int m_resolutionX;
+	int m_resolutionY;
+
+public:
 	GridProjector();
 	~GridProjector();
 
 	void Render(CCamera& camera) override;
+	void SetupGrid();
 
 private:
 	double m_time;
 	CCamera m_camera;
-	CVertexBuffer::VBChunk* m_vertices;
+	CVertexBuffer::VBChunk* m_Grid_VBindices;
+	CVertexBuffer::VBChunk* m_Grid_VBvertices;
 
 	CMatrix3D m_M_projector;
 	CMatrix3D m_M_range;
 
+	std::vector<GLuint> m_indices;
+	std::vector<CVector2D> m_vertices;
 
 };
 
