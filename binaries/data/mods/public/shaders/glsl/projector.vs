@@ -1,6 +1,10 @@
 #version 120
 
+attribute vec2 a_vertex; 
+
+uniform mat4 transform;
+
 void main()
 {
-	gl_Position = vec3(0.5, 0.5, 0.5);
+	gl_Position = transform * vec4(a_vertex, 0, 0);
 }
