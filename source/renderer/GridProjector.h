@@ -34,8 +34,9 @@ public:
 	GridProjector();
 	~GridProjector();
 
-	void Render(CCamera& camera) override;
+	void Render() override;
 	void SetupGrid();
+    void PrintTestMessage();
 
 private:
 	double m_time;
@@ -46,7 +47,7 @@ private:
 	CMatrix3D m_M_projector;
 	CMatrix3D m_M_range;
 
-	std::vector<GLuint> m_indices;
+	std::vector<u32> m_indices;
 	std::vector<CVector2D> m_vertices;
 
 };

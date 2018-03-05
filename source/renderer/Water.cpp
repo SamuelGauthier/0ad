@@ -20,13 +20,13 @@
 #include "renderer/FFTWaterModel.h"
 #include "renderer/Water.h"
 
-Water::Water() : m_waterModel{ FFTWaterModel() } {
+Water::Water(PhysicalWaterModel waterModel) : m_waterModel{ waterModel } {
 	m_heightfield = 0;
 	m_area = 0;
 	m_color = CColor();
 	m_tint = CColor();
 
-	m_waterModel = FFTWaterModel();
+	//m_waterModel = FFTWaterModel();
 }
 
 Water::~Water() {}

@@ -19,6 +19,8 @@
 #include "graphics/ShaderManager.h"
 #include "graphics/ShaderProgram.h"
 
+#include "lib/ogl.h"
+
 #include "renderer/Renderer.h"
 #include "renderer/VertexBuffer.h"
 #include "renderer/VertexBufferManager.h"
@@ -38,6 +40,9 @@ GridProjector::GridProjector()
 	m_M_projector = CMatrix3D();
 	m_M_range = CMatrix3D();
 
+    // Temporary here
+    SetupGrid();
+
 }
 
 GridProjector::~GridProjector()
@@ -56,8 +61,8 @@ void GridProjector::SetupGrid()
 	double xRatio = 1.0 / (m_resolutionX - 1);
 	double yRatio = 1.0 / (m_resolutionY - 1);
 
-	for (size_t i = 0; i < m_resolutionY; i++)
-		for (size_t j = 0; j <  m_resolutionX; j++)
+	for (int i = 0; i < m_resolutionY; i++)
+		for (int j = 0; j <  m_resolutionX; j++)
 			m_vertices.push_back(CVector2D(i * xRatio - 0.5, i * yRatio - 0.5));
 
 	m_Grid_VBvertices = g_VBMan.Allocate(sizeof(CVector2D), m_vertices.size(), GL_STATIC_DRAW, GL_ARRAY_BUFFER);
@@ -65,9 +70,9 @@ void GridProjector::SetupGrid()
 
 	//std::vector<GLuint> indices;
 
-	for (size_t i = 0; i < m_resolutionY; i++)
+	for (int i = 0; i < m_resolutionY; i++)
 	{
-		for (size_t j = 0; j < m_resolutionX; j++)
+		for (int j = 0; j < m_resolutionX; j++)
 		{
 			// *-*
 			// |/
@@ -91,7 +96,7 @@ void GridProjector::SetupGrid()
 
 }
 
-void GridProjector::Render(CCamera& camera)
+void GridProjector::Render()
 {
 	glClearColor(0.0f,0.0f, 0.0f,0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -99,7 +104,7 @@ void GridProjector::Render(CCamera& camera)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_DEPTH_TEST);
-	//glDepthFunc(GL_ALWAYS);
+	glDepthFunc(GL_ALWAYS);
 
 	if (g_Renderer.m_SkipSubmit)
 		return;
@@ -111,17 +116,30 @@ void GridProjector::Render(CCamera& camera)
 
 	shad->Uniform(str_transform, g_Renderer.GetViewCamera().GetViewProjection());
 
-	// shad->VertexPointer(...);
-	
-	// Call before glDraw(...)
+	//// shad->VertexPointer(...);
+    shad->VertexPointer(3, GL_FLOAT, sizeof(CVector2D), &m_vertices[0]);
+	//
+	//// Call before glDraw(...)
 	shad->AssertPointersBound();
 
-	u8* indexBase = m_Grid_VBindices->m_Owner->Bind();
-	glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, indexBase + sizeof(u32)*(m_Grid_VBindices->m_Index));
+    // Segfault here
+	//u8* indexBase = m_Grid_VBindices->m_Owner->Bind();
+    // <----
+    
+    // Owner is null...
+    //printf("----------------------------%s\n", m_Grid_VBindices->m_Owner->Bind());
+    //u8* indexBase = 0;
+	glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, &m_indices[0]);
+	//glDrawElements(GL_TRIANGLES, (GLsizei) (m_indices.size()), GL_UNSIGNED_INT, sizeof(u32)*(m_Grid_VBindices->m_Index));
 
 	CVertexBuffer::Unbind();
 	shad->Unbind();
 
 	glDisable(GL_BLEND);
 	glDepthFunc(GL_LEQUAL);
+}
+
+void GridProjector::PrintTestMessage()
+{
+    printf("----------------------TestCall-----------------------------\n");
 }

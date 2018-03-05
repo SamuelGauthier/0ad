@@ -46,7 +46,6 @@ class CShaderManager;
 class CSimulation2;
 class CTextureManager;
 class CTimeManager;
-class GridProjector;
 class RenderPathVertexShader;
 class ScriptInterface;
 class ShadowMap;
@@ -463,8 +462,6 @@ protected:
 	void EnumCaps();
 	// per-frame renderer stats
 	Stats m_Stats;
-
-	GridProjector* m_GridProjector;
 
 	/**
 	 * m_WaterManager: the WaterManager object used for water textures and settings

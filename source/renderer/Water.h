@@ -34,11 +34,11 @@ public:
 	CColor m_tint;
     
 public:
-	Water();
+	Water(PhysicalWaterModel model);
 	~Water();
 
 private:
-	PhysicalWaterModel& m_waterModel;
+	const PhysicalWaterModel& m_waterModel;
 };
 
 #endif // INCLUDED_WATER

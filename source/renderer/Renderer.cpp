@@ -58,7 +58,6 @@
 #include "graphics/Terrain.h"
 #include "graphics/Texture.h"
 #include "graphics/TextureManager.h"
-#include "renderer/GridProjector.h"
 #include "renderer/HWLightingModelRenderer.h"
 #include "renderer/InstancingModelRenderer.h"
 #include "renderer/ModelRenderer.h"
@@ -267,9 +266,6 @@ public:
 	/// Shader manager
 	CShaderManager shaderManager;
 
-	/// Water
-	GridProjector gridProjector;
-
 	/// Water manager
 	WaterManager waterManager;
 
@@ -419,7 +415,6 @@ CRenderer::CRenderer()
 	m = new CRendererInternals;
 	m_WaterManager = &m->waterManager;
 	m_SkyManager = &m->skyManager;
-	m_GridProjector = &m->gridProjector;
 
 	g_ProfileViewer.AddRootTable(&m->profileTable);
 
@@ -1864,11 +1859,9 @@ void CRenderer::RenderScene(Scene& scene)
 	}
 
 	CBoundingBoxAligned waterScissor;
-    ///*
 	if (m_WaterManager->m_RenderWater)
 	{
-		waterScissor = m->terrainRenderer.ScissorWater(CULL_DEFAULT, m_ViewCamera.GetViewProjection());
-
+        waterScissor = m->terrainRenderer.ScissorWater(CULL_DEFAULT, m_ViewCamera.GetViewProjection());
 		if (waterScissor.GetVolume() > 0 && m_WaterManager->WillRenderFancyWater())
 		{
 			if (m_Options.m_WaterReflection)
@@ -1894,8 +1887,6 @@ void CRenderer::RenderScene(Scene& scene)
 		// Render the waves to the Fancy effects texture
 		m_WaterManager->RenderWaves(frustum);
 	}
-    ///*
-	m_GridProjector->Render(m_ViewCamera);
 
 	m_CurrentCullGroup = -1;
 

@@ -25,7 +25,7 @@ class ProjectionSystem
 public:
 	virtual ~ProjectionSystem() {}
 
-	virtual void Render(CCamera& camera) = 0;
+	virtual void Render() = 0;
 };
 
 #endif // !INCLUDED_PROJECTIONSYSTEM
