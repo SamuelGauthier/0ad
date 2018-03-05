@@ -12,6 +12,7 @@
     -->
 
     <vertex file="glsl/projector.vs">
+        <attrib name="a_vertex" semantics="gl_Vertex"/>
     </vertex>
     <fragment file="glsl/projector.fs"/>
 
