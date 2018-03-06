@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Wildfire Games.
+/* Copyright (C) 2018 Wildfire Games.
  *
  * 0 A.D. is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
 #include "renderer/VertexBuffer.h"
 #include "renderer/VertexBufferManager.h"
 
-#include "GridProjector.h"
+#include "renderer/GridProjector.h"
 
 GridProjector::GridProjector()
 {
@@ -58,18 +58,30 @@ void GridProjector::SetupGrid()
 {
 	//std::vector<CVector2D> vertices;
 
+    /*
 	double xRatio = 1.0 / (m_resolutionX - 1);
 	double yRatio = 1.0 / (m_resolutionY - 1);
 
 	for (int i = 0; i < m_resolutionY; i++)
 		for (int j = 0; j <  m_resolutionX; j++)
 			m_vertices.push_back(CVector2D(i * xRatio - 0.5, i * yRatio - 0.5));
-
+    //*/
+    m_vertices.push_back(CVector2D(-0.5,  0.5));
+    m_vertices.push_back(CVector2D( 0.0,  0.5));
+    m_vertices.push_back(CVector2D( 0.5,  0.5));
+    m_vertices.push_back(CVector2D(-0.5,  0.0));
+    m_vertices.push_back(CVector2D( 0.0,  0.0));
+    m_vertices.push_back(CVector2D( 0.5,  0.0));
+    m_vertices.push_back(CVector2D(-0.5, -0.5));
+    m_vertices.push_back(CVector2D( 0.0, -0.5));
+    m_vertices.push_back(CVector2D( 0.5, -0.5));
+    
 	m_Grid_VBvertices = g_VBMan.Allocate(sizeof(CVector2D), m_vertices.size(), GL_STATIC_DRAW, GL_ARRAY_BUFFER);
 	m_Grid_VBvertices->m_Owner->UpdateChunkVertices(m_Grid_VBvertices, &m_vertices[0]);
 
 	//std::vector<GLuint> indices;
 
+    /*
 	for (int i = 0; i < m_resolutionY; i++)
 	{
 		for (int j = 0; j < m_resolutionX; j++)
@@ -90,36 +102,54 @@ void GridProjector::SetupGrid()
 		}
 
 	}
+    //*/
+    
+    m_indices.push_back(1);m_indices.push_back(0);m_indices.push_back(3);
+    m_indices.push_back(1);m_indices.push_back(3);m_indices.push_back(4);
+    m_indices.push_back(2);m_indices.push_back(1);m_indices.push_back(4);
+    m_indices.push_back(2);m_indices.push_back(4);m_indices.push_back(5);
+    m_indices.push_back(4);m_indices.push_back(3);m_indices.push_back(6);
+    m_indices.push_back(4);m_indices.push_back(6);m_indices.push_back(7);
+    m_indices.push_back(5);m_indices.push_back(4);m_indices.push_back(7);
+    m_indices.push_back(5);m_indices.push_back(7);m_indices.push_back(8);
 
 	m_Grid_VBindices = g_VBMan.Allocate(sizeof(GLuint), m_indices.size(), GL_STATIC_DRAW, GL_ELEMENT_ARRAY_BUFFER);
 	m_Grid_VBindices->m_Owner->UpdateChunkVertices(m_Grid_VBindices, &m_indices[0]);
 
 }
 
-void GridProjector::Render()
+void GridProjector::Render(CShaderProgramPtr& shader)
 {
-	glClearColor(0.0f,0.0f, 0.0f,0.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    
+	//glClearColor(0.0f,0.0f, 0.0f,0.0f);
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_ALWAYS);
+	//glEnable(GL_BLEND);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//glEnable(GL_DEPTH_TEST);
+	//glDepthFunc(GL_ALWAYS);
 
 	if (g_Renderer.m_SkipSubmit)
 		return;
 
 	CShaderDefines none;
-	CShaderProgramPtr shad = g_Renderer.GetShaderManager().LoadProgram("glsl/projector", none);
+	//CShaderProgramPtr shad = g_Renderer.GetShaderManager().LoadProgram("glsl/projector", none);
+    CShaderProgramPtr& shad = shader;
 
-	shad->Bind();
+	//shad->Bind();
 
 	shad->Uniform(str_transform, g_Renderer.GetViewCamera().GetViewProjection());
 
 	//// shad->VertexPointer(...);
-    shad->VertexPointer(3, GL_FLOAT, sizeof(CVector2D), &m_vertices[0]);
-	//
-	//// Call before glDraw(...)
+    //shad->VertexPointer(3, GL_FLOAT, sizeof(CVector2D), &m_vertices[0]);
+    
+    CVector2D* base = (CVector2D*) m_Grid_VBvertices->m_Owner->Bind();
+    
+    shad->VertexAttribPointer(str_vertexPosition, 2, GL_FLOAT, false, sizeof(CVector2D), &base[m_Grid_VBvertices->m_Index].X);// ???
+    //shad->VertexPointer(2, GL_FLOAT, sizeof(m_vertices[0]), &m_vertices[0]);
+    
+    // Call before glDraw(...)
 	shad->AssertPointersBound();
 
     // Segfault here
@@ -129,14 +159,16 @@ void GridProjector::Render()
     // Owner is null...
     //printf("----------------------------%s\n", m_Grid_VBindices->m_Owner->Bind());
     //u8* indexBase = 0;
-	glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, &m_indices[0]);
-	//glDrawElements(GL_TRIANGLES, (GLsizei) (m_indices.size()), GL_UNSIGNED_INT, sizeof(u32)*(m_Grid_VBindices->m_Index));
+	//glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, &m_indices[0]);
+    u8* indexBase = m_Grid_VBindices->m_Owner->Bind();
+	glDrawElements(GL_TRIANGLES, (GLsizei) m_Grid_VBindices->m_Count, GL_UNSIGNED_INT, indexBase + sizeof(u16)*(m_Grid_VBindices->m_Index));
 
 	CVertexBuffer::Unbind();
-	shad->Unbind();
+	//shad->Unbind();
 
-	glDisable(GL_BLEND);
-	glDepthFunc(GL_LEQUAL);
+	//glDisable(GL_BLEND);
+	//glDepthFunc(GL_LEQUAL);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 void GridProjector::PrintTestMessage()

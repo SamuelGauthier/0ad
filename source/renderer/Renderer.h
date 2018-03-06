@@ -29,6 +29,7 @@
 #include "lib/file/vfs/vfs_path.h"
 #include "lib/res/handle.h"
 #include "ps/Singleton.h"
+#include "renderer/ProjectionSystem.h"
 
 #include "graphics/ShaderDefines.h"
 #include "renderer/Scene.h"
@@ -312,6 +313,8 @@ public:
 	 * @return the SkyManager object used by the renderer
 	 */
 	SkyManager* GetSkyManager() { return m_SkyManager; }
+    
+    ProjectionSystem* GetProjectionSystem() { return m_ProjectionSystem; }
 
 	CTextureManager& GetTextureManager();
 
@@ -473,6 +476,8 @@ protected:
 	 * m_SkyManager: the SkyManager object used for sky textures and settings
 	 */
 	SkyManager* m_SkyManager;
+    
+    ProjectionSystem* m_ProjectionSystem;
 
 	/**
 	 * Enable rendering of terrain tile priority text overlay, for debugging.

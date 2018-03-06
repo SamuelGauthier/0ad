@@ -45,6 +45,7 @@
 
 #include "renderer/DecalRData.h"
 #include "renderer/PatchRData.h"
+#include "renderer/ProjectionSystem.h"
 #include "renderer/Renderer.h"
 #include "renderer/ShadowMap.h"
 #include "renderer/TerrainRenderer.h"
@@ -85,6 +86,9 @@ struct TerrainRendererInternals
 
 	/// Fancy water shader
 	CShaderProgramPtr fancyWaterShader;
+    
+    // Projector Shader
+    CShaderProgramPtr projectorShader;
 
 	CSimulation2* simulation;
 };
@@ -940,6 +944,24 @@ void TerrainRenderer::RenderWater(const CShaderDefines& context, int cullGroup, 
 		RenderSimpleWater(cullGroup);
 	else
 		RenderFancyWater(context, cullGroup, shadow);
+}
+
+void TerrainRenderer::RenderProjectedWater(const CShaderDefines& context, int cullGroup)
+{
+    ProjectionSystem* projectionSystem= g_Renderer.GetProjectionSystem();
+	CShaderDefines defines = context;
+    
+    // TODO: Do not reload the shader every time
+    m->projectorShader = g_Renderer.GetShaderManager().LoadProgram("glsl/projector", defines);
+    
+    m->projectorShader->Bind();
+    m->projectorShader->Uniform(str_transform, g_Renderer.GetViewCamera().GetViewProjection());
+    
+    projectionSystem->Render(m->projectorShader);
+    
+    m->projectorShader->Unbind();
+    
+    g_Renderer.m_Stats.m_DrawCalls++;
 }
 
 void TerrainRenderer::RenderPriorities(int cullGroup)

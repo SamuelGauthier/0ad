@@ -58,11 +58,13 @@
 #include "graphics/Terrain.h"
 #include "graphics/Texture.h"
 #include "graphics/TextureManager.h"
+#include "renderer/GridProjector.h"
 #include "renderer/HWLightingModelRenderer.h"
 #include "renderer/InstancingModelRenderer.h"
 #include "renderer/ModelRenderer.h"
 #include "renderer/OverlayRenderer.h"
 #include "renderer/ParticleRenderer.h"
+#include "renderer/ProjectionSystem.h"
 #include "renderer/PostprocManager.h"
 #include "renderer/RenderModifiers.h"
 #include "renderer/ShadowMap.h"
@@ -271,6 +273,10 @@ public:
 
 	/// Sky manager
 	SkyManager skyManager;
+    
+    // Projection System
+    //ProjectionSystem projectionSystem; can't do that
+    GridProjector projectionSystem;
 
 	/// Texture manager
 	CTextureManager textureManager;
@@ -415,6 +421,8 @@ CRenderer::CRenderer()
 	m = new CRendererInternals;
 	m_WaterManager = &m->waterManager;
 	m_SkyManager = &m->skyManager;
+    //m_ProjectionSystem = &m->projectionSystem;
+    m_ProjectionSystem = &m->projectionSystem;
 
 	g_ProfileViewer.AddRootTable(&m->profileTable);
 
@@ -1558,8 +1566,8 @@ void CRenderer::RenderSubmissions(const CBoundingBoxAligned& waterScissor)
 		RenderTransparentModels(context, cullGroup, TRANSPARENT_OPAQUE, false);
 		ogl_WarnIfError();
 
-		m->terrainRenderer.RenderWater(context, cullGroup, &m->shadow);
-		ogl_WarnIfError();
+		//m->terrainRenderer.RenderWater(context, cullGroup, &m->shadow);
+		//ogl_WarnIfError();
 
 		// render transparent stuff again, but only the blended parts that overlap water
 		RenderTransparentModels(context, cullGroup, TRANSPARENT_BLEND, false);
@@ -1571,6 +1579,9 @@ void CRenderer::RenderSubmissions(const CBoundingBoxAligned& waterScissor)
 		RenderTransparentModels(context, cullGroup, TRANSPARENT, false);
 		ogl_WarnIfError();
 	}
+    
+    m->terrainRenderer.RenderProjectedWater(context, cullGroup);
+    ogl_WarnIfError();
 
 	// render debug-related terrain overlays
 	ITerrainOverlay::RenderOverlaysAfterWater(cullGroup);

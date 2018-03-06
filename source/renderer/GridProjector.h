@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Wildfire Games.
+/* Copyright (C) 2018 Wildfire Games.
  *
  * 0 A.D. is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,10 +18,12 @@
 #define INCLUDED_GRIDPROJECTOR
 
 #include "graphics/Camera.h"
+#include "graphics/ShaderProgramPtr.h"
+
 #include "maths/Matrix3D.h"
 #include "maths/Vector2D.h"
-#include "VertexBuffer.h"
 
+#include "renderer/VertexBuffer.h"
 #include "renderer/ProjectionSystem.h"
 
 class GridProjector : public ProjectionSystem
@@ -34,7 +36,7 @@ public:
 	GridProjector();
 	~GridProjector();
 
-	void Render() override;
+	void Render(CShaderProgramPtr& shader) override;
 	void SetupGrid();
     void PrintTestMessage();
 
