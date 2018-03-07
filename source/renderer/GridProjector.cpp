@@ -21,13 +21,17 @@
 
 #include "lib/ogl.h"
 
+#include "ps/CLogger.h"
+
 #include "renderer/Renderer.h"
 #include "renderer/VertexBuffer.h"
 #include "renderer/VertexBufferManager.h"
 
 #include "renderer/GridProjector.h"
 
-GridProjector::GridProjector()
+const u16 MAX_ENTITIES_DRAWN = 65535;
+
+GridProjector::GridProjector() : m_Grid_indices(GL_STATIC_DRAW), m_Grid_vertices(GL_DYNAMIC_DRAW)
 {
 	m_resolutionX = 256;
 	m_resolutionY = 256;
@@ -52,10 +56,18 @@ GridProjector::~GridProjector()
 
 	if (m_Grid_VBvertices)
 		g_VBMan.Release(m_Grid_VBvertices);
+
+	m_Grid_indices.FreeBackingStore();
+	m_Grid_vertices.FreeBackingStore();
 }
 
 void GridProjector::SetupGrid()
 {
+	m_Grid_vertices.SetNumVertices(MAX_ENTITIES_DRAWN);
+	m_Grid_indices.SetNumVertices(MAX_ENTITIES_DRAWN);
+	m_Grid_vertices.Layout();
+	m_Grid_indices.Layout();
+
 	//std::vector<CVector2D> vertices;
 
     /*
@@ -66,17 +78,17 @@ void GridProjector::SetupGrid()
 		for (int j = 0; j <  m_resolutionX; j++)
 			m_vertices.push_back(CVector2D(i * xRatio - 0.5, i * yRatio - 0.5));
     //*/
-    m_vertices.push_back(CVector2D(-0.5,  0.5));
-    m_vertices.push_back(CVector2D( 0.0,  0.5));
-    m_vertices.push_back(CVector2D( 0.5,  0.5));
-    m_vertices.push_back(CVector2D(-0.5,  0.0));
-    m_vertices.push_back(CVector2D( 0.0,  0.0));
-    m_vertices.push_back(CVector2D( 0.5,  0.0));
-    m_vertices.push_back(CVector2D(-0.5, -0.5));
-    m_vertices.push_back(CVector2D( 0.0, -0.5));
-    m_vertices.push_back(CVector2D( 0.5, -0.5));
+    m_vertices.push_back(CVector3D(-0.5,  0.5, 1.0));
+    m_vertices.push_back(CVector3D( 0.0,  0.5, 1.0));
+    m_vertices.push_back(CVector3D( 0.5,  0.5, 1.0));
+    m_vertices.push_back(CVector3D(-0.5,  0.0, 1.0));
+    m_vertices.push_back(CVector3D( 0.0,  0.0, 1.0));
+    m_vertices.push_back(CVector3D( 0.5,  0.0, 1.0));
+    m_vertices.push_back(CVector3D(-0.5, -0.5, 1.0));
+    m_vertices.push_back(CVector3D( 0.0, -0.5, 1.0));
+    m_vertices.push_back(CVector3D( 0.5, -0.5, 1.0));
     
-	m_Grid_VBvertices = g_VBMan.Allocate(sizeof(CVector2D), m_vertices.size(), GL_STATIC_DRAW, GL_ARRAY_BUFFER);
+	m_Grid_VBvertices = g_VBMan.Allocate(sizeof(CVector3D), m_vertices.size(), GL_STATIC_DRAW, GL_ARRAY_BUFFER);
 	m_Grid_VBvertices->m_Owner->UpdateChunkVertices(m_Grid_VBvertices, &m_vertices[0]);
 
 	//std::vector<GLuint> indices;
@@ -120,7 +132,7 @@ void GridProjector::SetupGrid()
 
 void GridProjector::Render(CShaderProgramPtr& shader)
 {
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     
 	//glClearColor(0.0f,0.0f, 0.0f,0.0f);
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -133,7 +145,7 @@ void GridProjector::Render(CShaderProgramPtr& shader)
 	if (g_Renderer.m_SkipSubmit)
 		return;
 
-	CShaderDefines none;
+	//CShaderDefines none;
 	//CShaderProgramPtr shad = g_Renderer.GetShaderManager().LoadProgram("glsl/projector", none);
     CShaderProgramPtr& shad = shader;
 
@@ -144,11 +156,17 @@ void GridProjector::Render(CShaderProgramPtr& shader)
 	//// shad->VertexPointer(...);
     //shad->VertexPointer(3, GL_FLOAT, sizeof(CVector2D), &m_vertices[0]);
     
-    CVector2D* base = (CVector2D*) m_Grid_VBvertices->m_Owner->Bind();
+	// Null pointer??? it is (u8) 0
+    u8* vertexBase = m_Grid_VBvertices->m_Owner->Bind();
+    u8* indexBase = m_Grid_VBindices->m_Owner->Bind();
+	LOGWARNING("%p\n", (void*)vertexBase);
+	LOGWARNING("%p\n", (void*)indexBase);
     
-    shad->VertexAttribPointer(str_vertexPosition, 2, GL_FLOAT, false, sizeof(CVector2D), &base[m_Grid_VBvertices->m_Index].X);// ???
+    shad->VertexAttribPointer(str_vertexPosition, 3, GL_FLOAT, false, sizeof(CVector3D), &m_vertices[0]);// ???
+	//u8* add = m_Grid_VBvertices->m_Owner->GetBindAddress();
+	//LOGERROR("-------------------->x:%d\n", &base[m_Grid_VBvertices->m_Index].X);
+	//LOGERROR("-------------------->x:%p\n", (void*)add);
     //shad->VertexPointer(2, GL_FLOAT, sizeof(m_vertices[0]), &m_vertices[0]);
-    
     // Call before glDraw(...)
 	shad->AssertPointersBound();
 
@@ -160,8 +178,8 @@ void GridProjector::Render(CShaderProgramPtr& shader)
     //printf("----------------------------%s\n", m_Grid_VBindices->m_Owner->Bind());
     //u8* indexBase = 0;
 	//glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, &m_indices[0]);
-    u8* indexBase = m_Grid_VBindices->m_Owner->Bind();
-	glDrawElements(GL_TRIANGLES, (GLsizei) m_Grid_VBindices->m_Count, GL_UNSIGNED_INT, indexBase + sizeof(u16)*(m_Grid_VBindices->m_Index));
+    //u8* indexBase = m_Grid_VBindices->m_Owner->Bind();
+	//glDrawElements(GL_TRIANGLES, (GLsizei) m_Grid_VBindices->m_Count, GL_UNSIGNED_INT, NULL);
 
 	CVertexBuffer::Unbind();
 	//shad->Unbind();

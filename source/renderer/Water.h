@@ -34,7 +34,7 @@ public:
 	CColor m_tint;
     
 public:
-	Water(PhysicalWaterModel model);
+	Water(PhysicalWaterModel& model);
 	~Water();
 
 private:

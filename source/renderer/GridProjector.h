@@ -21,8 +21,9 @@
 #include "graphics/ShaderProgramPtr.h"
 
 #include "maths/Matrix3D.h"
-#include "maths/Vector2D.h"
+#include "maths/Vector3D.h"
 
+#include "renderer/VertexArray.h"
 #include "renderer/VertexBuffer.h"
 #include "renderer/ProjectionSystem.h"
 
@@ -45,12 +46,14 @@ private:
 	CCamera m_camera;
 	CVertexBuffer::VBChunk* m_Grid_VBindices;
 	CVertexBuffer::VBChunk* m_Grid_VBvertices;
+	VertexArray m_Grid_vertices;
+	VertexIndexArray m_Grid_indices;
 
 	CMatrix3D m_M_projector;
 	CMatrix3D m_M_range;
 
 	std::vector<u32> m_indices;
-	std::vector<CVector2D> m_vertices;
+	std::vector<CVector3D> m_vertices;
 
 };
 
