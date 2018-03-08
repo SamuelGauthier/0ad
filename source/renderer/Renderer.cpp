@@ -1580,8 +1580,20 @@ void CRenderer::RenderSubmissions(const CBoundingBoxAligned& waterScissor)
 		ogl_WarnIfError();
 	}
     
-    m->terrainRenderer.RenderProjectedWater(context, cullGroup);
-    ogl_WarnIfError();
+	// --------------------------------------------->
+
+	// render transparent stuff, but only the solid parts that can occlude block water
+	RenderTransparentModels(context, cullGroup, TRANSPARENT_OPAQUE, false);
+	ogl_WarnIfError();
+
+	m->terrainRenderer.RenderProjectedWater(context, cullGroup);
+	ogl_WarnIfError();
+
+	// render transparent stuff again, but only the blended parts that overlap water
+	RenderTransparentModels(context, cullGroup, TRANSPARENT_BLEND, false);
+	ogl_WarnIfError();
+
+	//<----------------------------------------------
 
 	// render debug-related terrain overlays
 	ITerrainOverlay::RenderOverlaysAfterWater(cullGroup);
