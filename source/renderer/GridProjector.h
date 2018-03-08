@@ -30,8 +30,9 @@
 class GridProjector : public ProjectionSystem
 {
 public:
-	int m_resolutionX;
-	int m_resolutionY;
+	u16 m_resolutionX;
+	u16 m_resolutionY;
+	u32 m_totalResolution;
 
 public:
 	GridProjector();
@@ -39,15 +40,18 @@ public:
 
 	void Render(CShaderProgramPtr& shader) override;
 	void SetupGrid();
-    void PrintTestMessage();
+	void BuildArrays();
 
 private:
 	double m_time;
 	CCamera m_camera;
-	CVertexBuffer::VBChunk* m_Grid_VBindices;
-	CVertexBuffer::VBChunk* m_Grid_VBvertices;
-	VertexArray m_Grid_vertices;
-	VertexIndexArray m_Grid_indices;
+	CVertexBuffer::VBChunk* m_gridVBIndices;
+	CVertexBuffer::VBChunk* m_gridVBVertices;
+
+	VertexIndexArray m_gridIndices;
+
+	VertexArray m_gridVertices;
+	VertexArray::Attribute m_position;
 
 	CMatrix3D m_M_projector;
 	CMatrix3D m_M_range;
