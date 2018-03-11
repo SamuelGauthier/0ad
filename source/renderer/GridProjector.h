@@ -22,6 +22,7 @@
 
 #include "maths/Matrix3D.h"
 #include "maths/Vector3D.h"
+#include "maths/Vector2D.h"
 
 #include "renderer/VertexArray.h"
 #include "renderer/VertexBuffer.h"

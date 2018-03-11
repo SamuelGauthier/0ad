@@ -1558,7 +1558,7 @@ void CRenderer::RenderSubmissions(const CBoundingBoxAligned& waterScissor)
 
 	RenderModels(context, cullGroup);
 	ogl_WarnIfError();
-
+//*/
 	// render water
 	if (m_WaterManager->m_RenderWater && g_Game && waterScissor.GetVolume() > 0)
 	{
@@ -1568,6 +1568,9 @@ void CRenderer::RenderSubmissions(const CBoundingBoxAligned& waterScissor)
 
 		//m->terrainRenderer.RenderWater(context, cullGroup, &m->shadow);
 		//ogl_WarnIfError();
+        
+        m->terrainRenderer.RenderProjectedWater(context, cullGroup);
+        ogl_WarnIfError();
 
 		// render transparent stuff again, but only the blended parts that overlap water
 		RenderTransparentModels(context, cullGroup, TRANSPARENT_BLEND, false);
@@ -1579,22 +1582,22 @@ void CRenderer::RenderSubmissions(const CBoundingBoxAligned& waterScissor)
 		RenderTransparentModels(context, cullGroup, TRANSPARENT, false);
 		ogl_WarnIfError();
 	}
-    
+//*/
 	// --------------------------------------------->
 
 	// render transparent stuff, but only the solid parts that can occlude block water
-	RenderTransparentModels(context, cullGroup, TRANSPARENT_OPAQUE, false);
-	ogl_WarnIfError();
+	//RenderTransparentModels(context, cullGroup, TRANSPARENT_OPAQUE, false);
+	//ogl_WarnIfError();
 
-	m->terrainRenderer.RenderProjectedWater(context, cullGroup);
-	ogl_WarnIfError();
+	//m->terrainRenderer.RenderProjectedWater(context, cullGroup);
+	//ogl_WarnIfError();
 
 	// render transparent stuff again, but only the blended parts that overlap water
-	RenderTransparentModels(context, cullGroup, TRANSPARENT_BLEND, false);
-	ogl_WarnIfError();
+	//RenderTransparentModels(context, cullGroup, TRANSPARENT_BLEND, false);
+	//ogl_WarnIfError();
 
 	//<----------------------------------------------
-
+///*
 	// render debug-related terrain overlays
 	ITerrainOverlay::RenderOverlaysAfterWater(cullGroup);
 	ogl_WarnIfError();
@@ -1641,7 +1644,7 @@ void CRenderer::RenderSubmissions(const CBoundingBoxAligned& waterScissor)
 	// render overlays that should appear on top of all other objects
 	m->overlayRenderer.RenderForegroundOverlays(m_ViewCamera);
 	ogl_WarnIfError();
-
+//*/
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
