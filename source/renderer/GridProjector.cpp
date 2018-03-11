@@ -32,7 +32,7 @@
 
 //const u16 MAX_ENTITIES_DRAWN = 65535;
 
-GridProjector::GridProjector() : m_gridIndices(0), m_gridVertices(0)
+GridProjector::GridProjector() : m_gridVBIndices(0), m_gridVBVertices(0), m_gridVertices(GL_STATIC_DRAW), m_gridIndices(GL_STATIC_DRAW)
 {
 	m_resolutionX = 3;
 	m_resolutionY = 3;
@@ -40,8 +40,8 @@ GridProjector::GridProjector() : m_gridIndices(0), m_gridVertices(0)
 
 	m_time = 0;
 	m_camera = CCamera();
-	m_gridVBIndices = NULL;
-	m_gridVBVertices = NULL;
+	//m_gridVBIndices = NULL;
+	//m_gridVBVertices = NULL;
 
 	m_M_projector = CMatrix3D();
 	m_M_range = CMatrix3D();
@@ -52,7 +52,7 @@ GridProjector::GridProjector() : m_gridIndices(0), m_gridVertices(0)
 
     // Temporary here
     SetupGrid();
-	//BuildArrays();
+    //BuildArrays();
 
 }
 
@@ -101,8 +101,6 @@ void GridProjector::SetupGrid()
 		LOGERROR("No storage available for water vertices!");
 
 	m_gridVBVertices->m_Owner->UpdateChunkVertices(m_gridVBVertices, &m_vertices[0]);
-
-	//std::vector<GLuint> indices;
 
 	for (int j = 0; j < (m_resolutionY - 1); j++)
 	{
@@ -155,13 +153,14 @@ void GridProjector::Render(CShaderProgramPtr& shader)
     //printf("x:%f y:%f\n", m_vertices[0].X, m_vertices[0].Y);
     
     
-    //shader->VertexAttribPointer(str_vertexPosition, 3, GL_FLOAT, GL_FALSE, sizeof(CVector3D), &base[m_gridVBVertices->m_Index]);
-    shader->VertexAttribPointer(str_vertexPosition, 3, GL_FLOAT, GL_FALSE, sizeof(CVector3D), &m_vertices[0]);
+    shader->VertexAttribPointer(str_vertexPosition, 3, GL_FLOAT, GL_FALSE, sizeof(CVector3D), &base[m_gridVBVertices->m_Index]);
+    //LOGWARNING("%u\n", m_gridVBVertices->m_Index);
+    //shader->VertexAttribPointer(str_vertexPosition, 3, GL_FLOAT, GL_FALSE, sizeof(CVector3D), &m_vertices[0]);
     
     shader->AssertPointersBound();
     
     u8* indexBase = m_gridVBIndices->m_Owner->Bind();
-    glDrawElements(GL_TRIANGLES, m_gridVBIndices->m_Count, GL_UNSIGNED_SHORT, indexBase + sizeof(u16)*(m_gridVBIndices->m_Index));
+    glDrawElements(GL_TRIANGLES, (GLsizei) m_gridVBIndices->m_Count, GL_UNSIGNED_SHORT, indexBase + sizeof(u16)*(m_gridVBIndices->m_Index));
     
 
 	//CVertexBuffer::Unbind();

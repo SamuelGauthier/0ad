@@ -1559,6 +1559,12 @@ void CRenderer::RenderSubmissions(const CBoundingBoxAligned& waterScissor)
 	RenderModels(context, cullGroup);
 	ogl_WarnIfError();
 //*/
+    // Temp stuff
+    //m->terrainRenderer.RenderWater(context, cullGroup, &m->shadow);
+    //ogl_WarnIfError();
+    m->terrainRenderer.RenderProjectedWater(context, cullGroup);
+    
+    
 	// render water
 	if (m_WaterManager->m_RenderWater && g_Game && waterScissor.GetVolume() > 0)
 	{
@@ -1569,8 +1575,8 @@ void CRenderer::RenderSubmissions(const CBoundingBoxAligned& waterScissor)
 		//m->terrainRenderer.RenderWater(context, cullGroup, &m->shadow);
 		//ogl_WarnIfError();
         
-        m->terrainRenderer.RenderProjectedWater(context, cullGroup);
-        ogl_WarnIfError();
+        //m->terrainRenderer.RenderProjectedWater(context, cullGroup);
+        //ogl_WarnIfError();
 
 		// render transparent stuff again, but only the blended parts that overlap water
 		RenderTransparentModels(context, cullGroup, TRANSPARENT_BLEND, false);
