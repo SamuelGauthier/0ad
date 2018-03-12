@@ -31,8 +31,8 @@
 class GridProjector : public ProjectionSystem
 {
 public:
-	u16 m_resolutionX;
-	u16 m_resolutionY;
+	uint m_resolutionX;
+	uint m_resolutionY;
 	u32 m_totalResolution;
 
 public:
@@ -57,7 +57,7 @@ private:
 	CMatrix3D m_M_projector;
 	CMatrix3D m_M_range;
 
-	std::vector<u32> m_indices;
+	std::vector<GLuint> m_indices;
 	std::vector<CVector3D> m_vertices;
 
 };

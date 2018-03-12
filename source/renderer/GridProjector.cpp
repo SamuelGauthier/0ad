@@ -34,8 +34,8 @@
 
 GridProjector::GridProjector() : m_gridVBIndices(0), m_gridVBVertices(0), m_gridVertices(GL_STATIC_DRAW), m_gridIndices(GL_STATIC_DRAW)
 {
-	m_resolutionX = 3;
-	m_resolutionY = 3;
+	m_resolutionX = 30;
+	m_resolutionY = 30;
 	m_totalResolution = m_resolutionX*m_resolutionY;
 
 	m_time = 0;
@@ -78,20 +78,18 @@ void GridProjector::SetupGrid()
         m_gridVBVertices = 0;
     }
 
-	double xRatio = 2.0 / (m_resolutionX - 1);
-	double yRatio = 2.0 / (m_resolutionY - 1);
-    printf("rH: %hu, rW: %hu\n", m_resolutionY, m_resolutionX);
-    printf("hratio: %f, wratio: %f\n", yRatio, xRatio);
-    printf("dH: %f, dW: %f\n", 2/2.0, 2/2.0);
-
+	float xRatio = 2.0 / (m_resolutionX - 1);
+	float yRatio = 2.0 / (m_resolutionY - 1);
+    //printf("rH: %u, rW: %u\n", m_resolutionY, m_resolutionX);
+    //printf("hratio: %f, wratio: %f\n", yRatio, xRatio);
+    //printf("dH: %f, dW: %f\n", 2/2.0, 2/2.0);
     
-    
-	for (int j = 0; j < m_resolutionY; j++)
+	for (uint j = 0; j < m_resolutionY; j++)
     {
-        for (int i = 0; i <  m_resolutionX; i++)
+        for (uint i = 0; i <  m_resolutionX; i++)
         {
-            m_vertices.push_back(CVector3D(i * xRatio - 1, 1 - j * yRatio, 0.0));
-            printf("x:%f y:%f\n", i * xRatio - 1, 1 - j * yRatio);
+            m_vertices.push_back(CVector3D(i * xRatio - 1.0, 1.0 - j * yRatio, 0.0));
+            //printf("x:%f y:%f\n", i * xRatio - 1.0, 1.0 - j * yRatio);
         }
     }
     
@@ -99,12 +97,13 @@ void GridProjector::SetupGrid()
 
 	if (m_gridVBVertices == NULL || m_gridVBVertices == 0)
 		LOGERROR("No storage available for water vertices!");
-
-	m_gridVBVertices->m_Owner->UpdateChunkVertices(m_gridVBVertices, &m_vertices[0]);
-
-	for (int j = 0; j < (m_resolutionY - 1); j++)
+    
+    // fails but but not down later, why???
+	//m_gridVBVertices->m_Owner->UpdateChunkVertices(m_gridVBVertices, &m_vertices[0]);
+    
+	for (uint j = 0; j < (m_resolutionY - 1); j++)
 	{
-		for (int i = 0; i < (m_resolutionX - 1); i++)
+		for (uint i = 0; i < (m_resolutionX - 1); i++)
 		{
 			// *-*
 			// |/
@@ -112,22 +111,25 @@ void GridProjector::SetupGrid()
 			m_indices.push_back(j * m_resolutionX + i);
 			m_indices.push_back((j + 1) * m_resolutionX + i);
 			m_indices.push_back(j * m_resolutionX + (i + 1));
-            printf("%d, %d, %d\n", j*m_resolutionX + i, (j+1)*m_resolutionX + (i), j*m_resolutionX + (i+1));
+            //printf("%u, %u, %u\n", j*m_resolutionX + i, (j+1)*m_resolutionX + (i), j*m_resolutionX + (i+1));
 			//   *
 			//  /|
 			// *-*
 			m_indices.push_back(j * m_resolutionX + (i + 1));
 			m_indices.push_back((j + 1) * m_resolutionX + i);
 			m_indices.push_back((j + 1) * m_resolutionX + (i + 1));
-            printf("%d, %d, %d\n", j*m_resolutionX + (i+1), (j+1)*m_resolutionX + i, (j+1)*m_resolutionX + (i+1));
+            //printf("%u, %u, %u\n", j*m_resolutionX + (i+1), (j+1)*m_resolutionX + i, (j+1)*m_resolutionX + (i+1));
 		}
 
 	}
     
-	m_gridVBIndices = g_VBMan.Allocate(sizeof(u32), m_indices.size(), GL_STATIC_DRAW, GL_ELEMENT_ARRAY_BUFFER);
+    //printf("indices size: %lu\n", m_indices.size());
+	m_gridVBIndices = g_VBMan.Allocate(sizeof(GLuint), m_indices.size(), GL_STATIC_DRAW, GL_ELEMENT_ARRAY_BUFFER);
     
     if (m_gridVBIndices == NULL || m_gridVBIndices == 0)
         LOGERROR("No storage available for water indices!");
+    
+    m_gridVBVertices->m_Owner->UpdateChunkVertices(m_gridVBVertices, &m_vertices[0]);
     
     m_gridVBIndices->m_Owner->UpdateChunkVertices(m_gridVBIndices, &m_indices[0]);
 
@@ -137,37 +139,20 @@ void GridProjector::Render(CShaderProgramPtr& shader)
 {
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     
-	//glClearColor(0.0f,0.0f, 0.0f,0.0f);
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_ALWAYS);
-
-    ///*
 	if (g_Renderer.m_SkipSubmit)
 		return;
 
-    CVector3D* base = (CVector3D*) m_gridVBVertices->m_Owner->Bind();
-    //printf("x:%f y:%f\n", m_vertices[0].X, m_vertices[0].Y);
+    u8* base = m_gridVBVertices->m_Owner->Bind();
     
-    
-    shader->VertexAttribPointer(str_vertexPosition, 3, GL_FLOAT, GL_FALSE, sizeof(CVector3D), &base[m_gridVBVertices->m_Index]);
-    //LOGWARNING("%u\n", m_gridVBVertices->m_Index);
-    //shader->VertexAttribPointer(str_vertexPosition, 3, GL_FLOAT, GL_FALSE, sizeof(CVector3D), &m_vertices[0]);
+    shader->VertexAttribPointer(str_vertexPosition, 3, GL_FLOAT, GL_FALSE, sizeof(CVector3D), base);
     
     shader->AssertPointersBound();
     
     u8* indexBase = m_gridVBIndices->m_Owner->Bind();
-    glDrawElements(GL_TRIANGLES, (GLsizei) m_gridVBIndices->m_Count, GL_UNSIGNED_SHORT, indexBase + sizeof(u16)*(m_gridVBIndices->m_Index));
-    
+    glDrawElements(GL_TRIANGLES, (GLsizei) m_gridVBIndices->m_Count, GL_UNSIGNED_INT, indexBase);
 
-	//CVertexBuffer::Unbind();
-	//shad->Unbind();
-
-	glDisable(GL_BLEND);
-	glDepthFunc(GL_LEQUAL);
+	CVertexBuffer::Unbind();
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
