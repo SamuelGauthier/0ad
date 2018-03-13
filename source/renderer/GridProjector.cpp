@@ -34,8 +34,8 @@
 
 GridProjector::GridProjector() : m_gridVBIndices(0), m_gridVBVertices(0), m_gridVertices(GL_STATIC_DRAW), m_gridIndices(GL_STATIC_DRAW)
 {
-	m_resolutionX = 30;
-	m_resolutionY = 30;
+	m_resolutionX = 128;
+	m_resolutionY = 64;
 	m_totalResolution = m_resolutionX*m_resolutionY;
 
 	m_time = 0;
@@ -43,8 +43,9 @@ GridProjector::GridProjector() : m_gridVBIndices(0), m_gridVBVertices(0), m_grid
 	//m_gridVBIndices = NULL;
 	//m_gridVBVertices = NULL;
 
-	m_M_projector = CMatrix3D();
-	m_M_range = CMatrix3D();
+	m_Mpview = CMatrix3D();
+    m_Mperspective = CMatrix3D();
+	m_Mrange = CMatrix3D();
 
 	m_position.type = GL_FLOAT;
 	m_position.elems = 3;
@@ -135,6 +136,15 @@ void GridProjector::SetupGrid()
 
 }
 
+void GridProjector::SetupMatrices()
+{
+    m_Mperspective = g_Renderer.GetViewCamera().GetProjection();
+    
+    CMatrix3D orientation = g_Renderer.GetViewCamera().GetOrientation();
+    CVector3D cPosition = CVector3D(orientation._14, orientation._24, orientation._34);
+    CVector3D direction = CVector3D(orientation._12, orientation._22, orientation._32);
+}
+
 void GridProjector::Render(CShaderProgramPtr& shader)
 {
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -154,63 +164,4 @@ void GridProjector::Render(CShaderProgramPtr& shader)
 
 	CVertexBuffer::Unbind();
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-}
-
-void GridProjector::BuildArrays()
-{
-	//PROFILE("water build");
-
-	m_gridVertices.SetNumVertices(m_totalResolution);
-	m_gridVertices.Layout();
-
-	VertexArrayIterator<CVector3D> position = m_position.GetIterator<CVector3D>();
-
-	double xRatio = 2.0 / (m_resolutionX - 1);
-	double yRatio = 2.0 / (m_resolutionY - 1);
-
-	for (u16 j = 0; j < m_resolutionX; j++)
-	{
-		for (u16 i = 0; i < m_resolutionY; i++)
-		{
-			*position = CVector3D(i * xRatio - 1, 1 - j * yRatio, 0.1);
-			++position;
-		}
-	}
-
-	m_gridVertices.Upload();
-	//m_gridVertices.FreeBackingStore();
-
-	u16 totalIndices = (m_resolutionX - 1) * (m_resolutionY - 1) * 6;
-	m_gridIndices.SetNumVertices(totalIndices);
-	LOGWARNING("%u", totalIndices);
-	m_gridIndices.Layout();
-
-	VertexArrayIterator<u16> index = m_gridIndices.GetIterator();
-
-	for (u16 j = 0; j < m_resolutionX - 1; j++)
-	{
-		for (u16 i = 0; i < m_resolutionY - 1; i++)
-		{
-			// *-*
-			// |/
-			// *
-			*index = (j + 0) * m_resolutionX + (i + 0); index++;
-			*index = (j + 1) * m_resolutionX + (i + 0); index++;
-			*index = (j + 0) * m_resolutionX + (i + 1); index++;
-			LOGWARNING("indices A: %u, %u, %u", (j + 0) * m_resolutionX + (i + 0), (j + 1) * m_resolutionX + (i + 0), (j + 0) * m_resolutionX + (i + 1));
-
-			//   *
-			//  /|
-			// *-*
-			*index = (j + 0) * m_resolutionX + (i + 1); index++;
-			*index = (j + 1) * m_resolutionX + (i + 0); index++;
-			*index = (j + 1) * m_resolutionX + (i + 1); index++;
-			LOGWARNING("indices B: %u, %u, %u",  (j + 0) * m_resolutionX + (i + 1), (j + 1) * m_resolutionX + (i + 0), (j + 1) * m_resolutionX + (i + 1));
-		}
-	}
-
-	m_gridIndices.Upload();
-	//m_gridIndices.FreeBackingStore();
-	/*
-	*/
 }

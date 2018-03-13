@@ -40,8 +40,6 @@ public:
 	~GridProjector();
 
 	void Render(CShaderProgramPtr& shader) override;
-	void SetupGrid();
-	void BuildArrays();
 
 private:
 	double m_time;
@@ -54,12 +52,17 @@ private:
 	VertexArray m_gridVertices;
 	VertexArray::Attribute m_position;
 
-	CMatrix3D m_M_projector;
-	CMatrix3D m_M_range;
+	CMatrix3D m_Mpview;
+    CMatrix3D m_Mperspective;
+	CMatrix3D m_Mrange;
 
 	std::vector<GLuint> m_indices;
 	std::vector<CVector3D> m_vertices;
 
+private:
+    void SetupGrid();
+    void SetupMatrices();
+    
 };
 
 #endif // !INCLUDED_GRIDPROJECTOR
