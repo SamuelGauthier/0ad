@@ -20,6 +20,7 @@
 
 //#include "lib/ogl.h"
 #include "graphics/TextureManager.h"
+#include "maths/Plane.h"
 #include "renderer/PhysicalWaterModel.h"
 #include "ps/Shapes.h"
 
@@ -30,12 +31,19 @@ public:
 	//CTexture m_area;
 	int* m_heightfield;
 	int* m_area;
+	float m_height;
+	float m_maxHeight;
 	CColor m_color;
 	CColor m_tint;
+
+	CPlane m_base;
     
 public:
-	Water(PhysicalWaterModel& model);
+	Water(const PhysicalWaterModel& model);
 	~Water();
+
+	// TODO: This is not very beautiful
+	float GetMaxWaterHeight();
 
 private:
 	const PhysicalWaterModel& m_waterModel;

@@ -19,7 +19,11 @@
 
 #include "FFTWaterModel.h"
 
-FFTWaterModel::FFTWaterModel() {}
+FFTWaterModel::FFTWaterModel()
+{
+	// TODO: temporary value
+	m_maxHeight = 0.1f;
+}
 
 FFTWaterModel::~FFTWaterModel() {}
 

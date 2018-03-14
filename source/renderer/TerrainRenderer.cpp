@@ -959,7 +959,7 @@ void TerrainRenderer::RenderProjectedWater(const CShaderDefines& context, int cu
     m->projectorShader->Bind();
     m->projectorShader->Uniform(str_transform, g_Renderer.GetViewCamera().GetViewProjection());
      
-    //projectionSystem->Render(m->projectorShader);
+    projectionSystem->Render(m->projectorShader);
     
     m->projectorShader->Unbind();
     

@@ -26,6 +26,9 @@ public:
 	virtual ~PhysicalWaterModel() {}
 
 	virtual void Update(double time) = 0;
+
+public:
+	float m_maxHeight;
 };
 
 #endif // !INCLUDED_PHYSICALWATERMODEL

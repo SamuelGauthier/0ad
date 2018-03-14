@@ -17,7 +17,11 @@
 
 #include "renderer/PhysicalWaterModel.h"
 
-class FFTWaterModel : public PhysicalWaterModel {
+class FFTWaterModel : public PhysicalWaterModel
+{
+public:
+	float m_maxHeight;
+
 public:
 	FFTWaterModel();
 	~FFTWaterModel();

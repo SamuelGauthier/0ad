@@ -27,6 +27,7 @@
 #include "renderer/VertexArray.h"
 #include "renderer/VertexBuffer.h"
 #include "renderer/ProjectionSystem.h"
+#include "renderer/Water.h"
 
 class GridProjector : public ProjectionSystem
 {
@@ -34,6 +35,7 @@ public:
 	uint m_resolutionX;
 	uint m_resolutionY;
 	u32 m_totalResolution;
+	Water m_water;
 
 public:
 	GridProjector();
@@ -55,6 +57,7 @@ private:
 	CMatrix3D m_Mpview;
     CMatrix3D m_Mperspective;
 	CMatrix3D m_Mrange;
+	CMatrix3D m_Mprojector;
 
 	std::vector<GLuint> m_indices;
 	std::vector<CVector3D> m_vertices;

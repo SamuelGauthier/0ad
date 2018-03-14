@@ -16,23 +16,31 @@
 
 #include "precompiled.h"
 
+#include "graphics/Terrain.h"
 #include "graphics/ShaderManager.h"
 #include "graphics/ShaderProgram.h"
 
 #include "lib/ogl.h"
 
+#include "maths/MathUtil.h"
+
 #include "ps/CLogger.h"
+#include "ps/Game.h"
+#include "ps/World.h"
 //#include "ps/Profile.h"
 
+#include "renderer/FFTWaterModel.h"
 #include "renderer/Renderer.h"
 #include "renderer/VertexBuffer.h"
 #include "renderer/VertexBufferManager.h"
+//Temp to be removed later
+#include "renderer/WaterManager.h"
 
 #include "renderer/GridProjector.h"
 
 //const u16 MAX_ENTITIES_DRAWN = 65535;
 
-GridProjector::GridProjector() : m_gridVBIndices(0), m_gridVBVertices(0), m_gridVertices(GL_STATIC_DRAW), m_gridIndices(GL_STATIC_DRAW)
+GridProjector::GridProjector() : m_gridVBIndices(0), m_gridVBVertices(0), m_gridVertices(GL_STATIC_DRAW), m_gridIndices(GL_STATIC_DRAW), m_water(FFTWaterModel())
 {
 	m_resolutionX = 128;
 	m_resolutionY = 64;
@@ -46,6 +54,7 @@ GridProjector::GridProjector() : m_gridVBIndices(0), m_gridVBVertices(0), m_grid
 	m_Mpview = CMatrix3D();
     m_Mperspective = CMatrix3D();
 	m_Mrange = CMatrix3D();
+	m_Mprojector = CMatrix3D();
 
 	m_position.type = GL_FLOAT;
 	m_position.elems = 3;
@@ -138,11 +147,41 @@ void GridProjector::SetupGrid()
 
 void GridProjector::SetupMatrices()
 {
-    m_Mperspective = g_Renderer.GetViewCamera().GetProjection();
+    //m_Mperspective = g_Renderer.GetViewCamera().GetProjection();
     
     CMatrix3D orientation = g_Renderer.GetViewCamera().GetOrientation();
-    CVector3D cPosition = CVector3D(orientation._14, orientation._24, orientation._34);
-    CVector3D direction = CVector3D(orientation._12, orientation._22, orientation._32);
+	CVector3D camPosition = orientation.GetTranslation();// (orientation._14, orientation._24, orientation._34);
+	CVector3D camDirection = orientation.GetIn();// (orientation._13, orientation._23, orientation._33);
+	CVector3D camUp = orientation.GetUp();// (orientation._12, orientation._22, orientation._32);
+
+	CVector3D projPosition = camPosition;
+	CVector3D projDirection = camDirection;
+	CVector3D projUp = camUp;
+
+	CVector3D intersection;
+
+	bool gotWater = m_water.m_base.FindRayIntersection(camPosition, camDirection, &intersection);
+
+	ssize_t mapSize = g_Game->GetWorld()->GetTerrain()->GetVerticesPerSide();
+	if (gotWater)
+	{
+		intersection.X = clamp(intersection.X, 0.f, (float)((mapSize - 1)*TERRAIN_TILE_SIZE));
+		intersection.Z = clamp(intersection.Z, 0.f, (float)((mapSize - 1)*TERRAIN_TILE_SIZE));
+	}
+
+	// Shift the projector upwards out of the displacable water volume
+	if (camPosition.Y <= intersection.Y) projPosition.Y = intersection.Y + m_water.GetMaxWaterHeight();
+
+	projDirection = intersection - projPosition;
+
+	m_camera.LookAt(projPosition, projDirection, projUp);
+
+	m_Mpview = m_camera.GetOrientation();
+	g_Renderer.GetViewCamera().GetProjection().GetInverse(m_Mperspective);
+
+	// TODO: Compute the m_Mrange matrix
+
+	m_Mprojector = m_Mrange * m_Mperspective * m_Mpview;
 }
 
 void GridProjector::Render(CShaderProgramPtr& shader)
