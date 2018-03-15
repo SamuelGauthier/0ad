@@ -12,7 +12,8 @@
     -->
 
     <vertex file="glsl/projector.vs">
-        <attrib name="vertexPosition" semantics="gl_Vertex"/>
+      <attrib name="vertexPosition" semantics="gl_Vertex"/>
+      <!-- <stream name="transform"/>-->
     </vertex>
     <fragment file="glsl/projector.fs"/>
 

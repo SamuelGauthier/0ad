@@ -39,3 +39,4 @@ Water::Water(const PhysicalWaterModel& waterModel) : m_waterModel{ waterModel } 
 Water::~Water() {}
 
 float Water::GetMaxWaterHeight() { return m_waterModel.m_maxHeight; }
+float Water::GetMinWaterHeight() { return m_waterModel.m_minHeight; }

@@ -957,7 +957,7 @@ void TerrainRenderer::RenderProjectedWater(const CShaderDefines& context, int cu
     m->projectorShader = g_Renderer.GetShaderManager().LoadProgram("glsl/projector", defines);
     
     m->projectorShader->Bind();
-    m->projectorShader->Uniform(str_transform, g_Renderer.GetViewCamera().GetViewProjection());
+   // m->projectorShader->Uniform(str_transform, g_Renderer.GetViewCamera().GetViewProjection());
      
     projectionSystem->Render(m->projectorShader);
     

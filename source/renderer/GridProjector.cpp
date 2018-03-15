@@ -33,14 +33,14 @@
 #include "renderer/Renderer.h"
 #include "renderer/VertexBuffer.h"
 #include "renderer/VertexBufferManager.h"
-//Temp to be removed later
+// TODO: Temp to be removed later
 #include "renderer/WaterManager.h"
 
 #include "renderer/GridProjector.h"
 
 //const u16 MAX_ENTITIES_DRAWN = 65535;
 
-GridProjector::GridProjector() : m_gridVBIndices(0), m_gridVBVertices(0), m_gridVertices(GL_STATIC_DRAW), m_gridIndices(GL_STATIC_DRAW), m_water(FFTWaterModel())
+GridProjector::GridProjector() : m_gridVBIndices(0), m_gridVBVertices(0), m_water(FFTWaterModel())//, m_gridVertices(GL_STATIC_DRAW), m_gridIndices(GL_STATIC_DRAW)
 {
 	m_resolutionX = 128;
 	m_resolutionY = 64;
@@ -56,12 +56,13 @@ GridProjector::GridProjector() : m_gridVBIndices(0), m_gridVBVertices(0), m_grid
 	m_Mrange = CMatrix3D();
 	m_Mprojector = CMatrix3D();
 
-	m_position.type = GL_FLOAT;
-	m_position.elems = 3;
-	m_gridVertices.AddAttribute(&m_position);
+	//m_position.type = GL_FLOAT;
+	//m_position.elems = 3;
+	//m_gridVertices.AddAttribute(&m_position);
 
     // Temporary here
     SetupGrid();
+	//SetupMatrices();
     //BuildArrays();
 
 }
@@ -145,11 +146,12 @@ void GridProjector::SetupGrid()
 
 }
 
-void GridProjector::SetupMatrices()
+void GridProjector::UpdateMatrices()
 {
     //m_Mperspective = g_Renderer.GetViewCamera().GetProjection();
     
-    CMatrix3D orientation = g_Renderer.GetViewCamera().GetOrientation();
+	CCamera camera = g_Renderer.GetViewCamera();
+    CMatrix3D orientation = camera.GetOrientation();
 	CVector3D camPosition = orientation.GetTranslation();// (orientation._14, orientation._24, orientation._34);
 	CVector3D camDirection = orientation.GetIn();// (orientation._13, orientation._23, orientation._33);
 	CVector3D camUp = orientation.GetUp();// (orientation._12, orientation._22, orientation._32);
@@ -175,26 +177,67 @@ void GridProjector::SetupMatrices()
 	projDirection = intersection - projPosition;
 
 	m_camera.LookAt(projPosition, projDirection, projUp);
+	m_camera.SetProjection(camera.GetNearPlane(), camera.GetFarPlane(), camera.GetFOV());
 
 	m_Mpview = m_camera.GetOrientation();
 	g_Renderer.GetViewCamera().GetProjection().GetInverse(m_Mperspective);
 
+	LOGWARNING("Near plane at: %f", g_Renderer.GetViewCamera().GetNearPlane());
+	LOGWARNING("Far plane at: %f", g_Renderer.GetViewCamera().GetFarPlane());
+	LOGWARNING("Projector Near plane at: %f", m_camera.GetNearPlane());
+	LOGWARNING("Projector Far plane at: %f", m_camera.GetFarPlane());
+
 	// TODO: Compute the m_Mrange matrix
+
+	//std::vector<CVector3D> cam_intersections;
+	//cam_intersections.push_back(CVector3D(1, 1, 1));
+	//cam_intersections.push_back(CVector3D(1, 1, -1));
+	//cam_intersections.push_back(CVector3D(1, -1, 1));
+	//cam_intersections.push_back(CVector3D(1, -1, -1));
+	//cam_intersections.push_back(CVector3D(-1, 1, 1));
+	//cam_intersections.push_back(CVector3D(-1, 1, -1));
+	//cam_intersections.push_back(CVector3D(-1, -1, 1));
+	//cam_intersections.push_back(CVector3D(-1, -1, -1));
+
+
+	//CMatrix3D invP; // = g_Renderer.GetViewCamera().GetProjection();
+	//g_Renderer.GetViewCamera().GetProjection().GetInverse(invP);
+	///*
+	//LOGWARNING("Inverse View Projection:\n");
+	//LOGWARNING("%f, %f, %f\n", invP._11, invP._12, invP._13);
+	//LOGWARNING("%f, %f, %f\n", invP._21, invP._22, invP._23);
+	//LOGWARNING("%f, %f, %f\n", invP._31, invP._32, invP._33);
+	//LOGWARNING("Transformed points:\n");
+	////*/
+	//CMatrix3D invPV = orientation * invP;
+
+	//LOGWARNING("Transformed points:\n");
+	//for (int i = 0; i < cam_intersections.size(); i++)
+	//{
+	//	cam_intersections[i] =  invPV.Transform(cam_intersections[i]);
+	//	LOGWARNING("%f, %f, %f\n", cam_intersections[i].X, cam_intersections[i].Y, cam_intersections[i].Z);
+	//}
+
+	m_Mrange.SetIdentity();
 
 	m_Mprojector = m_Mrange * m_Mperspective * m_Mpview;
 }
 
 void GridProjector::Render(CShaderProgramPtr& shader)
 {
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    
-
 	if (g_Renderer.m_SkipSubmit)
 		return;
+
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	//UpdateMatrices();
+	//UpdatePoints();
 
     u8* base = m_gridVBVertices->m_Owner->Bind();
     
     shader->VertexAttribPointer(str_vertexPosition, 3, GL_FLOAT, GL_FALSE, sizeof(CVector3D), base);
+
+	shader->Uniform(str_transform, m_camera.GetViewProjection());
     
     shader->AssertPointersBound();
     
@@ -203,4 +246,24 @@ void GridProjector::Render(CShaderProgramPtr& shader)
 
 	CVertexBuffer::Unbind();
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+}
+
+void GridProjector::UpdatePoints()
+{
+	CVector3D start;
+	CVector3D end;
+	CPlane water = m_water.m_base;
+
+	//cm
+	for (int i = 0; i < m_vertices.size(); i++)
+	{
+		start = end = m_vertices[i];
+		start.Z = 1.0;
+		end.Z = -1.0;
+		m_camera.GetViewProjection().Transform(start);
+		m_camera.GetViewProjection().Transform(end);
+
+
+		//m_gridVertices[i]*
+	}
 }

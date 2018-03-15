@@ -29,6 +29,7 @@ public:
 
 public:
 	float m_maxHeight;
+	float m_minHeight;
 };
 
 #endif // !INCLUDED_PHYSICALWATERMODEL

@@ -49,10 +49,10 @@ private:
 	CVertexBuffer::VBChunk* m_gridVBIndices;
 	CVertexBuffer::VBChunk* m_gridVBVertices;
 
-	VertexIndexArray m_gridIndices;
+	//VertexIndexArray m_gridIndices;
 
-	VertexArray m_gridVertices;
-	VertexArray::Attribute m_position;
+	//VertexArray m_gridVertices;
+	//VertexArray::Attribute m_position;
 
 	CMatrix3D m_Mpview;
     CMatrix3D m_Mperspective;
@@ -64,7 +64,8 @@ private:
 
 private:
     void SetupGrid();
-    void SetupMatrices();
+    void UpdateMatrices();
+	void UpdatePoints();
     
 };
 

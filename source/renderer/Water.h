@@ -33,6 +33,7 @@ public:
 	int* m_area;
 	float m_height;
 	float m_maxHeight;
+	float m_minHeight;
 	CColor m_color;
 	CColor m_tint;
 
@@ -44,6 +45,7 @@ public:
 
 	// TODO: This is not very beautiful
 	float GetMaxWaterHeight();
+	float GetMinWaterHeight();
 
 private:
 	const PhysicalWaterModel& m_waterModel;

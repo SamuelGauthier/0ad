@@ -23,6 +23,7 @@ FFTWaterModel::FFTWaterModel()
 {
 	// TODO: temporary value
 	m_maxHeight = 0.1f;
+	m_minHeight = -0.1f;
 }
 
 FFTWaterModel::~FFTWaterModel() {}
