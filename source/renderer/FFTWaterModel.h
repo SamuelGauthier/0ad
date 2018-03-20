@@ -19,9 +19,9 @@
 
 class FFTWaterModel : public PhysicalWaterModel
 {
-public:
-	float m_maxHeight;
-	float m_minHeight;
+//public:
+//	float m_maxHeight;
+//	float m_minHeight;
 
 public:
 	FFTWaterModel();

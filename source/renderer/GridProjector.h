@@ -22,8 +22,10 @@
 
 #include "maths/Matrix3D.h"
 #include "maths/Vector3D.h"
-#include "maths/Vector2D.h"
+#include "maths/Vector4D.h"
 
+
+#include "renderer/FFTWaterModel.h"
 #include "renderer/VertexArray.h"
 #include "renderer/VertexBuffer.h"
 #include "renderer/ProjectionSystem.h"
@@ -45,6 +47,7 @@ public:
 
 private:
 	double m_time;
+    FFTWaterModel m_model;
 	CCamera m_camera;
 	CVertexBuffer::VBChunk* m_gridVBIndices;
 	CVertexBuffer::VBChunk* m_gridVBVertices;
@@ -54,8 +57,8 @@ private:
 	//VertexArray m_gridVertices;
 	//VertexArray::Attribute m_position;
 
-	CMatrix3D m_Mpview;
-    CMatrix3D m_Mperspective;
+	CMatrix3D m_Mpiview;
+    CMatrix3D m_Miperspective;
 	CMatrix3D m_Mrange;
 	CMatrix3D m_Mprojector;
 
@@ -66,6 +69,7 @@ private:
     void SetupGrid();
     void UpdateMatrices();
 	void UpdatePoints();
+    void ComputeIntersection(std::vector<CVector4D>& cam_frustrum, std::vector<CVector4D>& span_buffer, CPlane& maxWater, CPlane& minWater, int start, int end);
     
 };
 

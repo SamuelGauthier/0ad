@@ -32,8 +32,8 @@ public:
 	int* m_heightfield;
 	int* m_area;
 	float m_height;
-	float m_maxHeight;
-	float m_minHeight;
+	//float m_maxHeight;
+	//float m_minHeight;
 	CColor m_color;
 	CColor m_tint;
 
