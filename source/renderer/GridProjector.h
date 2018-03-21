@@ -48,7 +48,7 @@ public:
 private:
 	double m_time;
     FFTWaterModel m_model;
-	CCamera m_camera;
+	CCamera m_PCamera;
 	CVertexBuffer::VBChunk* m_gridVBIndices;
 	CVertexBuffer::VBChunk* m_gridVBVertices;
 
@@ -67,6 +67,8 @@ private:
 
 private:
     void SetupGrid();
+	void GenerateVertices();
+	void GenerateIndices();
     void UpdateMatrices();
 	void UpdatePoints();
     void ComputeIntersection(std::vector<CVector4D>& cam_frustrum, std::vector<CVector4D>& span_buffer, CPlane& maxWater, CPlane& minWater, int start, int end);
