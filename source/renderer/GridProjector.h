@@ -21,7 +21,7 @@
 #include "graphics/ShaderProgramPtr.h"
 
 #include "maths/Matrix3D.h"
-#include "maths/Vector3D.h"
+//#include "maths/Vector3D.h"
 #include "maths/Vector4D.h"
 
 
@@ -63,7 +63,7 @@ private:
 	CMatrix3D m_Mprojector;
 
 	std::vector<GLuint> m_indices;
-	std::vector<CVector3D> m_vertices;
+	std::vector<CVector4D> m_vertices;
 
 private:
     void SetupGrid();

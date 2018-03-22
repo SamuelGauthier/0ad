@@ -24,7 +24,7 @@
 
 #include "maths/MathUtil.h"
 //#include "maths/Matrix3D.h"
-//#include "maths/Vector3D.h"
+#include "maths/Vector3D.h"
 #include "maths/Vector2D.h"
 
 #include "ps/CLogger.h"
@@ -42,6 +42,18 @@
 #include "renderer/GridProjector.h"
 
 //const u16 MAX_ENTITIES_DRAWN = 65535;
+
+#define DEBUG_UPDATE_POINTS 1
+#define DEBUG_COMPUTE_INTERSECTION 0
+#define DEBUG_UPDATE_MATRICES_CAMERA_INFOS 0
+#define DEBUG_UPDATE_MATRICES_PROJECTOR_INFOS 1
+#define DEBUG_UPDATE_MATRICES_PROJECTED_POINT 0
+#define DEBUG_UPDATE_MATRICES_SPAN_BUFFER 0
+#define DEBUG_UPDATE_MATRICES_MIN_MAX_INTER 1
+#define DEBUG_UPDATE_MATRICES_PROJECTOR 1
+#define DEBUG_RENDER_WORLD_POS 0
+#define DEBUG_COMPUTE_INTERSECTION_MINMAXINTER 1
+#define DEBUG_LEGEND 1
 
 GridProjector::GridProjector() : m_model(FFTWaterModel()), m_water(m_model), m_gridVBIndices(0), m_gridVBVertices(0)//, //m_water(FFTWaterModel())//, m_gridVertices(GL_STATIC_DRAW), m_gridIndices(GL_STATIC_DRAW)
 {
@@ -116,7 +128,7 @@ void GridProjector::SetupGrid()
 	*/
 	GenerateVertices();
     
-	m_gridVBVertices = g_VBMan.Allocate(sizeof(CVector3D), m_vertices.size(), GL_STATIC_DRAW, GL_ARRAY_BUFFER);
+	m_gridVBVertices = g_VBMan.Allocate(sizeof(CVector4D), m_vertices.size(), GL_STATIC_DRAW, GL_ARRAY_BUFFER);
 
 	if (m_gridVBVertices == NULL || m_gridVBVertices == 0)
 		LOGERROR("No storage available for water vertices!");
@@ -164,12 +176,14 @@ void GridProjector::GenerateVertices()
 {
 	m_vertices.clear();
 
-    float xRatio = 200.0 / (m_resolutionX - 1);
-    float yRatio = 200.0 / (m_resolutionY - 1);
+    float xRatio = 2.0 / (m_resolutionX - 1); // 200 for world debug size
+    float yRatio = 2.0 / (m_resolutionY - 1); // 200 for world debug size
     
 	for (uint j = 0; j < m_resolutionY; j++)
         for (uint i = 0; i <  m_resolutionX; i++)
-            m_vertices.push_back(CVector3D(i * xRatio - 1.0, 10.0, 1.0 - j * yRatio));
+            m_vertices.push_back(CVector4D(i * xRatio - 1.0, 1.0 - j * yRatio, 0.0, 1.0));
+            //m_vertices.push_back(CVector4D(i * xRatio - 1.0, 0.0, 1.0 - j * yRatio, 1.0));
+            //m_vertices.push_back(CVector4D(i * xRatio - 1.0, 10.0, 1.0 - j * yRatio, 1.0));
 }
 
 void GridProjector::GenerateIndices()
@@ -207,11 +221,11 @@ void GridProjector::UpdateMatrices()
     
     //m_Mperspective = g_Renderer.GetViewCamera().GetProjection();
     
-	CCamera camera = g_Renderer.GetViewCamera();
-    CMatrix3D orientation = camera.GetOrientation();
-	CVector3D camPosition = orientation.GetTranslation();// (orientation._14, orientation._24, orientation._34);
-	CVector3D camDirection = orientation.GetIn();// (orientation._13, orientation._23, orientation._33);
-	CVector3D camUp = orientation.GetUp();// (orientation._12, orientation._22, orientation._32);
+	CCamera g_RCamera = g_Renderer.GetViewCamera();
+    CMatrix3D invV = g_RCamera.GetOrientation();
+	CVector3D camPosition = invV.GetTranslation();// (invV._14, invV._24, invV._34);
+	CVector3D camDirection = invV.GetIn();// (invV._13, invV._23, invV._33);
+	CVector3D camUp = invV.GetUp();// (invV._12, invV._22, invV._32);
 
 	CVector3D projPosition = camPosition;
 	CVector3D projDirection = camDirection;
@@ -234,17 +248,26 @@ void GridProjector::UpdateMatrices()
 
 	projDirection = intersection - projPosition;
 
+#if DEBUG_UPDATE_MATRICES_PROJECTOR_INFOS
+	LOGWARNING("Camera position: (%f, %f, %f)", camPosition.X, camPosition.Y, camPosition.Z);
+	LOGWARNING("Projector position: (%f, %f, %f)", projPosition.X, projPosition.Y, projPosition.Z);
+#endif
+
 	m_PCamera.LookAt(projPosition, projDirection, projUp);
-	m_PCamera.SetProjection(camera.GetNearPlane(), camera.GetFarPlane(), camera.GetFOV());
+	//m_PCamera.LookAlong(projPosition, projDirection, projUp);
+	m_PCamera.SetProjection(g_RCamera.GetNearPlane(), g_RCamera.GetFarPlane(), g_RCamera.GetFOV());
 	m_PCamera.UpdateFrustum();
 
 	m_Mpiview = m_PCamera.GetOrientation();
-	g_Renderer.GetViewCamera().GetProjection().GetInverse(m_Miperspective);
+	//g_Renderer.GetViewCamera().GetProjection().GetInverse(m_Miperspective);
+	g_RCamera.GetProjection().GetInverse(m_Miperspective);
 
-	//LOGWARNING("Near plane at: %f", g_Renderer.GetViewCamera().GetNearPlane());
-	//LOGWARNING("Far plane at: %f", g_Renderer.GetViewCamera().GetFarPlane());
-	//LOGWARNING("Projector Near plane at: %f", m_camera.GetNearPlane());
-	//LOGWARNING("Projector Far plane at: %f", m_camera.GetFarPlane());
+#if DEBUG_UPDATE_MATRICES_CAMERA_INFOS
+	LOGWARNING("Near plane at: %f", g_Renderer.GetViewCamera().GetNearPlane());
+	LOGWARNING("Far plane at: %f", g_Renderer.GetViewCamera().GetFarPlane());
+	LOGWARNING("Projector Near plane at: %f", m_PCamera.GetNearPlane());
+	LOGWARNING("Projector Far plane at: %f", m_PCamera.GetFarPlane());
+#endif
 
     
 	// TODO: Compute the m_Mrange matrix
@@ -254,20 +277,21 @@ void GridProjector::UpdateMatrices()
     CPlane water = m_water.m_base;
     std::vector<CVector4D> span_buffer;
 	std::vector<CVector4D> cam_frustrum;
-	cam_frustrum.push_back(CVector4D(1, 1, 1, 1));
-	cam_frustrum.push_back(CVector4D(1, 1, -1, 1));
-	cam_frustrum.push_back(CVector4D(1, -1, 1, 1));
-	cam_frustrum.push_back(CVector4D(1, -1, -1, 1));
-	cam_frustrum.push_back(CVector4D(-1, 1, 1, 1));
-	cam_frustrum.push_back(CVector4D(-1, 1, -1, 1));
-	cam_frustrum.push_back(CVector4D(-1, -1, 1, 1));
+	cam_frustrum.push_back(CVector4D(+1, +1, +1, 1));
+	cam_frustrum.push_back(CVector4D(+1, +1, -1, 1));
+	cam_frustrum.push_back(CVector4D(+1, -1, +1, 1));
+	cam_frustrum.push_back(CVector4D(+1, -1, -1, 1));
+	cam_frustrum.push_back(CVector4D(-1, +1, +1, 1));
+	cam_frustrum.push_back(CVector4D(-1, +1, -1, 1));
+	cam_frustrum.push_back(CVector4D(-1, -1, +1, 1));
 	cam_frustrum.push_back(CVector4D(-1, -1, -1, 1));
 
 
 	CMatrix3D invP; // = g_Renderer.GetViewCamera().GetProjection();
-	g_Renderer.GetViewCamera().GetProjection().GetInverse(invP);
+	//g_Renderer.GetViewCamera().GetProjection().GetInverse(invP);
+	g_RCamera.GetProjection().GetInverse(invP);
 
-	CMatrix3D invPV = orientation * invP;
+	CMatrix3D invPV = invV * invP;
     
     float maxWaterHeight = m_water.GetMaxWaterHeight();
     float minWaterHeight = m_water.GetMinWaterHeight();
@@ -310,8 +334,6 @@ void GridProjector::UpdateMatrices()
     CVector3D direction = -water.m_Norm;
     CVector3D projection;
     CMatrix3D viewProjection = m_PCamera.GetViewProjection();
-    //CVector2D maxP = CVector2D(-FLT_MAX, -FLT_MAX);
-    //CVector2D minP = CVector2D(FLT_MAX, FLT_MAX);
     CVector2D current;
 	float x_max = span_buffer[0].X;
 	float x_min = span_buffer[0].X;
@@ -322,35 +344,45 @@ void GridProjector::UpdateMatrices()
 	{
         start = CVector3D(span_buffer[i].X, span_buffer[i].Y, span_buffer[i].Z);
         water.FindRayIntersection(start, direction, &projection);
-        //LOGWARNING("projected point: (%f, %f, %f)", projection.X, projection.Y, projection.Z);
+
+#if DEBUG_UPDATE_MATRICES_PROJECTED_POINT
+        LOGWARNING("projected point: (%f, %f, %f)", projection.X, projection.Y, projection.Z);
+#endif
         
         // Transform the points into projector space
         span_buffer[i] = viewProjection.Transform(CVector4D(projection.X, projection.Y, projection.Z, 1));
         current = CVector2D(span_buffer[i].X, span_buffer[i].Y);
+
+#if DEBUG_UPDATE_MATRICES_SPAN_BUFFER
         LOGWARNING("span buffer: (%f, %f)", span_buffer[i].X, span_buffer[i].Y);
+#endif
+
 		if (current.X > x_max) x_max = current.X;
 		if (current.X < x_min) x_min = current.X;
 		if (current.Y > y_max) y_max = current.Y;
 		if (current.Y < y_min) y_min = current.Y;
-        //if(current.X >= maxP.X && current.Y >= maxP.Y) maxP = current;
-        //if(current.X <= maxP.X && current.Y <= maxP.Y) minP = current;
     }
-	LOGWARNING("x_max: %f, x_min: %f, y_max: %f, y_min: %f", x_max, x_min, y_max, y_min);
 
-	//LOGWARNING("float max: (%f, %f)", FLT_MAX, FLT_MAX);
-	//LOGWARNING("float min: (%f, %f)", -FLT_MAX, -FLT_MAX);
-	////
-	//LOGWARNING("min: (%f, %f)", minP.X, minP.Y);
-	//LOGWARNING("max: (%f, %f)", maxP.X, maxP.Y);
+#if DEBUG_UPDATE_MATRICES_MIN_MAX_INTER
+	LOGWARNING("x_max: %f, x_min: %f, y_max: %f, y_min: %f", x_max, x_min, y_max, y_min);
+#endif
     
     // Create Mrange matrix
+    m_Mrange = CMatrix3D(x_max - x_min, 0,			   0, x_min,
+                         0,				y_max - y_min, 0, y_min,
+                         0,				0,			   1, 0,
+                         0,				0,			   0, 1);
 	//m_Mrange.SetIdentity();
-    m_Mrange = CMatrix3D(x_max - x_min, 0, 0, x_min,
-                         0, y_max - y_min, 0, y_min,
-                         0, 0, 1, 0,
-                         0, 0, 0, 1);
 
 	m_Mprojector = m_Mrange * m_Miperspective * m_Mpiview;
+
+#if DEBUG_UPDATE_MATRICES_PROJECTOR
+	LOGWARNING("m_Mprojector:");
+	LOGWARNING("%f, %f, %f, %f", m_Mprojector._11, m_Mprojector._21, m_Mprojector._31, m_Mprojector._41);
+	LOGWARNING("%f, %f, %f, %f", m_Mprojector._12, m_Mprojector._22, m_Mprojector._32, m_Mprojector._42);
+	LOGWARNING("%f, %f, %f, %f", m_Mprojector._13, m_Mprojector._23, m_Mprojector._33, m_Mprojector._43);
+	LOGWARNING("%f, %f, %f, %f", m_Mprojector._14, m_Mprojector._24, m_Mprojector._34, m_Mprojector._44);
+#endif
 }
 
 void GridProjector::ComputeIntersection(std::vector<CVector4D>& cam_frustrum, std::vector<CVector4D>& span_buffer, CPlane& maxWater, CPlane& minWater, int startIndice, int endIndice)
@@ -364,12 +396,16 @@ void GridProjector::ComputeIntersection(std::vector<CVector4D>& cam_frustrum, st
     if (maxIntersect)
     {
         span_buffer.push_back(CVector4D(intMax.X, intMax.Y, intMax.Z, 1));
-        LOGWARNING("maxInter: (%f, %f,%f)", intMax.X, intMax.Y, intMax.Z);
+#if DEBUG_COMPUTE_INTERSECTION_MINMAXINTER
+        LOGWARNING("[W] maxInter: (%f, %f, %f)", intMax.X, intMax.Y, intMax.Z);
+#endif
     }
     if (minIntersect)
     {
         span_buffer.push_back(CVector4D(intMin.X, intMin.Y, intMin.Z, 1));
-        LOGWARNING("minInter: (%f, %f,%f)", intMin.X, intMin.Y, intMin.Z);
+#if DEBUG_COMPUTE_INTERSECTION_MINMAXINTER
+        LOGWARNING("[W] minInter: (%f, %f, %f)", intMin.X, intMin.Y, intMin.Z);
+#endif
     }
 }
 
@@ -378,21 +414,26 @@ void GridProjector::Render(CShaderProgramPtr& shader)
 	if (g_Renderer.m_SkipSubmit)
 		return;
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+#if DEBUG_LEGEND
+	LOGWARNING("[S] Screen space [W] world space");
+#endif
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	UpdateMatrices();
 	UpdatePoints();
 
     u8* base = m_gridVBVertices->m_Owner->Bind();
-    
 
-     shader->VertexAttribPointer(str_vertexPosition, 3, GL_FLOAT, GL_FALSE, sizeof(CVector3D), base);
-    
+	shader->VertexAttribPointer(str_vertexPosition, 4, GL_FLOAT, GL_FALSE, sizeof(CVector4D), base);
+
+#if DEBUG_RENDER_WORLD_POS
     CVector3D worldPos = g_Renderer.GetViewCamera().GetWorldCoordinates(512, 384);
-    LOGWARNING("wPos: (%f, %f, %f)", worldPos.X, worldPos.Y, worldPos.Z);
-    //shader->Uniform(str_transform, g_Renderer.GetViewCamera().GetViewProjection());
+    LOGWARNING("[W] pos: (%f, %f, %f)", worldPos.X, worldPos.Y, worldPos.Z);
+#endif
+    shader->Uniform(str_transform, g_Renderer.GetViewCamera().GetViewProjection());
 	//
-    shader->Uniform(str_transform, m_PCamera.GetViewProjection());
+    //shader->Uniform(str_transform, m_PCamera.GetViewProjection());
 
     shader->AssertPointersBound();
     
@@ -407,8 +448,8 @@ void GridProjector::Render(CShaderProgramPtr& shader)
 void GridProjector::UpdatePoints()
 {
 	PROFILE3_GPU("update points");
-	CVector3D start;
-	CVector3D end;
+	CVector4D start;
+	CVector4D end;
 	bool doIntersect;
 	CVector3D intersection;
 	//CPlane water = m_water.m_base;
@@ -418,16 +459,51 @@ void GridProjector::UpdatePoints()
 	for (size_t i = 0; i < m_vertices.size(); i++)
 	{
 		start = end = m_vertices[i];
-		start.Z = 1.0;
+		start.Z = 1.0; // Z and Y are exchanged
 		end.Z = -1.0;
-		m_Mprojector.Transform(start);
-		m_Mprojector.Transform(end);
 
-		doIntersect = m_water.m_base.FindLineSegIntersection(start, end, &intersection);
+#if DEBUG_UPDATE_POINTS
+		if (i == 0)
+		{
+			//LOGWARNING("before transformation");
+			LOGWARNING("[S] start 0: (%f, %f, %f, %f)", start.X, start.Y, start.Z, start.W);
+			LOGWARNING("[S] end 0: (%f, %f, %f, %f)", end.X, end.Y, end.Z, end.W);
+		}
+#endif
+
+		m_Mprojector.Transform(start, start);
+		start /= start.W;
+		m_Mprojector.Transform(end, end);
+		end /= end.W;
+
+#if DEBUG_UPDATE_POINTS
+		if (i == 0)
+		{
+			//LOGWARNING("after transformation");
+			LOGWARNING("[W] start 0: (%f, %f, %f, %f)", start.X, start.Y, start.Z, start.W);
+			LOGWARNING("[W] end 0: (%f, %f, %f, %f)", end.X, end.Y, end.Z, end.W);
+		}
+#endif
+
+		doIntersect = m_water.m_base.FindLineSegIntersection(CVector3D(start.X, start.Y, start.Z), CVector3D(end.X, end.Y, end.Z), &intersection);
+#if DEBUG_UPDATE_POINTS
+		if (i == 0)
+		{
+			LOGWARNING("Does intersect: %s", doIntersect ? "true" : "false");
+		}
+#endif
 		if (doIntersect)
-			m_vertices[i] = intersection;
+		{
+#if DEBUG_UPDATE_POINTS
+			LOGWARNING("[W] intersetction 0: (%f, %f, %f)", intersection.X, intersection.Y, intersection.Z);
+#endif
+			m_vertices[i] = CVector4D(intersection.X, intersection.Y, intersection.Z, 1.0);
+		}
 		//m_gridVertices[i]*
 	}
+#if DEBUG_UPDATE_POINTS
+	LOGWARNING("[W] point 0: (%f, %f, %f, %f)", m_vertices[0].X, m_vertices[0].Y, m_vertices[0].Z, m_vertices[0].W);
+#endif
 
 	//CMatrix3D
 	/*
