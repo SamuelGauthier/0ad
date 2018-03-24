@@ -52,10 +52,6 @@ private:
 	CVertexBuffer::VBChunk* m_gridVBIndices;
 	CVertexBuffer::VBChunk* m_gridVBVertices;
 
-	//VertexIndexArray m_gridIndices;
-
-	//VertexArray m_gridVertices;
-	//VertexArray::Attribute m_position;
 
 	CMatrix3D m_Mpiview;
     CMatrix3D m_Miperspective;
