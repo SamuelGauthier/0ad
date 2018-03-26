@@ -17,6 +17,8 @@
 
 #include "precompiled.h"
 
+#include "math.h"
+
 #include "FFTWaterModel.h"
 
 FFTWaterModel::FFTWaterModel()
@@ -28,7 +30,7 @@ FFTWaterModel::FFTWaterModel()
 
 FFTWaterModel::~FFTWaterModel() {}
 
-void FFTWaterModel::Update(double time)
+void FFTWaterModel::Update(double time, CVector4D& point)
 {
-
+	point.Z += sin(5 * time + point.X + point.Y) / 5;
 }

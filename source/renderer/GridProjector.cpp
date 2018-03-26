@@ -21,6 +21,7 @@
 #include "graphics/ShaderProgram.h"
 
 #include "lib/ogl.h"
+#include "lib/timer.h"
 
 #include "maths/MathUtil.h"
 //#include "maths/Matrix3D.h"
@@ -51,9 +52,9 @@
 #define DEBUG_UPDATE_MATRICES_SPAN_BUFFER 0
 #define DEBUG_UPDATE_MATRICES_FRUSTRUM_SPAN_BUFFER 0
 #define DEBUG_UPDATE_MATRICES_MIN_MAX_INTER 0
-#define DEBUG_UPDATE_MATRICES_PROJECTOR 1
+#define DEBUG_UPDATE_MATRICES_PROJECTOR 0
 #define DEBUG_UPDATE_MATRICES_FRUSTRUM_POINTS_INFO 0
-#define DEBUG_UPDATE_MATRICES_INV_CAMERA_INFOS 1
+#define DEBUG_UPDATE_MATRICES_INV_CAMERA_INFOS 0
 #define DEBUG_UPDATE_MATRICES_WATER_PLANE_INFO 0
 #define DEBUG_RENDER_WORLD_POS 0
 #define DEBUG_COMPUTE_INTERSECTION_MINMAXINTER 0
@@ -409,15 +410,18 @@ void GridProjector::UpdateMatrices()
 	LOGWARNING("x_max: %f, x_min: %f, y_max: %f, y_min: %f", x_max, x_min, y_max, y_min);
 #endif
     
+	// Something fishy here
     // Create Mrange matrix
     m_Mrange = CMatrix3D(x_max - x_min, 0,			   0, x_min,
                          0,				y_max - y_min, 0, y_min,
                          0,				0,			   1, 0,
                          0,				0,			   0, 1);
-	//m_Mrange.SetIdentity();
+	m_Mrange.SetIdentity();
+	//m_Mrange = m_Mrange.GetTranspose();
 
 	//m_Mprojector = m_Mrange * m_Miperspective * m_Mpiview;//WRONG!!!
     m_Mprojector = m_Mrange * m_Mpiview * m_Miperspective;
+    //m_Mprojector =  m_Mpiview * m_Miperspective * m_Mrange;
     
 #if DEBUG_UPDATE_MATRICES_PROJECTOR
 	LOGWARNING("m_Mprojector:");
@@ -548,7 +552,9 @@ void GridProjector::UpdatePoints()
 #if DEBUG_UPDATE_POINTS_INTERSECT_INFO
 			LOGWARNING("[W] intersetction 0: (%f, %f, %f)", intersection.X, intersection.Y, intersection.Z);
 #endif
-			m_vertices[i] = CVector4D(intersection.X, intersection.Y, intersection.Z, 1.0);
+			transformed = CVector4D(intersection.X, intersection.Y, intersection.Z, 1.0);
+			//m_model.Update(timer_Time(), transformed);
+			m_vertices[i] = transformed;
 		}
 		//m_gridVertices[i]*
 	}
@@ -559,8 +565,8 @@ void GridProjector::UpdatePoints()
 
 	for (size_t i = 0; i < m_vertices.size(); i++)
 	{
-        //transformed = g_PV.Transform(m_vertices[i]);
-        transformed = p_IPV.Transform(m_vertices[i]);
+        transformed = g_PV.Transform(m_vertices[i]);
+        //transformed = p_IPV.Transform(m_vertices[i]);
         m_vertices[i] = transformed / transformed.W;
 	}
 

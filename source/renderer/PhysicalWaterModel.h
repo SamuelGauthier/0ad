@@ -25,7 +25,7 @@ class PhysicalWaterModel
 public:
 	virtual ~PhysicalWaterModel() {}
 
-	virtual void Update(double time) = 0;
+	virtual void Update(double time, CVector4D& point) = 0;
 
 public:
 	float m_maxHeight;
