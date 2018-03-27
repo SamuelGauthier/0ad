@@ -408,6 +408,7 @@ void GridProjector::UpdateMatrices()
 
 #if DEBUG_UPDATE_MATRICES_MIN_MAX_INTER
 	LOGWARNING("x_max: %f, x_min: %f, y_max: %f, y_min: %f", x_max, x_min, y_max, y_min);
+	LOGWARNING("x_max-x_min: %f, y_max-y_min: %f", x_max-x_min, y_max-y_min);
 #endif
     
 	// Something fishy here
@@ -416,12 +417,9 @@ void GridProjector::UpdateMatrices()
                          0,				y_max - y_min, 0, y_min,
                          0,				0,			   1, 0,
                          0,				0,			   0, 1);
-	m_Mrange.SetIdentity();
-	//m_Mrange = m_Mrange.GetTranspose();
+	//m_Mrange.SetIdentity();
 
-	//m_Mprojector = m_Mrange * m_Miperspective * m_Mpiview;//WRONG!!!
-    m_Mprojector = m_Mrange * m_Mpiview * m_Miperspective;
-    //m_Mprojector =  m_Mpiview * m_Miperspective * m_Mrange;
+    m_Mprojector = m_Mpiview * m_Miperspective * m_Mrange;
     
 #if DEBUG_UPDATE_MATRICES_PROJECTOR
 	LOGWARNING("m_Mprojector:");
@@ -553,7 +551,7 @@ void GridProjector::UpdatePoints()
 			LOGWARNING("[W] intersetction 0: (%f, %f, %f)", intersection.X, intersection.Y, intersection.Z);
 #endif
 			transformed = CVector4D(intersection.X, intersection.Y, intersection.Z, 1.0);
-			//m_model.Update(timer_Time(), transformed);
+			m_model.Update(timer_Time(), transformed);
 			m_vertices[i] = transformed;
 		}
 		//m_gridVertices[i]*

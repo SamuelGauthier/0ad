@@ -32,5 +32,5 @@ FFTWaterModel::~FFTWaterModel() {}
 
 void FFTWaterModel::Update(double time, CVector4D& point)
 {
-	point.Z += sin(5 * time + point.X + point.Y) / 5;
+	point.Z += sin(5 * time + point.X + point.Y);// / 5;
 }
