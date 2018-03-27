@@ -170,16 +170,21 @@ void GridProjector::SetupGrid()
 
 void GridProjector::GenerateVertices()
 {
-	m_vertices.clear();
+	PROFILE3_GPU("generate vertices");
+	if (m_verticesModel.size() != 0)
+	{
+		m_vertices = m_verticesModel;
+		return;
+	}
 
     float xRatio = 2.0 / (m_resolutionX - 1); // 200 for world debug size
     float yRatio = 2.0 / (m_resolutionY - 1); // 200 for world debug size
     
 	for (uint j = 0; j < m_resolutionY; j++)
         for (uint i = 0; i <  m_resolutionX; i++)
-            m_vertices.push_back(CVector4D(i * xRatio - 1.0, 1.0 - j * yRatio, 0.0, 1.0));
-            //m_vertices.push_back(CVector4D(i * xRatio - 1.0, 0.0, 1.0 - j * yRatio, 1.0));
-            //m_vertices.push_back(CVector4D(i * xRatio - 1.0, 10.0, 1.0 - j * yRatio, 1.0));
+             m_verticesModel.push_back(CVector4D(i * xRatio - 1.0, 1.0 - j * yRatio, 0.0, 1.0));
+
+	m_vertices = m_verticesModel;
 }
 
 void GridProjector::GenerateIndices()

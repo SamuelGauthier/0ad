@@ -60,6 +60,7 @@ private:
 
 	std::vector<GLuint> m_indices;
 	std::vector<CVector4D> m_vertices;
+	std::vector<CVector4D> m_verticesModel;
 
 private:
     void SetupGrid();
