@@ -26,6 +26,8 @@ FFTWaterModel::FFTWaterModel()
 	// TODO: temporary value
 	m_maxHeight = 5.0f;
 	m_minHeight = -5.0f;
+
+	// TODO: make the update useless and pass a heightmap texture to the GPU
 }
 
 FFTWaterModel::~FFTWaterModel() {}

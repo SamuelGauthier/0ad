@@ -65,7 +65,7 @@
 GridProjector::GridProjector() : m_model(FFTWaterModel()), m_water(m_model), m_gridVBIndices(0), m_gridVBVertices(0)
 {
 	m_resolutionX = 128;
-	m_resolutionY = 64;
+	m_resolutionY = 128;
 	m_totalResolution = m_resolutionX*m_resolutionY;
 
 	m_time = 0;
@@ -103,25 +103,6 @@ void GridProjector::SetupGrid()
         m_gridVBVertices = 0;
     }
 
-	/*
-	//float xRatio = 2.0 / (m_resolutionX - 1);
-	//float yRatio = 2.0 / (m_resolutionY - 1);
-    float xRatio = 200.0 / (m_resolutionX - 1);
-    float yRatio = 200.0 / (m_resolutionY - 1);
-    //printf("rH: %u, rW: %u\n", m_resolutionY, m_resolutionX);
-    //printf("hratio: %f, wratio: %f\n", yRatio, xRatio);
-    //printf("dH: %f, dW: %f\n", 2/2.0, 2/2.0);
-    
-	for (uint j = 0; j < m_resolutionY; j++)
-    {
-        for (uint i = 0; i <  m_resolutionX; i++)
-        {
-            //m_vertices.push_back(CVector3D(i * xRatio - 1.0, 1.0 - j * yRatio, 0.0));
-            m_vertices.push_back(CVector3D(i * xRatio - 1.0, 10.0, 1.0 - j * yRatio));
-            //printf("x:%f y:%f\n", i * xRatio - 1.0, 1.0 - j * yRatio);
-        }
-    }
-	*/
 	GenerateVertices();
     
 	m_gridVBVertices = g_VBMan.Allocate(sizeof(CVector4D), m_vertices.size(), GL_STATIC_DRAW, GL_ARRAY_BUFFER);
@@ -131,32 +112,8 @@ void GridProjector::SetupGrid()
     
     // fails but but not down later, why???
 	//m_gridVBVertices->m_Owner->UpdateChunkVertices(m_gridVBVertices, &m_vertices[0]);
-    /*
-	for (uint j = 0; j < (m_resolutionY - 1); j++)
-	{
-		for (uint i = 0; i < (m_resolutionX - 1); i++)
-		{
-			// *-*
-			// |/
-			// *
-			m_indices.push_back(j * m_resolutionX + i);
-			m_indices.push_back((j + 1) * m_resolutionX + i);
-			m_indices.push_back(j * m_resolutionX + (i + 1));
-            //printf("%u, %u, %u\n", j*m_resolutionX + i, (j+1)*m_resolutionX + (i), j*m_resolutionX + (i+1));
-			//   *
-			//  /|
-			// *-*
-			m_indices.push_back(j * m_resolutionX + (i + 1));
-			m_indices.push_back((j + 1) * m_resolutionX + i);
-			m_indices.push_back((j + 1) * m_resolutionX + (i + 1));
-            //printf("%u, %u, %u\n", j*m_resolutionX + (i+1), (j+1)*m_resolutionX + i, (j+1)*m_resolutionX + (i+1));
-		}
-
-	}
-	*/
 	GenerateIndices();
     
-    //printf("indices size: %lu\n", m_indices.size());
 	m_gridVBIndices = g_VBMan.Allocate(sizeof(GLuint), m_indices.size(), GL_STATIC_DRAW, GL_ELEMENT_ARRAY_BUFFER);
     
     if (m_gridVBIndices == NULL || m_gridVBIndices == 0)
@@ -484,6 +441,9 @@ void GridProjector::Render(CShaderProgramPtr& shader)
     shader->Uniform(str_transform, g_Renderer.GetViewCamera().GetViewProjection());
 	//
     //shader->Uniform(str_transform, m_PCamera.GetViewProjection());
+	shader->Uniform(str_projector, m_Mprojector);
+	shader->Uniform(str_waterNormal, m_water.m_base.m_Norm);
+	shader->Uniform(str_waterD, m_water.m_base.m_Dist);
 
     shader->AssertPointersBound();
     
@@ -512,6 +472,10 @@ void GridProjector::UpdatePoints()
 
 	GenerateVertices();
 
+	// TODO: Make the transformations on the GPU
+	//std::vector<CVector4D> start;
+	//std::vector<CVector4D> end;
+
 	for (size_t i = 0; i < m_vertices.size(); i++)
 	{
 		start = end = m_vertices[i];
@@ -528,10 +492,8 @@ void GridProjector::UpdatePoints()
 #endif
 
 		transformed = m_Mprojector.Transform(start);
-        //transformed = g_IPV.Transform(start);
 		start = transformed / transformed.W;
         transformed = m_Mprojector.Transform(end);
-        //transformed = g_IPV.Transform(end);
 		end = transformed / transformed.W;
 
 #if DEBUG_UPDATE_POINTS
@@ -559,19 +521,10 @@ void GridProjector::UpdatePoints()
 			m_model.Update(timer_Time(), transformed);
 			m_vertices[i] = transformed;
 		}
-		//m_gridVertices[i]*
 	}
 #if DEBUG_UPDATE_POINTS
 	LOGWARNING("[W] point 0: (%f, %f, %f, %f)", m_vertices[0].X, m_vertices[0].Y, m_vertices[0].Z, m_vertices[0].W);
 #endif
-
-
-	for (size_t i = 0; i < m_vertices.size(); i++)
-	{
-        transformed = g_PV.Transform(m_vertices[i]);
-        //transformed = p_IPV.Transform(m_vertices[i]);
-        m_vertices[i] = transformed / transformed.W;
-	}
 
     m_gridVBVertices->m_Owner->UpdateChunkVertices(m_gridVBVertices, &m_vertices[0]);
 }
