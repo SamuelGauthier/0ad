@@ -24,16 +24,13 @@
 #include "lib/timer.h"
 
 #include "maths/MathUtil.h"
-//#include "maths/Matrix3D.h"
 #include "maths/Vector3D.h"
 #include "maths/Vector2D.h"
 
 #include "ps/CLogger.h"
 #include "ps/Game.h"
 #include "ps/World.h"
-//#include "ps/Profile.h"
 
-//#include "renderer/FFTWaterModel.h"
 #include "renderer/Renderer.h"
 #include "renderer/VertexBuffer.h"
 #include "renderer/VertexBufferManager.h"
@@ -41,9 +38,6 @@
 #include "renderer/WaterManager.h"
 
 #include "renderer/GridProjector.h"
-
-//const u16 MAX_ENTITIES_DRAWN = 65535;
-
 
 #define DEBUG_COMPUTE_INTERSECTION 0
 #define DEBUG_UPDATE_MATRICES_CAMERA_INFOS 0
@@ -68,14 +62,12 @@ GridProjector::GridProjector() : m_model(FFTWaterModel()), m_water(m_model), m_g
 	m_resolutionY = 128;
 	m_totalResolution = m_resolutionX*m_resolutionY;
 
-	m_time = 0;
 	m_PCamera = CCamera();
 
 	m_Mpiview = CMatrix3D();
     m_Miperspective = CMatrix3D();
 	m_Mrange = CMatrix3D();
 	m_Mprojector = CMatrix3D();
-
 
     // Temporary here
     SetupGrid();
@@ -110,8 +102,6 @@ void GridProjector::SetupGrid()
 	if (m_gridVBVertices == NULL || m_gridVBVertices == 0)
 		LOGERROR("No storage available for water vertices!");
     
-    // fails but but not down later, why???
-	//m_gridVBVertices->m_Owner->UpdateChunkVertices(m_gridVBVertices, &m_vertices[0]);
 	GenerateIndices();
     
 	m_gridVBIndices = g_VBMan.Allocate(sizeof(GLuint), m_indices.size(), GL_STATIC_DRAW, GL_ELEMENT_ARRAY_BUFFER);
@@ -211,14 +201,12 @@ void GridProjector::UpdateMatrices()
 	LOGWARNING("Projector position: (%f, %f, %f)", projPosition.X, projPosition.Y, projPosition.Z);
 #endif
 
-	// WRONG!!! m_PCamera.LookAt(projPosition, projDirection, projUp);
 	m_PCamera.LookAlong(projPosition, projDirection, projUp);
 	m_PCamera.SetProjection(g_RCamera.GetNearPlane(), g_RCamera.GetFarPlane(), g_RCamera.GetFOV());
 	m_PCamera.UpdateFrustum();
 
 	m_Mpiview = m_PCamera.GetOrientation();
     
-	//g_Renderer.GetViewCamera().GetProjection().GetInverse(m_Miperspective);
 	g_RCamera.GetProjection().GetInverse(m_Miperspective);
 
 #if DEBUG_UPDATE_MATRICES_CAMERA_INFOS
@@ -339,10 +327,10 @@ void GridProjector::UpdateMatrices()
     CMatrix3D viewProjection = m_PCamera.GetViewProjection();
     CVector4D transformed;
     CVector2D current;
-    float x_max = -FLT_MAX;//span_buffer[0].X;
-	float x_min = +FLT_MAX;//span_buffer[0].X;
-	float y_max = -FLT_MAX;//span_buffer[0].Y;
-	float y_min = +FLT_MAX;//span_buffer[0].Y;
+    float x_max = -FLT_MAX;
+	float x_min = +FLT_MAX;
+	float y_max = -FLT_MAX;
+	float y_min = +FLT_MAX;
     
     for (size_t i = 0; i < span_buffer.size(); i++)
 	{
@@ -428,7 +416,7 @@ void GridProjector::Render(CShaderProgramPtr& shader)
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	UpdateMatrices();
-	UpdatePoints();
+	//UpdatePoints();
 
     u8* base = m_gridVBVertices->m_Owner->Bind();
 
@@ -439,8 +427,6 @@ void GridProjector::Render(CShaderProgramPtr& shader)
     LOGWARNING("[W] pos: (%f, %f, %f)", worldPos.X, worldPos.Y, worldPos.Z);
 #endif
     shader->Uniform(str_transform, g_Renderer.GetViewCamera().GetViewProjection());
-	//
-    //shader->Uniform(str_transform, m_PCamera.GetViewProjection());
 	shader->Uniform(str_projector, m_Mprojector);
 	shader->Uniform(str_waterNormal, m_water.m_base.m_Norm);
 	shader->Uniform(str_waterD, m_water.m_base.m_Dist);
@@ -471,10 +457,6 @@ void GridProjector::UpdatePoints()
     m_Mprojector.GetInverse(p_IPV);
 
 	GenerateVertices();
-
-	// TODO: Make the transformations on the GPU
-	//std::vector<CVector4D> start;
-	//std::vector<CVector4D> end;
 
 	for (size_t i = 0; i < m_vertices.size(); i++)
 	{

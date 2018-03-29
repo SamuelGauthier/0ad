@@ -21,9 +21,7 @@
 #include "graphics/ShaderProgramPtr.h"
 
 #include "maths/Matrix3D.h"
-//#include "maths/Vector3D.h"
 #include "maths/Vector4D.h"
-
 
 #include "renderer/FFTWaterModel.h"
 #include "renderer/VertexArray.h"
@@ -46,7 +44,6 @@ public:
 	void Render(CShaderProgramPtr& shader) override;
 
 private:
-	double m_time;
     FFTWaterModel m_model;
 	CCamera m_PCamera;
 	CVertexBuffer::VBChunk* m_gridVBIndices;
