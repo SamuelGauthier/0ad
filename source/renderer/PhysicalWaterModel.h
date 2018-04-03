@@ -27,9 +27,15 @@ public:
 
 	virtual void Update(double time, CVector4D& point) = 0;
 
-public:
+	//const float& GetMaxHeight() { return m_maxHeight; } const
+	//const float& GetMinHeight() { return m_minHeight; } const
+	//// gets tricky here
+	//void SetMaxHeight(float maxHeight) { m_minHeight = maxHeight; }
+	//void SetMinHeight(float minHeight) { m_minHeight = minHeight; }
+
 	float m_maxHeight;
 	float m_minHeight;
+//private:
 };
 
 #endif // !INCLUDED_PHYSICALWATERMODEL

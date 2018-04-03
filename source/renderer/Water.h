@@ -27,6 +27,17 @@
 class Water
 {
 public:
+	Water(const PhysicalWaterModel& model);
+	~Water();
+
+	// TODO: This is not very beautiful
+	float GetMaxWaterHeight() { return m_waterModel.m_maxHeight; }
+	float GetMinWaterHeight() { return m_waterModel.m_minHeight; }
+
+	//CPlane GetBasePlane() { return m_base; }
+	CPlane m_base;
+
+private:
 	//CTexture m_heightfield;
 	//CTexture m_area;
 	int* m_heightfield;
@@ -37,17 +48,7 @@ public:
 	CColor m_color;
 	CColor m_tint;
 
-	CPlane m_base;
-    
-public:
-	Water(const PhysicalWaterModel& model);
-	~Water();
 
-	// TODO: This is not very beautiful
-	float GetMaxWaterHeight();
-	float GetMinWaterHeight();
-
-private:
 	const PhysicalWaterModel& m_waterModel;
 };
 

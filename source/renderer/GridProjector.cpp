@@ -165,7 +165,9 @@ void GridProjector::UpdateMatrices()
 {
 	PROFILE3_GPU("update matrices");
     // TODO: Temporary here, don't know where to put else for know
+	//CPlane water = m_water.GetBasePlane();
     m_water.m_base.Set(CVector3D(0.f, 1.f, 0.f), CVector3D(0.f, g_Renderer.GetWaterManager()->m_WaterHeight, 0.f));
+    //water.Set(CVector3D(0.f, 1.f, 0.f), CVector3D(0.f, g_Renderer.GetWaterManager()->m_WaterHeight, 0.f));
     
     //m_Mperspective = g_Renderer.GetViewCamera().GetProjection();
     
@@ -182,6 +184,7 @@ void GridProjector::UpdateMatrices()
 	CVector3D intersection;
 
 	bool gotWater = m_water.m_base.FindRayIntersection(camPosition, camDirection, &intersection);
+	//bool gotWater = water.FindRayIntersection(camPosition, camDirection, &intersection);
 
 	ssize_t mapSize = g_Game->GetWorld()->GetTerrain()->GetVerticesPerSide();
 	if (gotWater)
@@ -231,7 +234,7 @@ void GridProjector::UpdateMatrices()
     // Compute Mrange conversion matrix
     // Project frustrum corner points into world coordinates
     
-    CPlane water = m_water.m_base;
+	CPlane water = m_water.m_base;
     std::vector<CVector4D> span_buffer;
 	std::vector<CVector4D> cam_frustrum;
 	cam_frustrum.push_back(CVector4D(+1, +1, +1, 1));
@@ -430,6 +433,8 @@ void GridProjector::Render(CShaderProgramPtr& shader)
 	shader->Uniform(str_projector, m_Mprojector);
 	shader->Uniform(str_waterNormal, m_water.m_base.m_Norm);
 	shader->Uniform(str_waterD, m_water.m_base.m_Dist);
+	//shader->Uniform(str_waterNormal, m_water.GetBasePlane().m_Norm);
+	//shader->Uniform(str_waterD, m_water.GetBasePlane().m_Dist);
 
     shader->AssertPointersBound();
     
@@ -488,6 +493,7 @@ void GridProjector::UpdatePoints()
 #endif
 
 		doIntersect = m_water.m_base.FindLineSegIntersection(CVector3D(start.X, start.Y, start.Z), CVector3D(end.X, end.Y, end.Z), &intersection);
+		//doIntersect = m_water.GetBasePlane().FindLineSegIntersection(CVector3D(start.X, start.Y, start.Z), CVector3D(end.X, end.Y, end.Z), &intersection);
 #if DEBUG_UPDATE_POINTS
 		if (i == 0)
 		{

@@ -467,7 +467,7 @@ protected:
 	// per-frame renderer stats
 	Stats m_Stats;
 
-	GridProjector* m_GridProjector;
+	//GridProjector* m_GridProjector;
 
 	/**
 	 * m_WaterManager: the WaterManager object used for water textures and settings

@@ -32,23 +32,27 @@
 class GridProjector : public ProjectionSystem
 {
 public:
-	uint m_resolutionX;
-	uint m_resolutionY;
-	u32 m_totalResolution;
-	Water m_water;
-
-public:
 	GridProjector();
 	~GridProjector();
 
 	void Render(CShaderProgramPtr& shader) override;
 
 private:
+    void SetupGrid();
+	void GenerateVertices();
+	void GenerateIndices();
+    void UpdateMatrices();
+	void UpdatePoints();
+    void ComputeIntersection(std::vector<CVector4D>& cam_frustrum, std::vector<CVector4D>& span_buffer, CPlane& maxWater, CPlane& minWater, int start, int end);
+
+	uint m_resolutionX;
+	uint m_resolutionY;
+	u32 m_totalResolution;
+	Water m_water;
     FFTWaterModel m_model;
 	CCamera m_PCamera;
 	CVertexBuffer::VBChunk* m_gridVBIndices;
 	CVertexBuffer::VBChunk* m_gridVBVertices;
-
 
 	CMatrix3D m_Mpiview;
     CMatrix3D m_Miperspective;
@@ -59,13 +63,6 @@ private:
 	std::vector<CVector4D> m_vertices;
 	std::vector<CVector4D> m_verticesModel;
 
-private:
-    void SetupGrid();
-	void GenerateVertices();
-	void GenerateIndices();
-    void UpdateMatrices();
-	void UpdatePoints();
-    void ComputeIntersection(std::vector<CVector4D>& cam_frustrum, std::vector<CVector4D>& span_buffer, CPlane& maxWater, CPlane& minWater, int start, int end);
     
 };
 
