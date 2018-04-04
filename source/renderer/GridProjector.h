@@ -45,6 +45,7 @@ private:
 	void UpdatePoints();
     void ComputeIntersection(std::vector<CVector4D>& cam_frustrum, std::vector<CVector4D>& span_buffer, CPlane& maxWater, CPlane& minWater, int start, int end);
 
+	float m_time;
 	uint m_resolutionX;
 	uint m_resolutionY;
 	u32 m_totalResolution;

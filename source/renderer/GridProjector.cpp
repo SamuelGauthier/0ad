@@ -58,8 +58,9 @@
 
 GridProjector::GridProjector() : m_model(FFTWaterModel()), m_water(m_model), m_gridVBIndices(0), m_gridVBVertices(0)
 {
+	m_time = 0.0;
 	m_resolutionX = 128;
-	m_resolutionY = 128;
+	m_resolutionY = 256;
 	m_totalResolution = m_resolutionX*m_resolutionY;
 
 	m_PCamera = CCamera();
@@ -418,6 +419,7 @@ void GridProjector::Render(CShaderProgramPtr& shader)
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
+	m_time = (float)timer_Time();
 	UpdateMatrices();
 	//UpdatePoints();
 
@@ -433,7 +435,7 @@ void GridProjector::Render(CShaderProgramPtr& shader)
 	shader->Uniform(str_projector, m_Mprojector);
 	shader->Uniform(str_waterNormal, m_water.m_base.m_Norm);
 	shader->Uniform(str_waterD, m_water.m_base.m_Dist);
-    shader->Uniform(str_time, (float)timer_Time());
+    shader->Uniform(str_time, m_time);
 	//shader->Uniform(str_waterNormal, m_water.GetBasePlane().m_Norm);
 	//shader->Uniform(str_waterD, m_water.GetBasePlane().m_Dist);
 
