@@ -433,6 +433,7 @@ void GridProjector::Render(CShaderProgramPtr& shader)
 	shader->Uniform(str_projector, m_Mprojector);
 	shader->Uniform(str_waterNormal, m_water.m_base.m_Norm);
 	shader->Uniform(str_waterD, m_water.m_base.m_Dist);
+    shader->Uniform(str_time, (float)timer_Time());
 	//shader->Uniform(str_waterNormal, m_water.GetBasePlane().m_Norm);
 	//shader->Uniform(str_waterD, m_water.GetBasePlane().m_Dist);
 

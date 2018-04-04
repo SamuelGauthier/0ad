@@ -6,6 +6,7 @@ uniform mat4 transform;
 uniform mat4 projector;
 uniform vec3 waterNormal;
 uniform float waterD;
+uniform float time;
 
 
 vec4 FindLineSegIntersection(vec4 start, vec4 end);
@@ -25,6 +26,7 @@ void main()
 	end /= end.w;
 
 	vec4 intersection = FindLineSegIntersection(start, end);
+    //intersection.y += sin(5 * time + intersection.x + intersection.z);
 
 	//vec4 l = transform * vertexPosition;
 	//gl_Position = vec4(vertexPosition, 1);
