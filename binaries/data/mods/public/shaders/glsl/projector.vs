@@ -4,9 +4,12 @@ attribute vec4 vertexPosition;
 
 uniform mat4 transform;
 uniform mat4 projector;
+uniform mat4 losMatrix;
 uniform vec3 waterNormal;
 uniform float waterD;
 uniform float time;
+
+varying vec2 losCoords;
 
 
 vec4 FindLineSegIntersection(vec4 start, vec4 end);
@@ -27,6 +30,8 @@ void main()
 
 	vec4 intersection = FindLineSegIntersection(start, end);
     intersection.y += sin(5 * time + intersection.x + intersection.z);
+
+	losCoords = (losMatrix * intersection).rg;
 
 	//vec4 l = transform * vertexPosition;
 	//gl_Position = vec4(vertexPosition, 1);

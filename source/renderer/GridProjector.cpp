@@ -16,6 +16,7 @@
 
 #include "precompiled.h"
 
+#include "graphics/LOSTexture.h"
 #include "graphics/Terrain.h"
 #include "graphics/ShaderManager.h"
 #include "graphics/ShaderProgram.h"
@@ -436,6 +437,10 @@ void GridProjector::Render(CShaderProgramPtr& shader)
 	shader->Uniform(str_waterNormal, m_water.m_base.m_Norm);
 	shader->Uniform(str_waterD, m_water.m_base.m_Dist);
     shader->Uniform(str_time, m_time);
+
+	CLOSTexture& losTexture = g_Renderer.GetScene().GetLOSTexture();
+	shader->BindTexture(str_losMap, losTexture.GetTextureSmooth());
+	shader->Uniform(str_losMatrix, losTexture.GetTextureMatrix());
 	//shader->Uniform(str_waterNormal, m_water.GetBasePlane().m_Norm);
 	//shader->Uniform(str_waterD, m_water.GetBasePlane().m_Dist);
 
