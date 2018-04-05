@@ -58,6 +58,7 @@
 
 GridProjector::GridProjector() : m_model(FFTWaterModel()), m_water(m_model), m_gridVBIndices(0), m_gridVBVertices(0)
 {
+	m_isInitialized = false;
 	m_time = 0.0;
 	m_resolutionX = 128;
 	m_resolutionY = 256;
@@ -70,8 +71,6 @@ GridProjector::GridProjector() : m_model(FFTWaterModel()), m_water(m_model), m_g
 	m_Mrange = CMatrix3D();
 	m_Mprojector = CMatrix3D();
 
-    // Temporary here
-    SetupGrid();
 }
 
 GridProjector::~GridProjector()
@@ -79,11 +78,9 @@ GridProjector::~GridProjector()
 	if (m_gridVBIndices) g_VBMan.Release(m_gridVBIndices);
 	if (m_gridVBVertices) g_VBMan.Release(m_gridVBVertices);
 
-	//m_Grid_indices.FreeBackingStore();
-	//m_Grid_vertices.FreeBackingStore();
 }
 
-void GridProjector::SetupGrid()
+void GridProjector::Initialize()
 {
     if(m_gridVBIndices)
     {
@@ -114,6 +111,7 @@ void GridProjector::SetupGrid()
     
     m_gridVBIndices->m_Owner->UpdateChunkVertices(m_gridVBIndices, &m_indices[0]);
 
+	m_isInitialized = true;
 }
 
 void GridProjector::GenerateVertices()
@@ -412,6 +410,8 @@ void GridProjector::Render(CShaderProgramPtr& shader)
 {
 	if (g_Renderer.m_SkipSubmit)
 		return;
+
+	//if (!m_isInitialized && CRenderer::IsInitialised()) SetupGrid();
 
 #if DEBUG_LEGEND
 	LOGWARNING("[S] Screen space [W] world space");

@@ -101,6 +101,8 @@ public:
 		{
 			g_Renderer.GetWaterManager()->RecomputeWaterData();
 			g_Renderer.GetWaterManager()->m_WaterHeight = m_WaterHeight.ToFloat();
+
+			g_Renderer.GetProjectionSystem()->Initialize();
 		}
 
 		// Tell the terrain it'll need to recompute its cached render data

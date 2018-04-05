@@ -27,6 +27,8 @@ public:
 	virtual ~ProjectionSystem() {}
 
 	virtual void Render(CShaderProgramPtr& shader) = 0;
+	
+	virtual void Initialize() = 0;
 };
 
 #endif // !INCLUDED_PROJECTIONSYSTEM

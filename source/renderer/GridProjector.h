@@ -37,14 +37,17 @@ public:
 
 	void Render(CShaderProgramPtr& shader) override;
 
+	void Initialize() override;
+
 private:
-    void SetupGrid();
+    //void SetupGrid();
 	void GenerateVertices();
 	void GenerateIndices();
     void UpdateMatrices();
 	void UpdatePoints();
     void ComputeIntersection(std::vector<CVector4D>& cam_frustrum, std::vector<CVector4D>& span_buffer, CPlane& maxWater, CPlane& minWater, int start, int end);
 
+	bool m_isInitialized;
 	float m_time;
 	uint m_resolutionX;
 	uint m_resolutionY;
