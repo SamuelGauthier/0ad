@@ -9,6 +9,8 @@ uniform vec3 waterNormal;
 uniform float waterD;
 uniform float time;
 
+uniform sampler2D height;
+
 varying vec2 losCoords;
 
 
@@ -29,7 +31,16 @@ void main()
 	end /= end.w;
 
 	vec4 intersection = FindLineSegIntersection(start, end);
-    intersection.y += sin(5 * time + intersection.x + intersection.z);
+	vec3 img_height = texture2D(height, intersection.xz + vec2(0.1, 0.1) * time).rgb;
+	float d_h = dot(img_height, vec3(0.299, 0.587, 0.114));
+	//float d_h = texture2D(height, intersection.xz + vec2(0.1, 0.1) * time).r;
+	//float d_x = texture2D(height, intersection.xz + vec2(0.1, 0.1) * time).g;
+	//float d_y = texture2D(height, intersection.xz + vec2(0.1, 0.1) * time).b;
+    //intersection.y += sin(5 * time + intersection.x + intersection.z);
+	//intersection.x += d_x;
+    //intersection.y += d_h;
+	//intersection.z += d_z;
+	intersection.y += d_h;
 
 	losCoords = (losMatrix * intersection).rg;
 

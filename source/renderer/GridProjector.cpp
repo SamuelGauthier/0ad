@@ -61,7 +61,7 @@ GridProjector::GridProjector() : m_model(FFTWaterModel()), m_water(m_model), m_g
 {
 	m_isInitialized = false;
 	m_time = 0.0;
-	m_resolutionX = 128;
+	m_resolutionX = 256;
 	m_resolutionY = 256;
 	m_totalResolution = m_resolutionX*m_resolutionY;
 
@@ -111,6 +111,9 @@ void GridProjector::Initialize()
     m_gridVBVertices->m_Owner->UpdateChunkVertices(m_gridVBVertices, &m_vertices[0]);
     
     m_gridVBIndices->m_Owner->UpdateChunkVertices(m_gridVBIndices, &m_indices[0]);
+
+	// TODO: Temporary here
+	m_water.GetPhysicalWaterModel().GenerateHeightMaps();
 
 	m_isInitialized = true;
 }
@@ -437,7 +440,7 @@ void GridProjector::Render(CShaderProgramPtr& shader)
 	shader->Uniform(str_waterNormal, m_water.m_base.m_Norm);
 	shader->Uniform(str_waterD, m_water.m_base.m_Dist);
     shader->Uniform(str_time, m_time);
-	shader->BindTexture(str_height, m_water.GetPhysicalWaterModel().GetHeightMapAtLevel(1));
+	shader->BindTexture(str_height, m_water.GetPhysicalWaterModel().GetHeightMapAtLevel(0));
 
 	CLOSTexture& losTexture = g_Renderer.GetScene().GetLOSTexture();
 	shader->BindTexture(str_losMap, losTexture.GetTextureSmooth());

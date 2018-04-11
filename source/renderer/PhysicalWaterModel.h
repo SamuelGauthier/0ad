@@ -19,6 +19,7 @@
 #define INCLUDED_PHYSICALWATERMODEL
 
 #include "lib/res/handle.h"
+#include "graphics/TextureManager.h"
 
 class PhysicalWaterModel
 {
@@ -27,7 +28,7 @@ public:
 
 	virtual void Update(double time, CVector4D& point) = 0;
 	virtual Handle GetHeightMapAtTime(double time) = 0;
-	virtual Handle GetHeightMapAtLevel(int level) = 0;
+	virtual CTexturePtr GetHeightMapAtLevel(int level) = 0;
 	virtual void GenerateHeightMaps() = 0;
 
 	float GetMaxHeight() { return m_maxHeight; }

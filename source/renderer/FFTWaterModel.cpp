@@ -19,6 +19,8 @@
 
 #include "math.h"
 
+#include "renderer/Renderer.h"
+
 #include "FFTWaterModel.h"
 
 FFTWaterModel::FFTWaterModel()
@@ -46,14 +48,19 @@ Handle FFTWaterModel::GetHeightMapAtTime(double time)
 	return NULL;
 }
 
-Handle FFTWaterModel::GetHeightMapAtLevel(int level)
+CTexturePtr FFTWaterModel::GetHeightMapAtLevel(int level)
 {
 	// TODO: for the moment like this
-	return m_HeightMaps[level % ARRAY_SIZE(m_HeightMaps)];
+	//return m_HeightMaps[level % ARRAY_SIZE(m_HeightMaps)];
+	return m_HeightMaps[level];
 }
 
 void FFTWaterModel::GenerateHeightMaps()
 {
-
+		CTextureProperties textureProps(L"art/textures/terrain/types/water/heightmap1_0.png");
+		textureProps.SetWrap(GL_REPEAT);
+		CTexturePtr texture = g_Renderer.GetTextureManager().CreateTexture(textureProps);
+		texture->Prefetch();
+		m_HeightMaps[0] = texture;
 }
 
