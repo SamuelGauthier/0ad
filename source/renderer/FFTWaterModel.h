@@ -24,5 +24,13 @@ class FFTWaterModel : public PhysicalWaterModel
 public:
 	FFTWaterModel();
 	~FFTWaterModel();
+
 	void Update(double time, CVector4D& point);
+	Handle GetHeightMapAtTime(double time);
+	Handle GetHeightMapAtLevel(int level);
+	void GenerateHeightMaps();
+
+private:
+	Handle m_HeightMaps[60];
+
 };

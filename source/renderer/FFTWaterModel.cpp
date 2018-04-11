@@ -24,8 +24,10 @@
 FFTWaterModel::FFTWaterModel()
 {
 	// TODO: temporary value
-	m_maxHeight = 5.0f;
-	m_minHeight = -5.0f;
+	SetMaxHeight(5.0f);
+	SetMinHeight(-5.0f);
+	//m_maxHeight = 5.0f;
+	//m_minHeight = -5.0f;
 	//SetMaxHeight(5.0f);
 	//SetMinHeight(-5.0f);
 
@@ -38,3 +40,20 @@ void FFTWaterModel::Update(double time, CVector4D& point)
 {
 	point.Z += sin(5 * time + point.X + point.Y);// / 5;
 }
+
+Handle FFTWaterModel::GetHeightMapAtTime(double time)
+{
+	return NULL;
+}
+
+Handle FFTWaterModel::GetHeightMapAtLevel(int level)
+{
+	// TODO: for the moment like this
+	return m_HeightMaps[level % ARRAY_SIZE(m_HeightMaps)];
+}
+
+void FFTWaterModel::GenerateHeightMaps()
+{
+
+}
+

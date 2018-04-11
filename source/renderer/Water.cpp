@@ -22,7 +22,7 @@
 #include "renderer/Water.h"
 #include "renderer/WaterManager.h"
 
-Water::Water(const PhysicalWaterModel& waterModel) : m_waterModel{ waterModel } {
+Water::Water(PhysicalWaterModel& waterModel) : m_waterModel{ waterModel } {
 	m_heightfield = 0;
 	m_area = 0;
 	// Temporary

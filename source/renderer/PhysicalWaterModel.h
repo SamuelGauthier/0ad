@@ -18,7 +18,7 @@
 #ifndef INCLUDED_PHYSICALWATERMODEL
 #define INCLUDED_PHYSICALWATERMODEL
 
-
+#include "lib/res/handle.h"
 
 class PhysicalWaterModel
 {
@@ -26,16 +26,18 @@ public:
 	virtual ~PhysicalWaterModel() {}
 
 	virtual void Update(double time, CVector4D& point) = 0;
+	virtual Handle GetHeightMapAtTime(double time) = 0;
+	virtual Handle GetHeightMapAtLevel(int level) = 0;
+	virtual void GenerateHeightMaps() = 0;
 
-	//const float& GetMaxHeight() { return m_maxHeight; } const
-	//const float& GetMinHeight() { return m_minHeight; } const
-	//// gets tricky here
-	//void SetMaxHeight(float maxHeight) { m_minHeight = maxHeight; }
-	//void SetMinHeight(float minHeight) { m_minHeight = minHeight; }
+	float GetMaxHeight() { return m_maxHeight; }
+	float GetMinHeight() { return m_minHeight; }
+	void SetMaxHeight(float maxHeight) { m_minHeight = maxHeight; }
+	void SetMinHeight(float minHeight) { m_minHeight = minHeight; }
 
+private:
 	float m_maxHeight;
 	float m_minHeight;
-//private:
 };
 
 #endif // !INCLUDED_PHYSICALWATERMODEL
