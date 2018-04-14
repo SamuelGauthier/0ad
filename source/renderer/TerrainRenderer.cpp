@@ -953,6 +953,11 @@ void TerrainRenderer::RenderProjectedWater(const CShaderDefines& context, int cu
     if(g_Renderer.m_WaterRenderMode == WIREFRAME)
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //glEnable(GL_DEPTH_TEST);
+    //glDepthFunc(GL_LEQUAL);
+    
     ProjectionSystem* projectionSystem= g_Renderer.GetProjectionSystem();
 	CShaderDefines defines = context;
     
@@ -968,6 +973,9 @@ void TerrainRenderer::RenderProjectedWater(const CShaderDefines& context, int cu
     m->projectorShader->Unbind();
     
     g_Renderer.m_Stats.m_DrawCalls++;
+    
+    //glDisable(GL_DEPTH_TEST);
+    glDisable(GL_BLEND);
     
     if(g_Renderer.m_WaterRenderMode == WIREFRAME)
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
