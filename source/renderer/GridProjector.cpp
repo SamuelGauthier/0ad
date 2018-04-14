@@ -421,7 +421,7 @@ void GridProjector::Render(CShaderProgramPtr& shader)
 	LOGWARNING("[S] Screen space [W] world space");
 #endif
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
 
 	m_time = (float)timer_Time();
 	UpdateMatrices();
@@ -454,7 +454,7 @@ void GridProjector::Render(CShaderProgramPtr& shader)
     glDrawElements(GL_TRIANGLES, (GLsizei) m_gridVBIndices->m_Count, GL_UNSIGNED_INT, indexBase);
     
 	CVertexBuffer::Unbind();
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 }
 
