@@ -57,10 +57,16 @@ CTexturePtr FFTWaterModel::GetHeightMapAtLevel(int level)
 
 void FFTWaterModel::GenerateHeightMaps()
 {
-		CTextureProperties textureProps(L"art/textures/terrain/types/water/heightmap1_0.png");
-		textureProps.SetWrap(GL_REPEAT);
-		CTexturePtr texture = g_Renderer.GetTextureManager().CreateTexture(textureProps);
-		texture->Prefetch();
-		m_HeightMaps[0] = texture;
+    wchar_t pathname[PATH_MAX];
+    
+    for (int i = 0; i < 3; i++) {
+        swprintf_s(pathname, ARRAY_SIZE(pathname), L"art/textures/terrain/types/water/heightmap%1d.png", i+1);
+        CTextureProperties textureProps(pathname);
+        textureProps.SetWrap(GL_REPEAT);
+        CTexturePtr texture = g_Renderer.GetTextureManager().CreateTexture(textureProps);
+        texture->Prefetch();
+        m_HeightMaps[i] = texture;
+    }
+
 }
 
