@@ -21,7 +21,11 @@ void main()
 	vec4 color = vec4(1, 1, 1, 1);
     //vec4 color = texture2D(height, 0.01 * waterCoords.xz);
     //vec4 color = deepColor;
-    //vec4 color = mix(shallowColor, deepColor, waterHeight);
+    float alpha = mix(1.0, 0.0, waterHeight + 0.5);
+    color = mix(shallowColor, deepColor, waterHeight + 0.5);
+    color.a = alpha;
+    //float dh = waterHeight + 0.5;
+    //color = vec4(dh, dh, dh, 1);
     //vec4 test = normalize(waterCoords);
     //vec4 color = vec4(waterHeight, 0, 0, 1);
 	gl_FragColor = color * losMod;
