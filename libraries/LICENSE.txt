@@ -29,6 +29,9 @@ win32/ contains headers and precompiled static libs for Windows builds.
   win32/enet
     MIT
 
+  win32/fftw
+    GPL v3
+
   win32/gloox
     GPL v3
 

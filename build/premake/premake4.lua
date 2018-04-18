@@ -720,6 +720,7 @@ function setup_all_libs ()
 		"tinygettext",
 		"icu",
 		"iconv",
+		"fftw",
 	}
 
 	if not _OPTIONS["without-audio"] then
@@ -741,7 +742,8 @@ function setup_all_libs ()
 		"opengl",
 		"sdl",	-- key definitions
 		"spidermonkey",	-- for graphics/scripting
-		"boost"
+		"boost",
+		"fftw",
 	}
 	if not _OPTIONS["without-nvtt"] then
 		table.insert(extern_libs, "nvtt")
@@ -904,6 +906,7 @@ used_extern_libs = {
 	"tinygettext",
 	"icu",
 	"iconv",
+	"fftw",
 
 	"valgrind",
 }

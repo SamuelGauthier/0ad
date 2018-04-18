@@ -253,6 +253,24 @@ extern_lib_defs = {
 			end
 		end,
 	},
+	fftw = {
+		compile_settings = function()
+			if os.istarget("windows") then
+				add_default_include_paths("fftw")
+				-- add_source_include_paths("fftw")
+			end
+		end,
+		link_settings = function()
+			if os.istarget("windows") then
+				add_default_lib_paths("fftw")
+			end
+			add_default_links({
+				win_names  = { "libfftw3-3", "libfftw3f-3", "libfftw3l-3" },
+				unix_names = { "fftw3" },
+				dbg_suffix = "",
+			})
+		end,
+	},
 	gloox = {
 		compile_settings = function()
 			if os.istarget("windows") then
