@@ -15,6 +15,9 @@
  * along with 0 A.D.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <complex>
+
+#include "maths/Vector2D.h"
 #include "maths/Vector4D.h"
 
 #include "graphics/TextureManager.h"
@@ -31,8 +34,20 @@ public:
 	Handle GetHeightMapAtTime(double time);
 	CTexturePtr GetHeightMapAtLevel(int level);
 	void GenerateHeightMaps();
+	void FFTTest();
+
+	struct WaterProperties
+	{
+		double m_Amplitude;
+		u16 m_WindSpeed;
+		double m_Lambda;
+		u16 m_Resolution;
+		u16 m_Width;
+	};
+
 
 private:
 	CTexturePtr m_HeightMaps[60];
 
+	std::complex<float> PhillipsSpectrum(CVector2D k);
 };

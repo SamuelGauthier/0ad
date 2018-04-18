@@ -17,11 +17,14 @@
 
 #include "precompiled.h"
 
-#include "math.h"
+#include "lib/external_libraries/fftw.h"
 
+#include "math.h"
 #include "renderer/Renderer.h"
 
 #include "FFTWaterModel.h"
+
+#define G 9.81
 
 FFTWaterModel::FFTWaterModel()
 {
@@ -45,6 +48,7 @@ void FFTWaterModel::Update(double time, CVector4D& point)
 
 Handle FFTWaterModel::GetHeightMapAtTime(double time)
 {
+
 	return NULL;
 }
 
@@ -70,3 +74,7 @@ void FFTWaterModel::GenerateHeightMaps()
 
 }
 
+std::complex<float> FFTWaterModel::PhillipsSpectrum(CVector2D k)
+{
+
+}

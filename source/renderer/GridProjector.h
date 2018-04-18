@@ -40,12 +40,12 @@ public:
 	void Initialize() override;
 
 private:
-    //void SetupGrid();
+	//void SetupGrid();
 	void GenerateVertices();
 	void GenerateIndices();
-    void UpdateMatrices();
+	void UpdateMatrices();
 	void UpdatePoints();
-    void ComputeIntersection(std::vector<CVector4D>& cam_frustrum, std::vector<CVector4D>& span_buffer, CPlane& maxWater, CPlane& minWater, int start, int end);
+	void ComputeIntersection(std::vector<CVector4D>& cam_frustrum, std::vector<CVector4D>& span_buffer, CPlane& maxWater, CPlane& minWater, int start, int end);
 
 	bool m_isInitialized;
 	float m_time;
@@ -53,13 +53,13 @@ private:
 	uint m_resolutionY;
 	u32 m_totalResolution;
 	Water m_water;
-    FFTWaterModel m_model;
+	FFTWaterModel m_model;
 	CCamera m_PCamera;
 	CVertexBuffer::VBChunk* m_gridVBIndices;
 	CVertexBuffer::VBChunk* m_gridVBVertices;
 
 	CMatrix3D m_Mpiview;
-    CMatrix3D m_Miperspective;
+	CMatrix3D m_Miperspective;
 	CMatrix3D m_Mrange;
 	CMatrix3D m_Mprojector;
 
@@ -67,7 +67,7 @@ private:
 	std::vector<CVector4D> m_vertices;
 	std::vector<CVector4D> m_verticesModel;
 
-    
+	
 };
 
 #endif // !INCLUDED_GRIDPROJECTOR
