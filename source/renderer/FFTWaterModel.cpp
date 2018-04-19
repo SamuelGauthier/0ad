@@ -71,10 +71,24 @@ void FFTWaterModel::GenerateHeightMaps()
         texture->Prefetch();
         m_HeightMaps[i] = texture;
     }
-
+    
+    FFTTest();
 }
 
 std::complex<float> FFTWaterModel::PhillipsSpectrum(CVector2D k)
 {
 
+}
+
+void FFTWaterModel::FFTTest()
+{
+    fftwf_complex *in, *out;
+    fftwf_plan p;
+    long N = 1;
+    in = (fftwf_complex*) fftw_malloc(sizeof(fftwf_complex) * N);
+    out = (fftwf_complex*) fftw_malloc(sizeof(fftwf_complex) * N);
+    p = fftwf_plan_dft_1d(N, in, out, FFTW_FORWARD, FFTW_ESTIMATE);
+    fftwf_execute(p); /* repeat as needed */
+    fftwf_destroy_plan(p);
+    fftw_free(in); fftw_free(out);
 }

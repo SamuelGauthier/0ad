@@ -42,6 +42,7 @@ NSPR_VERSION="4.15"
 ICU_VERSION="icu4c-59_1"
 ENET_VERSION="enet-1.3.13"
 MINIUPNPC_VERSION="miniupnpc-2.0.20170509"
+FFTW_VERSION="fftw-3.3.7"
 # --------------------------------------------------------------
 # Bundled with the game:
 # * SpiderMonkey 38
@@ -616,6 +617,36 @@ then
   popd
   # TODO: how can we not build the dylibs?
   rm -f lib/*.dylib
+  touch .already-built
+else
+  already_built
+fi
+popd > /dev/null
+
+# --------------------------------------------------------------
+echo -e "Building FFTW..."
+
+LIB_VERSION="${FFTW_VERSION}"
+LIB_ARCHIVE="$LIB_VERSION.tar.gz"
+LIB_DIRECTORY="$LIB_VERSION"
+LIB_URL="http://fftw.org/"
+
+mkdir -p fftw
+pushd fftw > /dev/null
+
+if [[ "$force_rebuild" = "true" ]] || [[ ! -e .already-built ]] || [[ .already-built -ot $LIB_DIRECTORY ]]
+then
+  INSTALL_DIR="$(pwd)"
+
+  rm -f .already-built
+  download_lib $LIB_URL $LIB_ARCHIVE
+
+  rm -rf $LIB_DIRECTORY bin include lib share
+  tar -xf $LIB_ARCHIVE
+  pushd $LIB_DIRECTORY
+
+  (./configure CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS" --prefix="$INSTALL_DIR" && make clean && make ${JOBS} && make install) || die "FFTW build failed"
+  popd
   touch .already-built
 else
   already_built

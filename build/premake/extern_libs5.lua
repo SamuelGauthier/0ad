@@ -255,18 +255,18 @@ extern_lib_defs = {
 	},
 	fftw = {
 		compile_settings = function()
-			if os.istarget("windows") then
+			if os.istarget("windows") or os.istarget("macosx") then
 				add_default_include_paths("fftw")
 				-- add_source_include_paths("fftw")
 			end
 		end,
 		link_settings = function()
-			if os.istarget("windows") then
+			if os.istarget("windows") or os.istarget("macosx") then
 				add_default_lib_paths("fftw")
 			end
 			add_default_links({
-				win_names  = { "libfftw3-3", "libfftw3f-3", "libfftw3l-3" },
-				unix_names = { "fftw3" },
+				win_names  = { "libfftw3-3", "libfftw3f-3" },
+				unix_names = { "fftw3", "fftw3f" },
 				dbg_suffix = "",
 			})
 		end,

@@ -57,6 +57,7 @@ libraries/source/nvtt/src/build/
 # Build files (libs) (OS X)
 libraries/osx/boost/
 libraries/osx/enet/
+libraries/osx/fftw/
 libraries/osx/gloox/
 libraries/osx/iconv/
 libraries/osx/icu/
