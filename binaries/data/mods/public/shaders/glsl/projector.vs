@@ -1,5 +1,6 @@
 #version 120
 #define TEST 0
+#define OLD 0
 
 attribute vec4 vertexPosition; 
 
@@ -44,6 +45,7 @@ void main()
     vec3 timeScale = vec3(0.01, 0.01, 0.03);
     vec3 amplitude = vec3(0.8, 1.2, 0.5);
 
+#if OLD
 #if TEST
 	vec3 imgHeight = texture2D(heightMap1, 0.005 * intersection.xz + wind1).rgb
         * amplitude.x - 0.5;
@@ -74,6 +76,11 @@ void main()
             timeScale.z * time).rgb * amplitude.z - 0.5;
 	intersection.y += imgHeight.g;
 	intersection.xz += imgHeight.rb;
+#endif
+#else
+    vec3 imgHeight = texture2D(heightMap1, scale.x * intersection.xz).rgb;
+    intersection.y += imgHeight.g;
+    intersection.xz += imgHeight.rb;
 #endif
 
 	losCoords = (losMatrix * intersection).rg;

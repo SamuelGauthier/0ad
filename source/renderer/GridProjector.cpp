@@ -57,7 +57,10 @@
 #define DEBUG_UPDATE_POINTS 0
 #define DEBUG_UPDATE_POINTS_INTERSECT_INFO 0
 
-GridProjector::GridProjector() : m_model(FFTWaterModel()), m_water(m_model), m_gridVBIndices(0), m_gridVBVertices(0)
+// TODO: Temporary declaration
+FFTWaterModel::WaterProperties wp(3e-7, 30, CVector2D(1,2), 2, 0.1, 512, 1000);
+
+GridProjector::GridProjector() : m_model(FFTWaterModel(wp)), m_water(m_model), m_gridVBIndices(0), m_gridVBVertices(0)
 {
 	m_isInitialized = false;
 	m_time = 0.0;
@@ -71,7 +74,12 @@ GridProjector::GridProjector() : m_model(FFTWaterModel()), m_water(m_model), m_g
 	m_Miperspective = CMatrix3D();
 	m_Mrange = CMatrix3D();
 	m_Mprojector = CMatrix3D();
-
+    
+    m_NormalMapID = 0;
+    m_HeightMapID = 0;
+    
+    m_HeightMap = std::vector<u8>(wp.m_Resolution * wp.m_Resolution * 3);
+    m_NormalMap = std::vector<u8>(wp.m_Resolution * wp.m_Resolution * 3);
 }
 
 GridProjector::~GridProjector()
@@ -114,6 +122,9 @@ void GridProjector::Initialize()
 
 	// TODO: Temporary here
 	m_water.GetPhysicalWaterModel().GenerateHeightMaps();
+    
+    glGenTextures(1, &m_NormalMapID);
+    glGenTextures(1, &m_HeightMapID);
 
 	m_isInitialized = true;
 }
@@ -436,15 +447,34 @@ void GridProjector::Render(CShaderProgramPtr& shader)
 	LOGWARNING("[W] pos: (%f, %f, %f)", worldPos.X, worldPos.Y, worldPos.Z);
 #endif
 
-	m_model.FFTTest();
 	shader->Uniform(str_transform, g_Renderer.GetViewCamera().GetViewProjection());
 	shader->Uniform(str_projector, m_Mprojector);
 	shader->Uniform(str_waterNormal, m_water.m_base.m_Norm);
 	shader->Uniform(str_waterD, m_water.m_base.m_Dist);
 	shader->Uniform(str_time, m_time);
-	shader->BindTexture(str_heightMap1, m_water.GetPhysicalWaterModel().GetHeightMapAtLevel(0));
-	shader->BindTexture(str_heightMap2, m_water.GetPhysicalWaterModel().GetHeightMapAtLevel(1));
-	shader->BindTexture(str_heightMap3, m_water.GetPhysicalWaterModel().GetHeightMapAtLevel(2));
+    
+    m_water.GetPhysicalWaterModel().GetHeightMapAtTime(m_time, m_HeightMap, m_NormalMap);
+    
+    g_Renderer.BindTexture(1, m_HeightMapID);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, wp.m_Resolution, wp.m_Resolution, 0, GL_RGB, GL_UNSIGNED_BYTE, &m_NormalMap);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    
+    g_Renderer.BindTexture(0, m_NormalMapID);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, wp.m_Resolution, wp.m_Resolution, 0, GL_RGB, GL_UNSIGNED_BYTE, &m_HeightMap);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    
+    shader->BindTexture(str_heightMap1, m_HeightMapID);
+    shader->BindTexture(str_heightMap2, m_NormalMapID);
+    
+	//shader->BindTexture(str_heightMap1, m_water.GetPhysicalWaterModel().GetHeightMapAtLevel(0));
+	//shader->BindTexture(str_heightMap2, m_water.GetPhysicalWaterModel().GetHeightMapAtLevel(1));
+	//shader->BindTexture(str_heightMap3, m_water.GetPhysicalWaterModel().GetHeightMapAtLevel(2));
 
 
 	CLOSTexture& losTexture = g_Renderer.GetScene().GetLOSTexture();

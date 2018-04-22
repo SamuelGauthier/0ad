@@ -18,6 +18,7 @@
 #include <complex>
 
 #include "maths/Vector2D.h"
+#include "maths/Vector3D.h"
 #include "maths/Vector4D.h"
 
 #include "graphics/TextureManager.h"
@@ -27,27 +28,39 @@
 class FFTWaterModel : public PhysicalWaterModel
 {
 public:
-	FFTWaterModel();
+    struct WaterProperties
+    {
+        float m_Amplitude;
+        u16 m_WindSpeed;
+        CVector2D m_WindDirection;
+        float m_Lambda;
+        float m_L;
+        u16 m_Resolution;
+        u16 m_Width;
+        WaterProperties(float amplitude, u16 windSpeed, CVector2D windDirection, float lambda, float l, u16 resolution, u16 width) : m_Amplitude{amplitude}, m_WindSpeed{windSpeed}, m_WindDirection{windDirection.Normalized()}, m_Lambda{lambda}, m_L{l}, m_Resolution{resolution}, m_Width{width} {}
+    };
+    
+	FFTWaterModel(WaterProperties waterProperties);
 	~FFTWaterModel();
 
 	void Update(double time, CVector4D& point);
-	Handle GetHeightMapAtTime(double time);
+    void GetHeightMapAtTime(double time, std::vector<u8> heightMap, std::vector<u8> normalMap);
 	CTexturePtr GetHeightMapAtLevel(int level);
 	void GenerateHeightMaps();
 	void FFTTest();
 
-	struct WaterProperties
-	{
-		double m_Amplitude;
-		u16 m_WindSpeed;
-		double m_Lambda;
-		u16 m_Resolution;
-		u16 m_Width;
-	};
+
 
 
 private:
+    WaterProperties m_WaterProperties;
 	CTexturePtr m_HeightMaps[60];
+    std::vector<std::complex<float>> m_h_0;
+    std::vector<std::complex<float>> m_h_0_star;
+    std::vector<std::complex<float>> m_h_tilde;
+    std::vector<CVector3D> m_HeightField;
+    std::vector<CVector3D> m_NormalMap;
 
-	std::complex<float> PhillipsSpectrum(CVector2D k);
+    void PrecomputePhillipsSpectrum();
+	std::complex<float> GetHTildeAt(u16 n, u16 m, double time);
 };
