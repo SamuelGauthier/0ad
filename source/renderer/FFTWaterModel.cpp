@@ -19,10 +19,10 @@
 
 #include <random>
 #include <time.h>
+#include <math.h>
 
-#include "lib/external_libraries/fftw.h"
-
-#include "math.h"
+//#include "lib/external_libraries/fftw.h"
+#include "ps/CLogger.h"
 #include "renderer/Renderer.h"
 
 #include "FFTWaterModel.h"
@@ -36,7 +36,9 @@ FFTWaterModel::FFTWaterModel(WaterProperties waterProperties) : m_WaterPropertie
     u32 length = m_WaterProperties.m_Resolution*m_WaterProperties.m_Resolution;
     m_h_0 = std::vector<std::complex<float>>(length);
     m_h_0_star = std::vector<std::complex<float>>(length);
-    m_h_tilde = std::vector<std::complex<float>>(length);
+    //m_h_tilde = std::vector<std::complex<float>>(length);
+    //m_HeightField = std::vector<CVector3D>(length);
+    //m_NormalMap = std::vector<CVector3D>(length);
     PrecomputePhillipsSpectrum();
 	// TODO: temporary value
 	SetMaxHeight(5.0f);
@@ -64,11 +66,11 @@ void FFTWaterModel::GetHeightMapAtTime(double time, std::vector<u8> heightMap, s
     fftwf_complex *out_D_x;
     fftwf_complex *out_D_z;
     
-    fftwf_plan p_height;
-    fftwf_plan p_slope_x;
-    fftwf_plan p_slope_z;
-    fftwf_plan p_D_x;
-    fftwf_plan p_D_z;
+    fftwf_plan p_ifft_height;
+    fftwf_plan p_ifft_slope_x;
+    fftwf_plan p_ifft_slope_z;
+    fftwf_plan p_ifft_D_x;
+    fftwf_plan p_ifft_D_z;
     
     u32 resolution = m_WaterProperties.m_Resolution * m_WaterProperties.m_Resolution;
     
@@ -78,7 +80,23 @@ void FFTWaterModel::GetHeightMapAtTime(double time, std::vector<u8> heightMap, s
     std::complex<float>* D_x_term = new std::complex<float>[resolution];
     std::complex<float>* D_z_term = new std::complex<float>[resolution];
     
-    std::vector<CVector3D>* m_HeightField = new std::<CVector3D>
+    std::complex<float>* m_h_tilde = new std::complex<float>[resolution];
+    
+    //std::vector<CVector3D>* m_HeightField = new std::vector<CVector3D>[resolution * 3];
+    //std::vector<CVector3D>* m_NormalMap = new std::vector<CVector3D>[resolution * 3];
+    CVector3D* m_HeightField = new CVector3D[resolution * 3];
+    CVector3D* m_NormalMap = new CVector3D[resolution * 3];
+
+    
+    //std::vector<CVector3D>* heightField = new std::vector<CVector3D>[resolution];
+    //std::vector<CVector3D>* normalMap = new std::vector<CVector3D>[resolution];
+    
+#if 0
+    std::complex<float> t = GetHTildeAt(2, 2, time);
+    LOGWARNING("t @ 2,2: %f + (%f)i", t.real(), t.imag());
+    CVector2D k = K_VEC(2, 2, m_WaterProperties.m_Resolution, m_WaterProperties.m_Width);
+    LOGWARNING("k @ 2,2: (%f; %f)", k.X, k.Y);
+#endif
     
     for (int i = 0; i < m_WaterProperties.m_Resolution; i++) {
         for (int j = 0; j < m_WaterProperties.m_Resolution; j++) {
@@ -88,39 +106,65 @@ void FFTWaterModel::GetHeightMapAtTime(double time, std::vector<u8> heightMap, s
             m_h_tilde[index] = GetHTildeAt(i, j, time);
             
             CVector2D k = K_VEC(i, j, m_WaterProperties.m_Resolution, m_WaterProperties.m_Width);
-            k.Normalize();
+            float kLength = k.Length();
+            CVector2D kNormalized = kLength == 0 ? k : k.Normalized();
             
             slope_x_term[index] = std::complex<float>(0, k.X) * m_h_tilde[index];
             slope_z_term[index] = std::complex<float>(0, k.Y) * m_h_tilde[index];
             
-            D_x_term[index] = std::complex<float>(0, -k.X) * m_h_tilde[index];
-            D_z_term[index] = std::complex<float>(0, -k.Y) * m_h_tilde[index];
+            D_x_term[index] = std::complex<float>(0, -kNormalized.X) * m_h_tilde[index];
+            D_z_term[index] = std::complex<float>(0, -kNormalized.Y) * m_h_tilde[index];
+            
+#if 0
+            if(index == 10){
+                std::complex<float> t = GetHTildeAt(i, j, time);
+                LOGWARNING("t @ %u, %u: %f + (%f)i", i, j, t.real(), t.imag());
+                LOGWARNING("m_h_tilde: %f + (%f)i", m_h_tilde[index].real(), m_h_tilde[index].imag());
+                LOGWARNING("slope_x_term: %f + (%f)i", slope_x_term[index].real(), slope_x_term[index].imag());
+                LOGWARNING("slope_z_term: %f + (%f)i", slope_z_term[index].real(), slope_z_term[index].imag());
+                LOGWARNING("D_x_term: %f + (%f)i", D_x_term[index].real(), D_x_term[index].imag());
+                LOGWARNING("D_z_term: %f + (%f)i", D_z_term[index].real(), D_z_term[index].imag());
+            }
+#endif
         }
     }
     
-    in_height = (fftwf_complex*) &m_h_tilde;
+    in_height = (fftwf_complex*) m_h_tilde;
     in_slope_x = (fftwf_complex*) slope_x_term;
     in_slope_z = (fftwf_complex*) slope_z_term;
     in_D_x = (fftwf_complex*) D_x_term;
     in_D_z = (fftwf_complex*) D_z_term;
     
+#if 0
+    for (int i = 0; i < m_WaterProperties.m_Resolution; i++) {
+        for (int j = 0; j < m_WaterProperties.m_Resolution; j++) {
+            int index = j * m_WaterProperties.m_Resolution + i;
+
+            LOGWARNING("in_slope_x: %f + (%f)i", in_slope_x[index][0], in_slope_x[index][1]);
+            LOGWARNING("in_slope_z: %f + (%f)i", in_slope_z[index][0], in_slope_z[index][1]);
+            LOGWARNING("in_D_x: %f + (%f)i", in_D_x[index][0], in_D_x[index][1]);
+            LOGWARNING("in_D_z: %f + (%f)i", in_D_z[index][0], in_D_z[index][1]);
+
+        }
+    }
+#endif
     out_height = (fftwf_complex*)fftwf_malloc(sizeof(fftwf_complex) * resolution);
     out_slope_x = (fftwf_complex*)fftwf_malloc(sizeof(fftwf_complex) * resolution);
     out_slope_z = (fftwf_complex*)fftwf_malloc(sizeof(fftwf_complex) * resolution);
     out_D_x = (fftwf_complex*)fftwf_malloc(sizeof(fftwf_complex) * resolution);
     out_D_z = (fftwf_complex*)fftwf_malloc(sizeof(fftwf_complex) * resolution);
     
-    p_height = fftwf_plan_dft_2d(m_WaterProperties.m_Resolution, m_WaterProperties.m_Resolution, in_height, out_height, FFTW_BACKWARD, FFTW_ESTIMATE);
-    p_slope_x = fftwf_plan_dft_2d(m_WaterProperties.m_Resolution, m_WaterProperties.m_Resolution, in_slope_x, out_slope_x, FFTW_BACKWARD, FFTW_ESTIMATE);
-    p_slope_z = fftwf_plan_dft_2d(m_WaterProperties.m_Resolution, m_WaterProperties.m_Resolution, in_slope_z, out_slope_z, FFTW_BACKWARD, FFTW_ESTIMATE);
-    p_D_x = fftwf_plan_dft_2d(m_WaterProperties.m_Resolution, m_WaterProperties.m_Resolution, in_D_x, out_D_x, FFTW_BACKWARD, FFTW_ESTIMATE);
-    p_D_z = fftwf_plan_dft_2d(m_WaterProperties.m_Resolution, m_WaterProperties.m_Resolution, in_D_z, out_D_z, FFTW_BACKWARD, FFTW_ESTIMATE);
+    p_ifft_height = fftwf_plan_dft_2d(m_WaterProperties.m_Resolution, m_WaterProperties.m_Resolution, in_height, out_height, FFTW_BACKWARD, FFTW_ESTIMATE);
+    p_ifft_slope_x = fftwf_plan_dft_2d(m_WaterProperties.m_Resolution, m_WaterProperties.m_Resolution, in_slope_x, out_slope_x, FFTW_BACKWARD, FFTW_ESTIMATE);
+    p_ifft_slope_z = fftwf_plan_dft_2d(m_WaterProperties.m_Resolution, m_WaterProperties.m_Resolution, in_slope_z, out_slope_z, FFTW_BACKWARD, FFTW_ESTIMATE);
+    p_ifft_D_x = fftwf_plan_dft_2d(m_WaterProperties.m_Resolution, m_WaterProperties.m_Resolution, in_D_x, out_D_x, FFTW_BACKWARD, FFTW_ESTIMATE);
+    p_ifft_D_z = fftwf_plan_dft_2d(m_WaterProperties.m_Resolution, m_WaterProperties.m_Resolution, in_D_z, out_D_z, FFTW_BACKWARD, FFTW_ESTIMATE);
     
-    fftwf_execute(p_height);
-    fftwf_execute(p_slope_x);
-    fftwf_execute(p_slope_z);
-    fftwf_execute(p_D_x);
-    fftwf_execute(p_D_z);
+    fftwf_execute(p_ifft_height);
+    fftwf_execute(p_ifft_slope_x);
+    fftwf_execute(p_ifft_slope_z);
+    fftwf_execute(p_ifft_D_x);
+    fftwf_execute(p_ifft_D_z);
     
     float min_slope = std::numeric_limits<float>().max();
     float max_slope = -min_slope;
@@ -134,11 +178,20 @@ void FFTWaterModel::GetHeightMapAtTime(double time, std::vector<u8> heightMap, s
             
             if((i + j) % 2) sign = -1;
             
+            //if(index < 3)
+            //    LOGWARNING("before: %f %f %f", (float)out_height[index][0], (float)*out_D_x[index], (float)*out_D_z[index]);
+            
             m_HeightField[index] = CVector3D(
                                              sign * m_WaterProperties.m_Lambda * out_D_x[index][0],//(n - N / 2) * L_x / N - sign * lambda * out_D_x[index][0],
                                              sign * out_height[index][0],
                                              sign * m_WaterProperties.m_Lambda * out_D_z[index][0]//(m - M / 2) * L_z / M - sign * lambda * out_D_z[index][0]
                                              );
+#if 0
+
+                LOGWARNING("sign, lambda: %f %f", sign, m_WaterProperties.m_Lambda);
+                LOGWARNING("hf: %f %f %f", m_HeightField[index].X, m_HeightField[index].Y, m_HeightField[index].Z);
+                LOGWARNING("h, Dx, Dz: %f %f %f", (float)out_height[index][0], (float)*out_D_x[index], (float)*out_D_z[index]);
+#endif
             
             if(m_HeightField[index].X > max_height) max_height = m_HeightField[index].X;
             if(m_HeightField[index].Y > max_height) max_height = m_HeightField[index].Y;
@@ -160,18 +213,34 @@ void FFTWaterModel::GetHeightMapAtTime(double time, std::vector<u8> heightMap, s
         }
     }
     
+#if 0
+    LOGWARNING("max_height, min_height: %f %f", max_height, min_height);
+    LOGWARNING("max_slope, min_slope: %f %f", max_slope, min_slope);
+#endif
+    
     for (int i = 0; i < m_WaterProperties.m_Resolution; i++) {
         for (int j = 0; j < m_WaterProperties.m_Resolution; j++) {
             int index = i * m_WaterProperties.m_Resolution + j;
             int index2 = 3*index;
             
+            //if(index < 3)
+            //    LOGWARNING("before: %f %f %f", m_HeightField[index].X, m_HeightField[index].Y, m_HeightField[index].Z);
+            
             m_HeightField[index].X = round((m_HeightField[index].X - min_height) * 255 / (max_height - min_height));
             m_HeightField[index].Y = round((m_HeightField[index].Y - min_height) * 255 / (max_height - min_height));
             m_HeightField[index].Z = round((m_HeightField[index].Z - min_height) * 255 / (max_height - min_height));
             
+#if 0
+            LOGWARNING("x, y, z: %f %f %f", m_HeightField[index].X, m_HeightField[index].Y, m_HeightField[index].Z);
+#endif
+            
             heightMap[index2] = (u8) m_HeightField[index].X;
             heightMap[index2 + 1] = (u8) m_HeightField[index].Y;
             heightMap[index2 + 2] = (u8) m_HeightField[index].Z;
+            
+#if 0
+            LOGWARNING("x, y, z: %u %u %u", heightMap[index2], heightMap[index2 + 1], heightMap[index2 + 2]);
+#endif
             
             m_NormalMap[index].X = round((m_NormalMap[index].X - min_slope) * 255 / (max_slope - min_slope));
             m_NormalMap[index].Y = round((m_NormalMap[index].Y - min_slope) * 255 / (max_slope - min_slope));
@@ -180,19 +249,25 @@ void FFTWaterModel::GetHeightMapAtTime(double time, std::vector<u8> heightMap, s
             normalMap[index2] = (u8) m_NormalMap[index].X;
             normalMap[index2 + 1] = (u8) m_NormalMap[index].Y;
             normalMap[index2 + 2] = (u8) m_NormalMap[index].Z;
+            
+            //if(index < 3)
+            //    LOGWARNING("after: %u %u %u", heightMap[index2], heightMap[index2+1], heightMap[index2+2]);
         }
     }
     
-    fftwf_destroy_plan(p_height);
-    fftwf_destroy_plan(p_slope_x);
-    fftwf_destroy_plan(p_slope_z);
-    fftwf_destroy_plan(p_D_x);
-    fftwf_destroy_plan(p_D_z);
+    fftwf_destroy_plan(p_ifft_height);
+    fftwf_destroy_plan(p_ifft_slope_x);
+    fftwf_destroy_plan(p_ifft_slope_z);
+    fftwf_destroy_plan(p_ifft_D_x);
+    fftwf_destroy_plan(p_ifft_D_z);
     
     SAFE_ARRAY_DELETE(slope_x_term);//delete[] slope_x_term;
     SAFE_ARRAY_DELETE(slope_z_term);//delete[] slope_z_term;
     SAFE_ARRAY_DELETE(D_x_term);//delete[] D_x_term;
     SAFE_ARRAY_DELETE(D_z_term);//delete[] D_z_term;
+    SAFE_ARRAY_DELETE(m_h_tilde);
+    SAFE_ARRAY_DELETE(m_HeightField);
+    SAFE_ARRAY_DELETE(m_NormalMap);
     fftw_free(out_height);
     fftw_free(out_slope_x);
     fftw_free(out_slope_z);
@@ -241,17 +316,34 @@ void FFTWaterModel::PrecomputePhillipsSpectrum()
             CVector2D normK = k.Normalized();
             float lengthK2 = k.LengthSquared();
             
-            float factor = m_WaterProperties.m_Amplitude * exp(-lengthK2 * l * l) *
-            exp(-1 /(lengthK2 * L2)) / (lengthK2 * lengthK2);
-            float p = factor * pow(normK.Dot(m_WaterProperties.m_WindDirection), 2);
-            
-            float xi_r = normal_dist(generator);
-            float xi_i = normal_dist(generator);
-            
-            m_h_0[index] = (float)SQRT_0_5 * std::complex<float>(xi_r, xi_i) * sqrt(p);
-            
-            p = factor * pow(-normK.Dot(m_WaterProperties.m_WindDirection), 2);
-            m_h_0_star[index] = (float)SQRT_0_5 * std::complex<float>(xi_r, -xi_i) * sqrt(p);
+            if(lengthK2 == 0.0f)
+            {
+                LOGWARNING("I was here");
+                m_h_0[index] = 0.0f;
+                m_h_0_star[index] = 0.0f;
+                continue;
+            }
+
+//            else
+//            {
+                float factor = m_WaterProperties.m_Amplitude * exp(-lengthK2 * l * l) *
+                exp(-1 /(lengthK2 * L2)) / (lengthK2 * lengthK2);
+                float p = factor * pow(normK.Dot(m_WaterProperties.m_WindDirection), 2);
+                
+#if 0
+                if(i == 2 && j == 2){
+                    LOGWARNING("p @ 2,2: %f", p);
+                    LOGWARNING("factor @ 2,2: %f", factor);
+                }
+#endif
+                float xi_r = normal_dist(generator);
+                float xi_i = normal_dist(generator);
+                
+                m_h_0[index] = (float)SQRT_0_5 * std::complex<float>(xi_r, xi_i) * sqrt(p);
+                
+                p = factor * pow(-normK.Dot(m_WaterProperties.m_WindDirection), 2);
+                m_h_0_star[index] = (float)SQRT_0_5 * std::complex<float>(xi_r, -xi_i) * sqrt(p);
+//            }
         }
     }
 }
@@ -264,6 +356,19 @@ std::complex<float> FFTWaterModel::GetHTildeAt(u16 n, u16 m, double time)
     
     std::complex<float> term1 = m_h_0[index] * exp(std::complex<float>(0.0f, w * time));
     std::complex<float> term2 = m_h_0_star[index] * exp(std::complex<float>(0.0f, -w * time));
+    
+#if 0
+    if(n == 2 && m == 2){
+        LOGWARNING("w @ 2,2: %f", w);
+        LOGWARNING("k @ 2,2: (%f; %f)", k.X, k.Y);
+        LOGWARNING("term1: %u and %f + (%f)i", index, term1.real(), term1.imag());
+        LOGWARNING("term2: %u and %f; (%f)i", index, term2.real(), term2.imag());
+        LOGWARNING("m_h_0: %u and %f; (%f)i", index, m_h_0[index].real(), m_h_0[index].imag());
+        LOGWARNING("m_h_0_star: %u and %f; (%f)i", index, m_h_0_star[index].real(), m_h_0_star[index].imag());
+                   
+    }
+#endif
+    
     return term1 + term2;
 }
 

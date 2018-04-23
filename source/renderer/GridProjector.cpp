@@ -58,7 +58,7 @@
 #define DEBUG_UPDATE_POINTS_INTERSECT_INFO 0
 
 // TODO: Temporary declaration
-FFTWaterModel::WaterProperties wp(3e-7, 30, CVector2D(1,2), 2, 0.1, 512, 1000);
+FFTWaterModel::WaterProperties wp(3e-7, 30, CVector2D(1,2), 2, 0.1, 128, 500);
 
 GridProjector::GridProjector() : m_model(FFTWaterModel(wp)), m_water(m_model), m_gridVBIndices(0), m_gridVBVertices(0)
 {

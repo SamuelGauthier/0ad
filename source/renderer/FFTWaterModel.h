@@ -15,7 +15,8 @@
  * along with 0 A.D.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <complex>
+#include <complex.h>
+#include "lib/external_libraries/fftw.h"
 
 #include "maths/Vector2D.h"
 #include "maths/Vector3D.h"
@@ -57,9 +58,9 @@ private:
 	CTexturePtr m_HeightMaps[60];
     std::vector<std::complex<float>> m_h_0;
     std::vector<std::complex<float>> m_h_0_star;
-    std::vector<std::complex<float>> m_h_tilde;
-    std::vector<CVector3D> m_HeightField;
-    std::vector<CVector3D> m_NormalMap;
+    //std::vector<std::complex<float>> m_h_tilde;
+    //std::vector<CVector3D> m_HeightField;
+    //std::vector<CVector3D> m_NormalMap;
 
     void PrecomputePhillipsSpectrum();
 	std::complex<float> GetHTildeAt(u16 n, u16 m, double time);
