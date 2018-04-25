@@ -265,7 +265,7 @@ extern_lib_defs = {
 				add_default_lib_paths("fftw")
 			end
 			add_default_links({
-				win_names  = { "libfftw3-3", "libfftw3f-3" },
+				win_names  = { "libfftw3-3", "libfftw3f-3",  "libfftw3l-3" },
 				unix_names = { "fftw3", "fftw3f" },
 				dbg_suffix = "",
 			})

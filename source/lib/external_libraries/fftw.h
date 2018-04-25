@@ -24,16 +24,16 @@
  * bring in FFTW library
  */
 
-#ifndef FFTW
-#define FFTW value
+#ifndef INCLUDED_FFTW
+#define INCLUDED_FFTW 
 
-#include <fftw3.h>
+#include <fftw/fftw3.h>
 
 #if MSC_VERSION
-# pragma comment(lib, "fftw3-3.lib")
-# pragma comment(lib, "fftw3f-3.lib")
-# pragma comment(lib, "fftw3l-3.lib")
+# pragma comment(lib, "libfftw3-3.lib")
+# pragma comment(lib, "libfftw3f-3.lib")
+# pragma comment(lib, "libfftw3l-3.lib")
 #endif	// MSC_VERSION
 
-#endif /* ifndef FFTW */
+#endif // ifndef INCLUDED_FFTW
 
