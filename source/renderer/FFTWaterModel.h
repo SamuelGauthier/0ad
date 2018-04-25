@@ -16,6 +16,7 @@
  */
 
 #include <complex.h>
+#include <tuple>
 #include "lib/external_libraries/fftw.h"
 
 #include "maths/Vector2D.h"
@@ -25,6 +26,9 @@
 #include "graphics/TextureManager.h"
 
 #include "renderer/PhysicalWaterModel.h"
+
+using TupleVecComplexF = std::tuple<std::vector<std::complex<float>>, std::vector<std::complex<float>>>;
+using TupleVecU8 = std::tuple<std::vector<u8>, std::vector<u8>>;
 
 class FFTWaterModel : public PhysicalWaterModel
 {
@@ -44,24 +48,28 @@ public:
 	FFTWaterModel(WaterProperties waterProperties);
 	~FFTWaterModel();
 
-	void Update(double time, CVector4D& point);
     void GetHeightMapAtTime(double time, std::vector<u8>* heightMap, std::vector<u8>* normalMap);
-	CTexturePtr GetHeightMapAtLevel(int level);
+	//CTexturePtr GetHeightMapAtLevel(int level);
 	void GenerateHeightMaps();
-	void FFTTest();
-
-
-
 
 private:
     WaterProperties m_WaterProperties;
-	CTexturePtr m_HeightMaps[60];
+	//CTexturePtr m_HeightMaps[60];
+	std::vector<std::vector<u8>> m_HeightMaps;
+	std::vector<std::vector<u8>> m_NormalMaps;
+	std::vector<u8> m_VariationMap;
+	
     std::vector<std::complex<float>> m_h_0;
     std::vector<std::complex<float>> m_h_0_star;
     //std::vector<std::complex<float>> m_h_tilde;
     //std::vector<CVector3D> m_HeightField;
     //std::vector<CVector3D> m_NormalMap;
 
-    void PrecomputePhillipsSpectrum();
+    //void PrecomputePhillipsSpectrum();
+
+	TupleVecComplexF ComputePhillipsSpectrum(WaterProperties waterProps);
+	//void FFTWaterModel::ComputePhillipsSpectrum(WaterProperties waterProps, std::vector<std::complex<float>>* h0, std::vector<std::complex<float>>* h0star)
+	TupleVecU8 GetHeightAndNormalMapAtTime(double time, WaterProperties waterProps);
+
 	std::complex<float> GetHTildeAt(u16 n, u16 m, double time);
 };

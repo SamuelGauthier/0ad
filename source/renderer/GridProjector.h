@@ -44,7 +44,6 @@ private:
 	void GenerateVertices();
 	void GenerateIndices();
 	void UpdateMatrices();
-	void UpdatePoints();
 	void ComputeIntersection(std::vector<CVector4D>& cam_frustrum, std::vector<CVector4D>& span_buffer, CPlane& maxWater, CPlane& minWater, int start, int end);
 
 	bool m_isInitialized;
@@ -66,12 +65,12 @@ private:
 	std::vector<GLuint> m_indices;
 	std::vector<CVector4D> m_vertices;
 	std::vector<CVector4D> m_verticesModel;
-    
-    GLuint m_HeightMapID;
-    GLuint m_NormalMapID;
+	
+	GLuint m_HeightMapID;
+	GLuint m_NormalMapID;
 
-    std::vector<u8> m_HeightMap;
-    std::vector<u8> m_NormalMap;
+	std::vector<u8> m_HeightMap;
+	std::vector<u8> m_NormalMap;
 };
 
 #endif // !INCLUDED_GRIDPROJECTOR

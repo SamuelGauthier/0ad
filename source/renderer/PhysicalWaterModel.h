@@ -26,9 +26,9 @@ class PhysicalWaterModel
 public:
 	virtual ~PhysicalWaterModel() {}
 
-	virtual void Update(double time, CVector4D& point) = 0;
+	//virtual void Update(double time, CVector4D& point) = 0;
 	virtual void GetHeightMapAtTime(double time, std::vector<u8>* heightMap, std::vector<u8>* normalMap) = 0;
-	virtual CTexturePtr GetHeightMapAtLevel(int level) = 0;
+	//virtual CTexturePtr GetHeightMapAtLevel(int level) = 0;
 	virtual void GenerateHeightMaps() = 0;
 
 	float GetMaxHeight() { return m_maxHeight; }

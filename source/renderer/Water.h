@@ -19,10 +19,10 @@
 #define INCLUDED_WATER
 
 //#include "lib/ogl.h"
-#include "graphics/TextureManager.h"
+//#include "graphics/TextureManager.h"
 #include "maths/Plane.h"
 #include "renderer/PhysicalWaterModel.h"
-#include "ps/Shapes.h"
+//#include "ps/Shapes.h"
 
 class Water
 {
@@ -48,8 +48,8 @@ private:
 	float m_height;
 	//float m_maxHeight;
 	//float m_minHeight;
-	CColor m_color;
-	CColor m_tint;
+	//CColor m_color;
+	//CColor m_tint;
 
 
 	PhysicalWaterModel& m_waterModel;

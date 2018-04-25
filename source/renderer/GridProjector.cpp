@@ -162,14 +162,12 @@ void GridProjector::GenerateIndices()
 			m_indices.push_back(j * m_resolutionX + i);
 			m_indices.push_back((j + 1) * m_resolutionX + i);
 			m_indices.push_back(j * m_resolutionX + (i + 1));
-			//printf("%u, %u, %u\n", j*m_resolutionX + i, (j+1)*m_resolutionX + (i), j*m_resolutionX + (i+1));
 			//   *
 			//  /|
 			// *-*
 			m_indices.push_back(j * m_resolutionX + (i + 1));
 			m_indices.push_back((j + 1) * m_resolutionX + i);
 			m_indices.push_back((j + 1) * m_resolutionX + (i + 1));
-			//printf("%u, %u, %u\n", j*m_resolutionX + (i+1), (j+1)*m_resolutionX + i, (j+1)*m_resolutionX + (i+1));
 		}
 
 	}
@@ -198,7 +196,6 @@ void GridProjector::UpdateMatrices()
 	CVector3D intersection;
 
 	bool gotWater = m_water.m_base.FindRayIntersection(camPosition, camDirection, &intersection);
-	//bool gotWater = water.FindRayIntersection(camPosition, camDirection, &intersection);
 
 	ssize_t mapSize = g_Game->GetWorld()->GetTerrain()->GetVerticesPerSide();
 	if (gotWater)
@@ -287,7 +284,6 @@ void GridProjector::UpdateMatrices()
 	float minWaterHeight = m_water.GetMinWaterHeight();
 
 	CVector4D result;
-	//LOGWARNING("Transformed points:\n");
 	for (size_t i = 0; i < cam_frustrum.size(); i++)
 	{
 		result = invPV.Transform(cam_frustrum[i]);
@@ -432,11 +428,8 @@ void GridProjector::Render(CShaderProgramPtr& shader)
 	LOGWARNING("[S] Screen space [W] world space");
 #endif
 
-
-
 	m_time = (float)timer_Time();
 	UpdateMatrices();
-	//UpdatePoints();
 
 	u8* base = m_gridVBVertices->m_Owner->Bind();
 
@@ -454,8 +447,6 @@ void GridProjector::Render(CShaderProgramPtr& shader)
 	shader->Uniform(str_time, m_time);
     
     m_water.GetPhysicalWaterModel().GetHeightMapAtTime(m_time, &m_HeightMap, &m_NormalMap);
-    
-    //LOGWARNING("[In GridProjector] h at 0: %u, %u, %u", m_HeightMap[0], m_HeightMap[1], m_HeightMap[2]);
     
     g_Renderer.BindTexture(0, m_HeightMapID);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, wp.m_Resolution, wp.m_Resolution, 0, GL_RGB, GL_UNSIGNED_BYTE, &m_HeightMap[0]);
@@ -494,75 +485,3 @@ void GridProjector::Render(CShaderProgramPtr& shader)
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 }
-
-void GridProjector::UpdatePoints()
-{
-	PROFILE3_GPU("update points");
-	CVector4D start;
-	CVector4D end;
-	CVector4D transformed;
-	bool doIntersect;
-	CVector3D intersection;
-	//CPlane water = m_water.m_base;
-	CMatrix3D g_IPV;
-	CMatrix3D g_PV = g_Renderer.GetViewCamera().GetViewProjection();
-	g_PV.GetInverse(g_IPV);
-	CMatrix3D p_IPV;
-	m_Mprojector.GetInverse(p_IPV);
-
-	GenerateVertices();
-
-	for (size_t i = 0; i < m_vertices.size(); i++)
-	{
-		start = end = m_vertices[i];
-		start.Z = 1.0; // Z and Y are exchanged
-		end.Z = -1.0;
-
-#if DEBUG_UPDATE_POINTS
-		if (i == 0)
-		{
-			//LOGWARNING("before transformation");
-			LOGWARNING("[S] start 0: (%f, %f, %f, %f)", start.X, start.Y, start.Z, start.W);
-			LOGWARNING("[S] end 0: (%f, %f, %f, %f)", end.X, end.Y, end.Z, end.W);
-		}
-#endif
-
-		transformed = m_Mprojector.Transform(start);
-		start = transformed / transformed.W;
-		transformed = m_Mprojector.Transform(end);
-		end = transformed / transformed.W;
-
-#if DEBUG_UPDATE_POINTS
-		if (i == 0)
-		{
-			//LOGWARNING("after transformation");
-			LOGWARNING("[W] start 0: (%f, %f, %f, %f)", start.X, start.Y, start.Z, start.W);
-			LOGWARNING("[W] end 0: (%f, %f, %f, %f)", end.X, end.Y, end.Z, end.W);
-		}
-#endif
-
-		doIntersect = m_water.m_base.FindLineSegIntersection(CVector3D(start.X, start.Y, start.Z), CVector3D(end.X, end.Y, end.Z), &intersection);
-		//doIntersect = m_water.GetBasePlane().FindLineSegIntersection(CVector3D(start.X, start.Y, start.Z), CVector3D(end.X, end.Y, end.Z), &intersection);
-#if DEBUG_UPDATE_POINTS
-		if (i == 0)
-		{
-			LOGWARNING("Does intersect: %s", doIntersect ? "true" : "false");
-		}
-#endif
-		if (doIntersect)
-		{
-#if DEBUG_UPDATE_POINTS_INTERSECT_INFO
-			LOGWARNING("[W] intersetction 0: (%f, %f, %f)", intersection.X, intersection.Y, intersection.Z);
-#endif
-			transformed = CVector4D(intersection.X, intersection.Y, intersection.Z, 1.0);
-			m_model.Update(timer_Time(), transformed);
-			m_vertices[i] = transformed;
-		}
-	}
-#if DEBUG_UPDATE_POINTS
-	LOGWARNING("[W] point 0: (%f, %f, %f, %f)", m_vertices[0].X, m_vertices[0].Y, m_vertices[0].Z, m_vertices[0].W);
-#endif
-
-	m_gridVBVertices->m_Owner->UpdateChunkVertices(m_gridVBVertices, &m_vertices[0]);
-}
-

@@ -28,7 +28,8 @@ void main()
     //color = texture2D(heightMap1, 0.01 * waterCoords.xz);
     float t = texture2D(heightMap1, 0.01 * waterCoords.xz).g;
     //float t = waterHeight;
-    color = vec4(t, t, t, 1);
+    //color = vec4(t, t, t, 1);
+    color = vec4(1, 0, 0, 1);
     //float dh = waterHeight + 0.5;
     //color = vec4(dh, dh, dh, 1);
     //vec4 test = normalize(waterCoords);

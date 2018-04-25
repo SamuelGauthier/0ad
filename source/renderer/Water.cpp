@@ -17,10 +17,11 @@
 
 #include "precompiled.h"
 
-#include "renderer/FFTWaterModel.h"
-#include "renderer/Renderer.h"
+//#include "renderer/FFTWaterModel.h"
+//#include "renderer/Renderer.h"
+//#include "renderer/WaterManager.h"
+
 #include "renderer/Water.h"
-#include "renderer/WaterManager.h"
 
 Water::Water(PhysicalWaterModel& waterModel) : m_waterModel{ waterModel } {
 	m_heightfield = 0;
@@ -28,8 +29,8 @@ Water::Water(PhysicalWaterModel& waterModel) : m_waterModel{ waterModel } {
 	// Temporary
 	m_height = 5.0f;
 	// nullPtr m_height = g_Renderer.GetWaterManager()->m_WaterHeight;
-	m_color = CColor();
-	m_tint = CColor();
+	//m_color = CColor();
+	//m_tint = CColor();
 
 	//m_base.Set(normal, point)
 	// nullPtr m_base.Set(CVector3D(0.f, 1.f, 0.f), CVector3D(0.f, g_Renderer.GetWaterManager()->m_WaterHeight, 0.f));
