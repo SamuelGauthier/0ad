@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Wildfire Games.
+/* Copyright (C) 2018 Wildfire Games.
  * This file is part of 0 A.D.
  *
  * 0 A.D. is free software: you can redistribute it and/or modify
@@ -27,7 +27,7 @@ public:
 	virtual ~PhysicalWaterModel() {}
 
 	virtual void Update(double time, CVector4D& point) = 0;
-	virtual void GetHeightMapAtTime(double time, std::vector<u8> heightMap, std::vector<u8> normalMap) = 0;
+	virtual void GetHeightMapAtTime(double time, std::vector<u8>* heightMap, std::vector<u8>* normalMap) = 0;
 	virtual CTexturePtr GetHeightMapAtLevel(int level) = 0;
 	virtual void GenerateHeightMaps() = 0;
 

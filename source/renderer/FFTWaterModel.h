@@ -45,7 +45,7 @@ public:
 	~FFTWaterModel();
 
 	void Update(double time, CVector4D& point);
-    void GetHeightMapAtTime(double time, std::vector<u8> heightMap, std::vector<u8> normalMap);
+    void GetHeightMapAtTime(double time, std::vector<u8>* heightMap, std::vector<u8>* normalMap);
 	CTexturePtr GetHeightMapAtLevel(int level);
 	void GenerateHeightMaps();
 	void FFTTest();

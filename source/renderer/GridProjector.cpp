@@ -58,7 +58,7 @@
 #define DEBUG_UPDATE_POINTS_INTERSECT_INFO 0
 
 // TODO: Temporary declaration
-FFTWaterModel::WaterProperties wp(3e-7, 30, CVector2D(1,2), 2, 0.1, 128, 500);
+FFTWaterModel::WaterProperties wp(3e-7, 30, CVector2D(1,2), 2, 0.1, 64, 500);
 
 GridProjector::GridProjector() : m_model(FFTWaterModel(wp)), m_water(m_model), m_gridVBIndices(0), m_gridVBVertices(0)
 {
@@ -453,17 +453,19 @@ void GridProjector::Render(CShaderProgramPtr& shader)
 	shader->Uniform(str_waterD, m_water.m_base.m_Dist);
 	shader->Uniform(str_time, m_time);
     
-    m_water.GetPhysicalWaterModel().GetHeightMapAtTime(m_time, m_HeightMap, m_NormalMap);
+    m_water.GetPhysicalWaterModel().GetHeightMapAtTime(m_time, &m_HeightMap, &m_NormalMap);
     
-    g_Renderer.BindTexture(1, m_HeightMapID);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, wp.m_Resolution, wp.m_Resolution, 0, GL_RGB, GL_UNSIGNED_BYTE, &m_NormalMap);
+    //LOGWARNING("[In GridProjector] h at 0: %u, %u, %u", m_HeightMap[0], m_HeightMap[1], m_HeightMap[2]);
+    
+    g_Renderer.BindTexture(0, m_HeightMapID);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, wp.m_Resolution, wp.m_Resolution, 0, GL_RGB, GL_UNSIGNED_BYTE, &m_HeightMap[0]);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     
-    g_Renderer.BindTexture(0, m_NormalMapID);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, wp.m_Resolution, wp.m_Resolution, 0, GL_RGB, GL_UNSIGNED_BYTE, &m_HeightMap);
+    g_Renderer.BindTexture(1, m_NormalMapID);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, wp.m_Resolution, wp.m_Resolution, 0, GL_RGB, GL_UNSIGNED_BYTE, &m_NormalMap[0]);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
