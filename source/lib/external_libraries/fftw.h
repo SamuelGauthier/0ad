@@ -25,9 +25,13 @@
  */
 
 #ifndef INCLUDED_FFTW
-#define INCLUDED_FFTW 
+#define INCLUDED_FFTW
 
+#if OS_WIN
 #include <fftw/fftw3.h>
+#elif OS_MACOSX || OS_MAC
+#include <fftw3.h>
+#endif
 
 #if MSC_VERSION
 # pragma comment(lib, "libfftw3-3.lib")
