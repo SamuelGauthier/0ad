@@ -31,7 +31,8 @@
 #define SQRT_0_5 0.7071067 // 0.707106781186547524
 #define K_VEC(n, m, N, L) CVector2D(2 * M_PI * (n - N / 2) / L, 2 * M_PI * (m  - N / 2) / L)
 
-FFTWaterModel::FFTWaterModel(WaterProperties waterProperties) : m_WaterProperties(waterProperties)
+/*
+FFTWaterModel::FFTWaterModel(WaterProperties waterProperty) : m_WaterProperties(waterProperty)
 {
     u32 length = m_WaterProperties.m_Resolution*m_WaterProperties.m_Resolution;
     m_h_0 = std::vector<std::complex<float>>(length);
@@ -46,6 +47,33 @@ FFTWaterModel::FFTWaterModel(WaterProperties waterProperties) : m_WaterPropertie
     //PrecomputePhillipsSpectrum();
 	//TupleVecComplexF t = ComputePhillipsSpectrum(m_WaterProperties);
 	std::tie(m_h_0, m_h_0_star) = ComputePhillipsSpectrum(m_WaterProperties);
+	//m_h_0 = std::get<0>(t);
+	//m_h_0_star = std::get<1>(t);
+
+	// TODO: temporary value
+	SetMaxHeight(5.0f);
+	SetMinHeight(-5.0f);
+}
+*/
+
+FFTWaterModel::FFTWaterModel(std::vector<WaterProperties> waterProperties) : m_WaterProperties(waterProperties)
+{
+	// TODO: Temp ugly stuff:
+	m_WaterProperty = waterProperties.at(0);
+
+    u32 length = m_WaterProperty.m_Resolution*m_WaterProperty.m_Resolution;
+    m_h_0 = std::vector<std::complex<float>>(length);
+    m_h_0_star = std::vector<std::complex<float>>(length);
+    //m_h_tilde = std::vector<std::complex<float>>(length);
+    //m_HeightField = std::vector<CVector3D>(length);
+    //m_NormalMap = std::vector<CVector3D>(length);
+	m_HeightMaps = std::vector<std::vector<u8>>(waterProperties.size());
+	m_NormalMaps = std::vector<std::vector<u8>>(waterProperties.size());
+	m_VariationMap = std::vector<u8>(length);
+
+    //PrecomputePhillipsSpectrum();
+	//TupleVecComplexF t = ComputePhillipsSpectrum(m_WaterProperties);
+	std::tie(m_h_0, m_h_0_star) = ComputePhillipsSpectrum(m_WaterProperty);
 	//m_h_0 = std::get<0>(t);
 	//m_h_0_star = std::get<1>(t);
 
@@ -76,7 +104,7 @@ void FFTWaterModel::GetHeightMapAtTime(double time, std::vector<u8>* heightMap, 
     fftwf_plan p_ifft_D_x;
     fftwf_plan p_ifft_D_z;
     
-    u32 resolution = m_WaterProperties.m_Resolution * m_WaterProperties.m_Resolution;
+    u32 resolution = m_WaterProperty.m_Resolution * m_WaterProperty.m_Resolution;
     
     std::complex<float>* slope_x_term = new std::complex<float>[resolution];
     std::complex<float>* slope_z_term = new std::complex<float>[resolution];
@@ -98,18 +126,18 @@ void FFTWaterModel::GetHeightMapAtTime(double time, std::vector<u8>* heightMap, 
 #if 0
     std::complex<float> t = GetHTildeAt(2, 2, time);
     LOGWARNING("t @ 2,2: %f + (%f)i", t.real(), t.imag());
-    CVector2D k = K_VEC(2, 2, m_WaterProperties.m_Resolution, m_WaterProperties.m_Width);
+    CVector2D k = K_VEC(2, 2, m_WaterProperty.m_Resolution, m_WaterProperty.m_Width);
     LOGWARNING("k @ 2,2: (%f; %f)", k.X, k.Y);
 #endif
     
-    for (int i = 0; i < m_WaterProperties.m_Resolution; i++) {
-        for (int j = 0; j < m_WaterProperties.m_Resolution; j++) {
+    for (int i = 0; i < m_WaterProperty.m_Resolution; i++) {
+        for (int j = 0; j < m_WaterProperty.m_Resolution; j++) {
             
-            int index = j * m_WaterProperties.m_Resolution + i;
+            int index = j * m_WaterProperty.m_Resolution + i;
             
             m_h_tilde[index] = GetHTildeAt(i, j, time);
             
-            CVector2D k = K_VEC(i, j, m_WaterProperties.m_Resolution, m_WaterProperties.m_Width);
+            CVector2D k = K_VEC(i, j, m_WaterProperty.m_Resolution, m_WaterProperty.m_Width);
             float kLength = k.Length();
             CVector2D kNormalized = kLength == 0 ? k : k.Normalized();
             
@@ -140,9 +168,9 @@ void FFTWaterModel::GetHeightMapAtTime(double time, std::vector<u8>* heightMap, 
     in_D_z = (fftwf_complex*) D_z_term;
     
 #if 0
-    for (int i = 0; i < m_WaterProperties.m_Resolution; i++) {
-        for (int j = 0; j < m_WaterProperties.m_Resolution; j++) {
-            int index = j * m_WaterProperties.m_Resolution + i;
+    for (int i = 0; i < m_WaterProperty.m_Resolution; i++) {
+        for (int j = 0; j < m_WaterProperty.m_Resolution; j++) {
+            int index = j * m_WaterProperty.m_Resolution + i;
 
             LOGWARNING("in_slope_x: %f + (%f)i", in_slope_x[index][0], in_slope_x[index][1]);
             LOGWARNING("in_slope_z: %f + (%f)i", in_slope_z[index][0], in_slope_z[index][1]);
@@ -158,11 +186,11 @@ void FFTWaterModel::GetHeightMapAtTime(double time, std::vector<u8>* heightMap, 
     out_D_x = (fftwf_complex*)fftwf_malloc(sizeof(fftwf_complex) * resolution);
     out_D_z = (fftwf_complex*)fftwf_malloc(sizeof(fftwf_complex) * resolution);
     
-    p_ifft_height = fftwf_plan_dft_2d(m_WaterProperties.m_Resolution, m_WaterProperties.m_Resolution, in_height, out_height, FFTW_BACKWARD, FFTW_ESTIMATE);
-    p_ifft_slope_x = fftwf_plan_dft_2d(m_WaterProperties.m_Resolution, m_WaterProperties.m_Resolution, in_slope_x, out_slope_x, FFTW_BACKWARD, FFTW_ESTIMATE);
-    p_ifft_slope_z = fftwf_plan_dft_2d(m_WaterProperties.m_Resolution, m_WaterProperties.m_Resolution, in_slope_z, out_slope_z, FFTW_BACKWARD, FFTW_ESTIMATE);
-    p_ifft_D_x = fftwf_plan_dft_2d(m_WaterProperties.m_Resolution, m_WaterProperties.m_Resolution, in_D_x, out_D_x, FFTW_BACKWARD, FFTW_ESTIMATE);
-    p_ifft_D_z = fftwf_plan_dft_2d(m_WaterProperties.m_Resolution, m_WaterProperties.m_Resolution, in_D_z, out_D_z, FFTW_BACKWARD, FFTW_ESTIMATE);
+    p_ifft_height = fftwf_plan_dft_2d(m_WaterProperty.m_Resolution, m_WaterProperty.m_Resolution, in_height, out_height, FFTW_BACKWARD, FFTW_ESTIMATE);
+    p_ifft_slope_x = fftwf_plan_dft_2d(m_WaterProperty.m_Resolution, m_WaterProperty.m_Resolution, in_slope_x, out_slope_x, FFTW_BACKWARD, FFTW_ESTIMATE);
+    p_ifft_slope_z = fftwf_plan_dft_2d(m_WaterProperty.m_Resolution, m_WaterProperty.m_Resolution, in_slope_z, out_slope_z, FFTW_BACKWARD, FFTW_ESTIMATE);
+    p_ifft_D_x = fftwf_plan_dft_2d(m_WaterProperty.m_Resolution, m_WaterProperty.m_Resolution, in_D_x, out_D_x, FFTW_BACKWARD, FFTW_ESTIMATE);
+    p_ifft_D_z = fftwf_plan_dft_2d(m_WaterProperty.m_Resolution, m_WaterProperty.m_Resolution, in_D_z, out_D_z, FFTW_BACKWARD, FFTW_ESTIMATE);
     
     fftwf_execute(p_ifft_height);
     fftwf_execute(p_ifft_slope_x);
@@ -175,9 +203,9 @@ void FFTWaterModel::GetHeightMapAtTime(double time, std::vector<u8>* heightMap, 
     float min_height = min_slope;
     float max_height = -min_slope;
     
-    for (int i = 0; i < m_WaterProperties.m_Resolution; i++) {
-        for (int j = 0; j < m_WaterProperties.m_Resolution; j++) {
-            int index = i * m_WaterProperties.m_Resolution + j;
+    for (int i = 0; i < m_WaterProperty.m_Resolution; i++) {
+        for (int j = 0; j < m_WaterProperty.m_Resolution; j++) {
+            int index = i * m_WaterProperty.m_Resolution + j;
             float sign = 1;
             
             if((i + j) % 2) sign = -1;
@@ -186,13 +214,13 @@ void FFTWaterModel::GetHeightMapAtTime(double time, std::vector<u8>* heightMap, 
             //    LOGWARNING("before: %f %f %f", (float)out_height[index][0], (float)*out_D_x[index], (float)*out_D_z[index]);
             
             m_HeightField[index] = CVector3D(
-                                             /*(i - m_WaterProperties.m_Resolution / 2) * m_WaterProperties.m_Width / m_WaterProperties.m_Resolution*/ - sign * m_WaterProperties.m_Lambda * out_D_x[index][0],//(n - N / 2) * L_x / N - sign * lambda * out_D_x[index][0],
+                                             /*(i - m_WaterProperty.m_Resolution / 2) * m_WaterProperty.m_Width / m_WaterProperty.m_Resolution*/ - sign * m_WaterProperty.m_Lambda * out_D_x[index][0],//(n - N / 2) * L_x / N - sign * lambda * out_D_x[index][0],
                                              sign * out_height[index][0],
-                                             /*(j - m_WaterProperties.m_Resolution / 2) * m_WaterProperties.m_Width / m_WaterProperties.m_Resolution*/ - sign * m_WaterProperties.m_Lambda * out_D_z[index][0]//(m - M / 2) * L_z / M - sign * lambda * out_D_z[index][0]
+                                             /*(j - m_WaterProperty.m_Resolution / 2) * m_WaterProperty.m_Width / m_WaterProperty.m_Resolution*/ - sign * m_WaterProperty.m_Lambda * out_D_z[index][0]//(m - M / 2) * L_z / M - sign * lambda * out_D_z[index][0]
                                              );
 #if 0
 
-                LOGWARNING("sign, lambda: %f %f", sign, m_WaterProperties.m_Lambda);
+                LOGWARNING("sign, lambda: %f %f", sign, m_WaterProperty.m_Lambda);
                 LOGWARNING("hf: %f %f %f", m_HeightField[index].X, m_HeightField[index].Y, m_HeightField[index].Z);
                 LOGWARNING("h, Dx, Dz: %f %f %f", (float)out_height[index][0], (float)*out_D_x[index], (float)*out_D_z[index]);
 #endif
@@ -222,9 +250,9 @@ void FFTWaterModel::GetHeightMapAtTime(double time, std::vector<u8>* heightMap, 
     LOGWARNING("max_slope, min_slope: %f %f", max_slope, min_slope);
 #endif
     
-    for (int i = 0; i < m_WaterProperties.m_Resolution; i++) {
-        for (int j = 0; j < m_WaterProperties.m_Resolution; j++) {
-            int index = i * m_WaterProperties.m_Resolution + j;
+    for (int i = 0; i < m_WaterProperty.m_Resolution; i++) {
+        for (int j = 0; j < m_WaterProperty.m_Resolution; j++) {
+            int index = i * m_WaterProperty.m_Resolution + j;
             int index2 = 3*index;
             
             //if(index < 3)
@@ -329,6 +357,7 @@ TupleVecU8 FFTWaterModel::GetHeightAndNormalMapAtTime(double time, WaterProperti
     fftwf_plan p_ifft_D_z;
     
     u32 resolution = waterProps.m_Resolution * waterProps.m_Resolution;
+	LOGWARNING("%u", resolution);
     
     std::complex<float>* slope_x_term = new std::complex<float>[resolution];
     std::complex<float>* slope_z_term = new std::complex<float>[resolution];
@@ -338,11 +367,13 @@ TupleVecU8 FFTWaterModel::GetHeightAndNormalMapAtTime(double time, WaterProperti
     
     std::complex<float>* m_h_tilde = new std::complex<float>[resolution];
     
-    CVector3D* heightField = new CVector3D[resolution * 3];
-    CVector3D* normalMap = new CVector3D[resolution * 3];
+	//std::vector<CVector3D> heightField = std::vector<CVector3D>(2048 * 2048 * 3);
+	//std::vector<CVector3D> normalMap = std::vector<CVector3D>(2048 * 2048 * 3);
+    CVector3D* heightField = new CVector3D[2048*2048 * 3];
+    CVector3D* normalMap = new CVector3D[2048*2048 * 3];
 
-	std::vector<u8> pixelHeightMap = std::vector<u8>(resolution * 3);
-	std::vector<u8> pixelNormalMap = std::vector<u8>(resolution * 3);
+	std::vector<u8> pixelHeightMap = std::vector<u8>(2048 * 2048 * 3);
+	std::vector<u8> pixelNormalMap = std::vector<u8>(2048 * 2048 * 3);
 
     for (int i = 0; i < waterProps.m_Resolution; i++) {
         for (int j = 0; j < waterProps.m_Resolution; j++) {
@@ -400,9 +431,9 @@ TupleVecU8 FFTWaterModel::GetHeightAndNormalMapAtTime(double time, WaterProperti
             
             if((i + j) % 2) sign = -1;
             
-            heightField[index] = CVector3D(- sign * m_WaterProperties.m_Lambda * out_D_x[index][0],
+            heightField[index] = CVector3D(- sign * waterProps.m_Lambda * out_D_x[index][0],
                                              sign * out_height[index][0],
-                                           - sign * m_WaterProperties.m_Lambda * out_D_z[index][0]);
+                                           - sign * waterProps.m_Lambda * out_D_z[index][0]);
             
             if(heightField[index].X > max_height) max_height = heightField[index].X;
             if(heightField[index].Y > max_height) max_height = heightField[index].Y;
@@ -425,9 +456,9 @@ TupleVecU8 FFTWaterModel::GetHeightAndNormalMapAtTime(double time, WaterProperti
     }
     
 	// Transform form floating point values to pixel data (unsigned byte)
-    for (int i = 0; i < m_WaterProperties.m_Resolution; i++) {
-        for (int j = 0; j < m_WaterProperties.m_Resolution; j++) {
-            int index = i * m_WaterProperties.m_Resolution + j;
+    for (int i = 0; i < waterProps.m_Resolution; i++) {
+        for (int j = 0; j < waterProps.m_Resolution; j++) {
+            int index = i * waterProps.m_Resolution + j;
             int index2 = 3*index;
             
             pixelHeightMap[index2] = (u8) round((heightField[index].X - min_height) * 255 / (max_height - min_height));
@@ -463,6 +494,18 @@ TupleVecU8 FFTWaterModel::GetHeightAndNormalMapAtTime(double time, WaterProperti
 	return std::make_tuple(pixelHeightMap, pixelNormalMap);
 }
 
+std::vector<u8> FFTWaterModel::GetHeightMapAtLevel(u8 level)
+{
+	if (level > m_HeightMaps.size()) return std::vector<u8>();
+	return m_HeightMaps[level];
+}
+
+std::vector<u8> FFTWaterModel::GetNormalMapAtLevel(u8 level)
+{
+	if (level > m_NormalMaps.size()) return std::vector<u8>();
+	return m_NormalMaps[level];
+}
+
 void FFTWaterModel::GenerateHeightMaps()
 {
     //wchar_t pathname[PATH_MAX];
@@ -477,24 +520,23 @@ void FFTWaterModel::GenerateHeightMaps()
     //}
 
 	// TODO: Temp here
-	//WaterProperties current = m_WaterProperties;
-	double time = 3.2;
-	WaterProperties coarseWaves = WaterProperties(3e-7, 43, CVector2D(1,5), 1, 0.1, 2048, 4000);
-	WaterProperties mediumWaves = WaterProperties(6e-7, 20, CVector2D(4,1.5), 2, 0.1, 2048, 5000);
-	WaterProperties detailedWaves = WaterProperties(6e-7, 20, CVector2D(1,1.5), 1, 0.1, 2048, 8000);
-	std::vector<WaterProperties> wps = { coarseWaves, mediumWaves, detailedWaves };
+	//WaterProperties current = m_WaterProperty;
 
+	LOGWARNING("%d", m_WaterProperties.size());
 
-	for (size_t i = 0; i < wps.size(); i++)
+	for (size_t i = 0; i < m_WaterProperties.size(); i++)
 	{
-		u32 resolution = wps.at(i).m_Resolution * wps.at(i).m_Resolution;
+		u32 resolution = m_WaterProperties.at(i).m_Resolution * m_WaterProperties.at(i).m_Resolution;
 		std::vector<u8> heightMap = std::vector<u8>(resolution);
 		std::vector<u8> normalMap = std::vector<u8>(resolution);
 
-		std::tie(heightMap, normalMap) = GetHeightAndNormalMapAtTime(time, wps.at(i));
+		std::tie(heightMap, normalMap) = GetHeightAndNormalMapAtTime(m_WaterProperties.at(i).m_Time, m_WaterProperties.at(i));
 
+		m_HeightMaps.push_back(heightMap);
+		m_NormalMaps.push_back(normalMap);
 	}
     
+	// TODO: Create variation maps
 }
 
 //void FFTWaterModel::ComputePhillipsSpectrum(WaterProperties waterProps, std::vector<std::complex<float>>* h0, std::vector<std::complex<float>>* h0star)
@@ -545,8 +587,8 @@ TupleVecComplexF FFTWaterModel::ComputePhillipsSpectrum(WaterProperties waterPro
 
 std::complex<float> FFTWaterModel::GetHTildeAt(u16 n, u16 m, double time)
 {
-    int index = n * m_WaterProperties.m_Resolution + m;
-    CVector2D k = K_VEC(n, m, m_WaterProperties.m_Resolution, m_WaterProperties.m_Width);
+    int index = n * m_WaterProperty.m_Resolution + m;
+    CVector2D k = K_VEC(n, m, m_WaterProperty.m_Resolution, m_WaterProperty.m_Width);
     float w = sqrt(k.Length() * G);
     
     std::complex<float> term1 = m_h_0[index] * exp(std::complex<float>(0.0f, w * time));

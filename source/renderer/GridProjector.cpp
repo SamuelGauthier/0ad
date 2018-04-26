@@ -57,10 +57,15 @@
 #define DEBUG_UPDATE_POINTS 0
 #define DEBUG_UPDATE_POINTS_INTERSECT_INFO 0
 
-// TODO: Temporary declaration
-FFTWaterModel::WaterProperties wp(3e-7, 30, CVector2D(1,2), 2, 0.1, 64, 500);
+using WaterProps = FFTWaterModel::WaterProperties;
 
-GridProjector::GridProjector() : m_model(FFTWaterModel(wp)), m_water(m_model), m_gridVBIndices(0), m_gridVBVertices(0)
+double TIME = 3.2;
+WaterProps coarseWaves = WaterProps(3e-7, 43, CVector2D(1, 5), 1, 0.1, 2048, 4000, TIME);
+WaterProps mediumWaves = WaterProps(6e-7, 20, CVector2D(4, 1.5), 2, 0.1, 2048, 5000, TIME);
+WaterProps detailedWaves = WaterProps(6e-7, 20, CVector2D(1, 1.5), 1, 0.1, 2048, 8000, TIME);
+std::vector<WaterProps> wps = { coarseWaves, mediumWaves, detailedWaves };
+
+GridProjector::GridProjector() : m_model(FFTWaterModel(wps)), m_water(m_model), m_gridVBIndices(0), m_gridVBVertices(0)
 {
 	m_isInitialized = false;
 	m_time = 0.0;
@@ -75,11 +80,17 @@ GridProjector::GridProjector() : m_model(FFTWaterModel(wp)), m_water(m_model), m
 	m_Mrange = CMatrix3D();
 	m_Mprojector = CMatrix3D();
     
-    m_NormalMapID = 0;
-    m_HeightMapID = 0;
+    m_NormalMapsID = std::vector<GLuint>(3);
+    m_HeightMapsID = std::vector<GLuint>(3);
     
-    m_HeightMap = std::vector<u8>(wp.m_Resolution * wp.m_Resolution * 3);
-    m_NormalMap = std::vector<u8>(wp.m_Resolution * wp.m_Resolution * 3);
+    //m_HeightMap = std::vector<u8>(wp.m_Resolution * wp.m_Resolution * 3);
+    //m_NormalMap = std::vector<u8>(wp.m_Resolution * wp.m_Resolution * 3);
+
+	for (size_t i = 0; i < wps.size(); i++)
+	{
+		u32 size = wps.at(i).m_Resolution * wps.at(i).m_Resolution * 3;
+		m_HeightMaps.push_back(std::vector<u8>(size));
+	}
 }
 
 GridProjector::~GridProjector()
@@ -123,8 +134,11 @@ void GridProjector::Initialize()
 	// TODO: Temporary here
 	m_water.GetPhysicalWaterModel().GenerateHeightMaps();
     
-    glGenTextures(1, &m_NormalMapID);
-    glGenTextures(1, &m_HeightMapID);
+    //glGenTextures(3, &m_NormalMapsID[0]);
+    //glGenTextures(3, &m_HeightMapsID[0]);
+
+	//CreateTextureHeightMaps();
+	//CreateTextureNormalMaps();
 
 	m_isInitialized = true;
 }
@@ -446,24 +460,33 @@ void GridProjector::Render(CShaderProgramPtr& shader)
 	shader->Uniform(str_waterD, m_water.m_base.m_Dist);
 	shader->Uniform(str_time, m_time);
     
-    m_water.GetPhysicalWaterModel().GetHeightMapAtTime(m_time, &m_HeightMap, &m_NormalMap);
+    //m_water.GetPhysicalWaterModel().GetHeightMapAtTime(m_time, &m_HeightMap, &m_NormalMap);
     
-    g_Renderer.BindTexture(0, m_HeightMapID);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, wp.m_Resolution, wp.m_Resolution, 0, GL_RGB, GL_UNSIGNED_BYTE, &m_HeightMap[0]);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    //g_Renderer.BindTexture(0, m_HeightMapID);
+    //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, wp.m_Resolution, wp.m_Resolution, 0, GL_RGB, GL_UNSIGNED_BYTE, &m_HeightMap[0]);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     
-    g_Renderer.BindTexture(1, m_NormalMapID);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, wp.m_Resolution, wp.m_Resolution, 0, GL_RGB, GL_UNSIGNED_BYTE, &m_NormalMap[0]);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    //g_Renderer.BindTexture(1, m_NormalMapID);
+    //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, wp.m_Resolution, wp.m_Resolution, 0, GL_RGB, GL_UNSIGNED_BYTE, &m_NormalMap[0]);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     
-    shader->BindTexture(str_heightMap1, m_HeightMapID);
-    shader->BindTexture(str_heightMap2, m_NormalMapID);
+	//shader->BindTexture(str_heightMap1, m_HeightMapsID.at(0));
+	//shader->BindTexture(str_heightMap2, m_HeightMapsID.at(1));
+	//shader->BindTexture(str_heightMap3, m_HeightMapsID.at(2));
+
+	//shader->BindTexture(str_normalMap1, m_NormalMapsID.at(0));
+	//shader->BindTexture(str_normalMap2, m_NormalMapsID.at(1));
+	//shader->BindTexture(str_normalMap3, m_NormalMapsID.at(2));
+
+    //shader->BindTexture(str_heightMap1, m_HeightMapID);
+    //shader->BindTexture(str_heightMap2, m_NormalMapID);
+    //shader->BindTexture(str_heightMap3, m_NormalMapID);
     
 	//shader->BindTexture(str_heightMap1, m_water.GetPhysicalWaterModel().GetHeightMapAtLevel(0));
 	//shader->BindTexture(str_heightMap2, m_water.GetPhysicalWaterModel().GetHeightMapAtLevel(1));
@@ -484,4 +507,30 @@ void GridProjector::Render(CShaderProgramPtr& shader)
 	CVertexBuffer::Unbind();
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
+}
+
+void GridProjector::CreateTextureHeightMaps()
+{
+	for (size_t i = 0; i < m_HeightMaps.size(); i++)
+	{
+		g_Renderer.BindTexture(i, m_HeightMapsID.at(i));
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, wps.at(i).m_Resolution, wps.at(i).m_Resolution, 0, GL_RGB, GL_UNSIGNED_BYTE, &m_HeightMaps.at(i)[0]);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	}
+}
+
+void GridProjector::CreateTextureNormalMaps()
+{
+	for (size_t i = 0; i < m_NormalMaps.size(); i++)
+	{
+		g_Renderer.BindTexture(i, m_NormalMapsID.at(i));
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, wps.at(i).m_Resolution, wps.at(i).m_Resolution, 0, GL_RGB, GL_UNSIGNED_BYTE, &m_NormalMaps.at(i)[0]);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	}
 }

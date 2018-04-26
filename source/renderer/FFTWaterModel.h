@@ -42,34 +42,35 @@ public:
         float m_L;
         u16 m_Resolution;
         u16 m_Width;
-        WaterProperties(float amplitude, u16 windSpeed, CVector2D windDirection, float lambda, float l, u16 resolution, u16 width) : m_Amplitude{amplitude}, m_WindSpeed{windSpeed}, m_WindDirection{windDirection.Normalized()}, m_Lambda{lambda}, m_L{l}, m_Resolution{resolution}, m_Width{width} {}
+		double m_Time;
+		WaterProperties(float amplitude = 3e-7, u16 windSpeed = 30, CVector2D windDirection = CVector2D(1, 1),
+			float lambda = 1, float l = 0.1, u16 resolution = 1024, u16 width = 2000, double time = 0.0) :
+			m_Amplitude{ amplitude }, m_WindSpeed{ windSpeed }, m_WindDirection{ windDirection.Normalized() },
+			m_Lambda{ lambda }, m_L{ l }, m_Resolution{ resolution }, m_Width{ width }, m_Time{ time } {}
     };
     
-	FFTWaterModel(WaterProperties waterProperties);
+	//FFTWaterModel(WaterProperties waterProperty);
+	FFTWaterModel(std::vector<WaterProperties> waterProperties);
 	~FFTWaterModel();
 
     void GetHeightMapAtTime(double time, std::vector<u8>* heightMap, std::vector<u8>* normalMap);
-	//CTexturePtr GetHeightMapAtLevel(int level);
+	std::vector<u8> GetHeightMapAtLevel(u8 level);
+	std::vector<u8> GetNormalMapAtLevel(u8 level);
+	std::vector<u8> GetVariationMap() { return m_VariationMap; }
 	void GenerateHeightMaps();
 
 private:
-    WaterProperties m_WaterProperties;
-	//CTexturePtr m_HeightMaps[60];
+    WaterProperties m_WaterProperty;
+    std::vector<WaterProperties> m_WaterProperties;
 	std::vector<std::vector<u8>> m_HeightMaps;
 	std::vector<std::vector<u8>> m_NormalMaps;
 	std::vector<u8> m_VariationMap;
 	
     std::vector<std::complex<float>> m_h_0;
     std::vector<std::complex<float>> m_h_0_star;
-    //std::vector<std::complex<float>> m_h_tilde;
-    //std::vector<CVector3D> m_HeightField;
-    //std::vector<CVector3D> m_NormalMap;
 
-    //void PrecomputePhillipsSpectrum();
-
-	TupleVecComplexF ComputePhillipsSpectrum(WaterProperties waterProps);
-	//void FFTWaterModel::ComputePhillipsSpectrum(WaterProperties waterProps, std::vector<std::complex<float>>* h0, std::vector<std::complex<float>>* h0star)
 	TupleVecU8 GetHeightAndNormalMapAtTime(double time, WaterProperties waterProps);
+	TupleVecComplexF ComputePhillipsSpectrum(WaterProperties waterProps);
 
 	std::complex<float> GetHTildeAt(u16 n, u16 m, double time);
 };
