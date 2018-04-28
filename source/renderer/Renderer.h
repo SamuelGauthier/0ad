@@ -315,7 +315,7 @@ public:
 	 */
 	SkyManager* GetSkyManager() { return m_SkyManager; }
     
-    ProjectionSystem* GetProjectionSystem() { return m_ProjectionSystem; }
+    //ProjectionSystem* GetProjectionSystem() { return m_ProjectionSystem; }
 
 	CTextureManager& GetTextureManager();
 
@@ -480,7 +480,7 @@ protected:
 	 */
 	SkyManager* m_SkyManager;
     
-    ProjectionSystem* m_ProjectionSystem;
+    //ProjectionSystem* m_ProjectionSystem;
 
 	/**
 	 * Enable rendering of terrain tile priority text overlay, for debugging.

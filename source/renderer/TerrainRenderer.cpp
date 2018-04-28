@@ -948,6 +948,7 @@ void TerrainRenderer::RenderWater(const CShaderDefines& context, int cullGroup, 
 
 void TerrainRenderer::RenderProjectedWater(const CShaderDefines& context, int cullGroup)
 {
+    /*
     PROFILE3_GPU("projected water");
     
     if(g_Renderer.m_WaterRenderMode == WIREFRAME)
@@ -979,6 +980,7 @@ void TerrainRenderer::RenderProjectedWater(const CShaderDefines& context, int cu
     
     if(g_Renderer.m_WaterRenderMode == WIREFRAME)
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+     */
 }
 
 void TerrainRenderer::RenderPriorities(int cullGroup)

@@ -24,7 +24,7 @@
 #include "renderer/Water.h"
 
 Water::Water(PhysicalWaterModel& waterModel) : m_waterModel{ waterModel } {
-	m_heightfield = 0;
+	//m_heightfield = 0;
 	m_area = 0;
 	// Temporary
 	m_height = 5.0f;

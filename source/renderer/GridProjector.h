@@ -68,11 +68,11 @@ private:
 	std::vector<CVector4D> m_vertices;
 	std::vector<CVector4D> m_verticesModel;
 	
-	std::vector<GLuint> m_HeightMapsID;
-	std::vector<GLuint> m_NormalMapsID;
+	std::vector<GLuint> m_heightMapsID;
+	std::vector<GLuint> m_normalMapsID;
 
-	std::vector<std::vector<u8>> m_HeightMaps;
-	std::vector<std::vector<u8>> m_NormalMaps;
+	std::vector<std::vector<u8>> m_heightMaps;
+	std::vector<std::vector<u8>> m_normalMaps;
 };
 
 #endif // !INCLUDED_GRIDPROJECTOR

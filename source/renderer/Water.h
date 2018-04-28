@@ -43,14 +43,15 @@ public:
 private:
 	//CTexture m_heightfield;
 	//CTexture m_area;
-	int* m_heightfield;
+    std::vector<std::vector<u8>> m_heightFields;
+    std::vector<std::vector<u8>> m_normalMaps;
+    std::vector<u8> m_variationMap;
 	int* m_area;
 	float m_height;
 	//float m_maxHeight;
 	//float m_minHeight;
 	//CColor m_color;
 	//CColor m_tint;
-
 
 	PhysicalWaterModel& m_waterModel;
 };

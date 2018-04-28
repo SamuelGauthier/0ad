@@ -276,7 +276,7 @@ public:
     
     // Projection System
     //ProjectionSystem projectionSystem; can't do that
-    GridProjector projectionSystem;
+    //GridProjector projectionSystem;
 
 	/// Texture manager
 	CTextureManager textureManager;
@@ -422,7 +422,7 @@ CRenderer::CRenderer()
 	m_WaterManager = &m->waterManager;
 	m_SkyManager = &m->skyManager;
     //m_ProjectionSystem = &m->projectionSystem;
-    m_ProjectionSystem = &m->projectionSystem;
+    //m_ProjectionSystem = &m->projectionSystem;
 
 	g_ProfileViewer.AddRootTable(&m->profileTable);
 
@@ -1561,8 +1561,8 @@ void CRenderer::RenderSubmissions(const CBoundingBoxAligned& waterScissor)
 	ogl_WarnIfError();
 
     // Temp stuff
-    m->terrainRenderer.RenderProjectedWater(context, cullGroup);
-    ogl_WarnIfError();
+    //m->terrainRenderer.RenderProjectedWater(context, cullGroup);
+    //ogl_WarnIfError();
     
 	// render water
 	if (m_WaterManager->m_RenderWater && g_Game && waterScissor.GetVolume() > 0)
