@@ -22,9 +22,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 0 A.D.\n"
-"POT-Creation-Date: 2018-02-28 09:04+0100\n"
-"PO-Revision-Date: 2018-02-28 15:24+0000\n"
-"Last-Translator: Adrián Chaves Fernández <adriyetichaves@gmail.com>\n"
+"POT-Creation-Date: 2018-04-23 09:05+0200\n"
+"PO-Revision-Date: 2018-04-25 06:53+0000\n"
+"Last-Translator: Vasilis Drosos <basilisd@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/wildfire-games/0ad/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -268,11 +268,11 @@ msgid ""
 " subject to numerous yet short-lived invasions. Ultimately consolidating "
 "power with Rhodes at their lead, these islands developed into great "
 "maritime, commercial and cultural centers. Will you acheive the same?"
-msgstr ""
+msgstr "Για τον έλεγχο της πρόσβασης στο Αιγαίο πέλαγος από την Ανατολή, τα Δωδεκάνησα έχουν υποστεί πολυάριθμες βραχύβιες εισβολές. Τελικά εδραίωσαν την εξουσία τους με πρωτεύουσα τη Ρόδο, τα νησιά αυτά αναπτύχθηκαν σε μεγάλα θαλάσσια, εμπορικά και πολιτιστικά κέντρα. Θα επιτύχετε το ίδιο;"
 
 #: maps/random/dodecanese.jsonsettings.Name
 msgid "Dodecanese"
-msgstr ""
+msgstr "Δωδεκάνησα"
 
 #: maps/random/elephantine.jsonsettings.Description
 msgid ""
@@ -282,11 +282,11 @@ msgid ""
 "became an important way-station for the trade in ivory and other goods. It "
 "was considered to be the home of the god Khnum, guardian of the source of "
 "the Nile, and boasted an impressive temple complex."
-msgstr ""
+msgstr "Εκεί που σχηματίζονταν τα παραδοσιακά σύνορα μεταξύ της αρχαίας Κους και της Αιγύπτου, βρισκόταν το οχυρωμένο νησί της Ελεφαντίας στον πρώτο καταρράκτη του ποταμού Νείλου. Ως σύνορο μεταξύ Άνω Αιγύπτου και Κάτω Νουβίας, η Ελεφαντία έγινε ένας σημαντικός σταθμός για το εμπόριο ελεφαντόδοντου και άλλων αγαθών. Θεωρήθηκε ως το σπίτι του θεού Κνεμού, θεματοφύλακα της πηγής του Νείλου, και καμάρωνε για ένα εντυπωσιακό συγκρότημα ναών."
 
 #: maps/random/elephantine.jsonsettings.Name
 msgid "Elephantine"
-msgstr ""
+msgstr "Ελεφαντίνη"
 
 #: maps/random/empire.jsonsettings.Description
 msgid ""
@@ -313,11 +313,24 @@ msgid ""
 "[color=\"red\"]IMPORTANT NOTE: AI PLAYERS DO NOT WORK WITH THIS MAP[/color]\n"
 "\n"
 "A once fertile valley, desolated by the eruption of the long-dormant volcano in the heart of the region. Following years of empty, scorched deadness, signs of life started reappearing and spreading. Now the land is half-way to the full lushness of its former era. Alas, it is not to be: following a long stretch of drought, interminable rains have set in in the higher regions to the north. Water levels are rising at drastic levels, slowly forcing players to seek the high ground of the lesser, extinct volcanoes or the now again dormant great cone."
-msgstr ""
+msgstr "[color=\"red\"]ΣΗΜΑΝΤΙΚΗ ΣΗΜΕΙΩΣΗ: Η ΤΕΧΝΙΚΗ ΝΟΗΜΟΣΥΝΗ ΔΕΝ ΛΕΙΤΟΥΡΓΕΙ ΣΕ ΑΥΤΟΝ ΤΟ ΧΑΡΤΗ[/color]\n\nΉταν κάποτε μία εύφορη κοιλάδα, ερημώθηκε από την έκρηξη, του για πολύ καιρό αδρανούς ηφαιστείου στην καρδιά της περιοχής. Μετά από χρόνια ερήμωσις, νεκρών αποκαϊδιών, τα σημάδια της ζωής άρχισαν να επανεμφανίζονται και να εξαπλώνονται. Τώρα η γη βρίσκεται στα μισά του δρόμου προς την πλήρη βλάστηση της προγενέστερης κατάστασης. Δυστυχώς, δεν πρόκειται να συμβεί: μετά από μια μεγάλη περίοδο ξηρασίας, ατέλειωτες βροχές έχουν πέσει στις υψηλότερες περιοχές προς τα βόρεια. Τα επίπεδα των υδάτων αυξάνονται σε δραστικά επίπεδα, αναγκάζοντας αργά τους παίκτες να αναζητήσουν το υψηλό έδαφος των μικρότερων, εξαφανισμένων ηφαιστείων ή τον πλέον αδρανή μεγάλο κώνο."
 
 #: maps/random/extinct_volcano.jsonsettings.Name
 msgid "Extinct Volcano"
 msgstr "Ανενεργό Ηφαίστειο"
+
+#: maps/random/fields_of_meroe.jsonsettings.Description
+msgid ""
+"The \"Island of Meroe\", a vast peninsula flanked by the Nile and Atbarah "
+"rivers, formed the heartland of ancient Kush. Where the harsh deserts start "
+"making way for the semi-arid savannahs and small acacia forests dot the "
+"landscape. The area is rich in resources and the ever-present Nile brings "
+"life, but grave threats loom on the opposite riverbank."
+msgstr "Το \"Νησί Μερόη\", μια τεράστια χερσόνησος που πλαισιώνεται από τους ποταμούς Νείλου και Ασταβόρα, αποτέλεσε την καρδιά του αρχαίου Κους. Όπου οι σκληρές έρημοι αρχίζουν να δίνουν τη θέση τους στις ημίξερες σαβάνες και τα μικρά δάση ακακίας σπαρμένα στο τοπίο. Η περιοχή είναι πλούσια σε πόρους και ο πάντα παρών Νείλος φέρνει τη ζωή, αλλά οι σοβαρές απειλές βρίσκονται στην απέναντι όχθη του ποταμού."
+
+#: maps/random/fields_of_meroe.jsonsettings.Name
+msgid "Fields of Meroe"
+msgstr "Πεδία της Μερόης"
 
 #: maps/random/flood.jsonsettings.Description
 msgid ""
@@ -394,11 +407,11 @@ msgid ""
 "western civilization. Yet the land lacks unity, countless cit-states vie for"
 " dominance. Will you lead your polis to glory and greatness or see it fall "
 "into oblivion, erased from the histories?"
-msgstr ""
+msgstr "Ελλάς, το σπίτι των Ελλήνων και μέσω αυτών γεννήθηκε το θεμέλιο του δυτικού πολιτισμού. Όμως, η χώρα στερείται ενότητας, αμέτρητα κράτη-πόλεις αγωνίζονται για την κυριαρχία. Θα οδηγήσετε την πόλη σας στη δόξα και το μεγαλείο ή θα την δείτε να πέφτει στη λήθη και να διαγράφετε από την ιστορία;"
 
 #: maps/random/hellas.jsonsettings.Name
 msgid "Hellas"
-msgstr ""
+msgstr "Ελλάς"
 
 #: maps/random/hells_pass.jsonsettings.Description
 msgid ""
@@ -452,6 +465,22 @@ msgstr "Οι παίκτες ξεκινούν σε μικρά νησιά ενω �
 msgid "Islands"
 msgstr "Νησιά"
 
+#: maps/random/jebel_barkal.jsonsettings.Description
+msgid ""
+"Starting near the fertile banks of the Nile, the players besiege the heavily"
+" defended city Napata which lies at the foot of the hill Jebel Barkal, the "
+"\"Pure Mountain\". It is the Southern home of Amun, and according to "
+"Kushites and Egyptians alike, the birthplace of man. Known as the Throne of "
+"the Two Lands, the ancient religious capital of Napata lay in its shadow. "
+"This is where Kings were made... and unmade! Abutting a rich floodplain "
+"downstream from the 4th cataract, this area became the breadbasket of "
+"ancient Kush."
+msgstr "Ξεκινώντας από τις γόνιμες όχθες του Νείλου, οι παίκτες πολιορκούν τη βαριά οχυρωμένη πόλη Νάπατα, η οποία βρίσκεται στους πρόποδες του λόφου Τζεμπέλ Μπαρκάλ, του «Ιερού Βουνού». Είναι το νότιο σπίτι του Αμούν, και σύμφωνα με τους Κουσίτες και τους Αιγυπτίους, η γενέτειρα του ανθρώπου. Γνωστή ως ο Θρόνος των Δύο Χωρών, η αρχαία θρησκευτική πρωτεύουσα Νάπατα βρισκόταν στη σκιά του. Εδώ ήταν που οι Βασιλιάδες γίνονταν... και ξεγίνονταν! Έχοντας μια πλούσια πλημμυρίδα από τον 4ο καταρράκτη, αυτή η περιοχή έγινε ο ζωοφόρος σιτοβολώνας του αρχαίας Κους."
+
+#: maps/random/jebel_barkal.jsonsettings.Name
+msgid "Jebel Barkal"
+msgstr "Τζεμπέλ Μπαρκάλ"
+
 #: maps/random/kerala.jsonsettings.Description
 msgid ""
 "Players start in the southwestern shores of India between a sea and "
@@ -504,17 +533,17 @@ msgstr "Πεδιάδες Λωρραίνης"
 #: maps/random/lower_nubia.jsonsettings.Description
 msgid ""
 "Known in the Greco-Roman world as the Triakontaschoinos, Lower Nubia was the"
-" area between the first and second cataracts of Nile and formed the "
+" area between the first and second cataracts of the Nile and formed the "
 "traditional border region between Kush and Egypt. The scorching desert, "
 "steep valleys and towering cliffs of the area make this an inhospitable "
 "place to live, but the control of this ancient corridor was vital for any "
 "power seeking to control the lucrative trade routes on the Nile and affords "
 "access to the rich goldfields of the Nubian desert."
-msgstr ""
+msgstr "Γνωστή στον ελληνορωμαϊκό κόσμο ως Τριακοντάσχοινος, η Κάτω Νουβία ήταν η περιοχή μεταξύ του πρώτου και του δεύτερου καταρράκτη του Νείλου και αποτελούσε την παραδοσιακή παραμεθόρια περιοχή μεταξύ της Κους και της Αιγύπτου. Η καυτή έρημος, οι απόκρημνες κοιλάδες και οι πανύψηλοι βράχοι της περιοχής την καθιστούν ένα αφιλόξενο μέρος για να ζήσουν, αλλά ο έλεγχος αυτής της αρχαίας διόδου ήταν ζωτικός για κάθε δύναμη που επιδιώκει να ελέγξει τις προσοδοφόρες εμπορικές οδούς στο Νείλο και να προσφέρει πρόσβαση σε περιοχές πλούσιες σε κοιτάσματα χρυσού στην έρημο της Νούβιας."
 
 #: maps/random/lower_nubia.jsonsettings.Name
 msgid "Lower Nubia"
-msgstr ""
+msgstr "Κάτω Νούβια"
 
 #: maps/random/mainland.jsonsettings.Description
 msgid "A typical map without any water."
@@ -781,11 +810,11 @@ msgid ""
 "the wild searching for prey, a lone arctic fox scurries away to hide. "
 "Starting in this seemingly hostile terrain, players must conquer - or be "
 "conquered."
-msgstr ""
+msgstr "Σκεπασμένη με ένα χαλί χιονιού, η γη κοιμάται ελαφρά για ανάπαυση, αλλά αυτή η εύθραυστη ειρήνη σύντομα θα αναταραχτεί - όχι από την άνοιξη. Μεγάλες αγέλες λύκων κρύβονται στην άγρια φύση ψάχνοντας για θήραμα, μια μοναχική αρκτική αλεπού περνάει μακριά για να κρυφτεί. Αρχίζοντας σε αυτό το φαινομενικά εχθρικό έδαφος, οι παίκτες πρέπει να κατακτήσουν - ή να κατακτηθούν."
 
 #: maps/random/scythian_rivulet.jsonsettings.Name
 msgid "Scythian Rivulet"
-msgstr ""
+msgstr "Σκύθιο Ρυάκι"
 
 #: maps/random/snowflake_searocks.jsonsettings.Description
 msgid "Many small islands connected to each other by narrow passages."
@@ -837,7 +866,7 @@ msgstr "Ο Νείλος"
 
 #: maps/random/unknown.jsonsettings.Description
 msgid "The unknown. Warning: May be a naval map."
-msgstr ""
+msgstr "Το άγνωστο. Προειδοποίηση: Μπορεί να είναι ένας ναυτικός χάρτης."
 
 #: maps/random/unknown.jsonsettings.Name
 msgid "Unknown"
@@ -845,7 +874,7 @@ msgstr "Άγνωστο"
 
 #: maps/random/unknown_land.jsonsettings.Description
 msgid "The unknown."
-msgstr ""
+msgstr "Το άγνωστο."
 
 #: maps/random/unknown_land.jsonsettings.Name
 msgid "Unknown Land"
@@ -863,7 +892,7 @@ msgstr "Ηφαιστειακή γη"
 msgid ""
 "A demonstration of wall placement methods/code in random maps. Giant map "
 "size is recommended!"
-msgstr ""
+msgstr "Μια επίδειξη μεθόδων/κώδικα τοποθέτησης τοίχων σε τυχαίους χάρτες. Συνιστάται χάρτης γιγαντιαίου μεγέθους!"
 
 #: maps/random/wall_demo.jsonsettings.Name
 msgid "Wall Demo"
@@ -877,6 +906,50 @@ msgstr "Μία λίμνη περιστοιχισμένη από λόφους."
 msgid "Wild Lake"
 msgstr "Άγρια Λίμνη"
 
+#: maps/random/rmbiome/fields_of_meroe/dry.jsonDescription.Description
+msgid ""
+"The vitalizing waters of the Nile sustain life along its banks, while the "
+"long dry season scorches the land."
+msgstr "Τα ζωογόνα νερά του Νείλου διατηρούν τη ζωή στις όχθες του, ενώ η μακρά περίοδος ξηρασίας αποξηραίνει τη γη."
+
+#: maps/random/rmbiome/fields_of_meroe/dry.jsonDescription.Description
+msgctxt "biome definition"
+msgid ""
+"The vitalizing waters of the Nile sustain life along its banks, while the "
+"long dry season scorches the land."
+msgstr "Τα ζωογόνα νερά του Νείλου διατηρούν τη ζωή στις όχθες του, ενώ η μακρά περίοδος ξηρασίας αποξηραίνει τη γη."
+
+#: maps/random/rmbiome/fields_of_meroe/dry.jsonDescription.Title
+msgid "Dry Season"
+msgstr "Περίοδος Ξηρασίας"
+
+#: maps/random/rmbiome/fields_of_meroe/dry.jsonDescription.Title
+msgctxt "biome definition"
+msgid "Dry Season"
+msgstr "Περίοδος Ξηρασίας"
+
+#: maps/random/rmbiome/fields_of_meroe/rainy.jsonDescription.Description
+msgid ""
+"Revelling in the much awaited rain, the baked land transforms into a lush "
+"haven for both man and beast."
+msgstr "Λαχταρώντας την πολυαναμενόμενη βροχή, η ψημένη γη μεταμορφώνεται σε ένα καταπράσινο καταφύγιο τόσο για τον άνθρωπο όσο και για το θηρίο."
+
+#: maps/random/rmbiome/fields_of_meroe/rainy.jsonDescription.Description
+msgctxt "biome definition"
+msgid ""
+"Revelling in the much awaited rain, the baked land transforms into a lush "
+"haven for both man and beast."
+msgstr "Λαχταρώντας την πολυαναμενόμενη βροχή, η ψημένη γη μεταμορφώνεται σε ένα καταπράσινο καταφύγιο τόσο για τον άνθρωπο όσο και για το θηρίο."
+
+#: maps/random/rmbiome/fields_of_meroe/rainy.jsonDescription.Title
+msgid "Rainy Season"
+msgstr "Περίοδος Βροχών"
+
+#: maps/random/rmbiome/fields_of_meroe/rainy.jsonDescription.Title
+msgctxt "biome definition"
+msgid "Rainy Season"
+msgstr "Περίοδος Βροχών"
+
 #: maps/random/rmbiome/generic/alpine.jsonDescription.Description
 msgid ""
 "A region in the high snowy mountains. Biting winds sweep through the "
@@ -1070,30 +1143,30 @@ msgstr "Τροπικό"
 msgid ""
 "Solidifying it's grip, the harsh cold has succeeded in freezing up the gulf."
 " The thick ice formed is capable of withstanding any weight."
-msgstr ""
+msgstr "Στερεοποιώντας τον σφιχτά, το δριμύ κρύο πέτυχε να παγώσει το κόλπο. Ο πυκνός πάγος είναι ικανός να αντέξει οποιοδήποτε βάρος."
 
 #: maps/random/rmbiome/gulf_of_bothnia/frozen_lake.jsonDescription.Description
 msgctxt "biome definition"
 msgid ""
 "Solidifying it's grip, the harsh cold has succeeded in freezing up the gulf."
 " The thick ice formed is capable of withstanding any weight."
-msgstr ""
+msgstr "Στερεοποιώντας τον σφιχτά, το δριμύ κρύο πέτυχε να παγώσει το κόλπο. Ο πυκνός πάγος είναι ικανός να αντέξει οποιοδήποτε βάρος."
 
 #: maps/random/rmbiome/gulf_of_bothnia/frozen_lake.jsonDescription.Title
 msgid "Frozen Lake"
-msgstr ""
+msgstr "Παγωμένη Λίμνη"
 
 #: maps/random/rmbiome/gulf_of_bothnia/frozen_lake.jsonDescription.Title
 msgctxt "biome definition"
 msgid "Frozen Lake"
-msgstr ""
+msgstr "Παγωμένη Λίμνη"
 
 #: maps/random/rmbiome/gulf_of_bothnia/late_spring.jsonDescription.Description
 msgid ""
 "A late spring breeze ripples through the conifer forests of the Gulf of "
 "Bothnia. Herds of deer dot the landscape and playful rabbits frolick in the "
 "undergrowth."
-msgstr ""
+msgstr "Μια τεμπέλικη ανοιξιάτικη αύρα κυματίζει μέσα από τα κωνοφόρα δάση του Βοθνικού Κόλπου. Τα κοπάδια των ελαφιών στιγματίζουν το τοπίο και τα παιχνιδιάρικα κουνέλια χοροπηδούν στο χαμόκλαδα."
 
 #: maps/random/rmbiome/gulf_of_bothnia/late_spring.jsonDescription.Description
 msgctxt "biome definition"
@@ -1101,45 +1174,45 @@ msgid ""
 "A late spring breeze ripples through the conifer forests of the Gulf of "
 "Bothnia. Herds of deer dot the landscape and playful rabbits frolick in the "
 "undergrowth."
-msgstr ""
+msgstr "Μια τεμπέλικη ανοιξιάτικη αύρα κυματίζει μέσα από τα κωνοφόρα δάση του Βοθνικού Κόλπου. Τα κοπάδια των ελαφιών στιγματίζουν το τοπίο και τα παιχνιδιάρικα κουνέλια χοροπηδούν στο χαμόκλαδα."
 
 #: maps/random/rmbiome/gulf_of_bothnia/late_spring.jsonDescription.Title
 msgid "Late Spring"
-msgstr ""
+msgstr "Τέλη της Άνοιξης"
 
 #: maps/random/rmbiome/gulf_of_bothnia/late_spring.jsonDescription.Title
 msgctxt "biome definition"
 msgid "Late Spring"
-msgstr ""
+msgstr "Τέλη της Άνοιξης"
 
 #: maps/random/rmbiome/gulf_of_bothnia/winter.jsonDescription.Description
 msgid ""
 "Winter has set in, carpeting the land with its first snow. The still "
 "unfrozen gulf offers great fishing opportunities."
-msgstr ""
+msgstr "Ο Χειμώνας έχει στρώσει το χαλί στη γη από το πρώτο του χιόνι. Ο ακόμα παγωμένος κόλπος προσφέρει μεγάλες αλιευτικές δυνατότητες."
 
 #: maps/random/rmbiome/gulf_of_bothnia/winter.jsonDescription.Description
 msgctxt "biome definition"
 msgid ""
 "Winter has set in, carpeting the land with its first snow. The still "
 "unfrozen gulf offers great fishing opportunities."
-msgstr ""
+msgstr "Ο Χειμώνας έχει στρώσει το χαλί στη γη από το πρώτο του χιόνι. Ο ακόμα παγωμένος κόλπος προσφέρει μεγάλες αλιευτικές δυνατότητες."
 
 #: maps/random/rmbiome/gulf_of_bothnia/winter.jsonDescription.Title
 msgid "Winter"
-msgstr ""
+msgstr "Χειμώνας"
 
 #: maps/random/rmbiome/gulf_of_bothnia/winter.jsonDescription.Title
 msgctxt "biome definition"
 msgid "Winter"
-msgstr ""
+msgstr "Χειμώνας"
 
 #: maps/random/rmbiome/persian_highlands/spring.jsonDescription.Description
 msgid ""
 "Spring in the highlands, yet the heat has already begun making itself felt. "
 "The short-lived green grasses are on the retreat, paving the way for "
 "scorching summer."
-msgstr ""
+msgstr "Άνοιξη στις ορεινές περιοχές, όμως η θερμότητα έχει ήδη αρχίσει να γίνεται αισθητή. Τα βραχύβια πράσινα χόρτα έχουν αρχίσει να υποχωρούν, προετοιμάζοντας το δρόμο για ένα καυτό καλοκαίρι."
 
 #: maps/random/rmbiome/persian_highlands/spring.jsonDescription.Description
 msgctxt "biome definition"
@@ -1147,38 +1220,38 @@ msgid ""
 "Spring in the highlands, yet the heat has already begun making itself felt. "
 "The short-lived green grasses are on the retreat, paving the way for "
 "scorching summer."
-msgstr ""
+msgstr "Άνοιξη στις ορεινές περιοχές, όμως η θερμότητα έχει ήδη αρχίσει να γίνεται αισθητή. Τα βραχύβια πράσινα χόρτα έχουν αρχίσει να υποχωρούν, προετοιμάζοντας το δρόμο για ένα καυτό καλοκαίρι."
 
 #: maps/random/rmbiome/persian_highlands/spring.jsonDescription.Title
 msgid "Spring"
-msgstr ""
+msgstr "Άνοιξη"
 
 #: maps/random/rmbiome/persian_highlands/spring.jsonDescription.Title
 msgctxt "biome definition"
 msgid "Spring"
-msgstr ""
+msgstr "Άνοιξη"
 
 #: maps/random/rmbiome/persian_highlands/summer.jsonDescription.Description
 msgid ""
 "An arid, hostile land. The blistering heat has baked the ground to a sickly "
 "brown and the remaining trees struggle for survival."
-msgstr ""
+msgstr "Μια άγονη, εχθρική γη. Η υψηλή θερμότητα έχει ψήσει το έδαφος σε ένα άρρωστο καφετί και τα υπόλοιπα δέντρα παλεύουν για την επιβίωση."
 
 #: maps/random/rmbiome/persian_highlands/summer.jsonDescription.Description
 msgctxt "biome definition"
 msgid ""
 "An arid, hostile land. The blistering heat has baked the ground to a sickly "
 "brown and the remaining trees struggle for survival."
-msgstr ""
+msgstr "Μια άγονη, εχθρική γη. Η υψηλή θερμότητα έχει ψήσει το έδαφος σε ένα άρρωστο καφετί και τα υπόλοιπα δέντρα παλεύουν για την επιβίωση."
 
 #: maps/random/rmbiome/persian_highlands/summer.jsonDescription.Title
 msgid "Summer"
-msgstr ""
+msgstr "Καλοκαίρι"
 
 #: maps/random/rmbiome/persian_highlands/summer.jsonDescription.Title
 msgctxt "biome definition"
 msgid "Summer"
-msgstr ""
+msgstr "Καλοκαίρι"
 
 #: maps/random/extinct_volcano_triggers.js:65
 msgid "It keeps on raining, we will have to evacuate soon!"
@@ -1196,16 +1269,25 @@ msgstr "Πρέπει να βρούμε στεγνό έδαφος, τα εδάφ�
 msgid "The lakes start swallowing the land, we have to find shelter!"
 msgstr "Οι λίμνες αρχίζουν να καταποντίζουν το έδαφος, πρέπει να βρούμε καταφύγιο!"
 
-#: maps/random/survivalofthefittest_triggers.js:190
+#: maps/random/jebel_barkal_triggers.js:578
+msgid "Napata is attacking!"
+msgstr "Η Ναπάτα επιτίθεται!"
+
+#: maps/random/jebel_barkal_triggers.js:590
+#, javascript-format
+msgid "Napata will attack in %(time)s!"
+msgstr "Η Ναπάτα θα επιτεθεί σε %(time)s!"
+
+#: maps/random/survivalofthefittest_triggers.js:163
 #, javascript-format
 msgid "The first wave will start in %(time)s!"
 msgstr "Το πρώτο κύμμα θα αρχίσει σε %(time)s!"
 
-#: maps/random/survivalofthefittest_triggers.js:325
+#: maps/random/survivalofthefittest_triggers.js:264
 msgid "An enemy wave is attacking!"
 msgstr "Ενα κύμα εχθρών επιτίθετε!"
 
-#: maps/random/survivalofthefittest_triggers.js:349
+#: maps/random/survivalofthefittest_triggers.js:289
 #, javascript-format
 msgid "%(player)s has been defeated (lost civic center)."
 msgstr "ο%(player)s ηττήθηκε (έχασε το αστικό κέντρο)."
@@ -1842,13 +1924,13 @@ msgstr "Μικρός χάρτης με πολλούς πόρους και λίγ
 
 #: maps/scenarios/Napata Reconstruction.xml:Name:40
 msgid "Napata Reconstruction"
-msgstr ""
+msgstr "Ανακατασκευή Ναπάτας"
 
 #: maps/scenarios/Napata Reconstruction.xml:Description:40
 msgid ""
 "This map displays a reconstruction of the ancient city Napata. "
 "[color=\"red\"]Note:[/color] The map is not intended to be playable."
-msgstr ""
+msgstr "Αυτός ο χάρτης παρουσιάζει μια ανακατασκευή της αρχαίας πόλης Ναπάτα. [color=\"red\"]Σημείωση:[/color] Ο χάρτης δεν προορίζεται για παίξιμο."
 
 #: maps/scenarios/Necropolis.xml:Description:39
 msgid ""
@@ -2034,19 +2116,19 @@ msgstr "Sandbox - Οι Ίβηρες"
 
 #: maps/scenarios/Sandbox - Kushites.xml:Description:40
 msgid "Play the Kushites faction in a non-threatening sandbox scenario."
-msgstr ""
+msgstr "Παίξε με τους Κουσίτες σε ένα μη απειλητικό περιβάλλον δοκιμών."
 
 #: maps/scenarios/Sandbox - Kushites.xml:PlayerData[1].Name:40
 msgid "Kushites"
-msgstr ""
+msgstr "Κουσίτες"
 
 #: maps/scenarios/Sandbox - Kushites.xml:PlayerData[2].Name:40
 msgid "Egyptians"
-msgstr ""
+msgstr "Αιγύπτιοι"
 
 #: maps/scenarios/Sandbox - Kushites.xml:Name:40
 msgid "Sandbox - The Kushites"
-msgstr ""
+msgstr "Sandbox - Οι Κουσίτες"
 
 #: maps/scenarios/Sandbox - Macedonians.xml:Description:39
 msgid ""
@@ -2430,7 +2512,7 @@ msgid ""
 " and thick forests make for a very dynamic and fast-paced 3-player map with "
 "lots of potential for skirmishing and guerilla warfare as well as tough "
 "defensive fighting or aggressive maneuvers."
-msgstr ""
+msgstr "Ένα άγριο και δασώδες νησί, γεμάτο δάση, χρυσό, και μυστήριο. Τα βουνά, οι θάλασσες και τα πυκνά δάση τον κάνουν ένα πολύ δυναμικό και γρήγορο χάρτη 3-παικτών με πολλές δυνατότητες για αψιμαχία και ανταρτοπόλεμο, καθώς και για σκληρή άμυνα ή επίθεση με ελιγμούς."
 
 #: maps/skirmishes/Belgian Bog (2).xml:Description:39
 msgid ""
@@ -2447,19 +2529,19 @@ msgstr "Βελγικός Βάλτος (2)"
 msgid ""
 "South of the Sahara, East of the Nile, lies a semi-arid region today known "
 "as the Butana Steppe."
-msgstr ""
+msgstr "Νότια της Σαχάρας, ανατολικά του Νείλου, βρίσκεται μια ημι-άνυδρη περιοχή γνωστή σήμερα ως Στέπα της Βουτάνας."
 
 #: maps/skirmishes/Butana Steppe (2).xml:PlayerData[1].Name:40
 msgid "West Player"
-msgstr ""
+msgstr "Δυτικός Παίχτης"
 
 #: maps/skirmishes/Butana Steppe (2).xml:PlayerData[2].Name:40
 msgid "East Player"
-msgstr ""
+msgstr "Ανατολικός Παίκτης"
 
 #: maps/skirmishes/Butana Steppe (2).xml:Name:40
 msgid "Butana Steppe (2)"
-msgstr ""
+msgstr "Στέπα της Βουτάνας (2)"
 
 #: maps/skirmishes/Caspian Sea (2v2).xml:Description:39
 msgid ""
@@ -2556,6 +2638,51 @@ msgstr "Ένα ομιχλώδες αλπικό τοπίο γίνεται ένα 
 #: maps/skirmishes/Dueling Cliffs (3v3).xml:Name:40
 msgid "Dueling Cliffs (3v3)"
 msgstr "Βράχοι Μονομαχίας (3v3)"
+
+#: maps/skirmishes/Egypt (3v3).xml:Name:40
+msgid "Egypt (3v3)"
+msgstr "Αίγυπτος (3 εναντίων 3)"
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[1].Name:40
+msgid "Alexandria"
+msgstr "Αλεξάνδρεια"
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[2].Name:40
+msgid "Theben"
+msgstr "Θήβαι"
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[3].Name:40
+msgid "Siwa"
+msgstr "Σίβα"
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[4].Name:40
+msgid "Sinai"
+msgstr "Σινά"
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[5].Name:40
+msgid "Memphis"
+msgstr "Μέμφις"
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[6].Name:40
+msgid "Cyrene"
+msgstr "Κυρήνη"
+
+#: maps/skirmishes/Egypt (3v3).xml:Description:40
+msgid ""
+"Fight for the remains of ancient Egypt!\n"
+"\n"
+"Players start with full grown cities and small armies, each having distinct advantages and drawbacks. Take care, there are 7 mighty forts and marauding bandids!\n"
+"\n"
+"It is the last century before 0 A.D. Egypt is internally divided between hellenistic (Alexandria, represented by Seleucids) and traditional influences (Memphis, represented by Ptolemies). Thebes in the southern clime of river Nile has already been taken over by the Kush. In the north western Al-Dschabal al-Achdar, where the mediterranean city of Cyrene is located the Romans are preparing their invasion. From the eastern desert at-Tih and mount Sinai enemies (represented by Persians) are pushing forward and the oasis Siwa. Charga (represented by Carthage) in the south western desert are trying to get a share of the pie as well.\n"
+"Locations:\n"
+"- Alexandria: library, harbor\n"
+"- Memphis: Necropolis, pyramids, Apis shrine\n"
+"- Thebes: temple district, Valley of the Kings \n"
+"- Cyrene: mediterranean Macchie, olive groves\n"
+"- Fayyum: crocodile shrine, nile dam\n"
+"- Eastern desert: mount Sinai, deep Wadi, Red Sea reefs\n"
+"- Western desert: Oasis Charga and Siwa, Qattara Depression\n"
+msgstr "Μάχη για τα υπολείμματα της αρχαίας Αιγύπτου!\n\nΟι παίκτες ξεκινούν με ολοκληρωμένες πόλεις και μικρά στρατεύματα, καθεμιά από τις οποίες έχει ξεχωριστά πλεονεκτήματα και μειονεκτήματα. Πρόσεξε, υπάρχουν 7 ισχυρά οχυρά και ληστές που λεηλατούν!\n\nΕίναι ο τελευταίος αιώνας πριν από το 0 μ.Χ. Η Αιγύπτος διαιρείται εσωτερικά μεταξύ των ελληνιστικών βασιλείων (Αλεξάνδρεια, εκπροσωπούμενο από τους Σελευκίδες) και των παραδοσιακών επιρροών (Μέμφις, εκπροσωπούμενο από τους Πτολεμαίους). Η Θήβα στη νότια χώρα του ποταμού Νείλου έχει ήδη καταληφθεί από τους Κους. Στο βορειοδυτικό Τζέμπελ Ακντάρ, όπου βρίσκεται η μεσογειακή πόλη της Κυρήνης, οι Ρωμαίοι προετοιμάζουν την εισβολή τους. Από την ανατολική έρημο Τίχ και από το βουνό Σινά οι εχθροί (που εκπροσωπούνται από τους Πέρσες) προωθούνται προς τα εμπρός στην όαση Σίβα. Η Κάργα επίσης (που εκπροσωπείται από την Καρχηδόνα) στη νότια δυτική έρημο προσπαθεί να πάρει ένα μερίδιο της πίτας.\nΤοποθεσίες:\n- Αλεξάνδρεια: βιβλιοθήκη, λιμάνι\n- Μέμφις: Νεκρόπολη, πυραμίδες, ιερό του Άπις\n- Θήβα: περιοχή των ναών, Κοιλάδα Των Βασιλέων\n- Κυρήνη: Μεσογειακή μάκια, ελαιώνες\n- Φαγιούμ: ιερό κροκόδειλου, φράγμα του Νείλου\n- Ανατολική έρημο: το όρος Σινά, χαράδρα Ουάντι, ύφαλοι της Ερυθράς θάλασσας\n- Δυτική έρημος: όαση Κάργα και Σίβα, Βύθισμα Κουατάρα"
 
 #: maps/skirmishes/Forest Battle (4).xml:Description:40
 msgid ""
@@ -2890,11 +3017,11 @@ msgstr "Δύο Θάλασσες (6)"
 #: maps/skirmishes/Via Augusta (4).xml:Description:40
 msgid ""
 "All Roads Lead To Rome. Via Julia Augusta a Roman road built in 13 BCE."
-msgstr ""
+msgstr "Όλοι οι δρόμοι οδηγούν στην Ρώμη. Μέσω της Αυγουστιανής οδού,  ένας ρωμαϊκός δρόμος που χτίστηκε το 13 π.Χ."
 
 #: maps/skirmishes/Via Augusta (4).xml:Name:40
 msgid "Via Augusta"
-msgstr ""
+msgstr "Αυγουστιανή οδός"
 
 #: maps/skirmishes/Watering Holes (4).xml:Description:39
 msgid ""

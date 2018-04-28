@@ -19,7 +19,7 @@
   <Decay>
     <Active>false</Active>
     <SinkingAnim>false</SinkingAnim>
-    <DelayTime>80.0</DelayTime>
+    <DelayTime>30.0</DelayTime>
     <SinkRate>0.01</SinkRate>
     <SinkAccel>0.0</SinkAccel>
   </Decay>
@@ -51,7 +51,6 @@
     </Formations>
     <Undeletable>false</Undeletable>
   </Identity>
-  <Looter/>
   <Minimap>
     <Type>unit</Type>
   </Minimap>
@@ -64,6 +63,7 @@
     <BlockConstruction>true</BlockConstruction>
     <DisableBlockMovement>false</DisableBlockMovement>
     <DisableBlockPathfinding>false</DisableBlockPathfinding>
+    <DeleteUponConstruction>false</DeleteUponConstruction>
   </Obstruction>
   <OverlayRenderer/>
   <RangeOverlayManager/>

@@ -182,33 +182,32 @@ m.NavalManager.prototype.getFishSea = function(gameState, fish)
 	if (sea)
 		return sea;
 	const ntry = 4;
-	const around = [ [-0.7,0.7], [0,1], [0.7,0.7], [1,0], [0.7,-0.7], [0,-1], [-0.7,-0.7], [-1,0] ];
+	const around = [[-0.7, 0.7], [0, 1], [0.7, 0.7], [1, 0], [0.7, -0.7], [0, -1], [-0.7, -0.7], [-1, 0]];
 	let pos = gameState.ai.accessibility.gamePosToMapPos(fish.position());
 	let width = gameState.ai.accessibility.width;
 	let k = pos[0] + pos[1]*width;
 	sea = gameState.ai.accessibility.navalPassMap[k];
 	fish.setMetadata(PlayerID, "sea", sea);
 	let radius = 120 / gameState.ai.accessibility.cellSize / ntry;
-	if (around.every(a =>
+	if (around.every(a => {
+		for (let t = 0; t < ntry; ++t)
 		{
-			for (let t = 0; t < ntry; ++t)
+			let i = pos[0] + Math.round(a[0]*radius*(ntry-t));
+			let j = pos[1] + Math.round(a[1]*radius*(ntry-t));
+			if (i < 0 || i >= width || j < 0 || j >= width)
+				continue;
+			if (gameState.ai.accessibility.landPassMap[i + j*width] === 1)
 			{
-				let i = pos[0] + Math.round(a[0]*radius*(ntry-t));
-				let j = pos[1] + Math.round(a[1]*radius*(ntry-t));
-				if (i < 0 || i >= width || j < 0 || j >= width)
+				let navalPass = gameState.ai.accessibility.navalPassMap[i + j*width];
+				if (navalPass == sea)
+					return true;
+				else if (navalPass == 1)  // we could be outside the map
 					continue;
-				if (gameState.ai.accessibility.landPassMap[i + j*width] === 1)
-				{
-					let navalPass = gameState.ai.accessibility.navalPassMap[i + j*width];
-					if (navalPass == sea)
-						return true;
-					else if (navalPass == 1)  // we could be outside the map
-						continue;
-				}
-				return false;
 			}
-			return true;
-		}))
+			return false;
+		}
+		return true;
+	}))
 		fish.setMetadata(PlayerID, "opensea", true);
 	return sea;
 };
@@ -219,37 +218,36 @@ m.NavalManager.prototype.canFishSafely = function(gameState, fish)
 	if (fish.getMetadata(PlayerID, "opensea"))
 		return true;
 	const ntry = 2;
-	const around = [ [-0.7,0.7], [0,1], [0.7,0.7], [1,0], [0.7,-0.7], [0,-1], [-0.7,-0.7], [-1,0] ];
+	const around = [[-0.7, 0.7], [0, 1], [0.7, 0.7], [1, 0], [0.7, -0.7], [0, -1], [-0.7, -0.7], [-1, 0]];
 	let territoryMap = gameState.ai.HQ.territoryMap;
 	let width = territoryMap.width;
 	let radius = 120 / territoryMap.cellSize / ntry;
 	let pos = territoryMap.gamePosToMapPos(fish.position());
-	return around.every(a =>
+	return around.every(a => {
+		for (let t = 0; t < ntry; ++t)
 		{
-			for (let t = 0; t < ntry; ++t)
-			{
-				let i = pos[0] + Math.round(a[0]*radius*(ntry-t));
-				let j = pos[1] + Math.round(a[1]*radius*(ntry-t));
-				if (i < 0 || i >= width || j < 0 || j >= width)
-					continue;
-				let owner = territoryMap.getOwnerIndex(i + j*width);
-				if (owner != 0 && gameState.isPlayerEnemy(owner))
-					return false;
-			}
-			return true;
-		});
+			let i = pos[0] + Math.round(a[0]*radius*(ntry-t));
+			let j = pos[1] + Math.round(a[1]*radius*(ntry-t));
+			if (i < 0 || i >= width || j < 0 || j >= width)
+				continue;
+			let owner = territoryMap.getOwnerIndex(i + j*width);
+			if (owner != 0 && gameState.isPlayerEnemy(owner))
+				return false;
+		}
+		return true;
+	});
 };
 
 /** get the list of seas (or lands) around this region not connected by a dock */
 m.NavalManager.prototype.getUnconnectedSeas = function(gameState, region)
 {
 	let seas = gameState.ai.accessibility.regionLinks[region].slice();
-	this.docks.forEach(function (dock) {
+	this.docks.forEach(dock => {
 		if (!dock.hasClass("Dock") || m.getLandAccess(gameState, dock) != region)
 			return;
 		let i = seas.indexOf(m.getSeaAccess(gameState, dock));
 		if (i != -1)
-			seas.splice(i--,1);
+			seas.splice(i--, 1);
 	});
 	return seas;
 };
@@ -294,9 +292,9 @@ m.NavalManager.prototype.checkEvents = function(gameState, queues, events)
 		if (plan.state == "boarding")
 		{
 			// just reset the units onBoard metadata and wait for a new ship to be assigned to this plan
-			plan.units.forEach(function (ent) {
-				if (ent.getMetadata(PlayerID, "onBoard") === "onBoard" && ent.position() ||
-				    ent.getMetadata(PlayerID, "onBoard") === shipId)
+			plan.units.forEach(ent => {
+				if (ent.getMetadata(PlayerID, "onBoard") == "onBoard" && ent.position() ||
+				    ent.getMetadata(PlayerID, "onBoard") == shipId)
 					ent.setMetadata(PlayerID, "onBoard", undefined);
 			});
 			plan.needTransportShips = !plan.transportShips.hasEntities();
@@ -456,7 +454,7 @@ m.NavalManager.prototype.setMinimalTransportShips = function(gameState, sea, num
 {
 	if (!sea)
 		return;
-	if (this.wantedTransportShips[sea] < number )
+	if (this.wantedTransportShips[sea] < number)
 		this.wantedTransportShips[sea] = number;
 };
 
@@ -579,7 +577,7 @@ m.NavalManager.prototype.moveApart = function(gameState)
 			// New transport ships receive boarding commands only on the following turn.
 			if (gameState.ai.playedTurn < ship.getMetadata(PlayerID, "turnPreviousPosition") + 2)
 				continue;
-			ship.moveToRange(shipPosition[0], shipPosition[1], 30, 30);
+			ship.moveToRange(shipPosition[0] + randFloat(-1, 1), shipPosition[1] + randFloat(-1, 1), 30, 30);
 			blockedShips.push(ship);
 			blockedIds.push(ship.id());
 		}
@@ -594,7 +592,7 @@ m.NavalManager.prototype.moveApart = function(gameState)
 				continue;
 			}
 			if (ship.getMetadata(PlayerID, "stationnary"))
-					continue;
+				continue;
 			ship.setMetadata(PlayerID, "stationnary", true);
 			// Check if there are some treasure around
 			if (m.gatherTreasure(gameState, ship, true))
@@ -636,7 +634,7 @@ m.NavalManager.prototype.moveApart = function(gameState)
 			// New transport ships receives boarding commands only on the following turn.
 			if (gameState.ai.playedTurn < ship.getMetadata(PlayerID, "turnPreviousPosition") + 2)
 				continue;
-			ship.moveToRange(shipPosition[0], shipPosition[1], 30, 30);
+			ship.moveToRange(shipPosition[0] + randFloat(-1, 1), shipPosition[1] + randFloat(-1, 1), 30, 30);
 			blockedShips.push(ship);
 			blockedIds.push(ship.id());
 		}
@@ -651,7 +649,7 @@ m.NavalManager.prototype.moveApart = function(gameState)
 				continue;
 			}
 			if (ship.getMetadata(PlayerID, "stationnary"))
-					continue;
+				continue;
 			ship.setMetadata(PlayerID, "stationnary", true);
 			// Check if there are some treasure around
 			if (m.gatherTreasure(gameState, ship, true))

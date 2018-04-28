@@ -3,15 +3,16 @@
 # This file is distributed under the same license as the 0 A.D. — Empires Ascendant project.
 # 
 # Translators:
+# Facundo Abiega <abiegafacundo@gmail.com>, 2018
 # Franco Falleti <ezefran256@gmail.com>, 2016
 # Iván Pstyga <ivanpstyga@gmail.com>, 2017
 # PoinoComer <ignacio.torea@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: 0 A.D.\n"
-"POT-Creation-Date: 2018-02-21 09:05+0100\n"
-"PO-Revision-Date: 2018-02-21 16:05+0000\n"
-"Last-Translator: Adrián Chaves Fernández <adriyetichaves@gmail.com>\n"
+"POT-Creation-Date: 2018-04-04 14:47+0200\n"
+"PO-Revision-Date: 2018-04-11 23:23+0000\n"
+"Last-Translator: Facundo Abiega <abiegafacundo@gmail.com>\n"
 "Language-Team: Spanish (Argentina) (http://www.transifex.com/wildfire-games/0ad/language/es_AR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -826,16 +827,16 @@ msgstr "Entrenamiento de recolección"
 
 #: simulation/data/technologies/gather_fishing_net.jsondescription
 msgid "Nets improve the fishing productivity."
-msgstr ""
+msgstr "Las redes mejoran la productividad pesquera."
 
 #: simulation/data/technologies/gather_fishing_net.jsontooltip
 msgid ""
 "Use nets on your Fishing Boats. +30% fishing rate. Unlocks Salting Fish."
-msgstr ""
+msgstr "Utiliza redes en tus Botes de Pesca. Incrementa la tasa de pesca un 30%. Desbloquea el saladero de pescado."
 
 #: simulation/data/technologies/gather_fishing_net.jsongenericName
 msgid "Fishing Net"
-msgstr ""
+msgstr "Red de pesca"
 
 #: simulation/data/technologies/gather_lumbering_ironaxes.jsondescription
 #: simulation/data/technologies/gather_lumbering_sharpaxes.jsondescription
@@ -2386,7 +2387,7 @@ msgid "Train elite rank healers."
 msgstr ""
 
 #: simulation/data/technologies/kushites/upgrade_rank_elite_healer.jsongenericName
-msgid "High Priest of Amun"
+msgid "Divine Instruction"
 msgstr ""
 
 #: simulation/data/technologies/mauryans/civbonus_maur_popcap.jsondescription

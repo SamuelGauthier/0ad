@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Wildfire Games.
+/* Copyright (C) 2018 Wildfire Games.
  * This file is part of 0 A.D.
  *
  * 0 A.D. is free software: you can redistribute it and/or modify
@@ -51,6 +51,7 @@ that of Atlas depending on commandline parameters.
 #include "ps/Globals.h"
 #include "ps/Hotkey.h"
 #include "ps/Loader.h"
+#include "ps/ModInstaller.h"
 #include "ps/Profile.h"
 #include "ps/Profiler2.h"
 #include "ps/Pyrogenesis.h"
@@ -304,8 +305,7 @@ static void Frame()
 #endif
 	ENSURE(realTimeSinceLastFrame > 0.0f);
 
-	// decide if update/render is necessary
-	bool need_render = !g_app_minimized;
+	// Decide if update is necessary
 	bool need_update = true;
 
 	// If we are not running a multiplayer game, disable updates when the game is
@@ -369,9 +369,11 @@ static void Frame()
 	g_UserReporter.Update();
 
 	g_Console->Update(realTimeSinceLastFrame);
-
 	ogl_WarnIfError();
-	if (need_render)
+
+	// We do not have to render an inactive fullscreen frame, because it can
+	// lead to errors for some graphic card families.
+	if (!g_app_minimized && (g_app_has_focus || !g_VideoMode.IsInFullscreen()))
 	{
 		Render();
 
@@ -494,6 +496,28 @@ static void RunGameOrAtlas(int argc, const char* argv[])
 		}
 	}
 
+	std::vector<OsPath> modsToInstall;
+	for (const CStr& arg : args.GetArgsWithoutName())
+	{
+		const OsPath modPath(arg);
+		if (!CModInstaller::IsDefaultModExtension(modPath.Extension()))
+		{
+			debug_printf("Skipping file '%s' which does not have a mod file extension.\n", modPath.string8().c_str());
+			continue;
+		}
+		if (!FileExists(modPath))
+		{
+			debug_printf("ERROR: The mod file '%s' does not exist!\n", modPath.string8().c_str());
+			continue;
+		}
+		if (DirectoryExists(modPath))
+		{
+			debug_printf("ERROR: The mod file '%s' is a directory!\n", modPath.string8().c_str());
+			continue;
+		}
+		modsToInstall.emplace_back(std::move(modPath));
+	}
+
 	// We need to initialize SpiderMonkey and libxml2 in the main thread before
 	// any thread uses them. So initialize them here before we might run Atlas.
 	ScriptEngine scriptEngine;
@@ -576,6 +600,19 @@ static void RunGameOrAtlas(int argc, const char* argv[])
 			continue;
 		}
 
+		std::vector<CStr> installedMods;
+		if (!modsToInstall.empty())
+		{
+			Paths paths(args);
+			CModInstaller installer(paths.UserData() / "mods", paths.Cache());
+
+			// Install the mods without deleting the pyromod files
+			for (const OsPath& modPath : modsToInstall)
+				installer.Install(modPath, g_ScriptRuntime, true);
+
+			installedMods = installer.GetInstalledMods();
+		}
+
 		if (isNonVisual)
 		{
 			InitNonVisual(args);
@@ -584,11 +621,14 @@ static void RunGameOrAtlas(int argc, const char* argv[])
 		}
 		else
 		{
-			InitGraphics(args, 0);
+			InitGraphics(args, 0, installedMods);
 			MainControllerInit();
 			while (!quit)
 				Frame();
 		}
+
+		// Do not install mods again in case of restart (typically from the mod selector)
+		modsToInstall.clear();
 
 		Shutdown(0);
 		MainControllerShutdown();

@@ -311,13 +311,7 @@ StatisticsTracker.prototype.KilledEntity = function(targetEntity)
 	var cmpCost = Engine.QueryInterface(targetEntity, IID_Cost);
 	var costs = cmpCost && cmpCost.GetResourceCosts();
 
-	var cmpTargetOwnership = Engine.QueryInterface(targetEntity, IID_Ownership);
-
-	// Ignore gaia
-	if (cmpTargetOwnership.GetOwner() == 0)
-		return;
-
-	if (cmpTargetEntityIdentity.HasClass("Unit") && !cmpTargetEntityIdentity.HasClass("Domestic"))
+	if (cmpTargetEntityIdentity.HasClass("Unit") && !cmpTargetEntityIdentity.HasClass("Animal"))
 	{
 		for (let type of this.unitsClasses)
 			this.CounterIncrement(cmpTargetEntityIdentity, "enemyUnitsKilled", type);
@@ -551,13 +545,23 @@ StatisticsTracker.prototype.GetTeamPercentMapControlled = function()
 
 StatisticsTracker.prototype.OnTerritoriesChanged = function(msg)
 {
-	var newPercent = this.GetPercentMapControlled();
-	if (newPercent > this.peakPercentMapControlled)
-		this.peakPercentMapControlled = newPercent;
+	this.UpdatePeakPercentages();
+};
 
-	newPercent = this.GetTeamPercentMapControlled();
-	if (newPercent > this.teamPeakPercentMapControlled)
-		this.teamPeakPercentMapControlled = newPercent;
+StatisticsTracker.prototype.OnGlobalPlayerDefeated = function(msg)
+{
+	this.UpdatePeakPercentages();
+};
+
+StatisticsTracker.prototype.OnGlobalPlayerWon = function(msg)
+{
+	this.UpdatePeakPercentages();
+};
+
+StatisticsTracker.prototype.UpdatePeakPercentages = function()
+{
+	this.peakPercentMapControlled = Math.max(this.peakPercentMapControlled, this.GetPercentMapControlled());
+	this.teamPeakPercentMapControlled = Math.max(this.teamPeakPercentMapControlled, this.GetTeamPercentMapControlled());
 };
 
 /**

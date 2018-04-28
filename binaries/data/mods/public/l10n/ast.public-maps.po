@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 0 A.D.\n"
-"POT-Creation-Date: 2018-02-28 09:04+0100\n"
-"PO-Revision-Date: 2018-03-01 22:59+0000\n"
+"POT-Creation-Date: 2018-04-23 09:05+0200\n"
+"PO-Revision-Date: 2018-04-23 22:12+0000\n"
 "Last-Translator: David Sowa <isithere2@yahoo.com>\n"
 "Language-Team: Asturian (http://www.transifex.com/wildfire-games/0ad/language/ast/)\n"
 "MIME-Version: 1.0\n"
@@ -305,6 +305,19 @@ msgstr "[color=\"red\"]NOTA IMPORTANTE: LOS XUGADORES AI NUN FURRULEN NESTI MAPA
 msgid "Extinct Volcano"
 msgstr "Volcán desaniciáu"
 
+#: maps/random/fields_of_meroe.jsonsettings.Description
+msgid ""
+"The \"Island of Meroe\", a vast peninsula flanked by the Nile and Atbarah "
+"rivers, formed the heartland of ancient Kush. Where the harsh deserts start "
+"making way for the semi-arid savannahs and small acacia forests dot the "
+"landscape. The area is rich in resources and the ever-present Nile brings "
+"life, but grave threats loom on the opposite riverbank."
+msgstr "La «islla de Meroe», una península espurrida ente los ríos Nilu y Atbara, formó'l cogollu del Cux antiguu. Equí la durez de los ermos entama a ceder énte la secor moderao de les sabanes y los viescos d'alcacies chisquen el terrenu. La fastera ye rica en recursos y la omnipresencia del Nilu da vida, anque amenaces graves achisben na otra ribera."
+
+#: maps/random/fields_of_meroe.jsonsettings.Name
+msgid "Fields of Meroe"
+msgstr "Campos de Meroe"
+
 #: maps/random/flood.jsonsettings.Description
 msgid ""
 "A great flood has moved across the valley enabling ships and troops to "
@@ -438,6 +451,22 @@ msgstr "Los xugadores entamen n'islles pequeñes que tán arrodiaes per dayures 
 msgid "Islands"
 msgstr "Islles"
 
+#: maps/random/jebel_barkal.jsonsettings.Description
+msgid ""
+"Starting near the fertile banks of the Nile, the players besiege the heavily"
+" defended city Napata which lies at the foot of the hill Jebel Barkal, the "
+"\"Pure Mountain\". It is the Southern home of Amun, and according to "
+"Kushites and Egyptians alike, the birthplace of man. Known as the Throne of "
+"the Two Lands, the ancient religious capital of Napata lay in its shadow. "
+"This is where Kings were made... and unmade! Abutting a rich floodplain "
+"downstream from the 4th cataract, this area became the breadbasket of "
+"ancient Kush."
+msgstr "Entamando cerca de les ribes vicioses del Nilu, los xugadores asedien la ciudá fortificada de Napata, que ta al pie del cuetu Xebel Barcal, el «monte puru». Ye'l llar sureñu d'Amón, y según los cuxites, asina como los exipcios, onde ñació l'home. Coñocida como'l tronu de les dos tierres, l'antigua capital relixosa de Napata queda a la solombra. Esto ye u los reis se fixeron... ¡y desfixeron! Llendando cola riqueza d'un terrén inundable que pasa la 4a catarata ríu abaxo, esta fastera conviértese na panera del Cux antiguu."
+
+#: maps/random/jebel_barkal.jsonsettings.Name
+msgid "Jebel Barkal"
+msgstr "Xebel Barcal"
+
 #: maps/random/kerala.jsonsettings.Description
 msgid ""
 "Players start in the southwestern shores of India between a sea and "
@@ -490,13 +519,13 @@ msgstr "Llanada de Lorena"
 #: maps/random/lower_nubia.jsonsettings.Description
 msgid ""
 "Known in the Greco-Roman world as the Triakontaschoinos, Lower Nubia was the"
-" area between the first and second cataracts of Nile and formed the "
+" area between the first and second cataracts of the Nile and formed the "
 "traditional border region between Kush and Egypt. The scorching desert, "
 "steep valleys and towering cliffs of the area make this an inhospitable "
 "place to live, but the control of this ancient corridor was vital for any "
 "power seeking to control the lucrative trade routes on the Nile and affords "
 "access to the rich goldfields of the Nubian desert."
-msgstr "Coñocida en mundu griegu-romanu como'l Triacontascenu, la Baxa Nubia foi la faza ente la primera y segunda catarata del Nilu y formó la llende tradicional ente Cux y Exiptu. Inda que l'ermu caloriento, valles pindios y maedes altes de la fastera dexábenla poco acoyedora, el dominiu d'esti corredor antiguu convieno a cualesquier poder que buscaba controlar la bayura de les rutes comerciales del Nilu y dio entrada a la riqueza de los campos d'oru del ermu nubiu.  "
+msgstr "Coñocida en mundu griegu-romanu como'l Triacontascenu, la Baxa Nubia foi la faza ente la primera y segunda catarata del Nilu y formó la llende tradicional ente Cux y Exiptu. Inda que la calor del ermu, lo pindio de los valles y l'altor de les maedes de la fastera dexábenla poco acoyedora, el dominiu d'esti corredor antiguu convieno a cualesquier poder que buscaba controlar la bayura de les rutes comerciales del Nilu y dio entrada a la riqueza de los campos d'oru del ermu nubiu. "
 
 #: maps/random/lower_nubia.jsonsettings.Name
 msgid "Lower Nubia"
@@ -863,6 +892,50 @@ msgstr "Un llagu arrodiáu de llombes."
 msgid "Wild Lake"
 msgstr "Llagu bravu"
 
+#: maps/random/rmbiome/fields_of_meroe/dry.jsonDescription.Description
+msgid ""
+"The vitalizing waters of the Nile sustain life along its banks, while the "
+"long dry season scorches the land."
+msgstr "Les agües del Nilu sostienen la vida a lo llargo de les sos orielles, de la que la seca llonga quema la tierra."
+
+#: maps/random/rmbiome/fields_of_meroe/dry.jsonDescription.Description
+msgctxt "biome definition"
+msgid ""
+"The vitalizing waters of the Nile sustain life along its banks, while the "
+"long dry season scorches the land."
+msgstr "Les agües del Nilu sostienen la vida a lo llargo de les sos orielles, de la que la seca llonga quema la tierra. "
+
+#: maps/random/rmbiome/fields_of_meroe/dry.jsonDescription.Title
+msgid "Dry Season"
+msgstr "Seca"
+
+#: maps/random/rmbiome/fields_of_meroe/dry.jsonDescription.Title
+msgctxt "biome definition"
+msgid "Dry Season"
+msgstr "Seca"
+
+#: maps/random/rmbiome/fields_of_meroe/rainy.jsonDescription.Description
+msgid ""
+"Revelling in the much awaited rain, the baked land transforms into a lush "
+"haven for both man and beast."
+msgstr "Engayolándose nel lloviu mui esperao, la tierra cocío tresfórmase nun ablugu llozanu tanto pal home como pal bichu."
+
+#: maps/random/rmbiome/fields_of_meroe/rainy.jsonDescription.Description
+msgctxt "biome definition"
+msgid ""
+"Revelling in the much awaited rain, the baked land transforms into a lush "
+"haven for both man and beast."
+msgstr "Engayolándose nel lloviu mui esperao, la tierra cocío tresfórmase nun ablugu llozanu tanto pal home como pal bichu."
+
+#: maps/random/rmbiome/fields_of_meroe/rainy.jsonDescription.Title
+msgid "Rainy Season"
+msgstr "Temporada lluviosa"
+
+#: maps/random/rmbiome/fields_of_meroe/rainy.jsonDescription.Title
+msgctxt "biome definition"
+msgid "Rainy Season"
+msgstr "Temporada lluviosa"
+
 #: maps/random/rmbiome/generic/alpine.jsonDescription.Description
 msgid ""
 "A region in the high snowy mountains. Biting winds sweep through the "
@@ -1182,16 +1255,25 @@ msgstr "¡Hemos de dar con tierra seco, les nueses tierres van añagase pronto!"
 msgid "The lakes start swallowing the land, we have to find shelter!"
 msgstr "¡Los llagos entamen a tragar la tierra, hai qu'atopar abellugu!"
 
-#: maps/random/survivalofthefittest_triggers.js:190
+#: maps/random/jebel_barkal_triggers.js:578
+msgid "Napata is attacking!"
+msgstr "¡Nepata ta atacando!"
+
+#: maps/random/jebel_barkal_triggers.js:590
+#, javascript-format
+msgid "Napata will attack in %(time)s!"
+msgstr "¡Nepata va atacar en %(time)s!"
+
+#: maps/random/survivalofthefittest_triggers.js:163
 #, javascript-format
 msgid "The first wave will start in %(time)s!"
 msgstr "¡La primer onda va entamar en %(time)s!"
 
-#: maps/random/survivalofthefittest_triggers.js:325
+#: maps/random/survivalofthefittest_triggers.js:264
 msgid "An enemy wave is attacking!"
 msgstr "¡Una onda enemiga ta atacando!"
 
-#: maps/random/survivalofthefittest_triggers.js:349
+#: maps/random/survivalofthefittest_triggers.js:289
 #, javascript-format
 msgid "%(player)s has been defeated (lost civic center)."
 msgstr "Derrotaron a %(player)s (perdió'l centru cívicu)."
@@ -2542,6 +2624,51 @@ msgstr "Un ñubláu terrén de los Alpes camúdase nun campu batalla, yá que ca
 #: maps/skirmishes/Dueling Cliffs (3v3).xml:Name:40
 msgid "Dueling Cliffs (3v3)"
 msgstr "Galardeyos amarradiegos (3-3)"
+
+#: maps/skirmishes/Egypt (3v3).xml:Name:40
+msgid "Egypt (3v3)"
+msgstr "Exiptu (3-3)"
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[1].Name:40
+msgid "Alexandria"
+msgstr "Alexandría"
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[2].Name:40
+msgid "Theben"
+msgstr "Tebes"
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[3].Name:40
+msgid "Siwa"
+msgstr "Siwa"
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[4].Name:40
+msgid "Sinai"
+msgstr "El Sinaí"
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[5].Name:40
+msgid "Memphis"
+msgstr "Menfis"
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[6].Name:40
+msgid "Cyrene"
+msgstr "Cirene"
+
+#: maps/skirmishes/Egypt (3v3).xml:Description:40
+msgid ""
+"Fight for the remains of ancient Egypt!\n"
+"\n"
+"Players start with full grown cities and small armies, each having distinct advantages and drawbacks. Take care, there are 7 mighty forts and marauding bandids!\n"
+"\n"
+"It is the last century before 0 A.D. Egypt is internally divided between hellenistic (Alexandria, represented by Seleucids) and traditional influences (Memphis, represented by Ptolemies). Thebes in the southern clime of river Nile has already been taken over by the Kush. In the north western Al-Dschabal al-Achdar, where the mediterranean city of Cyrene is located the Romans are preparing their invasion. From the eastern desert at-Tih and mount Sinai enemies (represented by Persians) are pushing forward and the oasis Siwa. Charga (represented by Carthage) in the south western desert are trying to get a share of the pie as well.\n"
+"Locations:\n"
+"- Alexandria: library, harbor\n"
+"- Memphis: Necropolis, pyramids, Apis shrine\n"
+"- Thebes: temple district, Valley of the Kings \n"
+"- Cyrene: mediterranean Macchie, olive groves\n"
+"- Fayyum: crocodile shrine, nile dam\n"
+"- Eastern desert: mount Sinai, deep Wadi, Red Sea reefs\n"
+"- Western desert: Oasis Charga and Siwa, Qattara Depression\n"
+msgstr "¡Llucha polo que resta del antiguu Exiptu!\n\nLos xugadores entamen con una ciudá madura y un exércitu pequeñu, caúna con distintes ventayes y desventayes. Repara, ¡hai 7 fuertes y bandíos qu'anden a la chisba!\n\nYe'l sieglu últimu endenantes de 0 A.D. Exiptu ta dixebráu internamente ente les influyencies helenístiques (Alexandría, representaes polos seléucides) y les tradicionales (Menfis, representaes polos tolemaicos). Tebes, na fastera al sur del ríu Nilu, tomáronla yá los cuxites. Al noroeste d'Al-Dschabal al-Achdar, u s'asitia la ciudá mediterránea de Cirene, los romanos tán preparando pa invadir. Dende l'ermu oriental d'at-Tih, el monte Sinaí y l'oasis de Siwa los enemigos (representaos polos perses) tán avanzando. Los del ermu suroccidental de Kharga (representada por Cartagu) tán tentando de pescanciar una porción tamién.\nLos allugamientos:\n- Alexandría: La biblioteca, el puertu\n- Menfis: La necrópolis, les pirámides, el santuariu d'Apis\n- Tebes: El distritu del templu, el Valle de los Reis\n- Cirene: La maquia mediterránea, les mates d'olivares\n- Fayyún: El santuariu del cocodrilu, la presa del Nilu\n- L'ermu oriental: El monte Sinaí, el Wadi fonderu, los petones de la Mar Bermeya\n- L'ermu occidental: L'oasis de Kharga y Siwa, la fondigonada de Qattara"
 
 #: maps/skirmishes/Forest Battle (4).xml:Description:40
 msgid ""

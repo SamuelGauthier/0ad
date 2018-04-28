@@ -48,17 +48,33 @@ var g_Mods = {};
 var g_ModsEnabled = [];
 var g_ModsDisabled = [];
 
+/**
+ * Name of the mods installed by the ModInstaller.
+ */
+var g_InstalledMods;
+
 var g_ColorNoModSelected = "255 255 100";
 var g_ColorDependenciesMet = "100 255 100";
 var g_ColorDependenciesNotMet = "255 100 100";
 
-function init(data)
+function init(data, hotloadData)
+{
+	g_InstalledMods = data && data.installedMods || hotloadData && hotloadData.installedMods || [];
+	initMods();
+	initGUIButtons(data);
+}
+
+function initMods()
 {
 	loadMods();
 	loadEnabledMods();
 	validateMods();
 	initGUIFilters();
-	initGUIButtons(data);
+}
+
+function getHotloadData()
+{
+	return { "installedMods": g_InstalledMods };
 }
 
 function loadMods()
@@ -129,7 +145,7 @@ function displayModList(listObjectName, folders)
 
 	folders = folders.filter(filterMod);
 
-	listObject.list_name = folders.map(folder => g_Mods[folder].name);
+	listObject.list_name = folders.map(folder => g_Mods[folder].name).map(name => g_InstalledMods.indexOf(name) == -1 ? name : coloredText(name, "green"));
 	listObject.list_folder = folders;
 	listObject.list_label = folders.map(folder => g_Mods[folder].label);
 	listObject.list_url = folders.map(folder => g_Mods[folder].url || "");
@@ -180,13 +196,6 @@ function disableMod()
 
 	modsEnabledList.selected = Math.min(pos, g_ModsEnabled.length - 1);
 
-	displayModLists();
-}
-
-function resetFilters()
-{
-	Engine.GetGUIObjectByName("modGenericFilter").caption = "";
-	Engine.GetGUIObjectByName("negateFilter").checked = false;
 	displayModLists();
 }
 
@@ -296,6 +305,23 @@ function isDependencyMet(dependency)
 		(!operator || versionSatisfied(g_Mods[folder].version, operator[0], version)));
 }
 
+function modIo()
+{
+	messageBox(500, 250,
+		translate("You are about to connect to the mod.io online service. This provides easy access to community-made mods, but is not under the control of Wildfire Games.\n\nWhile we have taken care to make this secure, we cannot guarantee with absolute certainty that this is not a security risk.\n\nDo you really want to connect?"),
+		translate("Connect to mod.io?"),
+		[translate("Cancel"), translateWithContext("mod.io connection message box", "Connect")],
+		[
+			null,
+			() => {
+				Engine.PushGuiPage("page_modio.xml", {
+					"callback": "initMods"
+				});
+			}
+		]
+	);
+}
+
 /**
  * Compares the given versions using the given operator.
  *       '-' or '_' is ignored. Only numbers are supported.
@@ -346,9 +372,23 @@ function sortEnabledMods()
 	displayModList("modsEnabledList", g_ModsEnabled);
 }
 
-function showModDescription(listObjectName)
+function selectedMod(listObjectName)
 {
 	let listObject = Engine.GetGUIObjectByName(listObjectName);
+	let otherListObject = Engine.GetGUIObjectByName(listObjectName == "modsDisabledList" ?
+		"modsEnabledList" : "modsDisabledList");
+
+	if (listObject.selected != -1)
+	{
+		otherListObject.selected = -1;
+		Engine.GetGUIObjectByName("visitWebButton").enabled = true;
+		let toggleModButton = Engine.GetGUIObjectByName("toggleModButton");
+		toggleModButton.caption = listObjectName == "modsDisabledList" ? "Enable" : "Disable";
+		toggleModButton.enabled = true;
+		toggleModButton.onPress = listObjectName == "modsDisabledList" ? enableMod : disableMod;
+		Engine.GetGUIObjectByName("enabledModUp").enabled = listObjectName == "modsEnabledList";
+		Engine.GetGUIObjectByName("enabledModDown").enabled = listObjectName == "modsEnabledList";
+	}
 
 	Engine.GetGUIObjectByName("globalModDescription").caption =
 		listObject.list[listObject.selected] ?
@@ -356,9 +396,12 @@ function showModDescription(listObjectName)
 			'[color="' + g_ColorNoModSelected + '"]' + translate("No mod has been selected.") + '[/color]';
 }
 
-function visitModWebsite(listName)
+function visitModWebsite()
 {
-	let list = Engine.GetGUIObjectByName(listName);
+	let modsEnabledList = Engine.GetGUIObjectByName("modsEnabledList");
+	let modsDisabledList = Engine.GetGUIObjectByName("modsDisabledList");
+
+	let list = modsEnabledList.selected == -1 ? modsDisabledList : modsEnabledList;
 	let folder = list.list_folder[list.selected];
 	let url = folder && g_Mods[folder] && g_Mods[folder].url;
 

@@ -4,13 +4,14 @@
 # 
 # Translators:
 # adin hykin <adin1664@gmail.com>, 2017
+# aqua - <aqua194@gmail.com>, 2018
 # asd asdasd <inactive+Well11@transifex.com>, 2017
 # yuval herman <huckvrni@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: 0 A.D.\n"
-"POT-Creation-Date: 2018-02-23 09:04+0100\n"
-"PO-Revision-Date: 2018-02-23 15:32+0000\n"
+"POT-Creation-Date: 2018-04-23 09:03+0200\n"
+"PO-Revision-Date: 2018-04-23 14:50+0000\n"
 "Last-Translator: Adrián Chaves Fernández <adriyetichaves@gmail.com>\n"
 "Language-Team: Hebrew (http://www.transifex.com/wildfire-games/0ad/language/he/)\n"
 "MIME-Version: 1.0\n"
@@ -50,7 +51,7 @@ msgstr "שחקן"
 
 #: gui/lobby/lobby.js:60
 msgid "Muted Player"
-msgstr ""
+msgstr "שחקן מושתק"
 
 #: gui/lobby/lobby.js:156
 msgid "Disconnected."
@@ -78,7 +79,7 @@ msgstr ""
 #: gui/lobby/lobby.js:221
 #, javascript-format
 msgid "%(nick)s has been muted."
-msgstr ""
+msgstr "%(nick)s הושתק"
 
 #: gui/lobby/lobby.js:224
 msgid "You are now a moderator."
@@ -162,21 +163,23 @@ msgstr ""
 
 #: gui/lobby/lobby.js:385
 msgid "Return to the main menu."
-msgstr ""
+msgstr "חזור לתפריט הראשי"
 
 #: gui/lobby/lobby.js:443
 msgid "You have been disconnected from the lobby. Do you want to reconnect?"
 msgstr ""
 
-#: gui/lobby/lobby.js:444 gui/lobby/lobby.js:1192 gui/prelobby/prelobby.js:299
+#: gui/lobby/lobby.js:444 gui/lobby/lobby.js:1200 gui/prelobby/prelobby.js:299
 msgid "Confirmation"
 msgstr "אישור"
 
-#: gui/lobby/lobby.js:445 gui/lobby/lobby.js:1193 gui/prelobby/prelobby.js:300
+#: gui/lobby/lobby.js:445 gui/lobby/lobby.js:1184 gui/lobby/lobby.js:1201
+#: gui/prelobby/prelobby.js:300
 msgid "No"
 msgstr "לא"
 
-#: gui/lobby/lobby.js:445 gui/lobby/lobby.js:1193 gui/prelobby/prelobby.js:300
+#: gui/lobby/lobby.js:445 gui/lobby/lobby.js:1184 gui/lobby/lobby.js:1201
+#: gui/prelobby/prelobby.js:300
 msgid "Yes"
 msgstr "כן"
 
@@ -273,7 +276,7 @@ msgstr "שחקן \"%(nick)s\" לא נמצא."
 msgid "Game started at %(time)s"
 msgstr "המשחק יתחיל ב %(time)s"
 
-#: gui/lobby/lobby.js:1135 gui/lobby/lobby.js:1506
+#: gui/lobby/lobby.js:1135 gui/lobby/lobby.js:1514
 msgid "HH:mm"
 msgstr "HH:mm"
 
@@ -287,103 +290,103 @@ msgid "Your active mods do not match the mods of this game."
 msgstr ""
 
 #: gui/lobby/lobby.js:1182
-msgid "Incompatible mods"
+msgid "Do you want to switch to the mod selection page?"
 msgstr ""
 
 #: gui/lobby/lobby.js:1183
-msgid "Ok"
+msgid "Incompatible mods"
 msgstr ""
 
-#: gui/lobby/lobby.js:1191
+#: gui/lobby/lobby.js:1199
 msgid "The game has already started. Do you want to join as observer?"
 msgstr "המשחק כבר התחיל. האם אתה רוצה להצטרף כמשקיף?"
 
-#: gui/lobby/lobby.js:1225
+#: gui/lobby/lobby.js:1233
 #, javascript-format
 msgid "This game's address '%(ip)s' does not appear to be valid."
 msgstr "כתובת משחק \" '%(ip)s' אינה מופיעה להיות כתקף בכתובת של המשחק הזה."
 
-#: gui/lobby/lobby.js:1341
+#: gui/lobby/lobby.js:1349
 #, javascript-format
 msgid "The command '%(cmd)s' is not supported."
 msgstr ""
 
-#: gui/lobby/lobby.js:1353
+#: gui/lobby/lobby.js:1361
 #, javascript-format
 msgid "The command '%(cmd)s' is restricted to moderators."
 msgstr ""
 
 #. Translation: IRC message prefix when the sender uses the /me command.
-#: gui/lobby/lobby.js:1426
+#: gui/lobby/lobby.js:1434
 #, javascript-format
 msgid "* %(sender)s"
 msgstr "%(sender)s"
 
 #. Translation: IRC message issued using the ‘/me’ command.
-#: gui/lobby/lobby.js:1431
+#: gui/lobby/lobby.js:1439
 #, javascript-format
 msgid "%(sender)s %(action)s"
 msgstr "%(sender)s %(action)s"
 
 #. Translation: IRC message prefix.
-#: gui/lobby/lobby.js:1440 gui/lobby/lobby.js:1461 gui/lobby/lobby.js:1488
+#: gui/lobby/lobby.js:1448 gui/lobby/lobby.js:1469 gui/lobby/lobby.js:1496
 #, javascript-format
 msgid "<%(sender)s>"
 msgstr "%(sender)s "
 
 #. Translation: IRC message.
-#: gui/lobby/lobby.js:1445 gui/lobby/lobby.js:1466 gui/lobby/lobby.js:1493
+#: gui/lobby/lobby.js:1453 gui/lobby/lobby.js:1474 gui/lobby/lobby.js:1501
 #, javascript-format
 msgid "%(sender)s %(message)s"
 msgstr "%(sender)s %(message)s"
 
 #. Translation: IRC system message.
-#: gui/lobby/lobby.js:1455
+#: gui/lobby/lobby.js:1463
 #, javascript-format
 msgid "== %(message)s"
 msgstr "== %(message)s"
 
-#: gui/lobby/lobby.js:1483
+#: gui/lobby/lobby.js:1491
 #, javascript-format
 msgctxt "lobby private message"
 msgid "(%(private)s) <%(sender)s>"
 msgstr "(%(private)s) <%(sender)s>"
 
-#: gui/lobby/lobby.js:1484
+#: gui/lobby/lobby.js:1492
 msgid "Private"
 msgstr "פרטי"
 
 #. Translation: Time prefix as shown in the multiplayer lobby (when you enable
 #. it in the options page).
-#: gui/lobby/lobby.js:1509
+#: gui/lobby/lobby.js:1517
 #, javascript-format
 msgid "\\[%(time)s]"
 msgstr "\\[%(time)s]"
 
 #. Translation: IRC message format when there is a time prefix.
-#: gui/lobby/lobby.js:1514
+#: gui/lobby/lobby.js:1522
 #, javascript-format
 msgid "%(time)s %(message)s"
 msgstr "%(time)s %(message)s"
 
-#: gui/lobby/lobby.js:1553
+#: gui/lobby/lobby.js:1561
 #, javascript-format
 msgid "%(nick)s (%(rating)s)"
 msgstr "%(nick)s (%(rating)s)"
 
-#: gui/lobby/lobby.js:1569
+#: gui/lobby/lobby.js:1577
 msgctxt "Used for an undefined winning rate"
 msgid "-"
 msgstr "-"
 
-#: gui/lobby/lobby.js:1571
+#: gui/lobby/lobby.js:1579
 #, javascript-format
 msgid "%(percentage)s%%"
 msgstr "%(percentage)s%%"
 
 #: gui/prelobby/prelobby.js:43
 msgid "Connecting…"
-msgstr ""
+msgstr "מתחבר"
 
 #: gui/prelobby/prelobby.js:66
 msgid "Registering…"
@@ -558,7 +561,7 @@ msgstr "לארח משחק\n "
 
 #: gui/lobby/lobby_panels.xml:(caption):244
 msgid "Show only open games"
-msgstr ""
+msgstr "הצג משחקים פתוחים בלבד"
 
 #: gui/lobby/lobby_panels.xml:(caption):267
 msgid "Send"
@@ -609,7 +612,7 @@ msgstr "סיסמא: "
 
 #: gui/prelobby/prelobby.xml:(caption):68
 msgid "Remember Password"
-msgstr ""
+msgstr "זכור סיסמא"
 
 #: gui/prelobby/prelobby.xml:(caption):74
 msgid "Registration"

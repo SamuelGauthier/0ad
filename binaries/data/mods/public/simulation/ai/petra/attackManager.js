@@ -177,7 +177,7 @@ m.AttackManager.prototype.assignBombers = function(gameState)
 		if (alreadyBombing)
 			break;
 
-		let range =  ent.attackRange("Ranged").max;
+		let range = ent.attackRange("Ranged").max;
 		let entPos = ent.position();
 		let access = m.getLandAccess(gameState, ent);
 		for (let struct of gameState.getEnemyStructures().values())
@@ -252,7 +252,7 @@ m.AttackManager.prototype.update = function(gameState, queues, events)
 
 	this.checkEvents(gameState, events);
 
-	let unexecutedAttacks = {"Rush": 0, "Raid": 0, "Attack": 0, "HugeAttack": 0};
+	let unexecutedAttacks = { "Rush": 0, "Raid": 0, "Attack": 0, "HugeAttack": 0 };
 	for (let attackType in this.upcomingAttacks)
 	{
 		for (let i = 0; i < this.upcomingAttacks[attackType].length; ++i)
@@ -265,20 +265,20 @@ m.AttackManager.prototype.update = function(gameState, queues, events)
 
 			let updateStep = attack.updatePreparation(gameState);
 			// now we're gonna check if the preparation time is over
-			if (updateStep === 1 || attack.isPaused() )
+			if (updateStep == 1 || attack.isPaused())
 			{
 				// just chillin'
-				if (attack.state === "unexecuted")
+				if (attack.state == "unexecuted")
 					++unexecutedAttacks[attackType];
 			}
-			else if (updateStep === 0)
+			else if (updateStep == 0)
 			{
 				if (this.Config.debug > 1)
 					API3.warn("Attack Manager: " + attack.getType() + " plan " + attack.getName() + " aborted.");
 				attack.Abort(gameState);
-				this.upcomingAttacks[attackType].splice(i--,1);
+				this.upcomingAttacks[attackType].splice(i--, 1);
 			}
-			else if (updateStep === 2)
+			else if (updateStep == 2)
 			{
 				if (attack.StartAttack(gameState))
 				{
@@ -290,7 +290,7 @@ m.AttackManager.prototype.update = function(gameState, queues, events)
 				}
 				else
 					attack.Abort(gameState);
-				this.upcomingAttacks[attackType].splice(i--,1);
+				this.upcomingAttacks[attackType].splice(i--, 1);
 			}
 		}
 	}
@@ -310,7 +310,7 @@ m.AttackManager.prototype.update = function(gameState, queues, events)
 				if (this.Config.debug > 1)
 					API3.warn("Military Manager: " + attack.getType() + " plan " + attack.getName() + " is finished with remaining " + remaining);
 				attack.Abort(gameState);
-				this.startedAttacks[attackType].splice(i--,1);
+				this.startedAttacks[attackType].splice(i--, 1);
 			}
 		}
 	}
@@ -597,7 +597,7 @@ m.AttackManager.prototype.getRelicEnemyPlayer = function(gameState, attack)
 	for (let i = 0; i < gameState.sharedScript.playersData.length; ++i)
 	{
 		if (!gameState.isPlayerEnemy(i) || this.defeated[i] ||
-		    i == 0 && !gameState.ai.HQ.gameTypeManager.tryCaptureGaiaRelic)
+		    i == 0 && !gameState.ai.HQ.victoryManager.tryCaptureGaiaRelic)
 			continue;
 
 		let relicsCount = allRelics.filter(relic => relic.owner() == i).length;
@@ -611,7 +611,7 @@ m.AttackManager.prototype.getRelicEnemyPlayer = function(gameState, attack)
 		if (attack.targetPlayer === undefined)
 			this.currentEnemyPlayer = enemyPlayer;
 		if (enemyPlayer == 0)
-			gameState.ai.HQ.gameTypeManager.resetCaptureGaiaRelic(gameState);
+			gameState.ai.HQ.victoryManager.resetCaptureGaiaRelic(gameState);
 	}
 	return enemyPlayer;
 };
@@ -693,6 +693,7 @@ m.AttackManager.prototype.switchDefenseToAttack = function(gameState, target, da
 	attackPlan.init(gameState);
 	this.startedAttacks[attackType].push(attackPlan);
 
+	let targetAccess = m.getLandAccess(gameState, target);
 	for (let army of gameState.ai.HQ.defenseManager.armies)
 	{
 		if (data.range)
@@ -711,7 +712,9 @@ m.AttackManager.prototype.switchDefenseToAttack = function(gameState, target, da
 			let unitId = army.ownEntities[0];
 			army.removeOwn(gameState, unitId);
 			let unit = gameState.getEntityById(unitId);
-			if (unit && attackPlan.isAvailableUnit(gameState, unit))
+			let accessOk = unit.getMetadata(PlayerID, "transport") !== undefined ||
+			               unit.position() && m.getLandAccess(gameState, unit) == targetAccess;
+			if (unit && accessOk && attackPlan.isAvailableUnit(gameState, unit))
 			{
 				unit.setMetadata(PlayerID, "plan", attackPlan.name);
 				unit.setMetadata(PlayerID, "role", "attack");

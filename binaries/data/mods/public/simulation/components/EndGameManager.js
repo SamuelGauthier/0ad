@@ -1,5 +1,5 @@
 /**
- * System component to store the gametype, gametype settings and
+ * System component to store the victory conditions and their settings and
  * check for allied victory / last-man-standing.
  */
 function EndGameManager() {}
@@ -9,11 +9,9 @@ EndGameManager.prototype.Schema =
 
 EndGameManager.prototype.Init = function()
 {
-	this.gameType = "conquest";
-
 	// Contains settings specific to the victory condition,
 	// for example wonder victory duration.
-	this.gameTypeSettings = {};
+	this.gameSettings = {};
 
 	// Allied victory means allied players can win if victory conditions are met for each of them
 	// False for a "last man standing" game
@@ -28,24 +26,23 @@ EndGameManager.prototype.Init = function()
 	this.endlessGame = false;
 };
 
-EndGameManager.prototype.GetGameType = function()
+EndGameManager.prototype.GetGameSettings = function()
 {
-	return this.gameType;
+	return this.gameSettings;
 };
 
-EndGameManager.prototype.GetGameTypeSettings = function()
+EndGameManager.prototype.GetVictoryConditions = function()
 {
-	return this.gameTypeSettings;
+	return this.gameSettings.victoryConditions;
 };
 
-EndGameManager.prototype.SetGameType = function(newGameType, newSettings = {})
+EndGameManager.prototype.SetGameSettings = function(newSettings = {})
 {
-	this.gameType = newGameType;
-	this.gameTypeSettings = newSettings;
+	this.gameSettings = newSettings;
 	this.skipAlliedVictoryCheck = false;
-	this.endlessGame = newGameType == "endless";
+	this.endlessGame = !this.gameSettings.victoryConditions.length;
 
-	Engine.BroadcastMessage(MT_GameTypeChanged, {});
+	Engine.BroadcastMessage(MT_VictoryConditionsChanged, {});
 };
 
 /**
@@ -58,7 +55,7 @@ EndGameManager.prototype.SetGameType = function(newGameType, newSettings = {})
  *       "%(players)s and %(lastPlayer)s have won (game mode).",
  *       n));
  */
-EndGameManager.prototype.MarkPlayerAsWon = function(playerID, victoryString, defeatString)
+EndGameManager.prototype.MarkPlayerAndAlliesAsWon = function(playerID, victoryString, defeatString)
 {
 	let state = QueryPlayerIDInterface(playerID).GetState();
 	if (state != "active")
@@ -67,29 +64,44 @@ EndGameManager.prototype.MarkPlayerAsWon = function(playerID, victoryString, def
 		return;
 	}
 
+	let winningPlayers = [playerID];
+	if (this.alliedVictory)
+		winningPlayers = QueryPlayerIDInterface(playerID).GetMutualAllies(playerID).filter(
+			player => QueryPlayerIDInterface(player).GetState() == "active");
+
+	this.MarkPlayersAsWon(winningPlayers, victoryString, defeatString);
+};
+
+/**
+ * Sets the given players as won and others as defeated.
+ *
+ * @param {array} winningPlayers - The players that should win.
+ * @param {function} victoryReason - Function that maps from number to plural string, for example
+ *   n => markForPluralTranslation(
+ *       "%(lastPlayer)s has won (game mode).",
+ *       "%(players)s and %(lastPlayer)s have won (game mode).",
+ *       n));
+ */
+EndGameManager.prototype.MarkPlayersAsWon = function(winningPlayers, victoryString, defeatString)
+{
 	this.skipAlliedVictoryCheck = true;
-
-	let winningPlayers = [];
-	let defeatedPlayers = [];
-
-	let numPlayers = Engine.QueryInterface(SYSTEM_ENTITY, IID_PlayerManager).GetNumPlayers();
-	for (let i = 1; i < numPlayers; ++i)
+	for (let playerID of winningPlayers)
 	{
-		let cmpPlayer = QueryPlayerIDInterface(i);
-		if (cmpPlayer.GetState() != "active")
+		let cmpPlayer = QueryPlayerIDInterface(playerID);
+		let state = cmpPlayer.GetState();
+		if (state != "active")
+		{
+			warn("Can't mark player " + playerID + " as won, since the state is " + state);
 			continue;
-
-		if (i == playerID || this.alliedVictory && cmpPlayer.IsMutualAlly(playerID))
-		{
-			cmpPlayer.SetState("won", undefined);
-			winningPlayers.push(i);
 		}
-		else
-		{
-			cmpPlayer.SetState("defeated", undefined);
-			defeatedPlayers.push(i);
-		}
+		cmpPlayer.SetState("won", undefined);
 	}
+
+	let defeatedPlayers = Engine.QueryInterface(SYSTEM_ENTITY, IID_PlayerManager).GetActivePlayers().filter(
+		playerID => winningPlayers.indexOf(playerID) == -1);
+
+	for (let playerID of defeatedPlayers)
+		QueryPlayerIDInterface(playerID).SetState("defeated", undefined);
 
 	let cmpGUIInterface = Engine.QueryInterface(SYSTEM_ENTITY, IID_GuiInterface);
 	cmpGUIInterface.PushNotification({

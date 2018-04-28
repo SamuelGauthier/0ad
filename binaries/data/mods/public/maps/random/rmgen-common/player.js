@@ -122,6 +122,9 @@ function placeStartingWalls(position, playerID, wallType, orientation = BUILDING
 	if (civ != "iber" || g_Map.getSize() <= 128)
 		return;
 
+	// TODO: should prevent trees inside walls
+	// When fixing, remove the DeleteUponConstruction flag from template_gaia_flora.xml
+
 	if (wallType == "towers")
 		placePolygonalWall(position, 15, ["entry"], "tower", civ, playerID, orientation, 7);
 	else if (wallType)
@@ -516,15 +519,15 @@ function sortAllPlayers()
  */
 function primeSortPlayers(playerIDs)
 {
-	if (!playerIDs.length)
-		return [];
-
 	let prime = [];
-	for (let i = 0; i < Math.ceil(playerIDs.length / 2); ++i)
+	for (let i = 0; i < Math.floor(playerIDs.length / 2); ++i)
 	{
 		prime.push(playerIDs[i]);
 		prime.push(playerIDs[playerIDs.length - 1 - i]);
 	}
+
+	if (playerIDs.length % 2)
+		prime.push(playerIDs[Math.floor(playerIDs.length / 2)]);
 
 	return prime;
 }
@@ -532,6 +535,33 @@ function primeSortPlayers(playerIDs)
 function primeSortAllPlayers()
 {
 	return primeSortPlayers(sortAllPlayers());
+}
+
+/*
+ * Separates playerIDs into two arrays such that teammates are in the same array,
+ * unless everyone's on the same team in which case they'll be split in half.
+ */
+function partitionPlayers(playerIDs)
+{
+	let teamIDs = Array.from(new Set(playerIDs.map(getPlayerTeam)));
+	let teams = teamIDs.map(teamID => playerIDs.filter(playerID => getPlayerTeam(playerID) == teamID));
+	if (teamIDs.indexOf(-1) != -1)
+		teams = teams.concat(teams.splice(teamIDs.indexOf(-1), 1)[0].map(playerID => [playerID]));
+
+	if (teams.length == 1)
+	{
+		let idx = Math.floor(teams[0].length / 2);
+		teams = [teams[0].slice(idx), teams[0].slice(0, idx)];
+	}
+
+	teams.sort((a, b) => b.length - a.length);
+
+	// Use the greedy algorithm: add the next team to the side with fewer players
+	return teams.reduce(([east, west], team) =>
+		east.length > west.length ?
+			[east, west.concat(team)] :
+			[east.concat(team), west],
+		[[], []]);
 }
 
 /**
@@ -562,6 +592,33 @@ function playerPlacementCustomAngle(radius, center, playerAngleFunc)
 	}
 
 	return [playerPosition, playerAngle];
+}
+
+/**
+ * Returns player starting positions equally spaced along an arc.
+ */
+function playerPlacementArc(playerIDs, center, radius, startAngle, endAngle)
+{
+	return distributePointsOnCircularSegment(
+		playerIDs.length + 2,
+		endAngle - startAngle,
+		startAngle,
+		radius,
+		center
+	)[0].slice(1, -1).map(p => p.round());
+}
+
+/**
+ * Returns player starting positions located on two symmetrically placed arcs, with teammates placed on the same arc.
+ */
+function playerPlacementArcs(playerIDs, center, radius, mapAngle, startAngle, endAngle)
+{
+	let [east, west] = partitionPlayers(playerIDs);
+	let eastPosition = playerPlacementArc(east, center, radius, mapAngle + startAngle, mapAngle + endAngle);
+	let westPosition = playerPlacementArc(west, center, radius, mapAngle - startAngle, mapAngle - endAngle);
+	return playerIDs.map(playerID => east.indexOf(playerID) != -1 ?
+		eastPosition[east.indexOf(playerID)] :
+		westPosition[west.indexOf(playerID)]);
 }
 
 /**

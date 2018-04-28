@@ -9,6 +9,11 @@ var g_Options;
 var g_HasCallback;
 
 /**
+ * Functions to call after closing the page.
+ */
+var g_CloseCallbacks;
+
+/**
  * Vertical size of a tab button.
  */
 var g_TabButtonHeight = 30;
@@ -39,6 +44,11 @@ var g_OptionControlDist = 2;
 var g_DependentLabelIndentation = 25;
 
 /**
+ * Color used to indicate that the string entered by the player isn't a sane color.
+ */
+var g_InsaneColor = "255 0 255";
+
+/**
  * Defines the parsing of config strings and GUI control interaction for the different option types.
  *
  * @property configToValue - parses a string from the user config to a value of the declared type.
@@ -67,6 +77,29 @@ var g_OptionType = {
 		},
 		"guiToValue": control => control.caption,
 		"guiSetter": "onTextEdit"
+	},
+	"color":
+	{
+		"configToValue": value => value,
+		"valueToGui": (value, control) => {
+			control.caption = value;
+		},
+		"guiToValue": control => control.caption,
+		"guiSetter": "onTextEdit",
+		"sanitizeValue": (value, control, option) => {
+			let color = guiToRgbColor(value);
+			let sanitized = rgbToGuiColor(color);
+			if (control)
+			{
+				control.sprite = sanitized == value ? "ModernDarkBoxWhite" : "ModernDarkBoxWhiteInvalid";
+				control.children[1].sprite = sanitized == value ? "color:" + value : "color:" + g_InsaneColor;
+			}
+			return sanitized;
+		},
+		"tooltip": (value, option) =>
+			sprintf(translate("Default: %(value)s"), {
+				"value": Engine.ConfigDB_GetValue("default", option.config)
+			})
 	},
 	"number":
 	{
@@ -137,6 +170,7 @@ var g_OptionType = {
 
 function init(data, hotloadData)
 {
+	g_CloseCallbacks = new Set();
 	g_HasCallback = hotloadData && hotloadData.callback || data && data.callback;
 	g_TabCategorySelected = hotloadData ? hotloadData.tabCategorySelected : 0;
 
@@ -216,6 +250,9 @@ function displayOptions()
 
 			if (option.function)
 				Engine[option.function](value);
+
+			if (option.callback)
+				g_CloseCallbacks.add(option.callback);
 
 			enableButtons();
 		};
@@ -346,7 +383,7 @@ function closePage()
 function closePageWithoutConfirmation()
 {
 	if (g_HasCallback)
-		Engine.PopGuiPageCB();
+		Engine.PopGuiPageCB(g_CloseCallbacks);
 	else
 		Engine.PopGuiPage();
 }

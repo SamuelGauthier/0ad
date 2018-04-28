@@ -47,8 +47,11 @@ private:
 	// Account infos
 	std::string m_username;
 	std::string m_password;
+	std::string m_server;
+	std::string m_room;
 	std::string m_nick;
 	std::string m_xpartamuppId;
+	std::string m_echelonId;
 
 	// State
 	bool m_initialLoadComplete;
@@ -70,6 +73,7 @@ public:
 	void SendIqRegisterGame(const ScriptInterface& scriptInterface, JS::HandleValue data);
 	void SendIqUnregisterGame();
 	void SendIqChangeStateGame(const std::string& nbp, const std::string& players);
+	void SendIqLobbyAuth(const std::string& to, const std::string& token);
 	void SetNick(const std::string& nick);
 	void GetNick(std::string& nick);
 	void kick(const std::string& nick, const std::string& reason);

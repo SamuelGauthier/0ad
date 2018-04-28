@@ -7,8 +7,9 @@ const g_MapTypes = prepareForDropdown(g_Settings && g_Settings.MapTypes);
 const g_TriggerDifficulties = prepareForDropdown(g_Settings && g_Settings.TriggerDifficulties);
 const g_PopulationCapacities = prepareForDropdown(g_Settings && g_Settings.PopulationCapacities);
 const g_StartingResources = prepareForDropdown(g_Settings && g_Settings.StartingResources);
-const g_VictoryConditions = prepareForDropdown(g_Settings && g_Settings.VictoryConditions);
 const g_VictoryDurations = prepareForDropdown(g_Settings && g_Settings.VictoryDurations);
+const g_VictoryConditions = g_Settings && g_Settings.VictoryConditions;
+
 var g_GameSpeeds = getGameSpeedChoices(false);
 
 /**
@@ -224,12 +225,12 @@ var g_TriggerDifficultyList;
 /**
  * Whether this is a single- or multiplayer match.
  */
-var g_IsNetworked;
+const g_IsNetworked = Engine.HasNetClient();
 
 /**
- * Is this user in control of game settings (i.e. singleplayer or host of a multiplayergame).
+ * Is this user in control of game settings (i.e. is a network server, or offline player).
  */
-var g_IsController;
+const g_IsController = !g_IsNetworked || Engine.HasNetServer();
 
 /**
  * Whether this is a tutorial.
@@ -413,8 +414,8 @@ var g_SettingsTabsGUI = [
 			"mapSelection",
 			"mapSize",
 			"biome",
-			"nomad",
 			"triggerDifficulty",
+			"nomad",
 			"disableTreasures",
 			"exploreMap",
 			"revealMap"
@@ -433,7 +434,7 @@ var g_SettingsTabsGUI = [
 	{
 		"label": translateWithContext("Match settings tab name", "Game Type"),
 		"settings": [
-			"victoryCondition",
+			...g_VictoryConditions.map(victoryCondition => victoryCondition.Name),
 			"relicCount",
 			"relicDuration",
 			"wonderDuration",
@@ -640,22 +641,6 @@ var g_Dropdowns = {
 		"enabled": () => g_GameAttributes.mapType != "scenario",
 		"initOrder": 1000
 	},
-	"victoryCondition": {
-		"title": () => translate("Victory Condition"),
-		"tooltip": (hoverIdx) => g_VictoryConditions.Description[hoverIdx] || translate("Select victory condition."),
-		"labels": () => g_VictoryConditions.Title,
-		"ids": () => g_VictoryConditions.Name,
-		"default": () => g_VictoryConditions.Default,
-		"defined": () => g_GameAttributes.settings.GameType !== undefined,
-		"get": () => g_GameAttributes.settings.GameType,
-		"select": (itemIdx) => {
-			g_GameAttributes.settings.GameType = g_VictoryConditions.Name[itemIdx];
-			g_GameAttributes.settings.VictoryScripts = g_VictoryConditions.Scripts[itemIdx];
-		},
-		"enabled": () => g_GameAttributes.mapType != "scenario",
-		"autocomplete": 0,
-		"initOrder": 1000
-	},
 	"relicCount": {
 		"title": () => translate("Relic Count"),
 		"tooltip": (hoverIdx) => translate("Total number of relics spawned on the map. Relic victory is most realistic with only one or two relics. With greater numbers, the relics are important to capture to receive aura bonuses."),
@@ -667,7 +652,7 @@ var g_Dropdowns = {
 		"select": (itemIdx) => {
 			g_GameAttributes.settings.RelicCount = g_RelicCountList[itemIdx];
 		},
-		"hidden": () => g_GameAttributes.settings.GameType != "capture_the_relic",
+		"hidden": () => g_GameAttributes.settings.VictoryConditions.indexOf("capture_the_relic") == -1,
 		"enabled": () => g_GameAttributes.mapType != "scenario",
 		"initOrder": 1000
 	},
@@ -682,7 +667,7 @@ var g_Dropdowns = {
 		"select": (itemIdx) => {
 			g_GameAttributes.settings.RelicDuration = g_VictoryDurations.Duration[itemIdx];
 		},
-		"hidden": () => g_GameAttributes.settings.GameType != "capture_the_relic",
+		"hidden": () => g_GameAttributes.settings.VictoryConditions.indexOf("capture_the_relic") == -1,
 		"enabled": () => g_GameAttributes.mapType != "scenario",
 		"initOrder": 1000
 	},
@@ -697,7 +682,7 @@ var g_Dropdowns = {
 		"select": (itemIdx) => {
 			g_GameAttributes.settings.WonderDuration = g_VictoryDurations.Duration[itemIdx];
 		},
-		"hidden": () => g_GameAttributes.settings.GameType != "wonder",
+		"hidden": () => g_GameAttributes.settings.VictoryConditions.indexOf("wonder") == -1,
 		"enabled": () => g_GameAttributes.mapType != "scenario",
 		"initOrder": 1000
 	},
@@ -822,7 +807,34 @@ var g_PlayerDropdowns = {
 /**
  * Contains the logic of all boolean gamesettings.
  */
-var g_Checkboxes = {
+var g_Checkboxes = Object.assign(
+	{},
+	g_VictoryConditions.reduce((obj, victoryCondition) => {
+		obj[victoryCondition.Name] = {
+			"title": () => victoryCondition.Title,
+			"tooltip": () => victoryCondition.Description,
+			// Defaults are set in supplementDefault directly from g_VictoryConditions since we use an array
+			"defined": () => true,
+			"get": () => g_GameAttributes.settings.VictoryConditions.indexOf(victoryCondition.Name) != -1,
+			"set": checked => {
+				if (checked)
+				{
+					g_GameAttributes.settings.VictoryConditions.push(victoryCondition.Name);
+					if (victoryCondition.ChangeOnChecked)
+						for (let setting in victoryCondition.ChangeOnChecked)
+							g_Checkboxes[setting].set(victoryCondition.ChangeOnChecked[setting]);
+				}
+				else
+					g_GameAttributes.settings.VictoryConditions = g_GameAttributes.settings.VictoryConditions.filter(victoryConditionName => victoryConditionName != victoryCondition.Name);
+			},
+			"enabled": () =>
+				g_GameAttributes.mapType != "scenario" &&
+				(!victoryCondition.DisabledWhenChecked ||
+				victoryCondition.DisabledWhenChecked.every(victoryConditionName => g_GameAttributes.settings.VictoryConditions.indexOf(victoryConditionName) == -1))
+		};
+		return obj;
+	}, {}),
+	{
 		"regicideGarrison": {
 			"title": () => translate("Hero Garrison"),
 			"tooltip": () => translate("Toggle whether heroes can be garrisoned."),
@@ -832,7 +844,7 @@ var g_Checkboxes = {
 			"set": checked => {
 				g_GameAttributes.settings.RegicideGarrison = checked;
 			},
-			"hidden": () => g_GameAttributes.settings.GameType != "regicide",
+			"hidden": () => g_GameAttributes.settings.VictoryConditions.indexOf("regicide") == -1,
 			"enabled": () => g_GameAttributes.mapType != "scenario",
 			"initOrder": 1000
 		},
@@ -968,7 +980,8 @@ var g_Checkboxes = {
 			},
 			"initOrder": 1000
 		},
-};
+	}
+);
 
 /**
  * For setting up arbitrary GUI objects.
@@ -1093,8 +1106,6 @@ function init(attribs)
 		return;
 	}
 
-	g_IsNetworked = attribs.type != "offline";
-	g_IsController = attribs.type != "client";
 	g_IsTutorial = !!attribs.tutorial;
 	g_ServerName = attribs.serverName;
 	g_ServerPort = attribs.serverPort;
@@ -1149,6 +1160,9 @@ function initDefaults()
  */
 function supplementDefaults()
 {
+	g_GameAttributes.settings.VictoryConditions = g_GameAttributes.settings.VictoryConditions ||
+		g_VictoryConditions.filter(victoryCondition => !!victoryCondition.Default).map(victoryCondition => victoryCondition.Name);
+
 	for (let dropdown in g_Dropdowns)
 		if (!g_Dropdowns[dropdown].defined())
 			g_Dropdowns[dropdown].select(g_Dropdowns[dropdown].default());
@@ -1168,59 +1182,8 @@ function supplementDefaults()
  */
 function initGUIObjects()
 {
-	for (let tab in g_SettingsTabsGUI)
-		g_SettingsTabsGUI[tab].tooltip =
-			sprintf(translate("Toggle the %(name)s settings tab."), { "name": g_SettingsTabsGUI[tab].label }) +
-			colorizeHotkey("\n" + translate("Use %(hotkey)s to move a settings tab down."), "tab.next") +
-			colorizeHotkey("\n" + translate("Use %(hotkey)s to move a settings tab up."), "tab.prev");
-
-	// Copy all initOrder values into one object
-	let initOrder = {};
-	for (let dropdown in g_Dropdowns)
-		initOrder[dropdown] = g_Dropdowns[dropdown].initOrder;
-	for (let checkbox in g_Checkboxes)
-		initOrder[checkbox] = g_Checkboxes[checkbox].initOrder;
-
-	// Sort the object on initOrder so we can init the settings in an arbitrary order
-	for (let setting of Object.keys(initOrder).sort((a, b) => initOrder[a] - initOrder[b]))
-		if (g_Dropdowns[setting])
-			initDropdown(setting);
-		else if (g_Checkboxes[setting])
-			initCheckbox(setting);
-		else
-			warn('The setting "' + setting + '" is not defined.');
-
-	for (let dropdown in g_PlayerDropdowns)
-		initPlayerDropdowns(dropdown);
-
-	let settingTabButtons = Engine.GetGUIObjectByName("settingTabButtons");
-	let settingTabButtonsSize = settingTabButtons.size;
-	settingTabButtonsSize.bottom = settingTabButtonsSize.top + g_SettingsTabsGUI.length * (g_TabButtonHeight + g_TabButtonDist);
-	settingTabButtonsSize.right = g_MiscControls.lobbyButton.hidden() ?
-		settingTabButtonsSize.right :
-		Engine.GetGUIObjectByName("lobbyButton").size.left - g_LobbyButtonSpacing;
-	settingTabButtons.size = settingTabButtonsSize;
-
-	let settingTabButtonsBackground = Engine.GetGUIObjectByName("settingTabButtonsBackground");
-	settingTabButtonsBackground.size = settingTabButtonsSize;
-
-	let gameDescription = Engine.GetGUIObjectByName("mapInfoDescriptionFrame");
-	let gameDescriptionSize = gameDescription.size;
-	gameDescriptionSize.top = settingTabButtonsSize.bottom + 3;
-	gameDescription.size = gameDescriptionSize;
-
-	placeTabButtons(
-		g_SettingsTabsGUI,
-		g_TabButtonHeight,
-		g_TabButtonDist,
-		category => {
-			selectPanel(category == g_TabCategorySelected ? undefined : category);
-		},
-		() => {
-			updateGUIObjects();
-			Engine.GetGUIObjectByName("settingsPanel").hidden = false;
-		});
-
+	initSettingObjects();
+	initSettingsTabButtons();
 	initSPTips();
 
 	loadPersistMatchSettings();
@@ -1239,10 +1202,9 @@ function initGUIObjects()
 }
 
 /**
- * Slide settings panel.
  * @param {number} dt - Time in milliseconds since last call.
  */
-function updateSettingsPanelPosition(dt)
+function slideSettingsPanel(dt)
 {
 	let slideSpeed = Engine.ConfigDB_GetValue("user", "gui.gamesetup.settingsslide") == "true" ? g_SlideSpeed : Infinity;
 
@@ -1264,20 +1226,30 @@ function updateSettingsPanelPosition(dt)
 			offset = -Math.min(slideSpeed * dt, maxOffset);
 	}
 
-	let size = settingsPanel.size;
-	size.left += offset;
-	size.right += offset;
-	settingsPanel.size = size;
+	updateSettingsPanelPosition(offset);	
+}
+
+/**
+ * Directly change the position of the settingsPanel.
+ * @param {number} offset - Number of pixels the panel needs to move.
+ */
+function updateSettingsPanelPosition(offset)
+{
+	let settingsPanel = Engine.GetGUIObjectByName("settingsPanel");
+	let settingsPanelSize = settingsPanel.size;
+	settingsPanelSize.left += offset;
+	settingsPanelSize.right += offset;
+	settingsPanel.size = settingsPanelSize;
 
 	let settingsBackground = Engine.GetGUIObjectByName("settingsBackground");
 	let backgroundSize = settingsBackground.size;
-	backgroundSize.left = size.left;
+	backgroundSize.left = settingsPanelSize.left;
 	settingsBackground.size = backgroundSize;
 
 	let chatPanel = Engine.GetGUIObjectByName("chatPanel");
 	let chatSize = chatPanel.size;
 
-	chatSize.right = size.left - g_ChatSettingsMargin;
+	chatSize.right = settingsPanelSize.left - g_ChatSettingsMargin;
 	chatPanel.size = chatSize;
 	chatPanel.hidden = g_MiscControls.chatPanel.hidden();
 
@@ -1319,6 +1291,31 @@ function getGUIObjectNameFromSetting(setting)
 
 	// Assume there is a GUI object with exactly that setting name
 	return [setting, "", ""];
+}
+
+/**
+ * Initialize all settings dropdowns and checkboxes.
+ */
+function initSettingObjects()
+{
+	// Copy all initOrder values into one object
+	let initOrder = {};
+	for (let dropdown in g_Dropdowns)
+		initOrder[dropdown] = g_Dropdowns[dropdown].initOrder;
+	for (let checkbox in g_Checkboxes)
+		initOrder[checkbox] = g_Checkboxes[checkbox].initOrder;
+
+	// Sort the object on initOrder so we can init the settings in an arbitrary order
+	for (let setting of Object.keys(initOrder).sort((a, b) => initOrder[a] - initOrder[b]))
+		if (g_Dropdowns[setting])
+			initDropdown(setting);
+		else if (g_Checkboxes[setting])
+			initCheckbox(setting);
+		else
+			warn('The setting "' + setting + '" is not defined.');
+
+	for (let dropdown in g_PlayerDropdowns)
+		initPlayerDropdowns(dropdown);
 }
 
 function initDropdown(name, playerIdx)
@@ -1381,6 +1378,49 @@ function initCheckbox(name)
 		supplementDefaults();
 		updateGameAttributes();
 	};
+}
+
+function initSettingsTabButtons()
+{
+	for (let tab in g_SettingsTabsGUI)
+		g_SettingsTabsGUI[tab].tooltip =
+			sprintf(translate("Toggle the %(name)s settings tab."), { "name": g_SettingsTabsGUI[tab].label }) +
+			colorizeHotkey("\n" + translate("Use %(hotkey)s to move a settings tab down."), "tab.next") +
+			colorizeHotkey("\n" + translate("Use %(hotkey)s to move a settings tab up."), "tab.prev");
+
+	let settingTabButtons = Engine.GetGUIObjectByName("settingTabButtons");
+	let settingTabButtonsSize = settingTabButtons.size;
+	settingTabButtonsSize.bottom = settingTabButtonsSize.top + g_SettingsTabsGUI.length * (g_TabButtonHeight + g_TabButtonDist);
+	settingTabButtonsSize.right = g_MiscControls.lobbyButton.hidden() ?
+		settingTabButtonsSize.right :
+		Engine.GetGUIObjectByName("lobbyButton").size.left - g_LobbyButtonSpacing;
+	settingTabButtons.size = settingTabButtonsSize;
+
+	let settingTabButtonsBackground = Engine.GetGUIObjectByName("settingTabButtonsBackground");
+	settingTabButtonsBackground.size = settingTabButtonsSize;
+
+	let gameDescription = Engine.GetGUIObjectByName("mapInfoDescriptionFrame");
+	let gameDescriptionSize = gameDescription.size;
+	gameDescriptionSize.top = settingTabButtonsSize.bottom + 3;
+	gameDescription.size = gameDescriptionSize;
+
+	if (!g_IsController)
+	{
+		g_TabCategorySelected = undefined;
+		updateSettingsPanelPosition(Engine.GetGUIObjectByName("settingTabButtons").size.left - Engine.GetGUIObjectByName("settingsPanel").size.left);
+	}
+
+	placeTabButtons(
+		g_SettingsTabsGUI,
+		g_TabButtonHeight,
+		g_TabButtonDist,
+		category => {
+			selectPanel(category == g_TabCategorySelected ? undefined : category);
+		},
+		() => {
+			updateGUIObjects();
+			Engine.GetGUIObjectByName("settingsPanel").hidden = false;
+		});
 }
 
 function initSPTips()
@@ -1491,9 +1531,7 @@ function handleGamestartMessage(message)
 
 	Engine.SwitchGuiPage("page_loading.xml", {
 		"attribs": g_GameAttributes,
-		"isNetworked": g_IsNetworked,
-		"playerAssignments": g_PlayerAssignments,
-		"isController": g_IsController
+		"playerAssignments": g_PlayerAssignments
 	});
 }
 
@@ -1620,6 +1658,13 @@ function getMapDisplayName(map)
 
 function getMapPreview(map)
 {
+	if (g_GameAttributes.settings.Biome)
+	{
+		let biomePreview = basename(map) + "_" + basename(g_GameAttributes.settings.Biome) + ".png";
+		if (Engine.FileExists("art/textures/ui/session/icons/mappreview/" + biomePreview))
+			return biomePreview;
+	}
+
 	let mapData = loadMapData(map);
 	if (!mapData || !mapData.settings || !mapData.settings.Preview)
 		return "nopreview.png";
@@ -1932,7 +1977,7 @@ function onTick()
 	let tickLength = now - g_LastTickTime;
 	g_LastTickTime = now;
 
-	updateSettingsPanelPosition(tickLength);
+	slideSettingsPanel(tickLength);
 }
 
 /**
@@ -1987,13 +2032,7 @@ function selectMap(name)
 	let mapSettings = mapData && mapData.settings ? clone(mapData.settings) : {};
 
 	if (g_GameAttributes.mapType != "random")
-	{
 		delete g_GameAttributes.settings.Nomad;
-
-		let victoryIdx = g_VictoryConditions.Name.indexOf(mapSettings.GameType || "") != -1 ? g_VictoryConditions.Name.indexOf(mapSettings.GameType) : g_VictoryConditions.Default;
-		g_GameAttributes.settings.GameType = g_VictoryConditions.Name[victoryIdx];
-		g_GameAttributes.settings.VictoryScripts = g_VictoryConditions.Scripts[victoryIdx];
-	}
 
 	if (g_GameAttributes.mapType == "scenario")
 	{
@@ -2134,19 +2173,18 @@ function launchGame()
 
 	// Select random map
 	if (g_GameAttributes.map == "random")
-	{
-		let victoryScriptsSelected = g_GameAttributes.settings.VictoryScripts;
-		let gameTypeSelected = g_GameAttributes.settings.GameType;
 		selectMap(pickRandom(g_Dropdowns.mapSelection.ids().slice(1)));
-		g_GameAttributes.settings.VictoryScripts = victoryScriptsSelected;
-		g_GameAttributes.settings.GameType = gameTypeSelected;
-	}
 
 	if (g_GameAttributes.settings.Biome == "random")
 		g_GameAttributes.settings.Biome = pickRandom(
 			typeof g_GameAttributes.settings.SupportedBiomes == "string" ?
 				g_BiomeList.Id.slice(1).filter(biomeID => biomeID.startsWith(g_GameAttributes.settings.SupportedBiomes)) :
 				g_GameAttributes.settings.SupportedBiomes);
+
+	g_GameAttributes.settings.VictoryScripts = g_GameAttributes.settings.VictoryConditions.reduce(
+		(scripts, victoryConditionName) => scripts.concat(g_VictoryConditions[g_VictoryConditions.map(data =>
+			data.Name).indexOf(victoryConditionName)].Scripts.filter(script => scripts.indexOf(script) == -1)),
+		[]);
 
 	g_GameAttributes.settings.TriggerScripts = g_GameAttributes.settings.VictoryScripts.concat(g_GameAttributes.settings.TriggerScripts || []);
 
@@ -2167,7 +2205,8 @@ function launchGame()
 		if (chosenCiv == "random")
 		{
 			let culture = pickRandom(cultures);
-			chosenCiv = pickRandom(Object.keys(g_CivData).filter(civ => g_CivData[civ].Culture == culture));
+			chosenCiv = pickRandom(Object.keys(g_CivData).filter(civ =>
+				g_CivData[civ].Culture == culture && g_CivData[civ].SelectableInGameSetup));
 		}
 		g_GameAttributes.settings.PlayerData[i].Civ = chosenCiv;
 
@@ -2224,7 +2263,6 @@ function launchGame()
 		Engine.StartGame(g_GameAttributes, playerID);
 		Engine.SwitchGuiPage("page_loading.xml", {
 			"attribs": g_GameAttributes,
-			"isNetworked": g_IsNetworked,
 			"playerAssignments": g_PlayerAssignments
 		});
 	}
@@ -2353,7 +2391,6 @@ function openAIConfig(playerSlot)
 
 	Engine.PushGuiPage("page_aiconfig.xml", {
 		"callback": "AIConfigCallback",
-		"isController": g_IsController,
 		"playerSlot": playerSlot,
 		"id": g_GameAttributes.settings.PlayerData[playerSlot].AI,
 		"difficulty": g_GameAttributes.settings.PlayerData[playerSlot].AIDiff,
@@ -2640,7 +2677,7 @@ function sendRegisterGameStanzaImmediate()
 		"niceMapName": getMapDisplayName(g_GameAttributes.map),
 		"mapSize": g_GameAttributes.mapType == "random" ? g_GameAttributes.settings.Size : "Default",
 		"mapType": g_GameAttributes.mapType,
-		"victoryCondition": g_GameAttributes.settings.GameType,
+		"victoryConditions": g_GameAttributes.settings.VictoryConditions.join(","),
 		"nbp": clients.connectedPlayers,
 		"maxnbp": g_GameAttributes.settings.PlayerData.length,
 		"players": clients.list,

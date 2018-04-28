@@ -6,21 +6,23 @@
 # Anique van Berne <avanberne@gmail.com>, 2016
 # Bart Groeneveld, 2017
 # Bart Groeneveld, 2016
+# bb jansen <b.jansen5@students.uu.nl>, 2018
 # bilsimon <simontje.bil@gmail.com>, 2014
 # Christof Verhoeven <christof.verhoeven@gmail.com>, 2016
 # Ellen Roels, 2015
 # Evert Van Petegem <inactive+evertvp@transifex.com>, 2015
 # Max Klaversma <maxklaversma@gmail.com>, 2014
 # niektb <niektb95@gmail.com>, 2014-2016
+# Robin van der Kruit <Robin.Kruit@hotmail.com>, 2018
 # TheBuG <Ruben.bilo@gmail.com>, 2014
 # Sander Deryckere, 2014,2016
 # Stef Jansen <stefgijsberts.sg@gmail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: 0 A.D.\n"
-"POT-Creation-Date: 2018-02-28 09:04+0100\n"
-"PO-Revision-Date: 2018-02-28 15:24+0000\n"
-"Last-Translator: Adrián Chaves Fernández <adriyetichaves@gmail.com>\n"
+"POT-Creation-Date: 2018-04-23 09:05+0200\n"
+"PO-Revision-Date: 2018-04-25 10:00+0000\n"
+"Last-Translator: bb jansen <b.jansen5@students.uu.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/wildfire-games/0ad/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -100,7 +102,7 @@ msgid ""
 "animals, profiting from its milder climate. Wolves, ever present, have shed "
 "their winter clothes; deer, hares and muskox populate the plains. The last "
 "traces of winter are rapidly disappearing, only to reappear very soon."
-msgstr ""
+msgstr "Zomer is begonnen in het koude Noorden en vele dieren komen profiteren van het mildere klimaat. Wolven, altijd aanwezig, hebben hun wintervacht laten vallen; rendieren, hazen en ossen bevolken de vlakten. De laatste restanten van de winter smelten snel in de zon, alleen om binnenkort weer terug te keren. "
 
 #: maps/random/arctic_summer.jsonsettings.Name
 msgid "Arctic Summer"
@@ -159,18 +161,18 @@ msgid ""
 "inhospitable just weeks before has come to life totally transformed. Herds "
 "of zebras graze amid the tall, lush grasses in which lions lie waiting, "
 "while in the shallow pools lurk fearsome crocodiles."
-msgstr ""
+msgstr "Afrika, Botswana tijdens het regenseizoen, een land dat dor en onherbergzaam was tot een paar weken geleden, komt totaal veranderd tot leven. Kuddes zebra's grazen te midden van weelderig gras waartussen leeuwen hun kans afwachten, terwijl in de kleine wateren krokodillen vreesachtig toekijken."
 
 #: maps/random/botswanan_haven.jsonsettings.Name
 msgid "Botswanan Haven"
-msgstr ""
+msgstr "Botswana's rustplaats"
 
 #: maps/random/caledonian_meadows.jsonsettings.Description
 msgid ""
 "Fertile lands surrounded by harsh terrain.\n"
 "Remains of recent snowfalls still haunt the forests, and torrential rivers from the snowmelt have barely died away.\n"
 "Aiming at a realistic terrain, this map might not always be balanced."
-msgstr ""
+msgstr "Vruchtbare gronden omgeven door ruw terrein.\nOverblijfselen van recente sneeuwval zijn nog zichtbaar in het bos en de onstuimige rivieren van het smeltwater zijn maar net verdwenen.\nMet het oogpunt op een realistisch terrein, kan het zijn dat deze kaart niet altijd gebalanceerd is. "
 
 #: maps/random/caledonian_meadows.jsonsettings.Name
 msgid "Caledonian Meadows"
@@ -268,7 +270,7 @@ msgstr ""
 
 #: maps/random/dodecanese.jsonsettings.Name
 msgid "Dodecanese"
-msgstr ""
+msgstr "Dodekanesos "
 
 #: maps/random/elephantine.jsonsettings.Description
 msgid ""
@@ -282,7 +284,7 @@ msgstr ""
 
 #: maps/random/elephantine.jsonsettings.Name
 msgid "Elephantine"
-msgstr ""
+msgstr "Elephantine"
 
 #: maps/random/empire.jsonsettings.Description
 msgid ""
@@ -313,6 +315,19 @@ msgstr ""
 
 #: maps/random/extinct_volcano.jsonsettings.Name
 msgid "Extinct Volcano"
+msgstr "Uitgestorven vulkaan"
+
+#: maps/random/fields_of_meroe.jsonsettings.Description
+msgid ""
+"The \"Island of Meroe\", a vast peninsula flanked by the Nile and Atbarah "
+"rivers, formed the heartland of ancient Kush. Where the harsh deserts start "
+"making way for the semi-arid savannahs and small acacia forests dot the "
+"landscape. The area is rich in resources and the ever-present Nile brings "
+"life, but grave threats loom on the opposite riverbank."
+msgstr ""
+
+#: maps/random/fields_of_meroe.jsonsettings.Name
+msgid "Fields of Meroe"
 msgstr ""
 
 #: maps/random/flood.jsonsettings.Description
@@ -428,7 +443,7 @@ msgstr ""
 
 #: maps/random/india.jsonsettings.Name
 msgid "India"
-msgstr ""
+msgstr "India"
 
 #: maps/random/island_stronghold.jsonsettings.Description
 msgid ""
@@ -447,6 +462,22 @@ msgstr "Spelers starten op kleine eilanden, terwijl er veel andere eilanden in d
 #: maps/random/islands.jsonsettings.Name
 msgid "Islands"
 msgstr "Eilanden"
+
+#: maps/random/jebel_barkal.jsonsettings.Description
+msgid ""
+"Starting near the fertile banks of the Nile, the players besiege the heavily"
+" defended city Napata which lies at the foot of the hill Jebel Barkal, the "
+"\"Pure Mountain\". It is the Southern home of Amun, and according to "
+"Kushites and Egyptians alike, the birthplace of man. Known as the Throne of "
+"the Two Lands, the ancient religious capital of Napata lay in its shadow. "
+"This is where Kings were made... and unmade! Abutting a rich floodplain "
+"downstream from the 4th cataract, this area became the breadbasket of "
+"ancient Kush."
+msgstr ""
+
+#: maps/random/jebel_barkal.jsonsettings.Name
+msgid "Jebel Barkal"
+msgstr "Djebel Barkal"
 
 #: maps/random/kerala.jsonsettings.Description
 msgid ""
@@ -500,7 +531,7 @@ msgstr "Vlakte van Lotharingen"
 #: maps/random/lower_nubia.jsonsettings.Description
 msgid ""
 "Known in the Greco-Roman world as the Triakontaschoinos, Lower Nubia was the"
-" area between the first and second cataracts of Nile and formed the "
+" area between the first and second cataracts of the Nile and formed the "
 "traditional border region between Kush and Egypt. The scorching desert, "
 "steep valleys and towering cliffs of the area make this an inhospitable "
 "place to live, but the control of this ancient corridor was vital for any "
@@ -510,7 +541,7 @@ msgstr ""
 
 #: maps/random/lower_nubia.jsonsettings.Name
 msgid "Lower Nubia"
-msgstr ""
+msgstr "Neder-Nubië"
 
 #: maps/random/mainland.jsonsettings.Description
 msgid "A typical map without any water."
@@ -653,7 +684,7 @@ msgstr ""
 
 #: maps/random/polar_sea.jsonsettings.Name
 msgid "Polar Sea"
-msgstr ""
+msgstr "Poolzee"
 
 #: maps/random/pompeii.jsonsettings.Description
 msgid ""
@@ -689,7 +720,7 @@ msgstr ""
 
 #: maps/random/ratumacos.jsonsettings.Name
 msgid "Ratumacos"
-msgstr ""
+msgstr "Rotomagus"
 
 #: maps/random/red_sea.jsonsettings.Description
 msgid ""
@@ -721,7 +752,7 @@ msgstr ""
 
 #: maps/random/river_archipelago.jsonsettings.Name
 msgid "River Archipelago"
-msgstr ""
+msgstr "Rivier Archipel"
 
 #: maps/random/rivers.jsonsettings.Description
 msgid ""
@@ -781,7 +812,7 @@ msgstr ""
 
 #: maps/random/scythian_rivulet.jsonsettings.Name
 msgid "Scythian Rivulet"
-msgstr ""
+msgstr "Scythische stroom"
 
 #: maps/random/snowflake_searocks.jsonsettings.Description
 msgid "Many small islands connected to each other by narrow passages."
@@ -833,7 +864,7 @@ msgstr "De Nijl"
 
 #: maps/random/unknown.jsonsettings.Description
 msgid "The unknown. Warning: May be a naval map."
-msgstr ""
+msgstr "Het onbekende. Waarschuwing: kan een zeekaart zijn."
 
 #: maps/random/unknown.jsonsettings.Name
 msgid "Unknown"
@@ -841,7 +872,7 @@ msgstr "Onbekend"
 
 #: maps/random/unknown_land.jsonsettings.Description
 msgid "The unknown."
-msgstr ""
+msgstr "Het onbekende."
 
 #: maps/random/unknown_land.jsonsettings.Name
 msgid "Unknown Land"
@@ -867,12 +898,56 @@ msgstr "Murendemo"
 
 #: maps/random/wild_lake.jsonsettings.Description
 msgid "A lake surrounded by hills."
-msgstr ""
+msgstr "Een meer omgeven door heuvels."
 
 #: maps/random/wild_lake.jsonsettings.Name
 msgid "Wild Lake"
 msgstr ""
 
+#: maps/random/rmbiome/fields_of_meroe/dry.jsonDescription.Description
+msgid ""
+"The vitalizing waters of the Nile sustain life along its banks, while the "
+"long dry season scorches the land."
+msgstr ""
+
+#: maps/random/rmbiome/fields_of_meroe/dry.jsonDescription.Description
+msgctxt "biome definition"
+msgid ""
+"The vitalizing waters of the Nile sustain life along its banks, while the "
+"long dry season scorches the land."
+msgstr ""
+
+#: maps/random/rmbiome/fields_of_meroe/dry.jsonDescription.Title
+msgid "Dry Season"
+msgstr "Droge tijd"
+
+#: maps/random/rmbiome/fields_of_meroe/dry.jsonDescription.Title
+msgctxt "biome definition"
+msgid "Dry Season"
+msgstr "Droge tijd"
+
+#: maps/random/rmbiome/fields_of_meroe/rainy.jsonDescription.Description
+msgid ""
+"Revelling in the much awaited rain, the baked land transforms into a lush "
+"haven for both man and beast."
+msgstr ""
+
+#: maps/random/rmbiome/fields_of_meroe/rainy.jsonDescription.Description
+msgctxt "biome definition"
+msgid ""
+"Revelling in the much awaited rain, the baked land transforms into a lush "
+"haven for both man and beast."
+msgstr ""
+
+#: maps/random/rmbiome/fields_of_meroe/rainy.jsonDescription.Title
+msgid "Rainy Season"
+msgstr "Regenseizoen"
+
+#: maps/random/rmbiome/fields_of_meroe/rainy.jsonDescription.Title
+msgctxt "biome definition"
+msgid "Rainy Season"
+msgstr "Regenseizoen"
+
 #: maps/random/rmbiome/generic/alpine.jsonDescription.Description
 msgid ""
 "A region in the high snowy mountains. Biting winds sweep through the "
@@ -890,12 +965,12 @@ msgstr ""
 
 #: maps/random/rmbiome/generic/alpine.jsonDescription.Title
 msgid "Alpine"
-msgstr ""
+msgstr "Alpen"
 
 #: maps/random/rmbiome/generic/alpine.jsonDescription.Title
 msgctxt "biome definition"
 msgid "Alpine"
-msgstr ""
+msgstr "Alpen"
 
 #: maps/random/rmbiome/generic/autumn.jsonDescription.Description
 msgid ""
@@ -916,12 +991,12 @@ msgstr ""
 
 #: maps/random/rmbiome/generic/autumn.jsonDescription.Title
 msgid "Autumn"
-msgstr ""
+msgstr "Herfst"
 
 #: maps/random/rmbiome/generic/autumn.jsonDescription.Title
 msgctxt "biome definition"
 msgid "Autumn"
-msgstr ""
+msgstr "Herfst"
 
 #: maps/random/rmbiome/generic/desert.jsonDescription.Description
 msgid ""
@@ -940,12 +1015,12 @@ msgstr ""
 
 #: maps/random/rmbiome/generic/desert.jsonDescription.Title
 msgid "Desert"
-msgstr ""
+msgstr "Woestijn"
 
 #: maps/random/rmbiome/generic/desert.jsonDescription.Title
 msgctxt "biome definition"
 msgid "Desert"
-msgstr ""
+msgstr "Woestijn"
 
 #: maps/random/rmbiome/generic/mediterranean.jsonDescription.Description
 msgid ""
@@ -979,12 +1054,12 @@ msgstr ""
 
 #: maps/random/rmbiome/generic/savanna.jsonDescription.Title
 msgid "Savanna"
-msgstr ""
+msgstr "Savanne"
 
 #: maps/random/rmbiome/generic/savanna.jsonDescription.Title
 msgctxt "biome definition"
 msgid "Savanna"
-msgstr ""
+msgstr "Savanne"
 
 #: maps/random/rmbiome/generic/snowy.jsonDescription.Description
 msgid ""
@@ -1003,12 +1078,12 @@ msgstr ""
 
 #: maps/random/rmbiome/generic/snowy.jsonDescription.Title
 msgid "Snowy"
-msgstr ""
+msgstr "Sneeuw"
 
 #: maps/random/rmbiome/generic/snowy.jsonDescription.Title
 msgctxt "biome definition"
 msgid "Snowy"
-msgstr ""
+msgstr "Sneeuw"
 
 #: maps/random/rmbiome/generic/temperate.jsonDescription.Description
 msgid ""
@@ -1029,12 +1104,12 @@ msgstr ""
 
 #: maps/random/rmbiome/generic/temperate.jsonDescription.Title
 msgid "Temperate"
-msgstr ""
+msgstr "Gematigd"
 
 #: maps/random/rmbiome/generic/temperate.jsonDescription.Title
 msgctxt "biome definition"
 msgid "Temperate"
-msgstr ""
+msgstr "Gematigd"
 
 #: maps/random/rmbiome/generic/tropic.jsonDescription.Description
 msgid ""
@@ -1055,12 +1130,12 @@ msgstr ""
 
 #: maps/random/rmbiome/generic/tropic.jsonDescription.Title
 msgid "Tropic"
-msgstr ""
+msgstr "Tropisch"
 
 #: maps/random/rmbiome/generic/tropic.jsonDescription.Title
 msgctxt "biome definition"
 msgid "Tropic"
-msgstr ""
+msgstr "Tropisch"
 
 #: maps/random/rmbiome/gulf_of_bothnia/frozen_lake.jsonDescription.Description
 msgid ""
@@ -1077,12 +1152,12 @@ msgstr ""
 
 #: maps/random/rmbiome/gulf_of_bothnia/frozen_lake.jsonDescription.Title
 msgid "Frozen Lake"
-msgstr ""
+msgstr "Bevroren meer"
 
 #: maps/random/rmbiome/gulf_of_bothnia/frozen_lake.jsonDescription.Title
 msgctxt "biome definition"
 msgid "Frozen Lake"
-msgstr ""
+msgstr "Bevroren meer"
 
 #: maps/random/rmbiome/gulf_of_bothnia/late_spring.jsonDescription.Description
 msgid ""
@@ -1101,41 +1176,41 @@ msgstr ""
 
 #: maps/random/rmbiome/gulf_of_bothnia/late_spring.jsonDescription.Title
 msgid "Late Spring"
-msgstr ""
+msgstr "Late lente"
 
 #: maps/random/rmbiome/gulf_of_bothnia/late_spring.jsonDescription.Title
 msgctxt "biome definition"
 msgid "Late Spring"
-msgstr ""
+msgstr "Late lente"
 
 #: maps/random/rmbiome/gulf_of_bothnia/winter.jsonDescription.Description
 msgid ""
 "Winter has set in, carpeting the land with its first snow. The still "
 "unfrozen gulf offers great fishing opportunities."
-msgstr ""
+msgstr "Winter is begonnen, het land bedekkend met de eerste sneeuw. De nog ijsvrije golf geeft mogelijkheden voor vissen."
 
 #: maps/random/rmbiome/gulf_of_bothnia/winter.jsonDescription.Description
 msgctxt "biome definition"
 msgid ""
 "Winter has set in, carpeting the land with its first snow. The still "
 "unfrozen gulf offers great fishing opportunities."
-msgstr ""
+msgstr "Winter is begonnen, het land bedekkend met de eerste sneeuw. De nog ijsvrije golf geeft mogelijkheden voor vissen."
 
 #: maps/random/rmbiome/gulf_of_bothnia/winter.jsonDescription.Title
 msgid "Winter"
-msgstr ""
+msgstr "Winter"
 
 #: maps/random/rmbiome/gulf_of_bothnia/winter.jsonDescription.Title
 msgctxt "biome definition"
 msgid "Winter"
-msgstr ""
+msgstr "Winter"
 
 #: maps/random/rmbiome/persian_highlands/spring.jsonDescription.Description
 msgid ""
 "Spring in the highlands, yet the heat has already begun making itself felt. "
 "The short-lived green grasses are on the retreat, paving the way for "
 "scorching summer."
-msgstr ""
+msgstr "Lente in de hooglanden, de warmte maakt zich al voelbaar. Het kort levende groene gras zijn op de retour en maken ruimte voor een bloedhete zomer."
 
 #: maps/random/rmbiome/persian_highlands/spring.jsonDescription.Description
 msgctxt "biome definition"
@@ -1143,68 +1218,77 @@ msgid ""
 "Spring in the highlands, yet the heat has already begun making itself felt. "
 "The short-lived green grasses are on the retreat, paving the way for "
 "scorching summer."
-msgstr ""
+msgstr "Lente in de hooglanden, de warmte maakt zich al voelbaar. Het kort levende groene gras zijn op de retour en maken ruimte voor een bloedhete zomer."
 
 #: maps/random/rmbiome/persian_highlands/spring.jsonDescription.Title
 msgid "Spring"
-msgstr ""
+msgstr "Lente"
 
 #: maps/random/rmbiome/persian_highlands/spring.jsonDescription.Title
 msgctxt "biome definition"
 msgid "Spring"
-msgstr ""
+msgstr "Lente"
 
 #: maps/random/rmbiome/persian_highlands/summer.jsonDescription.Description
 msgid ""
 "An arid, hostile land. The blistering heat has baked the ground to a sickly "
 "brown and the remaining trees struggle for survival."
-msgstr ""
+msgstr "Droog en vijandig land. De verzengende hitte heeft de grond bruin gebakken en de overgebleven bomen worstelen met overleven."
 
 #: maps/random/rmbiome/persian_highlands/summer.jsonDescription.Description
 msgctxt "biome definition"
 msgid ""
 "An arid, hostile land. The blistering heat has baked the ground to a sickly "
 "brown and the remaining trees struggle for survival."
-msgstr ""
+msgstr "Droog en vijandig land. De verzengende hitte heeft de grond bruin gebakken en de overgebleven bomen worstelen met overleven."
 
 #: maps/random/rmbiome/persian_highlands/summer.jsonDescription.Title
 msgid "Summer"
-msgstr ""
+msgstr "Zomer"
 
 #: maps/random/rmbiome/persian_highlands/summer.jsonDescription.Title
 msgctxt "biome definition"
 msgid "Summer"
-msgstr ""
+msgstr "Zomer"
 
 #: maps/random/extinct_volcano_triggers.js:65
 msgid "It keeps on raining, we will have to evacuate soon!"
-msgstr ""
+msgstr "Het blijft maar regenen, we zullen snel moeten vertrekken!"
 
 #: maps/random/extinct_volcano_triggers.js:66
 msgid "The rivers are standing high, we need to find a safe place!"
-msgstr ""
+msgstr "De rivieren staan hoog, we moeten een veilige plek vinden!"
 
 #: maps/random/extinct_volcano_triggers.js:67
 msgid "We have to find dry ground, our lands will drown soon!"
-msgstr ""
+msgstr "We moeten snel droge grond vinden, onze landen staan onder!"
 
 #: maps/random/extinct_volcano_triggers.js:68
 msgid "The lakes start swallowing the land, we have to find shelter!"
-msgstr ""
+msgstr "De meren nemen het land in, we moeten dekking zoeken!"
 
-#: maps/random/survivalofthefittest_triggers.js:190
+#: maps/random/jebel_barkal_triggers.js:578
+msgid "Napata is attacking!"
+msgstr "Napata valt aan!"
+
+#: maps/random/jebel_barkal_triggers.js:590
+#, javascript-format
+msgid "Napata will attack in %(time)s!"
+msgstr "Napata zal aanvallen in %(time)s!"
+
+#: maps/random/survivalofthefittest_triggers.js:163
 #, javascript-format
 msgid "The first wave will start in %(time)s!"
 msgstr "De eerste aanvalsgolf begint binnen %(time)s!"
 
-#: maps/random/survivalofthefittest_triggers.js:325
+#: maps/random/survivalofthefittest_triggers.js:264
 msgid "An enemy wave is attacking!"
 msgstr "Pas op! Een vijandelijke aanvalsgolf!"
 
-#: maps/random/survivalofthefittest_triggers.js:349
+#: maps/random/survivalofthefittest_triggers.js:289
 #, javascript-format
 msgid "%(player)s has been defeated (lost civic center)."
-msgstr ""
+msgstr "%(player)s is verslagen (beschavingscentrum verloren)"
 
 #: maps/scenarios/Cinema_Demo.js:6
 msgid "Cutscene starts after 5 seconds"
@@ -1267,16 +1351,16 @@ msgstr "Versla je vijand om te winnen!"
 #, javascript-format
 msgid "%(lastPlayer)s has won (treasure collected)."
 msgid_plural "%(players)s and %(lastPlayer)s have won (treasure collected)."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(lastPlayer)s heeft gewonnen (schat gevonden)."
+msgstr[1] "%(players)s en %(lastPlayer)s hebben gewonnen (schat gevonden)."
 
 #: maps/scenarios/treasure_islands.js:105
 #, javascript-format
 msgid "%(lastPlayer)s has been defeated (treasure collected)."
 msgid_plural ""
 "%(players)s and %(lastPlayer)s have been defeated (treasure collected)."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(lastPlayer)s heeft verloren (schat gevonden)."
+msgstr[1] "%(players)s en %(lastPlayer)s hebben verloren (schat gevonden)."
 
 #: maps/scenarios/Arcadia.xml:Description:39
 msgid ""
@@ -1595,11 +1679,11 @@ msgstr ""
 
 #: maps/scenarios/Cinema_Demo.xml:PlayerData[1].Name:40
 msgid "Xerxes I"
-msgstr ""
+msgstr "Xerxes I"
 
 #: maps/scenarios/Cinema_Demo.xml:PlayerData[2].Name:40
 msgid "You"
-msgstr ""
+msgstr "Jij"
 
 #: maps/scenarios/Cinema_Demo.xml:Name:40
 msgid "Cinema Demo"
@@ -2030,19 +2114,19 @@ msgstr "Zandbak - De Iberiërs"
 
 #: maps/scenarios/Sandbox - Kushites.xml:Description:40
 msgid "Play the Kushites faction in a non-threatening sandbox scenario."
-msgstr ""
+msgstr "Speel met de Koesjitische beschaving in een niet-bedreigende zandbak omgeving."
 
 #: maps/scenarios/Sandbox - Kushites.xml:PlayerData[1].Name:40
 msgid "Kushites"
-msgstr ""
+msgstr "Koesjiten "
 
 #: maps/scenarios/Sandbox - Kushites.xml:PlayerData[2].Name:40
 msgid "Egyptians"
-msgstr ""
+msgstr "Egyptenaren"
 
 #: maps/scenarios/Sandbox - Kushites.xml:Name:40
 msgid "Sandbox - The Kushites"
-msgstr ""
+msgstr "Zandbak - De koesjiten"
 
 #: maps/scenarios/Sandbox - Macedonians.xml:Description:39
 msgid ""
@@ -2426,7 +2510,7 @@ msgid ""
 " and thick forests make for a very dynamic and fast-paced 3-player map with "
 "lots of potential for skirmishing and guerilla warfare as well as tough "
 "defensive fighting or aggressive maneuvers."
-msgstr ""
+msgstr "Een verwilderd en bebost eiland, vol met bomen, goud en mysteries. Bergen, zeeën en ondoordringbare bossen maken dit een 3-spelerkaart voor dynamisch en snel spel, vol met mogelijkheden voor schermutselingen en guerrilla tactieken, maar ook voor verdedigend of agressieve bewegingen. "
 
 #: maps/skirmishes/Belgian Bog (2).xml:Description:39
 msgid ""
@@ -2443,19 +2527,19 @@ msgstr "Belgisch moeras (2)"
 msgid ""
 "South of the Sahara, East of the Nile, lies a semi-arid region today known "
 "as the Butana Steppe."
-msgstr ""
+msgstr "Het zuiden van de Sahara, ten oosten van de Nijl, ligt een halfdor gebied tegenwoordig bekend als de Butaanse Steppe."
 
 #: maps/skirmishes/Butana Steppe (2).xml:PlayerData[1].Name:40
 msgid "West Player"
-msgstr ""
+msgstr "Westelijke speler"
 
 #: maps/skirmishes/Butana Steppe (2).xml:PlayerData[2].Name:40
 msgid "East Player"
-msgstr ""
+msgstr "Oostenlijke speler"
 
 #: maps/skirmishes/Butana Steppe (2).xml:Name:40
 msgid "Butana Steppe (2)"
-msgstr ""
+msgstr "Butaanse Steppe (2)"
 
 #: maps/skirmishes/Caspian Sea (2v2).xml:Description:39
 msgid ""
@@ -2552,6 +2636,51 @@ msgstr "Een mistig alpenlandschap wordt een slagveld wanneer elk team een bondge
 #: maps/skirmishes/Dueling Cliffs (3v3).xml:Name:40
 msgid "Dueling Cliffs (3v3)"
 msgstr "Duels op de Klippen (3v3)"
+
+#: maps/skirmishes/Egypt (3v3).xml:Name:40
+msgid "Egypt (3v3)"
+msgstr "Egypte (3v3)"
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[1].Name:40
+msgid "Alexandria"
+msgstr "Alexandrië"
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[2].Name:40
+msgid "Theben"
+msgstr "Thebe"
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[3].Name:40
+msgid "Siwa"
+msgstr "Siwa"
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[4].Name:40
+msgid "Sinai"
+msgstr "Sinaï"
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[5].Name:40
+msgid "Memphis"
+msgstr ""
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[6].Name:40
+msgid "Cyrene"
+msgstr ""
+
+#: maps/skirmishes/Egypt (3v3).xml:Description:40
+msgid ""
+"Fight for the remains of ancient Egypt!\n"
+"\n"
+"Players start with full grown cities and small armies, each having distinct advantages and drawbacks. Take care, there are 7 mighty forts and marauding bandids!\n"
+"\n"
+"It is the last century before 0 A.D. Egypt is internally divided between hellenistic (Alexandria, represented by Seleucids) and traditional influences (Memphis, represented by Ptolemies). Thebes in the southern clime of river Nile has already been taken over by the Kush. In the north western Al-Dschabal al-Achdar, where the mediterranean city of Cyrene is located the Romans are preparing their invasion. From the eastern desert at-Tih and mount Sinai enemies (represented by Persians) are pushing forward and the oasis Siwa. Charga (represented by Carthage) in the south western desert are trying to get a share of the pie as well.\n"
+"Locations:\n"
+"- Alexandria: library, harbor\n"
+"- Memphis: Necropolis, pyramids, Apis shrine\n"
+"- Thebes: temple district, Valley of the Kings \n"
+"- Cyrene: mediterranean Macchie, olive groves\n"
+"- Fayyum: crocodile shrine, nile dam\n"
+"- Eastern desert: mount Sinai, deep Wadi, Red Sea reefs\n"
+"- Western desert: Oasis Charga and Siwa, Qattara Depression\n"
+msgstr ""
 
 #: maps/skirmishes/Forest Battle (4).xml:Description:40
 msgid ""
@@ -2886,11 +3015,11 @@ msgstr "Twee zeeën (6)"
 #: maps/skirmishes/Via Augusta (4).xml:Description:40
 msgid ""
 "All Roads Lead To Rome. Via Julia Augusta a Roman road built in 13 BCE."
-msgstr ""
+msgstr "Alle wegen leiden naar Rome. Via Julius Augustus is een Romeinse weg gebouwd in de 13e eeuw voor Christus."
 
 #: maps/skirmishes/Via Augusta (4).xml:Name:40
 msgid "Via Augusta"
-msgstr ""
+msgstr "Via Augusta"
 
 #: maps/skirmishes/Watering Holes (4).xml:Description:39
 msgid ""

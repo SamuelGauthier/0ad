@@ -410,6 +410,45 @@
 	</sprite>
 	<!--
 	==========================================
+	- Progress Bar -
+	==========================================
+	-->
+	<sprite name="ModernProgressBarBackground">
+		<image
+			texture="global/modern/progressbar/background_end.png"
+			real_texture_placement="3 0 8 32"
+			size="0 50%-16 5 50%+16"
+		/>
+		<image
+			texture="global/modern/progressbar/background_end.png"
+			real_texture_placement="6 0 7 32"
+			size="5 50%-16 100%-5 50%+16"
+		/>
+		<image
+			texture="global/modern/progressbar/background_end.png"
+			real_texture_placement="8 0 3 32"
+			size="100%-5 50%-16 100% 50%+16"
+		/>
+	</sprite>
+	<sprite name="ModernProgressBar">
+		<image
+			texture="global/modern/progressbar/bar_end.png"
+			real_texture_placement="3 0 4 32"
+			size="-1 50%-16 0 50%+16"
+		/>
+		<image
+			texture="global/modern/progressbar/bar_end.png"
+			real_texture_placement="6 0 7 32"
+			size="0 50%-16 100% 50%+16"
+		/>
+		<image
+			texture="global/modern/progressbar/bar_end.png"
+			real_texture_placement="4 0 3 32"
+			size="100% 50%-16 100%+1 50%+16"
+		/>
+	</sprite>
+	<!--
+	==========================================
 	- Horizontal Tabs -
 	==========================================
 	-->
@@ -597,6 +636,43 @@
 		<image texture="global/modern/gold-separator.png"
 			real_texture_placement="0 0 806 1"
 			size="0 50%-1 100% 50%+1"
+		/>
+	</sprite>
+
+	<sprite name="ModernArrowDownRed">
+		<effect add_color="123 53 53"/>
+		<image texture="global/modern/arrow_down_128x128.png"
+			size="0 4 100% 100%"
+		/>
+	</sprite>
+	<sprite name="ModernArrowDownRedBright">
+		<effect add_color="166 96 96"/>
+		<image texture="global/modern/arrow_down_128x128.png"
+			size="0 4 100% 100%"
+		/>
+	</sprite>
+	<sprite name="ModernArrowDownGrey">
+		<effect	add_color="35 35 35"/>
+		<image texture="global/modern/arrow_down_128x128.png"
+			size="0 4 100% 100%"
+		/>
+	</sprite>
+	<sprite name="ModernArrowUpRed">
+		<effect add_color="123 53 53"/>
+		<image texture="global/modern/arrow_up_128x128.png"
+			size="0 4 100% 100%"
+		/>
+	</sprite>
+	<sprite name="ModernArrowUpRedBright">
+		<effect add_color="166 96 96"/>
+		<image texture="global/modern/arrow_up_128x128.png"
+			size="0 4 100% 100%"
+		/>
+	</sprite>
+	<sprite name="ModernArrowUpGrey">
+		<effect	add_color="35 35 35"/>
+		<image texture="global/modern/arrow_up_128x128.png"
+			size="0 4 100% 100%"
 		/>
 	</sprite>
 </sprites>

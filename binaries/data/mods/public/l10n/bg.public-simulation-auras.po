@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 0 A.D.\n"
-"POT-Creation-Date: 2018-02-23 09:05+0100\n"
-"PO-Revision-Date: 2018-02-24 06:47+0000\n"
+"POT-Creation-Date: 2018-04-16 09:04+0200\n"
+"PO-Revision-Date: 2018-04-17 07:26+0000\n"
 "Last-Translator: Любомир Василев\n"
 "Language-Team: Bulgarian (http://www.transifex.com/wildfire-games/0ad/language/bg/)\n"
 "MIME-Version: 1.0\n"
@@ -702,8 +702,9 @@ msgid "Warrior Queen"
 msgstr "Царица-во̀ин"
 
 #: simulation/data/auras/units/heroes/kush_hero_amanirenas.jsonauraDescription
-msgid "+20% attack and +2 capture for soldiers and elephants."
-msgstr "+20 атака и +2 пленяване за всички во̀ини и слонове."
+#: simulation/data/auras/units/heroes/mace_hero_philip.jsonauraDescription
+msgid "+20% attack and +2 capture for champion units."
+msgstr "+20% атака и +2 пленяване за гвардейските единици."
 
 #: simulation/data/auras/units/heroes/kush_hero_arakamani_1.jsonauraName
 msgid "Defier of Tradition"
@@ -729,15 +730,25 @@ msgstr "Клане на верните"
 msgid "Enemy healrate reduced by 50%."
 msgstr "Вражеската скорост на лечение се намалява с 50%."
 
-#: simulation/data/auras/units/heroes/kush_hero_nastasen.jsonauraName
-msgid "Saviour of Kush"
+#: simulation/data/auras/units/heroes/kush_hero_nastasen_1.jsonauraName
+msgid "Savior of Kush"
 msgstr "Спасител на Куш"
 
-#: simulation/data/auras/units/heroes/kush_hero_nastasen.jsonauraDescription
+#: simulation/data/auras/units/heroes/kush_hero_nastasen_1.jsonauraDescription
 msgid ""
 "Own units +10% attack.\n"
 "Nastasen acquired lots of bounty from the defeated invaders. Gain +50% loot from killing enemy units."
 msgstr "+10% атака за собствените единици.\nНастасен получил много плячка от победените нашественици. +50% плячка за убиване на вражески единици."
+
+#: simulation/data/auras/units/heroes/kush_hero_nastasen_2.jsonauraName
+msgid "Gift of Warships"
+msgstr "Дарени военни кораби"
+
+#: simulation/data/auras/units/heroes/kush_hero_nastasen_2.jsonauraDescription
+msgid ""
+"Train Ptolemaic Mercenary Triremes at -25% resource cost.\n"
+"Crushing the Ptolemaic invasion of Kush, Nastasen seized numerous enemy warships."
+msgstr "-25% цена за птолемейските наемни триери.\nРазбивайки нападението на птолемейците над Куш, Настасен си присвоил много вражески военни кораби."
 
 #: simulation/data/auras/units/heroes/mace_hero_alexander_1.jsonauraName
 msgid "Imperialism"
@@ -768,16 +779,12 @@ msgid "Besieger"
 msgstr "Обсадител"
 
 #: simulation/data/auras/units/heroes/mace_hero_demetrius.jsonauraDescription
-msgid "+10% attack, +10% range and +1 armor for siege engines."
-msgstr "+10% атака, +10% обхват и +1 броня за обсадните машини."
+msgid "+20% attack, +10% range and +1 armor for siege engines."
+msgstr "+20% атака, +10% обхват и +1 броня за обсадните машини."
 
 #: simulation/data/auras/units/heroes/mace_hero_philip.jsonauraName
 msgid "Rise of Macedon"
 msgstr "Възходът на Македония"
-
-#: simulation/data/auras/units/heroes/mace_hero_philip.jsonauraDescription
-msgid "+20% attack and +2 capture for champion units."
-msgstr "+20% атака и +2 пленяване за гвардейските единици."
 
 #: simulation/data/auras/units/heroes/mace_hero_pyrrhus.jsonauraName
 msgid "Pyrrhic Victory"
@@ -897,8 +904,8 @@ msgid "Shield of Rome"
 msgstr "Щитът на Рим"
 
 #: simulation/data/auras/units/heroes/rome_hero_maximus.jsonauraDescription
-msgid "+2 armor for all units and structures."
-msgstr "+2 защита за всички единици и сгради."
+msgid "+1 armor for all units and structures."
+msgstr "+1 защита за всички единици и сгради."
 
 #: simulation/data/auras/units/heroes/rome_hero_scipio.jsonauraName
 msgid "Triumph"
@@ -913,8 +920,8 @@ msgid "Ilarchès"
 msgstr "Илархѐс"
 
 #: simulation/data/auras/units/heroes/sele_hero_antiochus_great.jsonauraDescription
-msgid "All cavalry gains +2 levels of all armor types."
-msgstr "+2 нива на всички видове защита за всички конници."
+msgid "Nearby cavalry gains +2 levels of all armor types."
+msgstr "+2 нива на всички видове защита за близките конници."
 
 #: simulation/data/auras/units/heroes/sele_hero_antiochus_righteous.jsonauraName
 msgid "Renowned Conqueror"

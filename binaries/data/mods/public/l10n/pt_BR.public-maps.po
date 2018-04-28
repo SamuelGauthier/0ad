@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Angelo Florentino <angelodarosaflorentino@gmail.com>, 2017
-# borg 2k <estevanborg@gmail.com>, 2017
+# borg 2k <estevanborg@gmail.com>, 2017-2018
 # Gustavo Moitinho <gustavo.moitinho@outlook.com>, 2016
 # Igor Aleixo <igor.pavao@gmail.com>, 2017
 # Jhonatan Morfim <joemorfim@gmail.com>, 2016
@@ -22,6 +22,7 @@
 # Raphael Mendonça, 2014
 # Ricardo Siqueira Oliveira Leite <ricardooliveira88@gmail.com>, 2016
 # Romoaldo Cordeiro <Romoaldo.Cordeiro@gmail.com>, 2017
+# Rui <xymarior@yandex.com>, 2018
 # Thiago Perrotta <inactive+thiagowfx@transifex.com>, 2015
 # Tiago, 2018
 # Victor Gregório <vt_marv@hotmail.com>, 2017
@@ -30,9 +31,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 0 A.D.\n"
-"POT-Creation-Date: 2018-02-28 09:04+0100\n"
-"PO-Revision-Date: 2018-02-28 15:24+0000\n"
-"Last-Translator: Adrián Chaves Fernández <adriyetichaves@gmail.com>\n"
+"POT-Creation-Date: 2018-04-23 09:05+0200\n"
+"PO-Revision-Date: 2018-04-25 19:31+0000\n"
+"Last-Translator: Tiago\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/wildfire-games/0ad/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -80,7 +81,7 @@ msgstr "Vale Alpino"
 msgid ""
 "High bluffs overlook the terrain below. Bountiful resources await on the "
 "cliffs, but beware of enemies planning an ambush."
-msgstr "Barrancos altos permitem uma análise do terreno abaixo. Grandes recompensas esperam nos barrancos, porém atente-se à inimigos planejam emboscadas. "
+msgstr "Barrancos altos permitem uma análise do terreno abaixo. Grandes recompensas esperam nos barrancos, porém atente-se à emboscada inimiga."
 
 #: maps/random/ambush.jsonsettings.Name
 msgid "Ambush"
@@ -148,7 +149,7 @@ msgid ""
 "Bahrain is never left unoccupied for long. But now, with the previous "
 "occupants gone, the land prepares for war. Will you be the next Ruler of "
 "Bahrain?"
-msgstr "Bahrain, centro da civilização Dilmun, caída em 800 d.C., foi então controlada por sumérios, assírios, babilônios, persas e outros povos. Uma ilha estrategicamente posicionada no Sinus Persicus (Golfo Persa) e também centro do comércio de pérolas graças a sua magnífica pesca de pérolas, Bahrain nunca permaneceu desocupada por muito tempo. Mas agora, com o fim dos últimos ocupantes, a região se prepara para a guerra. Será você o próximo Senhor de Bahrain?"
+msgstr "Bahrain, centro da civilização Dilmun, que caiu em 800 d.C., foi então controlada por Sumérios, Assírios, Babilônios, Persas e outros povos. Uma ilha estrategicamente posicionada no Sinus Persicus (Golfo Persa) e também centro do comércio de pérolas graças a sua magnífica pesca de pérolas, Bahrain nunca permaneceu desocupado por muito tempo. Mas agora, com o fim dos últimos ocupantes, a região se prepara para a guerra. Será você o próximo Senhor de Bahrain?"
 
 #: maps/random/bahrain.jsonsettings.Name
 msgid "Bahrain"
@@ -171,11 +172,11 @@ msgid ""
 "inhospitable just weeks before has come to life totally transformed. Herds "
 "of zebras graze amid the tall, lush grasses in which lions lie waiting, "
 "while in the shallow pools lurk fearsome crocodiles."
-msgstr "Em Botswanan na Africa, durante a estação chuvosa, uma terra que era árida e inóspita poucas semanas antes agora está transformada. Os rebanhos de zebras pastam entre as gramas altas, nas quais os leões estão a espera, enquanto nas águas rasas crocodilos temíveis espreitam."
+msgstr "Na África Botsuana, durante a estação chuvosa, uma terra que era árida e inóspita poucas semanas antes agora está transformada. Os rebanhos de zebras pastam entre as gramas altas, nas quais os leões estão a espera, enquanto nas águas rasas crocodilos temíveis espreitam."
 
 #: maps/random/botswanan_haven.jsonsettings.Name
 msgid "Botswanan Haven"
-msgstr "Refúgio Botswanan"
+msgstr "Refúgio Botsuano"
 
 #: maps/random/caledonian_meadows.jsonsettings.Description
 msgid ""
@@ -256,7 +257,7 @@ msgid ""
 "amongst themselves, but also beat back these ruthless invaders. Ultimately, "
 "the Boii were defeated by the rising power of the Dacians, hence leading to "
 "the reemergence of the Geto-Dacian Confederation under King Burebista."
-msgstr "Os jogadores começam ao longo das margens do rio Danúbio no período após a expansão para Pannonia pela tribo Céltica Boii. Buscando consolidar seu domínio sobre esta terra, reforços celtas foram enviados para erradicar as restantes culturas estrangeiras. Os jogadores não só têm que disputar o poder entre si, mas também derrotar esses invasores implacáveis. Em última instância, os Boii foram derrotados pelo poder crescente dos dacianos, conduzindo assim ao ressurgimento da Confederação Geto-Daciana sob o Rei Burebista."
+msgstr "Os jogadores começam ao longo das margens do rio Danúbio no período após a expansão para Panónia pela tribo Céltica Boios. Buscando consolidar seu domínio sobre esta terra, reforços celtas foram enviados para erradicar as restantes culturas estrangeiras. Os jogadores não só têm que disputar o poder entre si, mas também derrotar esses invasores implacáveis. Em última instância, os Boios foram derrotados pelo poder crescente dos Dácios, conduzindo assim ao ressurgimento da Confederação Geto-Daciana sob o Rei Burebista."
 
 #: maps/random/danubius.jsonsettings.Name
 msgid "Danubius"
@@ -280,7 +281,7 @@ msgstr ""
 
 #: maps/random/dodecanese.jsonsettings.Name
 msgid "Dodecanese"
-msgstr ""
+msgstr "Dodecaneso"
 
 #: maps/random/elephantine.jsonsettings.Description
 msgid ""
@@ -294,7 +295,7 @@ msgstr ""
 
 #: maps/random/elephantine.jsonsettings.Name
 msgid "Elephantine"
-msgstr ""
+msgstr "Elefantina"
 
 #: maps/random/empire.jsonsettings.Description
 msgid ""
@@ -326,6 +327,19 @@ msgstr ""
 #: maps/random/extinct_volcano.jsonsettings.Name
 msgid "Extinct Volcano"
 msgstr "Vulcão Extinto"
+
+#: maps/random/fields_of_meroe.jsonsettings.Description
+msgid ""
+"The \"Island of Meroe\", a vast peninsula flanked by the Nile and Atbarah "
+"rivers, formed the heartland of ancient Kush. Where the harsh deserts start "
+"making way for the semi-arid savannahs and small acacia forests dot the "
+"landscape. The area is rich in resources and the ever-present Nile brings "
+"life, but grave threats loom on the opposite riverbank."
+msgstr ""
+
+#: maps/random/fields_of_meroe.jsonsettings.Name
+msgid "Fields of Meroe"
+msgstr "Campos de Meroe"
 
 #: maps/random/flood.jsonsettings.Description
 msgid ""
@@ -406,7 +420,7 @@ msgstr ""
 
 #: maps/random/hellas.jsonsettings.Name
 msgid "Hellas"
-msgstr ""
+msgstr "Hellas"
 
 #: maps/random/hells_pass.jsonsettings.Description
 msgid ""
@@ -460,6 +474,22 @@ msgstr "Os jogadores começam em pequenas ilhas, embora existam muitos outros ao
 msgid "Islands"
 msgstr "Ilhas"
 
+#: maps/random/jebel_barkal.jsonsettings.Description
+msgid ""
+"Starting near the fertile banks of the Nile, the players besiege the heavily"
+" defended city Napata which lies at the foot of the hill Jebel Barkal, the "
+"\"Pure Mountain\". It is the Southern home of Amun, and according to "
+"Kushites and Egyptians alike, the birthplace of man. Known as the Throne of "
+"the Two Lands, the ancient religious capital of Napata lay in its shadow. "
+"This is where Kings were made... and unmade! Abutting a rich floodplain "
+"downstream from the 4th cataract, this area became the breadbasket of "
+"ancient Kush."
+msgstr ""
+
+#: maps/random/jebel_barkal.jsonsettings.Name
+msgid "Jebel Barkal"
+msgstr "Jebel Barkal"
+
 #: maps/random/kerala.jsonsettings.Description
 msgid ""
 "Players start in the southwestern shores of India between a sea and "
@@ -483,7 +513,7 @@ msgid ""
 "The Italian peninsula \n"
 "\n"
 " Latium is the region of central western Italy in which the city of Rome was founded and grew to be the capital city of the Roman Empire. Latium was originally a small triangle of fertile, volcanic soil on which resided the tribe of the Latins. It was located on the left bank (east and south) of the Tiber river, extending northward to the Anio river (a left-bank tributary of the Tiber) and southeastward to the Pomptina Palus (Pontine Marshes, now the Pontine Fields) as far south as the Circeian promontory. The right bank of the Tiber was occupied by the Etruscan city of Veii, and the other borders were occupied by Italic tribes. Subsequently Rome defeated Veii and then its Italic neighbors, expanding Latium to the Apennine Mountains in the northeast and to the opposite end of the marsh in the southeast. The modern descendant, the Italian Regione of Lazio, also called Latium in Latin, and occasionally in modern English, is somewhat larger still, but not as much as double the original Latium."
-msgstr "A Península Itálica\n\nLatium é uma região que fica no centro-oeste da Itália e é foi onde foi fundada a cidade de Roma, capital do Império Romano. Latium era originalmente um pequeno triângulo de solo fértil vulcânico na qual residia a tribo dos Latinos. Localizava-se na margem esquerda (leste e sul) do rio Tibre, estendendo-se ao norte para o rio Anio (ou Aniene, um afluente da margem esquerda do rio Tibre) e sudoeste, em direção ao Pomptina Palus (Charco Pontino, agora Campos Pontinos) até o promontório Circeiano. A margem direita do Tibre era ocupada pela cidade etrusca de Veii, e outras bordas eram ocupadas por tribos itálicas. Subsequentemente, Roma derrotou Veii e logo em seguida seus vizinhos itálicos, expandindo Latium para os Apeninos a nordeste e para a borda oposta do charco, a sudeste. A descendente moderna, a Regione di Lazio italiana, chamada \"Latium\" em latim e \"Lácio\" em português, é quase duas vezes maior que a Latium original."
+msgstr "A Península Itálica\n\nLatium é uma região que fica no centro-oeste da Itália e é foi onde foi fundada a cidade de Roma, capital do Império Romano. Latium era originalmente um pequeno triângulo de solo fértil vulcânico na qual residia a tribo dos Latinos. Localizava-se na margem esquerda (leste e sul) do rio Tibre, estendendo-se ao norte para o rio Anio (ou Aniene, um afluente da margem esquerda do rio Tibre) e sudoeste, em direção ao Pomptina Palus (Charco Pontino, agora Campos Pontinos) até o promontório Circeiano. A margem direita do Tibre era ocupada pela cidade etrusca de Veios, e outras bordas eram ocupadas por tribos itálicas. Subsequentemente, Roma derrotou Veios e logo em seguida seus vizinhos itálicos, expandindo Latium para os Apeninos a nordeste e para a borda oposta do charco, a sudeste. A descendente moderna, a Regione di Lazio italiana, chamada \"Latium\" em latim e \"Lácio\" em português, é quase duas vezes maior que a Latium original."
 
 #: maps/random/latium.jsonsettings.Name
 msgid "Latium"
@@ -512,7 +542,7 @@ msgstr "Planície da Lorena"
 #: maps/random/lower_nubia.jsonsettings.Description
 msgid ""
 "Known in the Greco-Roman world as the Triakontaschoinos, Lower Nubia was the"
-" area between the first and second cataracts of Nile and formed the "
+" area between the first and second cataracts of the Nile and formed the "
 "traditional border region between Kush and Egypt. The scorching desert, "
 "steep valleys and towering cliffs of the area make this an inhospitable "
 "place to live, but the control of this ancient corridor was vital for any "
@@ -522,7 +552,7 @@ msgstr ""
 
 #: maps/random/lower_nubia.jsonsettings.Name
 msgid "Lower Nubia"
-msgstr ""
+msgstr "Baixo Núbia"
 
 #: maps/random/mainland.jsonsettings.Description
 msgid "A typical map without any water."
@@ -560,7 +590,7 @@ msgid ""
 "Syria, on the south by Libya and Mauritania, and on the west by Iberia. The "
 "name Mediterranean is derived from Latin, but the Romans themselves "
 "preferred the term 'Mare Internum' or even 'Mare Nostrum'."
-msgstr "O Mediterrâneo, lar dos Fenícios, Gregos, Egípcios e finalmente os Romanos. Estes povos utilizaram conhecimentos e princípios rudimentares da organização mesopotâmica e criaram algo mais, alterando o centro da pesquisa e conhecimento para a Costa Mediterrânea, fundando os alicerces da civilização moderna. O Mar Mediterrâneo é quase completamente cercado por terra: Ao norte pela Gallia Transalpina (Gália Narbonense), Itália, Grécia (Graecia) e Anatolia; ao leste pela Síria; ao sul pela Líbia e Mauritânia e a oeste pela Península Ibérica. O nome Mediterrâneo deriva do Latim, mas os Romanos preferiam o termo \"Mare Internum\" ou mesmo \"Mare Nostrum\". "
+msgstr "O Mediterrâneo, lar dos Fenícios, Gregos, Egípcios e finalmente os Romanos. Estes povos utilizaram conhecimentos e princípios rudimentares da organização mesopotâmica e criaram algo mais, alterando o centro da pesquisa e conhecimento para a Costa Mediterrânea, fundando os alicerces da civilização moderna. O Mar Mediterrâneo é quase completamente cercado por terra: Ao norte pela Gallia Transalpina (Gália Narbonense), Itália, Grécia (Graecia) e Anatolia; ao leste pela Síria; ao sul pela Líbia e Mauritânia e a oeste pela Península Ibérica. O nome Mediterrâneo deriva do Latim, mas os Romanos preferiam o termo \"Mare Internum\" ou mesmo \"Mare Nostrum\"."
 
 #: maps/random/mediterranean.jsonsettings.Name
 #: maps/random/rmbiome/generic/mediterranean.jsonDescription.Title
@@ -673,7 +703,7 @@ msgid ""
 "Pompeii, along with much of the surrounding area, was mostly destroyed and "
 "buried under 4 to 6 meters of volcanic ash and pumice in the eruption of "
 "Mount Vesuvius in AD 79."
-msgstr "Pompeia foi uma cidade costeira da Roma Antiga, na região de Campânia, na Itália. Pompeia, junto com a área próxima, foi destruída e soterrada em  4 a 6 metros de cinzas e espuma vulcânica na erupção dp Monte Vesúvio em 79 a.C."
+msgstr "Pompeia foi uma cidade costeira da Roma Antiga, na região de Campânia, na Itália. Pompeia, junto com a área próxima, foi destruída e soterrada em  4 a 6 metros de cinzas e espuma vulcânica provenientes da erupção do Monte Vesúvio em 79 a.C."
 
 #: maps/random/pompeii.jsonsettings.Name
 msgid "Pompeii"
@@ -697,7 +727,7 @@ msgid ""
 "most prosperous cities of Medieval Europe and one of the Anglo-Norman "
 "dynasty capitals under the new name of Rouen, Ratumacos is still a peaceful "
 "land - but not for long."
-msgstr "Os jogadores começam nas margens do rio Sequana (Seine) no norte da Gália perto do assentamento de Ratumacos. Destinado a se tornar uma das maiores e mais prósperas cidades da Europa medieval e uma das capitais da dinastia anglo-normandos sob o novo nome de Rouen, Ratumacos ainda é uma terra pacífica - mas não por muito tempo."
+msgstr "Os jogadores começam nas margens do rio Sequana (Sena) no norte da Gália perto do assentamento de Ratumacos. Destinado a se tornar uma das maiores e mais prósperas cidades da Europa medieval e uma das capitais da dinastia anglo-normanda sob o novo nome de Rouen, Ratumacos ainda é uma terra pacífica - mas não por muito tempo."
 
 #: maps/random/ratumacos.jsonsettings.Name
 msgid "Ratumacos"
@@ -708,7 +738,7 @@ msgid ""
 "Historically, the Red Sea was a sea of many nations. Ideally situated for "
 "trade with the Far East, it was coveted by all. Although dry, this land is "
 "by no means inhospitable, and is amply provided with all resources."
-msgstr "Historicamente, o Mar Vermelho é o mar de muitas nações. Com uma localização ideal para o comércio com o Extremo Oriente, era cobiçado por todos. Apesar de seco, esta terra não se tornou inóspita, sendo ainda amplamente provida de todos os recursos."
+msgstr "Historicamente, o Mar Vermelho é o mar de muitas nações. Com uma localização ideal para o comércio com o Extremo Oriente, era cobiçado por todos. Apesar de seca, esta terra não se tornou inóspita, sendo ainda amplamente provida de todos os recursos."
 
 #: maps/random/red_sea.jsonsettings.Name
 msgid "Red Sea"
@@ -793,7 +823,7 @@ msgstr ""
 
 #: maps/random/scythian_rivulet.jsonsettings.Name
 msgid "Scythian Rivulet"
-msgstr ""
+msgstr "Riacho Cita"
 
 #: maps/random/snowflake_searocks.jsonsettings.Description
 msgid "Many small islands connected to each other by narrow passages."
@@ -885,6 +915,50 @@ msgstr "Um lago cercado por colinas."
 msgid "Wild Lake"
 msgstr "Lago selvagem"
 
+#: maps/random/rmbiome/fields_of_meroe/dry.jsonDescription.Description
+msgid ""
+"The vitalizing waters of the Nile sustain life along its banks, while the "
+"long dry season scorches the land."
+msgstr ""
+
+#: maps/random/rmbiome/fields_of_meroe/dry.jsonDescription.Description
+msgctxt "biome definition"
+msgid ""
+"The vitalizing waters of the Nile sustain life along its banks, while the "
+"long dry season scorches the land."
+msgstr ""
+
+#: maps/random/rmbiome/fields_of_meroe/dry.jsonDescription.Title
+msgid "Dry Season"
+msgstr "Estação Seca"
+
+#: maps/random/rmbiome/fields_of_meroe/dry.jsonDescription.Title
+msgctxt "biome definition"
+msgid "Dry Season"
+msgstr "Estação Seca"
+
+#: maps/random/rmbiome/fields_of_meroe/rainy.jsonDescription.Description
+msgid ""
+"Revelling in the much awaited rain, the baked land transforms into a lush "
+"haven for both man and beast."
+msgstr ""
+
+#: maps/random/rmbiome/fields_of_meroe/rainy.jsonDescription.Description
+msgctxt "biome definition"
+msgid ""
+"Revelling in the much awaited rain, the baked land transforms into a lush "
+"haven for both man and beast."
+msgstr ""
+
+#: maps/random/rmbiome/fields_of_meroe/rainy.jsonDescription.Title
+msgid "Rainy Season"
+msgstr "Estação Chuvosa"
+
+#: maps/random/rmbiome/fields_of_meroe/rainy.jsonDescription.Title
+msgctxt "biome definition"
+msgid "Rainy Season"
+msgstr "Estação Chuvosa"
+
 #: maps/random/rmbiome/generic/alpine.jsonDescription.Description
 msgid ""
 "A region in the high snowy mountains. Biting winds sweep through the "
@@ -915,7 +989,7 @@ msgid ""
 "intertwined. The native beech and oak trees of this temperate zone display a"
 " multi-coloured foliage while the evergreen pines look on with indifference "
 "at the approaching winter."
-msgstr "O outono no seu auge. A paisagem é um deslumbrante traço de cores irrevogavelmente entrelaçadas. A faia nativa e os carvalhos desta zona temperada exibem uma folhagem multicolorida enquanto os pinheiros perenes parecem indiferentes no inverno que se aproxima."
+msgstr "O outono no seu auge. A paisagem é um deslumbrante traço de cores irrevogavelmente entrelaçadas. A faia nativa e os carvalhos desta zona temperada exibem uma folhagem multicolorida enquanto os pinheiros perenes parecem indiferentes ao inverno que se aproxima."
 
 #: maps/random/rmbiome/generic/autumn.jsonDescription.Description
 msgctxt "biome definition"
@@ -924,7 +998,7 @@ msgid ""
 "intertwined. The native beech and oak trees of this temperate zone display a"
 " multi-coloured foliage while the evergreen pines look on with indifference "
 "at the approaching winter."
-msgstr "O outono no seu auge. A paisagem é um deslumbrante traço de cores irrevogavelmente entrelaçadas. A faia nativa e os carvalhos desta zona temperada exibem uma folhagem multicolorida enquanto os pinheiros perenes parecem indiferentes no inverno que se aproxima."
+msgstr "O outono no seu auge. A paisagem é um deslumbrante traço de cores irrevogavelmente entrelaçadas. A faia nativa e os carvalhos desta zona temperada exibem uma folhagem multicolorida enquanto os pinheiros perenes parecem indiferentes ao inverno que se aproxima."
 
 #: maps/random/rmbiome/generic/autumn.jsonDescription.Title
 msgid "Autumn"
@@ -964,7 +1038,7 @@ msgid ""
 "Start in a region blessed with the Mediterranean climate, a warm and "
 "inviting land. The cypresses are in a perpetual struggle with the dominant "
 "fan palms while deer graze in their shadows, blissfully unaware."
-msgstr "Comece em uma região abençoada pelo clima mediterrâneo, uma terra quente e convidativa. Os ciprestes estão em uma disputa perpétua com as dominantes palmeiras de leque enquanto cervos pastam às suas sombras, felizmente desapercebidos. "
+msgstr "Comece em uma região abençoada pelo clima mediterrâneo, uma terra quente e convidativa. Os ciprestes estão em uma disputa perpétua com as dominantes palmeiras de leque enquanto cervos pastam às suas sombras, felizmente desapercebidos."
 
 #: maps/random/rmbiome/generic/mediterranean.jsonDescription.Description
 msgctxt "biome definition"
@@ -972,7 +1046,7 @@ msgid ""
 "Start in a region blessed with the Mediterranean climate, a warm and "
 "inviting land. The cypresses are in a perpetual struggle with the dominant "
 "fan palms while deer graze in their shadows, blissfully unaware."
-msgstr "Comece em uma região abençoada pelo clima mediterrâneo, uma terra quente e convidativa. Os ciprestes estão em uma disputa perpétua com as dominantes palmeiras de leque enquanto cervos pastam às suas sombras, felizmente desapercebidos. "
+msgstr "Comece em uma região abençoada pelo clima mediterrâneo, uma terra quente e convidativa. Os ciprestes estão em uma disputa perpétua com as dominantes palmeiras de leque enquanto cervos pastam às suas sombras, felizmente desapercebidos."
 
 #: maps/random/rmbiome/generic/savanna.jsonDescription.Description
 msgid ""
@@ -1028,7 +1102,7 @@ msgid ""
 "diverse broadleaf forests. Poplars, pines, beeches and oaks all vie for "
 "supremacy but this root-war is a neverending struggle. Numerous apple trees "
 "dot the land, deer and sheep gorge themselves on this years fallen fruit."
-msgstr "As pastagens luxuriantes tapam a terra, em lugares dando lugar a florestas de folhas largas magníficas e diversas. Populus, pinheiros, fagus e carvalhos todos disputam a supremacia, mas essa guerra radical é uma luta eterna. Numerosas macieiras pontilham a terra, os veados e as ovelhas se derrubaram nestes anos, caíram frutos."
+msgstr "As pastagens luxuriantes cobrem a terra, em locais dando lugar a florestas de folhas largas magníficas e diversas. Choupos, pinheiros, faias e carvalhos todos disputam a supremacia, mas essa guerra radical é uma luta eterna. Numerosas macieiras pontilham a terra, os veados e as ovelhas se empanturram nestes anos de frutos caídos."
 
 #: maps/random/rmbiome/generic/temperate.jsonDescription.Description
 msgctxt "biome definition"
@@ -1037,7 +1111,7 @@ msgid ""
 "diverse broadleaf forests. Poplars, pines, beeches and oaks all vie for "
 "supremacy but this root-war is a neverending struggle. Numerous apple trees "
 "dot the land, deer and sheep gorge themselves on this years fallen fruit."
-msgstr "As pastagens luxuriantes tapam a terra, em lugares dando lugar a florestas de folhas largas magníficas e diversas. Populus, pinheiros, fagus e carvalhos todos disputam a supremacia, mas essa guerra radical é uma luta eterna. Numerosas macieiras pontilham a terra, os veados e as ovelhas se derrubaram nestes anos, caíram frutos."
+msgstr "As pastagens luxuriantes cobrem a terra, em locais dando lugar a florestas de folhas largas magníficas e diversas. Choupos, pinheiros, faias e carvalhos todos disputam a supremacia, mas essa guerra radical é uma luta eterna. Numerosas macieiras pontilham a terra, os veados e as ovelhas se empanturram nestes anos de frutos caídos."
 
 #: maps/random/rmbiome/generic/temperate.jsonDescription.Title
 msgid "Temperate"
@@ -1113,12 +1187,12 @@ msgstr ""
 
 #: maps/random/rmbiome/gulf_of_bothnia/late_spring.jsonDescription.Title
 msgid "Late Spring"
-msgstr ""
+msgstr "Primavera Tardia"
 
 #: maps/random/rmbiome/gulf_of_bothnia/late_spring.jsonDescription.Title
 msgctxt "biome definition"
 msgid "Late Spring"
-msgstr ""
+msgstr "Primavera Tardia"
 
 #: maps/random/rmbiome/gulf_of_bothnia/winter.jsonDescription.Description
 msgid ""
@@ -1204,16 +1278,25 @@ msgstr "Temos que encontrar terra seca, nossas terras se imundarão em breve!"
 msgid "The lakes start swallowing the land, we have to find shelter!"
 msgstr "Os lagos começam a engolir a terra, temos de encontrar abrigo!"
 
-#: maps/random/survivalofthefittest_triggers.js:190
+#: maps/random/jebel_barkal_triggers.js:578
+msgid "Napata is attacking!"
+msgstr "Napata está a atacar!"
+
+#: maps/random/jebel_barkal_triggers.js:590
+#, javascript-format
+msgid "Napata will attack in %(time)s!"
+msgstr "Napata irá atacar em %(time)s!"
+
+#: maps/random/survivalofthefittest_triggers.js:163
 #, javascript-format
 msgid "The first wave will start in %(time)s!"
 msgstr "A primeira onda vai começar em %(time)s!"
 
-#: maps/random/survivalofthefittest_triggers.js:325
+#: maps/random/survivalofthefittest_triggers.js:264
 msgid "An enemy wave is attacking!"
 msgstr "Uma onda inimiga está atacando!"
 
-#: maps/random/survivalofthefittest_triggers.js:349
+#: maps/random/survivalofthefittest_triggers.js:289
 #, javascript-format
 msgid "%(player)s has been defeated (lost civic center)."
 msgstr "%(player)s foi derrotado (perdeu centro cívico)."
@@ -1850,13 +1933,13 @@ msgstr "Pequeno mapa com muitos recursos e pouca água, para teste de jogabilida
 
 #: maps/scenarios/Napata Reconstruction.xml:Name:40
 msgid "Napata Reconstruction"
-msgstr ""
+msgstr "Reconstrução de Napata"
 
 #: maps/scenarios/Napata Reconstruction.xml:Description:40
 msgid ""
 "This map displays a reconstruction of the ancient city Napata. "
 "[color=\"red\"]Note:[/color] The map is not intended to be playable."
-msgstr ""
+msgstr "Este mapa mostra a reconstrução da antiga cidade de Napata. [color=\"red\"]Nota:[/color] O mapa não é jogável."
 
 #: maps/scenarios/Necropolis.xml:Description:39
 msgid ""
@@ -1967,7 +2050,7 @@ msgstr "Táutalo"
 #: maps/scenarios/Sandbox - Athenians.xml:Description:39
 msgid ""
 "Play with the Athenians faction in a non-threatening sandbox environment."
-msgstr "Jogue com os Atenienses em um ambiente sandbox."
+msgstr "Jogue com os Atenienses em um ambiente não ameaçador."
 
 #: maps/scenarios/Sandbox - Athenians.xml:PlayerData[0].Name:39
 msgid "The Athenians"
@@ -2042,24 +2125,24 @@ msgstr "Simulador - Os Ibéricos"
 
 #: maps/scenarios/Sandbox - Kushites.xml:Description:40
 msgid "Play the Kushites faction in a non-threatening sandbox scenario."
-msgstr ""
+msgstr "Jogue com os Cuchitas em um ambiente não ameaçador."
 
 #: maps/scenarios/Sandbox - Kushites.xml:PlayerData[1].Name:40
 msgid "Kushites"
-msgstr ""
+msgstr "Cuchitas"
 
 #: maps/scenarios/Sandbox - Kushites.xml:PlayerData[2].Name:40
 msgid "Egyptians"
-msgstr ""
+msgstr "Egípcios"
 
 #: maps/scenarios/Sandbox - Kushites.xml:Name:40
 msgid "Sandbox - The Kushites"
-msgstr ""
+msgstr "Simulador - Os Cuchitas"
 
 #: maps/scenarios/Sandbox - Macedonians.xml:Description:39
 msgid ""
 "Play with the Macedonians faction in a non-threatening sandbox environment."
-msgstr "Jogue com os macedônios num ambiente sem ameaças."
+msgstr "Jogue com os Macedônios em um ambiente não ameaçador."
 
 #: maps/scenarios/Sandbox - Macedonians.xml:PlayerData[0].Name:39
 msgid "The Macedonians"
@@ -2087,7 +2170,7 @@ msgstr "Simulador - Os Máurias"
 
 #: maps/scenarios/Sandbox - Persians.xml:Description:39
 msgid "Demo Map. Play with the Persian civilisation in a sandbox setting."
-msgstr "Demonstração. Jogue com a civilização persa num ambiente sandbox."
+msgstr "Demonstração. Jogue com a civilização persa em um ambiente não ameaçador."
 
 #: maps/scenarios/Sandbox - Persians.xml:PlayerData[0].Name:39
 msgid "Achaemenids"
@@ -2100,7 +2183,7 @@ msgstr "Simulador - Os Persas"
 #: maps/scenarios/Sandbox - Ptolemies 2.xml:Description:39
 msgid ""
 "Play with the Ptolemaic Egyptians in a non-threatening sandbox setting."
-msgstr "Jogar com os egípcios ptolemaico num ambiente sandbox não ameaçador."
+msgstr "Jogue com os Egípcios Ptolemaicos em um ambiente não ameaçador."
 
 #: maps/scenarios/Sandbox - Ptolemies 2.xml:PlayerData[0].Name:39
 msgid "Ptolemy \"Savior\""
@@ -2137,15 +2220,15 @@ msgstr "Simulador - O Egito Ptolemaico"
 
 #: maps/scenarios/Sandbox - Romans.xml:Description:39
 msgid "A sandbox scenario for players to try out the Roman civilisation."
-msgstr "Um cenário solitário para os jogadores experimentarem a civilização romana."
+msgstr "Um cenário não ameaçador para os jogadores experimentarem a civilização romana."
 
 #: maps/scenarios/Sandbox - Romans.xml:Name:39
 msgid "Sandbox - The Republican Romans"
-msgstr "Sandbox - Os Romanos Republicanos"
+msgstr "Simulador - Os Romanos Republicanos"
 
 #: maps/scenarios/Sandbox - Seleucids.xml:Description:39
 msgid "A sandbox scenario for players to try out the Seleucid civilisation."
-msgstr "Um cenário sandbox para que os jogadores experimentem a civilização selêucida."
+msgstr "Um cenário não ameaçador para que os jogadores experimentem a civilização selêucida."
 
 #: maps/scenarios/Sandbox - Seleucids.xml:PlayerData[0].Name:39
 msgid "The Seleucids"
@@ -2162,7 +2245,7 @@ msgstr "Simulador - Os Selêucidas"
 #: maps/scenarios/Sandbox - Spartans.xml:Description:39
 msgid ""
 "Play with the Spartans faction in a non-threatening sandbox environment."
-msgstr "Jogue como Espartano num seguro ambiente de sandbox."
+msgstr "Jogue com os Espartanos em um ambiente não ameaçador."
 
 #: maps/scenarios/Sandbox - Spartans.xml:Name:39
 msgid "Sandbox - The Spartans"
@@ -2234,11 +2317,11 @@ msgstr "Demonstração de Território"
 msgid ""
 "The Celts invade Greece. Fight through the central valley or cut through the"
 " rich highlands in order to secure the lands around Delphi!"
-msgstr "Os Celtas invadem a Grécia. Lute pelo vale central ou avance pelo rico planalto para garantir a paz de volta a Delphi!"
+msgstr "Os Celtas invadem a Grécia. Lute pelo vale central ou avance pelo rico planalto para garantir a paz de volta a Delfos!"
 
 #: maps/scenarios/The Massacre of Delphi.xml:Name:39
 msgid "Massacre of Delphi"
-msgstr "Massacre de Delphi"
+msgstr "Massacre de Delfos"
 
 #: maps/scenarios/The Persian Gates.xml:Description:27
 msgid ""
@@ -2459,15 +2542,15 @@ msgstr ""
 
 #: maps/skirmishes/Butana Steppe (2).xml:PlayerData[1].Name:40
 msgid "West Player"
-msgstr ""
+msgstr "Jogador a Oeste"
 
 #: maps/skirmishes/Butana Steppe (2).xml:PlayerData[2].Name:40
 msgid "East Player"
-msgstr ""
+msgstr "Jogador a Este"
 
 #: maps/skirmishes/Butana Steppe (2).xml:Name:40
 msgid "Butana Steppe (2)"
-msgstr ""
+msgstr "Estepe do Butana (2)"
 
 #: maps/skirmishes/Caspian Sea (2v2).xml:Description:39
 msgid ""
@@ -2565,6 +2648,51 @@ msgstr "Uma paisagem alpina enevoada torna-se o campo de batalha à medida que c
 msgid "Dueling Cliffs (3v3)"
 msgstr "Penhascos do Duelo (3v3)"
 
+#: maps/skirmishes/Egypt (3v3).xml:Name:40
+msgid "Egypt (3v3)"
+msgstr "Egito (3v3)"
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[1].Name:40
+msgid "Alexandria"
+msgstr "Alexandria"
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[2].Name:40
+msgid "Theben"
+msgstr "Tebas"
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[3].Name:40
+msgid "Siwa"
+msgstr "Siuá"
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[4].Name:40
+msgid "Sinai"
+msgstr "Sinai"
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[5].Name:40
+msgid "Memphis"
+msgstr "Mênfis"
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[6].Name:40
+msgid "Cyrene"
+msgstr "Cirene"
+
+#: maps/skirmishes/Egypt (3v3).xml:Description:40
+msgid ""
+"Fight for the remains of ancient Egypt!\n"
+"\n"
+"Players start with full grown cities and small armies, each having distinct advantages and drawbacks. Take care, there are 7 mighty forts and marauding bandids!\n"
+"\n"
+"It is the last century before 0 A.D. Egypt is internally divided between hellenistic (Alexandria, represented by Seleucids) and traditional influences (Memphis, represented by Ptolemies). Thebes in the southern clime of river Nile has already been taken over by the Kush. In the north western Al-Dschabal al-Achdar, where the mediterranean city of Cyrene is located the Romans are preparing their invasion. From the eastern desert at-Tih and mount Sinai enemies (represented by Persians) are pushing forward and the oasis Siwa. Charga (represented by Carthage) in the south western desert are trying to get a share of the pie as well.\n"
+"Locations:\n"
+"- Alexandria: library, harbor\n"
+"- Memphis: Necropolis, pyramids, Apis shrine\n"
+"- Thebes: temple district, Valley of the Kings \n"
+"- Cyrene: mediterranean Macchie, olive groves\n"
+"- Fayyum: crocodile shrine, nile dam\n"
+"- Eastern desert: mount Sinai, deep Wadi, Red Sea reefs\n"
+"- Western desert: Oasis Charga and Siwa, Qattara Depression\n"
+msgstr ""
+
 #: maps/skirmishes/Forest Battle (4).xml:Description:40
 msgid ""
 "A forest battle map where all players fight for supremacy and control over "
@@ -2582,7 +2710,7 @@ msgid ""
 "Each player begins the match with a wooden palisade and some guard towers atop a low embankment.\n"
 "\n"
 "Watch out for Romans passing by!"
-msgstr "Defenda seu posto avançado Gaulês contra ataques dos seus vizinhos traiçoeiros!\n\nCada jogador começa a partida com uma paliçada de madeira e algumas torres de vigia no topo de um aterro baixo.\n\nFique atento com os Romanos passando por perto."
+msgstr "Defenda seu posto avançado Gaulês contra ataques dos seus vizinhos traiçoeiros!\n\nCada jogador começa a partida com uma paliçada de madeira e algumas torres de vigia no topo de um aterro baixo.\n\nFique atento com os Romanos passando por perto!"
 
 #: maps/skirmishes/Gallic Fields (3).xml:Name:39
 msgid "Gallic Fields (3)"
@@ -2898,7 +3026,7 @@ msgstr "Dois Oceanos (6)"
 #: maps/skirmishes/Via Augusta (4).xml:Description:40
 msgid ""
 "All Roads Lead To Rome. Via Julia Augusta a Roman road built in 13 BCE."
-msgstr ""
+msgstr "Todos os Caminhos Levam a Roma. Via Júlia Augusta, uma estrada Romana construída em 13 a.C."
 
 #: maps/skirmishes/Via Augusta (4).xml:Name:40
 msgid "Via Augusta"

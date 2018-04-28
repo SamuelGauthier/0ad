@@ -106,14 +106,14 @@ function selectionChanged()
 		return;
 
 	Engine.GetGUIObjectByName("savedMapName").caption = translate(metadata.initAttributes.settings.Name);
-	let mapData = getMapDescriptionAndPreview(metadata.initAttributes.mapType, metadata.initAttributes.map);
+	let mapData = getMapDescriptionAndPreview(metadata.initAttributes.mapType, metadata.initAttributes.map, metadata.initAttributes);
 	setMapPreviewImage("savedInfoPreview", mapData.preview);
 
 	Engine.GetGUIObjectByName("savedPlayers").caption = metadata.initAttributes.settings.PlayerData.length - 1;
 	Engine.GetGUIObjectByName("savedPlayedTime").caption = timeToString(metadata.gui.timeElapsed ? metadata.gui.timeElapsed : 0);
 	Engine.GetGUIObjectByName("savedMapType").caption = translateMapType(metadata.initAttributes.mapType);
 	Engine.GetGUIObjectByName("savedMapSize").caption = translateMapSize(metadata.initAttributes.settings.Size);
-	Engine.GetGUIObjectByName("savedVictory").caption = translateVictoryCondition(metadata.initAttributes.settings.GameType);
+	Engine.GetGUIObjectByName("savedVictory").caption = metadata.initAttributes.settings.VictoryConditions.map(victoryConditionName => translateVictoryCondition(victoryConditionName)).join(translate(", "));
 
 	let caption = sprintf(translate("Mods: %(mods)s"), { "mods": modsToString(metadata.mods) });
 	if (!hasSameMods(metadata.mods, Engine.GetEngineInfo().mods))
@@ -191,7 +191,6 @@ function reallyLoadGame(gameId)
 
 	Engine.SwitchGuiPage("page_loading.xml", {
 		"attribs": metadata.initAttributes,
-		"isNetworked": false,
 		"playerAssignments": {
 			"local": {
 				"name": pData ? pData.Name : singleplayerName(),

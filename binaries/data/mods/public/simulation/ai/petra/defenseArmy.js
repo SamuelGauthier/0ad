@@ -19,7 +19,7 @@ m.DefenseArmy = function(gameState, foeEntities, type)
 	this.breakawaySize = this.Config.Defense.armyBreakawaySize;
 
 	// average
-	this.foePosition = [0,0];
+	this.foePosition = [0, 0];
 	this.positionLastUpdate = gameState.ai.elapsedTime;
 
 	// Some caching
@@ -60,7 +60,7 @@ m.DefenseArmy.prototype.addFoe = function(gameState, enemyId, force)
 
 	// check distance
 	if (!force && API3.SquareVectorDistance(ent.position(), this.foePosition) > this.compactSize)
-			return false;
+		return false;
 
 	this.foeEntities.push(enemyId);
 	this.assignedAgainst[enemyId] = [];
@@ -119,7 +119,7 @@ m.DefenseArmy.prototype.addOwn = function(gameState, id, force)
 	if (plan !== undefined)
 		ent.setMetadata(PlayerID, "plan", -2);
 	else
- 		ent.setMetadata(PlayerID, "plan", -3);
+		ent.setMetadata(PlayerID, "plan", -3);
 	let subrole = ent.getMetadata(PlayerID, "subrole");
 	if (subrole === undefined || subrole !== "defender")
 		ent.setMetadata(PlayerID, "formerSubrole", subrole);
@@ -160,6 +160,14 @@ m.DefenseArmy.prototype.removeOwn = function(gameState, id, Entity)
 	else
 		ent.setMetadata(PlayerID, "subrole", undefined);
 	ent.setMetadata(PlayerID, "formerSubrole", undefined);
+
+	// Remove from tranport plan if not yet on Board
+	if (ent.getMetadata(PlayerID, "transport") !== undefined)
+	{
+		let plan = gameState.ai.HQ.navalManager.getPlan(ent.getMetadata(PlayerID, "transport"));
+		if (plan && plan.state == "boarding" && ent.position())
+			plan.removeUnit(gameState, ent);
+	}
 
 /*
 	// TODO be sure that all units in the transport need the cancelation

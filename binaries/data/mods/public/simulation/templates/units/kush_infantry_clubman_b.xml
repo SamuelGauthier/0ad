@@ -6,7 +6,7 @@
   <Attack>
     <Melee>
       <Hack>3.0</Hack>
-      <Crush>5.0</Crush>
+      <Crush>2.5</Crush>
     </Melee>
   </Attack>
   <Builder>
@@ -14,8 +14,8 @@
       structures/kush_pyramid_small
       structures/kush_pyramid_large
       structures/kush_temple_amun
-      structures/kush_temple_apedemak
-      -structures/{civ}_temple
+      structures/kush_blemmye_camp
+      structures/kush_nuba_village
     </Entities>
   </Builder>
   <Cost>
@@ -31,6 +31,7 @@
     <SpecificName>nhw Noba</SpecificName>
     <Icon>units/kush_infantry_clubman.png</Icon>
     <RequiredTechnology>phase_town</RequiredTechnology>
+    <VisibleClasses datatype="tokens">Mercenary</VisibleClasses>
   </Identity>
   <Promotion>
     <Entity>units/kush_infantry_clubman_a</Entity>

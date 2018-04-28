@@ -78,32 +78,32 @@ var g_SummaryTypes = {
 	"lost": {
 		"color": g_TypeColors.red,
 		"caption": translate("Lost"),
-		"postfix": "\n"
+		"postfix": ""
 	},
 	"used": {
 		"color": g_TypeColors.red,
 		"caption": translate("Used"),
-		"postfix": "\n"
+		"postfix": ""
 	},
 	"received": {
 		"color": g_TypeColors.red,
 		"caption": translate("Received"),
-		"postfix": "\n"
+		"postfix": ""
 	},
 	"sold": {
 		"color": g_TypeColors.red,
 		"caption": translate("Sold"),
-		"postfix": "\n"
+		"postfix": ""
 	},
 	"outcome": {
 		"color": g_TypeColors.red,
 		"caption": translate("Outcome"),
-		"postfix": "\n"
+		"postfix": ""
 	},
 	"failed": {
 		"color": g_TypeColors.red,
 		"caption": translate("Failed"),
-		"postfix": "\n"
+		"postfix": ""
 	}
 };
 
@@ -436,20 +436,6 @@ function updatePanelData(panelInfo)
 		updateCountersTeam(teamCounterFn, panelInfo.counters, panelInfo.headings, index);
 }
 
-function confirmStartReplay()
-{
-	if (Engine.HasXmppClient())
-		messageBox(
-			400, 200,
-			translate("Are you sure you want to quit the lobby?"),
-			translate("Confirmation"),
-			[translate("No"), translate("Yes")],
-			[null, startReplay]
-		);
-	else
-		startReplay();
-}
-
 function continueButton()
 {
 	let summarySelectedData = {
@@ -463,22 +449,19 @@ function continueButton()
 		});
 	else if (g_GameData.gui.dialog)
 		Engine.PopGuiPage();
+	else if (Engine.HasXmppClient())
+		Engine.SwitchGuiPage("page_lobby.xml", { "dialog": false });
 	else if (g_GameData.gui.isReplay)
 		Engine.SwitchGuiPage("page_replaymenu.xml", {
 			"replaySelectionData": g_GameData.gui.replaySelectionData,
 			"summarySelectedData": summarySelectedData
 		});
-	else if (Engine.HasXmppClient())
-		Engine.SwitchGuiPage("page_lobby.xml", { "dialog": false });
 	else
 		Engine.SwitchGuiPage("page_pregame.xml");
 }
 
 function startReplay()
 {
-	if (Engine.HasXmppClient())
-		Engine.StopXmppClient();
-
 	if (!Engine.StartVisualReplay(g_GameData.gui.replayDirectory))
 	{
 		warn("Replay file not found!");
@@ -487,7 +470,6 @@ function startReplay()
 
 	Engine.SwitchGuiPage("page_loading.xml", {
 		"attribs": Engine.GetReplayAttributes(g_GameData.gui.replayDirectory),
-		"isNetworked": false,
 		"playerAssignments": {
 			"local": {
 				"name": singleplayerName(),

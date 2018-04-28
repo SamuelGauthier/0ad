@@ -3,12 +3,12 @@
 # This file is distributed under the same license as the 0 A.D. — Empires Ascendant project.
 # 
 # Translators:
-# Wuzzy <almikes@aol.com>, 2016-2017
+# Wuzzy <almikes@aol.com>, 2016-2018
 # xtother90, 2018
 # Enno Holz <eh@idh20.de>, 2017
 # Fabian Gref <fabian.gref@gmail.com>, 2017
 # Maximilian Wagenbach <foaly@posteo.de>, 2016
-# ... ... <jon12@gmx.de>, 2017
+# ... ... <jon12@gmx.de>, 2017-2018
 # Maximilian von Lindern <hobbituhukai@live.de>, 2017
 # Maximilian Wagenbach <foaly@posteo.de>, 2016-2017
 # pilino1234 <pilino1234@zoho.eu>, 2016
@@ -23,9 +23,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 0 A.D.\n"
-"POT-Creation-Date: 2018-02-23 09:05+0100\n"
-"PO-Revision-Date: 2018-02-23 21:30+0000\n"
-"Last-Translator: xtother90\n"
+"POT-Creation-Date: 2018-04-16 09:04+0200\n"
+"PO-Revision-Date: 2018-04-20 16:47+0000\n"
+"Last-Translator: Wuzzy <almikes@aol.com>\n"
 "Language-Team: German (http://www.transifex.com/wildfire-games/0ad/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,7 +71,7 @@ msgstr "Ermahnendes Auftreten"
 
 #: simulation/data/auras/structures/kush_pyramids_military.jsonauraDescription
 msgid "Soldiers near Large Pyramids +10% attack."
-msgstr "Soldaten haben in der Nähe von großen Pyramiden +10% Angriff"
+msgstr "Soldaten haben in der Nähe von großen Pyramiden +10% Angriff."
 
 #: simulation/data/auras/structures/kush_pyramids_territory.jsonauraName
 msgid "Meroitic Pyramids"
@@ -80,7 +80,7 @@ msgstr "Meroitische Periode"
 #: simulation/data/auras/structures/kush_pyramids_territory.jsonauraDescription
 msgid ""
 "Civic Centers +10% territory influence as long as a Pyramid stands built."
-msgstr "Verwaltungssitze haben +10% territorialen Einfluss, solange eine Pyramide besteht."
+msgstr "Solange die Pyramide besteht haben Verwaltungssitze +10% territorialen Einfluss."
 
 #: simulation/data/auras/structures/kush_temple_amun.jsonauraName
 msgid "Powerful Priesthood"
@@ -107,7 +107,7 @@ msgstr "Loyalität"
 
 #: simulation/data/auras/structures/loyalty_regen.jsonauraDescription
 msgid "+50% garrisoned loyalty regeneration rate for structures."
-msgstr "+50% Loyalitätsregenerationsrate durch Einquartieren für Gebäude."
+msgstr "+50% Loyalitätsregenerationsrate für Gebäude durch Einquartieren."
 
 #: simulation/data/auras/structures/maur_pillar.jsonauraName
 msgid "Edict of Ashoka"
@@ -165,7 +165,7 @@ msgstr "Glorreiche Expansion"
 msgid ""
 "Further increase the population limit by 40 per wonder owned (requires "
 "\"Glorious Expansion\" tech)."
-msgstr "Erhöht das Bevölkerungslimit um weitere 40 für jedes Wunder in deinem Besitz (erfordert \"Glorreiche Expansion\")."
+msgstr "Erhöht das Bevölkerungslimit um weitere 40 für jedes Wunder in deinem Besitz (erfordert „Glorreiche Expansion“)."
 
 #: simulation/data/auras/structures/workshop_repair.jsonauraName
 msgid "Workshop Repairs"
@@ -173,7 +173,7 @@ msgstr "Werkstattreparaturen"
 
 #: simulation/data/auras/structures/workshop_repair.jsonauraDescription
 msgid "Repairs garrisoned siege units at 3 HP per second."
-msgstr "Repariert belagerte Belagerungseinheiten mit 3 TP pro Sekunde."
+msgstr "Repariert einquartierte Belagerungseinheiten mit 3 TP pro Sekunde."
 
 #: simulation/data/auras/teambonuses/athen_player_teambonus.jsonauraName
 msgid "Delian League"
@@ -189,7 +189,7 @@ msgstr "Druiden"
 
 #: simulation/data/auras/teambonuses/brit_player_teambonus.jsonauraDescription
 msgid "Allies get -20% resource cost to train healers."
-msgstr "Verbündete erhalten -20% Ressourcenkosten, um Heiler auszubilden."
+msgstr "Verbündete zahlen -20% weniger Ressourcen, um Heiler auszubilden."
 
 #: simulation/data/auras/teambonuses/cart_player_teambonus.jsonauraName
 msgid "Trademasters"
@@ -225,7 +225,7 @@ msgstr "Elefantenlieferanten"
 msgid ""
 "Reduces the cost and train time for elephants with 20% for allies of Kushite"
 " players."
-msgstr "Reduziert die Kosten und Ausbildungszeit für Elefanten für Verbündete von Kuschiten um 20%."
+msgstr "Verbündete der Kuschiten benötigen 20% weniger Resourcen und Zeit um Elefanten auszubilden."
 
 #: simulation/data/auras/teambonuses/mace_player_teambonus.jsonauraName
 msgid "Standardized Currency"
@@ -394,7 +394,7 @@ msgstr "Früheste nubische Königin"
 msgid ""
 "Ruling with full power in the Meroë Empire and also playing a significant role in the Meroitic religion, Shanakdakheto represented the might of Kush, something not to be taken lightly.\n"
 "Awe: All enemy female citizens -15% gather rate."
-msgstr "Indem sie mit voller Kraft das meroitische Reich regierte und eine wesentliche Rolle in der meroitischen Religion spielte, repräsentierte Shanakdakheto Kuschs Macht, was man nicht auf die leichte Schulter nehmen sollte.\nEhrfurcht: Alle gegnerischen Bürgerinnen haben -15% Sammelrate."
+msgstr "Indem sie mit voller Kraft das meroitische Reich regierte und eine wesentliche Rolle in der meroitischen Religion spielte, repräsentierte Shanakdakheto Kuschs Macht, was man nicht auf die leichte Schulter nehmen sollte.\nEhrfurcht: Alle gegnerischen Bürgerinnen haben -15% Sammelrate."
 
 #: simulation/data/auras/units/catafalques/kush_catafalque_2.jsonauraName
 msgid "Temple at Naqa"
@@ -404,7 +404,7 @@ msgstr "Tempel bei Naqa"
 msgid ""
 "As in all cultures, relgion played a significant part in the Meroë Empire. Shanakdakheto had the Temple buit around 160 B.C. as a symbol of the advancedness of Meroë.\n"
 "+1 garrisoned heal rate for nearby temples."
-msgstr "Wie in allen Kulturen spielte die Religion eine wesentliche Rolle im meroitischen Reich. Shanakdakheto baute den Tempel um 160 v. Chr. als ein Symbol der Fortschrittlichkeit von Meroe.\n+1 Heilrate für einquartierte Einheiten für Tempel in der Nähe."
+msgstr "Wie in allen Kulturen spielte die Religion eine wesentliche Rolle im meroitischen Reich. Shanakdakheto baute den Tempel um 160 v. Chr. als ein Symbol der Fortschrittlichkeit von Meroe.\n+1 Heilrate für einquartierte Einheiten für nahegelegene Tempel."
 
 #: simulation/data/auras/units/catafalques/mace_catafalque.jsonauraName
 msgid "Sacker of Cities"
@@ -478,7 +478,7 @@ msgstr "Brutus war einer der Hauptakteure im Sturz der Monarchie und der Gründu
 
 #: simulation/data/auras/units/catafalques/sele_catafalque_1.jsonauraName
 msgid "Founder of the Ezida Temple"
-msgstr "Gründer des of the Ezida-Tempels"
+msgstr "Gründer des Ezida-Tempels"
 
 #: simulation/data/auras/units/catafalques/sele_catafalque_1.jsonauraDescription
 msgid ""
@@ -718,8 +718,9 @@ msgid "Warrior Queen"
 msgstr "Kriegerkönigin"
 
 #: simulation/data/auras/units/heroes/kush_hero_amanirenas.jsonauraDescription
-msgid "+20% attack and +2 capture for soldiers and elephants."
-msgstr "+20% Angriff und +2 Einnehmen für Soldaten und Elefanten."
+#: simulation/data/auras/units/heroes/mace_hero_philip.jsonauraDescription
+msgid "+20% attack and +2 capture for champion units."
+msgstr "+20% Angriff und +2 Eroberung für Gardisten."
 
 #: simulation/data/auras/units/heroes/kush_hero_arakamani_1.jsonauraName
 msgid "Defier of Tradition"
@@ -745,15 +746,25 @@ msgstr "Schlächter der Gläubigen"
 msgid "Enemy healrate reduced by 50%."
 msgstr "Gegnerische Heilrate ist um 50% reduziert."
 
-#: simulation/data/auras/units/heroes/kush_hero_nastasen.jsonauraName
-msgid "Saviour of Kush"
+#: simulation/data/auras/units/heroes/kush_hero_nastasen_1.jsonauraName
+msgid "Savior of Kush"
 msgstr "Retter von Kusch"
 
-#: simulation/data/auras/units/heroes/kush_hero_nastasen.jsonauraDescription
+#: simulation/data/auras/units/heroes/kush_hero_nastasen_1.jsonauraDescription
 msgid ""
 "Own units +10% attack.\n"
 "Nastasen acquired lots of bounty from the defeated invaders. Gain +50% loot from killing enemy units."
 msgstr "Eigene Einheiten +10% Angriff.\nNastasen bekam viele Geschenke von seinen besiegten Invasoren. +50% Beute von getöteten gegnerischen Einheiten."
+
+#: simulation/data/auras/units/heroes/kush_hero_nastasen_2.jsonauraName
+msgid "Gift of Warships"
+msgstr "Geschenk der Kriegsschiffe"
+
+#: simulation/data/auras/units/heroes/kush_hero_nastasen_2.jsonauraDescription
+msgid ""
+"Train Ptolemaic Mercenary Triremes at -25% resource cost.\n"
+"Crushing the Ptolemaic invasion of Kush, Nastasen seized numerous enemy warships."
+msgstr "Baue ptolemäische Söldner-Trieren mit -25% Ressourcenkosten.\nAls er die ptolemäische Invasion Kuschs zerschmetterte, kaperte Nastasen zahlreiche gegnerische Kriegsschiffe."
 
 #: simulation/data/auras/units/heroes/mace_hero_alexander_1.jsonauraName
 msgid "Imperialism"
@@ -784,16 +795,12 @@ msgid "Besieger"
 msgstr "Belagerer"
 
 #: simulation/data/auras/units/heroes/mace_hero_demetrius.jsonauraDescription
-msgid "+10% attack, +10% range and +1 armor for siege engines."
-msgstr "+10% Angriff, +10% Reichweite und +1 Rüstung für Belagerungsmaschinen."
+msgid "+20% attack, +10% range and +1 armor for siege engines."
+msgstr "+20% Angriff, +10% Reichweite und +1 Rüstung für Belagerungsmaschinen."
 
 #: simulation/data/auras/units/heroes/mace_hero_philip.jsonauraName
 msgid "Rise of Macedon"
 msgstr "Aufstieg Makedoniens"
-
-#: simulation/data/auras/units/heroes/mace_hero_philip.jsonauraDescription
-msgid "+20% attack and +2 capture for champion units."
-msgstr "+20% Angriff und +2 Eroberung für Gardisten."
 
 #: simulation/data/auras/units/heroes/mace_hero_pyrrhus.jsonauraName
 msgid "Pyrrhic Victory"
@@ -913,8 +920,8 @@ msgid "Shield of Rome"
 msgstr "Schild von Rom"
 
 #: simulation/data/auras/units/heroes/rome_hero_maximus.jsonauraDescription
-msgid "+2 armor for all units and structures."
-msgstr "+2 Rüstung für alle Einheiten und Gebäude."
+msgid "+1 armor for all units and structures."
+msgstr "+1 Rüstung für alle Einheiten und Gebäude."
 
 #: simulation/data/auras/units/heroes/rome_hero_scipio.jsonauraName
 msgid "Triumph"
@@ -929,8 +936,8 @@ msgid "Ilarchès"
 msgstr "Ilarchès"
 
 #: simulation/data/auras/units/heroes/sele_hero_antiochus_great.jsonauraDescription
-msgid "All cavalry gains +2 levels of all armor types."
-msgstr "Kavallerie bekommt +2 Level aller Rüstungstypen."
+msgid "Nearby cavalry gains +2 levels of all armor types."
+msgstr "Nahe Kavallerie bekommt +2 Level aller Rüstungstypen."
 
 #: simulation/data/auras/units/heroes/sele_hero_antiochus_righteous.jsonauraName
 msgid "Renowned Conqueror"

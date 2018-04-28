@@ -62,12 +62,12 @@ const oElephantInfant = "gaia/fauna_elephant_african_infant";
 const oLion = "gaia/fauna_lion";
 const oLioness = "gaia/fauna_lioness";
 const oCrocodile = "gaia/fauna_crocodile";
-const oFish = "gaia/fauna_fish";
+const oFish = "gaia/fauna_fish_tilapia";
 const oHawk = "gaia/fauna_hawk";
 
 // The main temple on elephantine was very similar looking (Greco-Roman-Egyptian):
 const oWonder = "structures/ptol_wonder";
-const oTemples = ["structures/kush_temple_amun", "structures/kush_temple_apedemak"];
+const oTemples = ["structures/kush_temple_amun", "structures/kush_temple"];
 const oPyramid = "structures/kush_pyramid_large";
 const oTowers = new Array(2).fill("uncapturable|structures/kush_sentry_tower").concat(["uncapturable|structures/kush_defense_tower"]);
 
@@ -189,7 +189,7 @@ createArea(
 Engine.SetProgress(10);
 
 g_Map.log("Marking islands");
-createArea(
+var areaIsland = createArea(
 	new ConvexPolygonPlacer(
 		[
 			new Vector2D(mapCenter.x - riverWidthBorder / 2, mapBounds.top),
@@ -250,21 +250,23 @@ placePlayerBases({
 Engine.SetProgress(22);
 
 g_Map.log("Creating temple");
-var groupTemple = createObjectGroups(
+var groupTemple = createObjectGroupsByAreas(
 	new SimpleGroup([new RandomObject(g_Map.getSize() >= 320 ? [oWonder] : oTemples, 1, 1, 0, 1, riverAngle, riverAngle)], true, clTemple),
 	0,
-	stayClasses(clIsland, scaleByMapSize(10, 15)),
+	stayClasses(clIsland, scaleByMapSize(10, 20)),
 	1,
-	200);
+	200,
+	[areaIsland]);
 Engine.SetProgress(34);
 
 g_Map.log("Creating pyramid");
-var groupPyramid = createObjectGroups(
+var groupPyramid = createObjectGroupsByAreas(
 	new SimpleGroup([new SimpleObject(oPyramid, 1, 1, 0, 1, riverAngle, riverAngle)], true, clTemple),
 	0,
-	[stayClasses(clIsland, scaleByMapSize(8, 24)), avoidClasses(clTemple, scaleByMapSize(1, 80)), avoidCollisions],
+	[stayClasses(clIsland, scaleByMapSize(10, 20)), avoidClasses(clTemple, scaleByMapSize(20, 50)), avoidCollisions],
 	1,
-	200);
+	200,
+	[areaIsland]);
 Engine.SetProgress(37);
 
 g_Map.log("Painting city patches");
@@ -282,7 +284,7 @@ Engine.SetProgress(40);
 g_Map.log("Painting city path");
 if (cityCenters.length == 2)
 	createArea(
-		new PathPlacer(cityCenters[0].pos, cityCenters[1].pos, 4, 0.4, 4, 0.2, 0.05),
+		new PathPlacer(cityCenters[0].pos, cityCenters[1].pos, 4, 0.3, 4, 0.2, 0.05),
 		[
 			new LayeredPainter([tRoadWildIsland, tRoadIsland], [1]),
 			new SmoothElevationPainter(ELEVATION_MODIFY, heightOffsetPath, 4),
@@ -364,7 +366,7 @@ createPatches(
 Engine.SetProgress(58);
 
 g_Map.log("Creating statues");
-createObjectGroups(
+createObjectGroupsByAreas(
 	new SimpleGroup([new RandomObject(aStatues, 1, 1, 0, 1)], true, clStatue),
 	0,
 	[
@@ -373,7 +375,8 @@ createObjectGroups(
 		avoidCollisions
 	],
 	scaleByMapSize(2, 10),
-	400);
+	400,
+	[areaIsland]);
 Engine.SetProgress(61);
 
 g_Map.log("Creating treasure");
@@ -537,29 +540,64 @@ Engine.SetProgress(98);
 
 createDecoration(
 	aBushesShoreline.map(bush => [new SimpleObject(bush, 0, 3, 2, 4)]),
-	aBushesShoreline.map(bush => scaleByMapSize(100, 800)),
+	aBushesShoreline.map(bush => scaleByMapSize(200, 1000)),
 	[new HeightConstraint(heightWaterLevel, heightShore), avoidCollisions]);
 Engine.SetProgress(99);
 
-setSunRotation(randomAngle());
-setSunColor(0.85, 0.63, 0.4);
-setSunElevation(Math.PI * randFloat(1/4, 1/2));
-
-setWaterColor(0.541, 0.506, 0.416);
-setWaterTint(0.75, 0.75, 0.75);
-setWaterMurkiness(0.92);
-setWaterWaviness(0.5);
-setWaterType("clap");
-
-setFogThickness(0.76);
-setFogFactor(0);
-
-setPPEffect("hdr");
-setPPContrast(0.6);
-setPPSaturation(0.45);
-setPPBloom(0.4);
-
-setTerrainAmbientColor(0.7, 0.6, 0.7);
-setUnitsAmbientColor(0.6, 0.5, 0.6);
+g_Environment = {
+	"SkySet": "cloudless",
+	"SunColor": {
+		"r": 1,
+		"g": 0.964706,
+		"b": 0.909804,
+		"a": 0
+	},
+	"SunElevation": 0.908117,
+	"SunRotation": -0.558369,
+	"TerrainAmbientColor": {
+		"r": 0.54902,
+		"g": 0.419608,
+		"b": 0.352941,
+		"a": 0
+	},
+	"UnitsAmbientColor": { "r": 0.721569, "g": 0.529412, "b": 0.4, "a": 0 },
+	"Fog": {
+		"FogFactor": 0.00195313,
+		"FogThickness": 0,
+		"FogColor": {
+			"r": 0.941176,
+			"g": 0.917647,
+			"b": 0.807843,
+			"a": 0
+		}
+	},
+	"Water": {
+		"WaterBody": {
+			"Type": "lake",
+			"Color": {
+				"r": 0.443137,
+				"g": 0.341176,
+				"b": 0.14902,
+				"a": 0
+			},
+			"Tint": {
+				"r": 0.705882,
+				"g": 0.67451,
+				"b": 0.454902,
+				"a": 0
+			},
+			"Waviness": 8.4668,
+			"Murkiness": 0.92,
+			"WindAngle": 0.625864
+		}
+	},
+	"Postproc": {
+		"Brightness": 0.0234375,
+		"Contrast": 1.09961,
+		"Saturation": 0.828125,
+		"Bloom": 0.142969,
+		"PostprocEffect": "hdr"
+	}
+};
 
 g_Map.ExportMap();

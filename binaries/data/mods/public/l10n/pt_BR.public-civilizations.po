@@ -17,9 +17,9 @@
 # Estus <totalgameplayz@gmail.com>, 2014
 # Fábio Medeiros <fmperoxido@gmail.com>, 2014
 # Filipe Oliveira <contato@fmoliveira.com.br>, 2013
-# gsoster <guilhermesosters@gmail.com>, 2014
+# Guilherme Soster <guilhermesosters@gmail.com>, 2014
 # Hunteros <jorgebosch@ymail.com>, 2013
-# Jose Victor <josevictor@openmailbox.org>, 2017
+# Jose Victor <josevictor@riseup.net>, 2017
 # JulioBianor <mr.logan1@yahoo.com.br>, 2014
 # Junior Lage <junimslage@gmail.com>, 2017
 # Lucas Simões <inactive+kaslusimoes@transifex.com>, 2013
@@ -36,14 +36,16 @@
 # Qodek <andre.lucas.silva2468@gmail.com>, 2014
 # Raphael Mendonça, 2014
 # Rowel <luciomeiradavid@hotmail.com>, 2014
+# Rui <xymarior@yandex.com>, 2018
 # Sturm <gravador202@yahoo.com.br>, 2014
+# Tiago, 2018
 # yurids, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: 0 A.D.\n"
 "POT-Creation-Date: 2017-06-05 09:01+0200\n"
-"PO-Revision-Date: 2017-06-06 17:27+0000\n"
-"Last-Translator: borg 2k <estevanborg@gmail.com>\n"
+"PO-Revision-Date: 2018-04-25 21:35+0000\n"
+"Last-Translator: Rui <xymarior@yandex.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/wildfire-games/0ad/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -68,7 +70,7 @@ msgstr "Corujas de Prata"
 msgid ""
 "The mines at Laureion in Attica provided Athens with a wealth of silver from"
 " which to mint her famous and highly prized coin, The Athenian Owl."
-msgstr "As minas de Laureion na Attica proveram Atenas com a riqueza em prata das qual foi cunhada a famosa e estimada moeda, A Coruja Ateniense."
+msgstr "As minas de Lavrio, em Ática, proveram Atenas com a riqueza em prata das qual foi cunhada a famosa e estimada moeda, a Coruja de Atena."
 
 #: simulation/data/civs/athen.jsonCivBonuses[1].Description
 #: simulation/data/civs/mace.jsonCivBonuses[2].Description
@@ -225,7 +227,7 @@ msgid ""
 "Aegean, thereby laying the foundations of future Athenian power. However, he"
 " was eventually ostracised by the Athenians and forced to flee to the "
 "protection of the Persians."
-msgstr "O general que convenceu os atenienses a investir suas receitas com minas de prata em uma guerra de 200 Trirremes. Uma figura-chave durante a Guerra Persa, ele ordenou à vitoriosa marinha ateniense na batalha decisiva de Salamina em 479 A.C. Mais tarde, ele prosseguiu uma política ativa contra os persas no mar Egeu, sentando assim as bases do futuro poder ateniense. No entanto, ele foi eventualmente condenado ao ostracismo pelos atenienses e forçado a fugir para a proteção dos persas."
+msgstr "O general que convenceu os Atenienses a investir suas receitas das minas de prata em uma guerra naval de 200 Trirremes. Uma figura-chave durante a Guerra Persa, ele comandou a vitoriosa marinha Ateniense na batalha decisiva de Salamina em 479 A.C. Mais tarde, ele prosseguiu uma política ativa contra os Persas no mar Egeu, fundando assim as bases do futuro poder ateniense. No entanto, ele foi eventualmente condenado ao ostracismo pelos Atenienses e forçado a fugir para a proteção dos Persas."
 
 #: simulation/data/civs/athen.jsonFactions[0].Heroes[1].History
 msgid "Pericles was the foremost Athenian politician of the 5th Century B.C."
@@ -246,7 +248,7 @@ msgstr "."
 
 #: simulation/data/civs/athen.jsonFactions[0].Description
 msgid "A Hellenic people of the Ionian tribe."
-msgstr "Um povo Helênico da tribo de Iônia"
+msgstr "Um povo Helênico da tribo de Jônia."
 
 #: simulation/data/civs/athen.jsonStructures[0].Name
 #: simulation/data/civs/mace.jsonStructures[0].Name
@@ -837,7 +839,7 @@ msgstr "Divico"
 
 #: simulation/data/civs/gaul.jsonAINames[6]
 msgid "Ambiorix"
-msgstr "Ambiorix"
+msgstr "Ambiórix"
 
 #: simulation/data/civs/gaul.jsonAINames[7]
 msgid "Liscus"
@@ -867,7 +869,7 @@ msgid ""
 " a relief force from Veii, he negotiated his surrender for 1000 pounds of "
 "gold, and adding the weight of his sword on the scale when the Romans "
 "complained that he used false weights he uttered those famous words."
-msgstr "Ai dos Derrotados! O chefe Gaules Breno derrotou Roma (com exceção de uma guarnição no Monte Capitolino). Quando Camilo o cercou com uma força de ajuda, ele negociou sua rendição por 1000 quilos de ouro, e adicionando o peso de sua espada na balança quando os romanos reclamaram que ele usava pesos falsos ele pronunciou aquelas palavras famosas."
+msgstr "Ai dos Derrotados! O chefe Gaules Breno derrotou Roma (com exceção de uma guarnição no Monte Capitolino). Quando Camilo o cercou com uma força de ajuda de Veios, ele negociou sua rendição por 1000 quilos de ouro, e adicionando o peso de sua espada na balança quando os romanos reclamaram que ele usava pesos falsos ele pronunciou aquelas palavras famosas."
 
 #: simulation/data/civs/gaul.jsonFactions[0].Technologies[1].Description
 msgid "Gallic druids gain a small melee attack."
@@ -1073,7 +1075,7 @@ msgstr "Maisu Burdina Langileak"
 msgid ""
 "The Iberians were known to produce the finest iron and steel implements and "
 "weapons of the age. The famous 'Toledo Steel.'"
-msgstr "Os ibéricos eram conhecidos por produzir os melhores instrumentos e armas de ferro e aço da época. O famoso 'Aço de Toledo'. "
+msgstr "Os Ibéricos eram conhecidos por produzir os melhores instrumentos e armas de ferro e aço da época. O famoso 'Aço de Toledo'. "
 
 #: simulation/data/civs/iber.jsonFactions[0].Heroes[0].History
 msgid ""
@@ -1246,7 +1248,7 @@ msgstr "Lisímaco"
 
 #: simulation/data/civs/mace.jsonAINames[6]
 msgid "Pyrrhus of Epirus"
-msgstr "Pirro"
+msgstr "Pirro de Epiro"
 
 #: simulation/data/civs/mace.jsonAINames[7]
 msgid "Antigonus II Gonatas"
@@ -1308,7 +1310,7 @@ msgid ""
 "In India near the end of his long anabasis, Alexander gifted to the Royal "
 "Hypaspist corps shields of silver for their long and valiant service in his "
 "army."
-msgstr "Na Índia, perto do fim da sua longa Anábase, Alexander dotado corpo de Hypaspist Royal escudos de prata para o seu serviço longo e valente em seu exército."
+msgstr "Na Índia, perto do fim da sua longa anábase, Alexandre dotado dos corpos de Hipaspistas Reais os escudos de prata para o seu serviço longo e valente em seu exército."
 
 #: simulation/data/civs/mace.jsonFactions[0].Technologies[2].Description
 #: simulation/data/civs/ptol.jsonFactions[0].Technologies[0].Description
@@ -1431,7 +1433,7 @@ msgstr "Máurias"
 msgid ""
 "Mauryans have a +10% population cap bonus (i.e., 330 pop cap instead of the "
 "usual 300)."
-msgstr "Mauryanos tem um bônus de +10% de capacidade populacional (ex., 330 de cap. pop. em vez do habitual 300)."
+msgstr "Máurias tem um bônus de +10% de capacidade populacional (ex., 330 de cap. pop. em vez do habitual 300)."
 
 #: simulation/data/civs/maur.jsonCivBonuses[0].Name
 msgid "Emperor of Emperors."
@@ -1597,7 +1599,7 @@ msgid ""
 "Acharya Chanakya, contributed to such varied fields such as economics, "
 "religion, diplomacy, warfare, and good governance. Under the rule of Ashoka "
 "the Great, the empire saw 40 years of peace, harmony, and prosperity."
-msgstr "Fundado em 322 A.C. por Chandragupta Maurya, o Império Máuria foi o primeiro a governar a maior parte do subcontinente indiano, e foi o maior e mais populoso império da antiguidade. Seu exército era composto de arqueiros que usavam arcos longos de bambu, bravas guerreiras, bigas e milhares de elefantes de guerra armadurados. Seus folósofos, especialmente o famoso Acharya Chanakya, contribuíram em vários campos, como economia, religião, diplomacia, militar, e administração. Sob o governo de de Ashoka, o Grande, o império viu 40 anos de paz, harmonia e prosperidade."
+msgstr "Fundado em 322 A.C. por Chandragupta Maurya, o Império Máuria foi o primeiro a governar a maior parte do subcontinente indiano, e foi o maior e mais populoso império da antiguidade. Seu exército era composto de arqueiros que usavam arcos longos de bambu, bravas guerreiras, bigas e milhares de elefantes de guerra armadurados. Seus filósofos, especialmente o famoso Acharya Cautília, contribuíram em vários campos, como economia, religião, diplomacia, militar, e administração. Sob o governo de de Ashoka, o Grande, o império viu 40 anos de paz, harmonia e prosperidade."
 
 #: simulation/data/civs/pers.jsonName
 msgid "Persians"
@@ -1655,7 +1657,7 @@ msgid ""
 " common until the Persian period. Darius the Great standardized coined money"
 " and his golden coins (known as 'darics') became commonplace not only "
 "throughout his empire, but as far to the west as Central Europe."
-msgstr "A Cunhagem foi inventada pelos Lídios no 7º século A.C., mas não era muito comum até o período persa. Darius, o Grande, padronizou o uso de dinheiro e suas moedas de ouro (conhecidas como \"dáricos\") tornaram-se comuns não só em seu império, mas até mesmo na Europa Central."
+msgstr "A Cunhagem foi inventada pelos Lídios no 7º século A.C., mas não era muito comum até o período persa. Dario, o Grande, padronizou o uso de dinheiro e suas moedas de ouro (conhecidas como \"dáricos\") tornaram-se comuns não só em seu império, mas até mesmo na Europa Central."
 
 #: simulation/data/civs/pers.jsonAINames[0]
 msgid "Kurush II the Great"
@@ -2473,7 +2475,7 @@ msgstr "Exército tradicional vs. Reforma do Exército"
 #: simulation/data/civs/sele.jsonFactions[0].Technologies[2].Description
 msgid ""
 "A one-time purchase of 20 Indian War Elephants from the Mauryan Empire."
-msgstr "Uma única compra de 20 elefantes de guerra Indian do Império de Mauryan."
+msgstr "Uma única compra de 20 Elefantes de Guerra Indianos do Império Máuria."
 
 #: simulation/data/civs/sele.jsonFactions[0].Technologies[2].Name
 msgid "Marriage Alliance"
@@ -2489,7 +2491,7 @@ msgid ""
 "alliance, he married his daughter to Chandragupta. In return, Chandragupta "
 "gifted Seleucus a corps of 500 war elephants, which would prove a decisive "
 "military asset for Seleucus as he fought the rest of Alexander's successors."
-msgstr "Seleuco I Nicator invadiu a região de Punjab de India em 305 A.C., confrontando Chandragupta Maurya (Sandrokottos), fundador do Império Maurya. Diz-se que Chandragupta em campo um exército de 600.000 homens e 9.000 elefantes de guerra (Plínio, História Natural VI, 22,4). Seleuco reuniu-se com nenhum sucesso e para estabelecer a paz entre as duas grandes potências e formalizar sua aliança, ele se casou com a filha de Chandragupta. Em troca, Chandragupta talentoso Seleuco um corpo de 500 elefantes de guerra, que iria provar um ativo militar decisivo para Seleuco como ele lutou contra o resto dos sucessores de Alexandre."
+msgstr "Seleuco I Nicator invadiu a região de Punjab da Índia em 305 A.C., confrontando Chandragupta Maurya (Sandrokottos), fundador do Império Máuria. Diz-se que Chandragupta em campo um exército de 600.000 homens e 9.000 elefantes de guerra (Plínio, História Natural VI, 22,4). Seleuco reuniu-se com nenhum sucesso e para estabelecer a paz entre as duas grandes potências e formalizar sua aliança, ele se casou com a filha de Chandragupta. Em troca, Chandragupta talentoso Seleuco um corpo de 500 elefantes de guerra, que iria provar um ativo militar decisivo para Seleuco como ele lutou contra o resto dos sucessores de Alexandre."
 
 #: simulation/data/civs/sele.jsonFactions[0].Technologies[3].History
 msgid ""
@@ -2623,7 +2625,7 @@ msgstr "No âmbito da Constituição redigida pelo mítico legislador Licurgo, f
 msgid ""
 "Increases the health for citizen-soldier infantry spearmen by 10% for allies"
 " of Spartan players."
-msgstr "Aumenta a saúde da infantaria soldado cidadão em 10% para os aliados dos jogadores espartanos."
+msgstr "Aumenta a saúde da infantaria soldado cidadão lanceiro em 10% para os aliados dos jogadores Espartanos."
 
 #: simulation/data/civs/spart.jsonTeamBonuses[0].Name
 msgid "Peloponnesian League"
@@ -2639,7 +2641,7 @@ msgstr "Grande parte do Peloponeso estava subordinado a Esparta de uma maneira o
 
 #: simulation/data/civs/spart.jsonAINames[0]
 msgid "Leonidas"
-msgstr "Leonidas"
+msgstr "Leônidas"
 
 #: simulation/data/civs/spart.jsonAINames[1]
 msgid "Dienekes"
@@ -2702,7 +2704,7 @@ msgid ""
 "lost battle against Pyrrhus of Epirus they overnight built an earthen "
 "rampart to protect the city while their men slept in preparation for the "
 "next day's siege."
-msgstr "As mulheres espartanas eram das mais livres do mundo antigo. Podiam ser proprietárias de terras e escravos, e até se exercitavam despidas, como os espartanos. Dizia-se que só as espartanas davam à luz homens de verdade. Estas mulheres fortes ajudaram mais de uma vez a salvar a sua cidade da catástrofe - por exemplo, depois de Esparta ter perdido uma batalha contra Pirro de Épiro, as espartanas construíram uma muralha de terra da noite para o dia, enquanto os homens descansavam para estarem preparados para o cerco do dia seguinte."
+msgstr "As mulheres espartanas eram das mais livres do mundo antigo. Podiam ser proprietárias de terras e escravos, e até se exercitavam despidas, como os espartanos. Dizia-se que só as espartanas davam à luz homens de verdade. Estas mulheres fortes ajudaram mais de uma vez a salvar a sua cidade da catástrofe - por exemplo, depois de Esparta ter perdido uma batalha contra Pirro de Epiro, as espartanas construíram uma muralha de terra da noite para o dia, enquanto os homens descansavam para estarem preparados para o cerco do dia seguinte."
 
 #: simulation/data/civs/spart.jsonFactions[0].Technologies[1].Description
 msgid "Units in phalanx formation move faster."
@@ -2777,13 +2779,13 @@ msgstr "Sissítia"
 
 #: simulation/data/civs/spart.jsonStructures[1].Special
 msgid "Train heroes and Spartiates and research technologies related to them."
-msgstr "Recrutar heróis e esparciatas e desenvolver tecnologias para estas unidades."
+msgstr "Recrutar heróis e Esparciatas e desenvolver tecnologias para estas unidades."
 
 #: simulation/data/civs/spart.jsonStructures[1].History
 msgid ""
 "The Syssition was the Mess Hall for full-blooded Spartiates. Every Spartan "
 "peer, even kings, belonged to one."
-msgstr "A Sissítia era o refeitório para os espartanos de puro sangue, incluindo os reis."
+msgstr "A Sissítia era o refeitório para os Esparciatas de puro sangue, incluindo os reis."
 
 #: simulation/data/civs/spart.jsonHistory
 msgid ""

@@ -17,17 +17,53 @@ m.Worker.prototype.update = function(gameState, ent)
 	if (!ent.position() || ent.getMetadata(PlayerID, "plan") == -2 || ent.getMetadata(PlayerID, "plan") == -3)
 		return;
 
+	let subrole = ent.getMetadata(PlayerID, "subrole");
+
 	// If we are waiting for a transport or we are sailing, just wait
 	if (ent.getMetadata(PlayerID, "transport") !== undefined)
 	{
 		// Except if builder with their foundation destroyed, in which case cancel the transport if not yet on board
-		if (ent.getMetadata(PlayerID, "subrole") == "builder" &&
-		    ent.getMetadata(PlayerID, "target-foundation") !== undefined)
+		if (subrole == "builder" && ent.getMetadata(PlayerID, "target-foundation") !== undefined)
 		{
 			let plan = gameState.ai.HQ.navalManager.getPlan(ent.getMetadata(PlayerID, "transport"));
 			let target = gameState.getEntityById(ent.getMetadata(PlayerID, "target-foundation"));
 			if (!target && plan && plan.state == "boarding" && ent.position())
 				plan.removeUnit(gameState, ent);
+		}
+		// and gatherer if there are no more dropsite accessible in the base the ent is going to
+		if (subrole == "gatherer" || subrole == "hunter")
+		{
+			let plan = gameState.ai.HQ.navalManager.getPlan(ent.getMetadata(PlayerID, "transport"));
+			if (plan.state == "boarding" && ent.position())
+			{
+				let hasDropsite = false;
+				let gatherType = ent.getMetadata(PlayerID, "gather-type") || "food";
+				for (let structure of gameState.getOwnStructures().values())
+				{
+					if (m.getLandAccess(gameState, structure) != plan.endIndex)
+						continue;
+					let resourceDropsiteTypes = m.getBuiltEntity(gameState, structure).resourceDropsiteTypes();
+					if (!resourceDropsiteTypes || resourceDropsiteTypes.indexOf(gatherType) == -1)
+						continue;
+					hasDropsite = true;
+					break;
+				}
+				if (!hasDropsite)
+				{
+					for (let unit of gameState.getOwnUnits().filter(API3.Filters.byClass("Support")).values())
+					{
+						if (!unit.position() || m.getLandAccess(gameState, unit) != plan.endIndex)
+							continue;
+						let resourceDropsiteTypes = unit.resourceDropsiteTypes();
+						if (!resourceDropsiteTypes || resourceDropsiteTypes.indexOf(gatherType) == -1)
+							continue;
+						hasDropsite = true;
+						break;
+					}
+				}
+				if (!hasDropsite)
+					plan.removeUnit(gameState, ent);
+			}
 		}
 		if (ent.getMetadata(PlayerID, "transport") !== undefined)
 			return;
@@ -40,7 +76,6 @@ m.Worker.prototype.update = function(gameState, ent)
 	else
 		this.baseAccess = this.base.accessIndex;
 
-	let subrole = ent.getMetadata(PlayerID, "subrole");
 	if (!subrole)	// subrole may-be undefined after a transport, garrisoning, army, ...
 	{
 		ent.setMetadata(PlayerID, "subrole", "idle");
@@ -302,7 +337,7 @@ m.Worker.prototype.update = function(gameState, ent)
 			ent.setMetadata(PlayerID, "target-foundation", undefined);
 			// If worker elephant, move away to avoid being trapped in between constructions
 			if (ent.hasClass("Elephant"))
-				this.moveAway(gameState);
+				this.moveToGatherer(gameState, ent, true);
 			else if (this.baseID != gameState.ai.HQ.baseManagers[0].ID)
 			{
 				// reassign it to something useful
@@ -785,7 +820,7 @@ m.Worker.prototype.startHunting = function(gameState, position)
 			continue;
 
 		// Only cavalry should hunt far from dropsite (specially for non domestic animals which flee)
- 		if (!isCavalry && canFlee && territoryOwner == 0)
+		if (!isCavalry && canFlee && territoryOwner == 0)
 			continue;
 		let distanceSquare = isCavalry ? 35000 : (canFlee ? 7000 : 12000);
 		if (!hasFoodDropsiteWithinDistance(supply.position(), supplyAccess, distanceSquare))
@@ -898,7 +933,7 @@ m.Worker.prototype.startFishing = function(gameState)
 		this.ent.setMetadata(PlayerID, "target-foundation", undefined);
 		return true;
 	}
-	if (this.ent.getMetadata(PlayerID,"subrole") == "fisher")
+	if (this.ent.getMetadata(PlayerID, "subrole") == "fisher")
 		this.ent.setMetadata(PlayerID, "subrole", "idle");
 	return false;
 };
@@ -968,20 +1003,29 @@ m.Worker.prototype.buildAnyField = function(gameState, baseID)
 };
 
 /**
- * Workers elephant should move away from the buildings they've built to avoid being trapped in between constructions
- * For the time being, we move towards the nearest gatherer (providing him a dropsite)
+ * Workers elephant should move away from the buildings they've built to avoid being trapped in between constructions.
+ * For the time being, we move towards the nearest gatherer (providing him a dropsite).
+ * BaseManager does also use that function to deal with its mobile dropsites.
  */
-m.Worker.prototype.moveAway = function(gameState)
+m.Worker.prototype.moveToGatherer = function(gameState, ent, forced)
 {
+	let pos = ent.position();
+	if (!pos || ent.getMetadata(PlayerID, "target-foundation") !== undefined)
+		return;
+	if (!forced && gameState.ai.elapsedTime < (ent.getMetadata(PlayerID, "nextMoveToGatherer") || 5))
+		return;
 	let gatherers = this.base.workersBySubrole(gameState, "gatherer");
-	let pos = this.ent.position();
 	let dist = Math.min();
-	let destination = pos;
+	let destination;
+	let access = m.getLandAccess(gameState, ent);
+	let types = ent.resourceDropsiteTypes();
 	for (let gatherer of gatherers.values())
 	{
-		if (!gatherer.position() || gatherer.getMetadata(PlayerID, "transport") !== undefined)
+		let gathererType = gatherer.getMetadata(PlayerID, "gather-type");
+		if (!gathererType || types.indexOf(gathererType) == -1)
 			continue;
-		if (gatherer.isIdle())
+		if (!gatherer.position() || gatherer.getMetadata(PlayerID, "transport") !== undefined ||
+		    m.getLandAccess(gameState, gatherer) != access || gatherer.isIdle())
 			continue;
 		let distance = API3.SquareVectorDistance(pos, gatherer.position());
 		if (distance > dist)
@@ -989,7 +1033,9 @@ m.Worker.prototype.moveAway = function(gameState)
 		dist = distance;
 		destination = gatherer.position();
 	}
-	this.ent.move(destination[0], destination[1]);
+	ent.setMetadata(PlayerID, "nextMoveToGatherer", gameState.ai.elapsedTime + (destination ? 12 : 5));
+	if (destination && dist > 10)
+		ent.move(destination[0], destination[1]);
 };
 
 /**

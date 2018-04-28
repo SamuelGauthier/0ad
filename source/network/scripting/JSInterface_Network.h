@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Wildfire Games.
+/* Copyright (C) 2018 Wildfire Games.
  * This file is part of 0 A.D.
  *
  * 0 A.D. is free software: you can redistribute it and/or modify
@@ -24,9 +24,11 @@
 namespace JSI_Network
 {
 	u16 GetDefaultPort(ScriptInterface::CxPrivate* pCxPrivate);
+	bool HasNetServer(ScriptInterface::CxPrivate* pCxPrivate);
+	bool HasNetClient(ScriptInterface::CxPrivate* pCxPrivate);
 	void StartNetworkGame(ScriptInterface::CxPrivate* pCxPrivate);
 	void SetNetworkGameAttributes(ScriptInterface::CxPrivate* pCxPrivate, JS::HandleValue attribs1);
-	void StartNetworkHost(ScriptInterface::CxPrivate* pCxPrivate, const CStrW& playerName, const u16 serverPort);
+	void StartNetworkHost(ScriptInterface::CxPrivate* pCxPrivate, const CStrW& playerName, const u16 serverPort, const CStr& hostLobbyName, bool useLobbyAuth);
 	void StartNetworkJoin(ScriptInterface::CxPrivate* pCxPrivate, const CStrW& playerName, const CStr& serverAddress, u16 serverPort, bool useSTUN, const CStr& hostJID);
 	JS::Value FindStunEndpoint(ScriptInterface::CxPrivate* pCxPrivate, int port);
 	void DisconnectNetworkGame(ScriptInterface::CxPrivate* pCxPrivate);
@@ -42,4 +44,4 @@ namespace JSI_Network
 	void RegisterScriptFunctions(const ScriptInterface& scriptInterface);
 }
 
-#endif
+#endif // INCLUDED_JSI_NETWORK

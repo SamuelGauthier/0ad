@@ -65,7 +65,6 @@ function reallyStartVisualReplay(replayDirectory)
 
 	Engine.SwitchGuiPage("page_loading.xml", {
 		"attribs": Engine.GetReplayAttributes(replayDirectory),
-		"isNetworked": false,
 		"playerAssignments": {
 			"local": {
 				"name": singleplayerName(),
@@ -73,7 +72,6 @@ function reallyStartVisualReplay(replayDirectory)
 			}
 		},
 		"savedGUIData": "",
-		"isReplay": true,
 		"replaySelectionData": createReplaySelectionData(replayDirectory)
 	});
 }

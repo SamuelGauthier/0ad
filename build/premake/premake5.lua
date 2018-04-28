@@ -627,6 +627,7 @@ function setup_all_libs ()
 			"gloox",
 			"icu",
 			"iconv",
+			"libsodium",
 			"tinygettext"
 		}
 		setup_static_lib_project("lobby", source_dirs, extern_libs, {})
@@ -655,7 +656,8 @@ function setup_all_libs ()
 		}
 		extern_libs = {
 			"spidermonkey",
-			"boost"
+			"boost",
+			"libsodium"
 		}
 		setup_static_lib_project("lobby", source_dirs, extern_libs, {})
 		files { source_root.."lobby/Globals.cpp" }
@@ -721,6 +723,7 @@ function setup_all_libs ()
 		"icu",
 		"iconv",
 		"fftw",
+		"libsodium",
 	}
 
 	if not _OPTIONS["without-audio"] then
@@ -916,7 +919,7 @@ used_extern_libs = {
 	"icu",
 	"iconv",
 	"fftw",
-
+	"libsodium",
 	"valgrind",
 }
 

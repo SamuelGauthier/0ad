@@ -10,8 +10,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 0 A.D.\n"
-"POT-Creation-Date: 2018-02-28 09:04+0100\n"
-"PO-Revision-Date: 2018-02-28 17:43+0000\n"
+"POT-Creation-Date: 2018-04-23 09:05+0200\n"
+"PO-Revision-Date: 2018-04-23 16:12+0000\n"
 "Last-Translator: Mielanjel Iraeta <pospolos@gmail.com>\n"
 "Language-Team: Basque (http://www.transifex.com/wildfire-games/0ad/language/eu/)\n"
 "MIME-Version: 1.0\n"
@@ -307,6 +307,19 @@ msgstr "[Color = \"red\"] OHAR GARRANTZITSUA: JOKALARIAK EZ DIRA MAPA HONEKIN JO
 msgid "Extinct Volcano"
 msgstr "Sumendi Hila"
 
+#: maps/random/fields_of_meroe.jsonsettings.Description
+msgid ""
+"The \"Island of Meroe\", a vast peninsula flanked by the Nile and Atbarah "
+"rivers, formed the heartland of ancient Kush. Where the harsh deserts start "
+"making way for the semi-arid savannahs and small acacia forests dot the "
+"landscape. The area is rich in resources and the ever-present Nile brings "
+"life, but grave threats loom on the opposite riverbank."
+msgstr "\"Meroe uhartea\", Nilo eta Atbarah ibaiek inguratutako penintsula zabala, Kush antzinako koroaren bihotza izan zen. Basamortu gogorrak sabana erdi elkortu bihurtu eta akazia baso txikiak tartekatzen dira. Baliabide aberatsak daude, eta Nilok bizitza ekartzen du, baina mehatxu larriak kontrako ibaiertzera inguratzen dira."
+
+#: maps/random/fields_of_meroe.jsonsettings.Name
+msgid "Fields of Meroe"
+msgstr "Meroe zelaiak"
+
 #: maps/random/flood.jsonsettings.Description
 msgid ""
 "A great flood has moved across the valley enabling ships and troops to "
@@ -440,6 +453,22 @@ msgstr "Jokalariek uharte txikienetan hasiko dute partida, nahiz inguruan beste 
 msgid "Islands"
 msgstr "Irlak"
 
+#: maps/random/jebel_barkal.jsonsettings.Description
+msgid ""
+"Starting near the fertile banks of the Nile, the players besiege the heavily"
+" defended city Napata which lies at the foot of the hill Jebel Barkal, the "
+"\"Pure Mountain\". It is the Southern home of Amun, and according to "
+"Kushites and Egyptians alike, the birthplace of man. Known as the Throne of "
+"the Two Lands, the ancient religious capital of Napata lay in its shadow. "
+"This is where Kings were made... and unmade! Abutting a rich floodplain "
+"downstream from the 4th cataract, this area became the breadbasket of "
+"ancient Kush."
+msgstr "Niloko ibaiertz oparoetan hasirik, Jokalariek ondo babestutako Napata hiria setiatzen dute, Jebel Barkal mendixkaren oinetan aurkitzen dena, \"Mendi Purua\". Amón hegoaldeko etxea da, eta kushiten eta egiptoarren arabera gizakiaren sortze lekua. Bi Lurren Tronua bezala ezaguturik, Napata kapital erlijiosoa bere itzalean zetzan. Hemen egin ziren erregeak...eta desegin ere bai! Lautada alubial baten ertzean 4. ur jauzitik behera, gune hau Kushen mandio bihurtu zen."
+
+#: maps/random/jebel_barkal.jsonsettings.Name
+msgid "Jebel Barkal"
+msgstr "Jebel Barkal"
+
 #: maps/random/kerala.jsonsettings.Description
 msgid ""
 "Players start in the southwestern shores of India between a sea and "
@@ -492,13 +521,13 @@ msgstr "Lorenako Lautadak"
 #: maps/random/lower_nubia.jsonsettings.Description
 msgid ""
 "Known in the Greco-Roman world as the Triakontaschoinos, Lower Nubia was the"
-" area between the first and second cataracts of Nile and formed the "
+" area between the first and second cataracts of the Nile and formed the "
 "traditional border region between Kush and Egypt. The scorching desert, "
 "steep valleys and towering cliffs of the area make this an inhospitable "
 "place to live, but the control of this ancient corridor was vital for any "
 "power seeking to control the lucrative trade routes on the Nile and affords "
 "access to the rich goldfields of the Nubian desert."
-msgstr "Greko-erromatarren munduan Triakontaschoinos bezala ezaguna, Nubia Beherea Niloren lehen eta bigarren ur jauzien artean zegoen eta Kush eta Egiptoko mugako eskualde tradizionala osatzen zuten. Basamortu kiskalgarria, haran aldapatsuak eta inguruko labar harrigarriak bizitzeko toki ezatsegina izan daiteke, baina antzinako korridore horren kontrola funtsezkoa zen Niloko merkataritza-ibilbidearen irabaziak kontrolatu nahi zuenarentzat eta Nubia basamortuko urre eremu aberatsean sarbidea nahi zuenarentzat."
+msgstr "Greko-erromatarren munduan Triakontaschoinos bezala ezaguna, Nubia Beherea Niloren lehen eta bigarren ur jauzien artean zegoen eta Kush eta Egiptoko mugako eskualde tradizionala osatzen zuten. Basamortu kiskalgarria, haran aldapatsuak eta inguruko labar harrigarriak bizitzeko toki ezatsegina izan daiteke, baina antzinako korridore horren kontrola funtsezkoa zen Niloko merkataritza  ibilbidearen irabaziak kontrolatu nahi zuenarentzat eta Nubia basamortuko urre eremu aberatsean sarbidea nahi zuenarentzat."
 
 #: maps/random/lower_nubia.jsonsettings.Name
 msgid "Lower Nubia"
@@ -865,6 +894,50 @@ msgstr "Mendi tontorrak inguratutako lakua."
 msgid "Wild Lake"
 msgstr "Laku basatia"
 
+#: maps/random/rmbiome/fields_of_meroe/dry.jsonDescription.Description
+msgid ""
+"The vitalizing waters of the Nile sustain life along its banks, while the "
+"long dry season scorches the land."
+msgstr "Nilo ibaiko ur bizigarriek ertzetako bizitza mantentzen dute, urtaro lehor luzeak lurra erretzen duen bitartean."
+
+#: maps/random/rmbiome/fields_of_meroe/dry.jsonDescription.Description
+msgctxt "biome definition"
+msgid ""
+"The vitalizing waters of the Nile sustain life along its banks, while the "
+"long dry season scorches the land."
+msgstr "Nilo ibaiko ur bizigarriek ertzetako bizitza mantentzen dute, urtaro lehor luzeak lurra erretzen duen bitartean."
+
+#: maps/random/rmbiome/fields_of_meroe/dry.jsonDescription.Title
+msgid "Dry Season"
+msgstr "Urtaro Lehorra"
+
+#: maps/random/rmbiome/fields_of_meroe/dry.jsonDescription.Title
+msgctxt "biome definition"
+msgid "Dry Season"
+msgstr "Urtaro Lehorra "
+
+#: maps/random/rmbiome/fields_of_meroe/rainy.jsonDescription.Description
+msgid ""
+"Revelling in the much awaited rain, the baked land transforms into a lush "
+"haven for both man and beast."
+msgstr "Horrenbeste denboraz esperotako euritan, berotutako ura aterpe emankor bihurtzen da gizaki eta piztientzako."
+
+#: maps/random/rmbiome/fields_of_meroe/rainy.jsonDescription.Description
+msgctxt "biome definition"
+msgid ""
+"Revelling in the much awaited rain, the baked land transforms into a lush "
+"haven for both man and beast."
+msgstr "Horrenbeste denboraz esperotako euritan, berotutako ura aterpe emankor bihurtzen da gizaki eta piztientzako."
+
+#: maps/random/rmbiome/fields_of_meroe/rainy.jsonDescription.Title
+msgid "Rainy Season"
+msgstr "Euri garaia"
+
+#: maps/random/rmbiome/fields_of_meroe/rainy.jsonDescription.Title
+msgctxt "biome definition"
+msgid "Rainy Season"
+msgstr "Euri garaia"
+
 #: maps/random/rmbiome/generic/alpine.jsonDescription.Description
 msgid ""
 "A region in the high snowy mountains. Biting winds sweep through the "
@@ -1184,16 +1257,25 @@ msgstr "Lur lehorra aurkitu beharrean gaude, gure lurrak laster itoko dira!"
 msgid "The lakes start swallowing the land, we have to find shelter!"
 msgstr "Lakuak lurra jaten hasi dira, aterpea aurkitu beharrean gaude!"
 
-#: maps/random/survivalofthefittest_triggers.js:190
+#: maps/random/jebel_barkal_triggers.js:578
+msgid "Napata is attacking!"
+msgstr "Napata erasotzen ari da!"
+
+#: maps/random/jebel_barkal_triggers.js:590
+#, javascript-format
+msgid "Napata will attack in %(time)s!"
+msgstr "Napata erasoan %(time)s!"
+
+#: maps/random/survivalofthefittest_triggers.js:163
 #, javascript-format
 msgid "The first wave will start in %(time)s!"
 msgstr "Lehenengo saldoa %(time)s tan hasiko da!"
 
-#: maps/random/survivalofthefittest_triggers.js:325
+#: maps/random/survivalofthefittest_triggers.js:264
 msgid "An enemy wave is attacking!"
 msgstr "Etsaien saldoa eraso dator!"
 
-#: maps/random/survivalofthefittest_triggers.js:349
+#: maps/random/survivalofthefittest_triggers.js:289
 #, javascript-format
 msgid "%(player)s has been defeated (lost civic center)."
 msgstr "%(player)s menderatua izan da (gizarte zentroak galdu du). "
@@ -2544,6 +2626,51 @@ msgstr "Alpeetako paisai lainotsu bat guda zelai bihurtuko da non talde bakoitza
 #: maps/skirmishes/Dueling Cliffs (3v3).xml:Name:40
 msgid "Dueling Cliffs (3v3)"
 msgstr "Aurrez-aurreko Labarrak (3v3)"
+
+#: maps/skirmishes/Egypt (3v3).xml:Name:40
+msgid "Egypt (3v3)"
+msgstr "Egipto (3v3)"
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[1].Name:40
+msgid "Alexandria"
+msgstr "Alexandria"
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[2].Name:40
+msgid "Theben"
+msgstr "Theben"
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[3].Name:40
+msgid "Siwa"
+msgstr "Siwa"
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[4].Name:40
+msgid "Sinai"
+msgstr "Sinai"
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[5].Name:40
+msgid "Memphis"
+msgstr "Memphis"
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[6].Name:40
+msgid "Cyrene"
+msgstr "Cyrene"
+
+#: maps/skirmishes/Egypt (3v3).xml:Description:40
+msgid ""
+"Fight for the remains of ancient Egypt!\n"
+"\n"
+"Players start with full grown cities and small armies, each having distinct advantages and drawbacks. Take care, there are 7 mighty forts and marauding bandids!\n"
+"\n"
+"It is the last century before 0 A.D. Egypt is internally divided between hellenistic (Alexandria, represented by Seleucids) and traditional influences (Memphis, represented by Ptolemies). Thebes in the southern clime of river Nile has already been taken over by the Kush. In the north western Al-Dschabal al-Achdar, where the mediterranean city of Cyrene is located the Romans are preparing their invasion. From the eastern desert at-Tih and mount Sinai enemies (represented by Persians) are pushing forward and the oasis Siwa. Charga (represented by Carthage) in the south western desert are trying to get a share of the pie as well.\n"
+"Locations:\n"
+"- Alexandria: library, harbor\n"
+"- Memphis: Necropolis, pyramids, Apis shrine\n"
+"- Thebes: temple district, Valley of the Kings \n"
+"- Cyrene: mediterranean Macchie, olive groves\n"
+"- Fayyum: crocodile shrine, nile dam\n"
+"- Eastern desert: mount Sinai, deep Wadi, Red Sea reefs\n"
+"- Western desert: Oasis Charga and Siwa, Qattara Depression\n"
+msgstr "Antzinako Egiptoko aztarnen alde borrokatu!\n\nJokalariak garaturik diren hiri eta armada txikiekin hasten dira, bakoitzak abantaila eta desabantaila desberdinak dituzte. Kontuz, badira 7 indartsu boteretsu eta lapur maltzurrak.\n\nHau 0 A.D. aurreko mendea da. Egipto zatiturik dago barnean helenístico (Alejandría,  seleuzidak ordezkaturik) eta barne influentzien (Memphis, Ptolomeok ordezkaturik) artean Tebas Kushek hartua izan da NIlo hegoaldeko kliman. Al-Dschabal al-Achdaren ipar-mendebaldean, Cirene mediterraneoko hiria aurkitzen den lekuan, erromatarrak inbasioa prestatzen ari dira. Tih basamortua eta Sinai menditik, etsaiak (persiarrak ordezkaturik) Siwa oasira aldera doaz. Chargak ere (Kartagok ordezkaturik) hego-mendebaldeko basamortuan, pastelaren zati bat bereganatu nahi du.\nTokiak:\n- Alejandria: Liburutegia, kaia\n- Memphis: Necropoli, piramide, Apis santutegia\n- Tebas: tenpluaren distritua, Erregeen harana\n- Cirene: Macchie mediterraneo, olibondoak\n- Fayyum: krokodiloen santutegia, Niloko aldaparoa\n- Ekialdeko basamortua: Sinaí mendia, Wadi sakona, Itsas Gorriaren labarrak\n- Mendebaldeko basamortua: Oasis Charga eta Siwa, Qattarako sakonunea\n"
 
 #: maps/skirmishes/Forest Battle (4).xml:Description:40
 msgid ""

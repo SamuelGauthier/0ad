@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Wildfire Games.
+/* Copyright (C) 2018 Wildfire Games.
  * This file is part of 0 A.D.
  *
  * 0 A.D. is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@
 
 #include "precompiled.h"
 
-#include "network/scripting/JSInterface_Network.h"
+#include "JSInterface_Network.h"
 
 #include "lib/external_libraries/enet.h"
 #include "lib/external_libraries/libsdl.h"
@@ -28,10 +28,21 @@
 #include "network/StunClient.h"
 #include "ps/CLogger.h"
 #include "ps/Game.h"
+#include "scriptinterface/ScriptInterface.h"
 
 u16 JSI_Network::GetDefaultPort(ScriptInterface::CxPrivate* UNUSED(pCxPrivate))
 {
 	return PS_DEFAULT_PORT;
+}
+
+bool JSI_Network::HasNetServer(ScriptInterface::CxPrivate* UNUSED(pCxPrivate))
+{
+	return g_NetServer;
+}
+
+bool JSI_Network::HasNetClient(ScriptInterface::CxPrivate* UNUSED(pCxPrivate))
+{
+	return g_NetClient;
 }
 
 JS::Value JSI_Network::FindStunEndpoint(ScriptInterface::CxPrivate* pCxPrivate, int port)
@@ -39,13 +50,13 @@ JS::Value JSI_Network::FindStunEndpoint(ScriptInterface::CxPrivate* pCxPrivate, 
 	return StunClient::FindStunEndpointHost(*(pCxPrivate->pScriptInterface), port);
 }
 
-void JSI_Network::StartNetworkHost(ScriptInterface::CxPrivate* pCxPrivate, const CStrW& playerName, const u16 serverPort)
+void JSI_Network::StartNetworkHost(ScriptInterface::CxPrivate* pCxPrivate, const CStrW& playerName, const u16 serverPort, const CStr& hostLobbyName, bool useLobbyAuth)
 {
 	ENSURE(!g_NetClient);
 	ENSURE(!g_NetServer);
 	ENSURE(!g_Game);
 
-	g_NetServer = new CNetServer();
+	g_NetServer = new CNetServer(useLobbyAuth);
 	if (!g_NetServer->SetupConnection(serverPort))
 	{
 		pCxPrivate->pScriptInterface->ReportError("Failed to start server");
@@ -56,6 +67,7 @@ void JSI_Network::StartNetworkHost(ScriptInterface::CxPrivate* pCxPrivate, const
 	g_Game = new CGame();
 	g_NetClient = new CNetClient(g_Game, true);
 	g_NetClient->SetUserName(playerName);
+	g_NetClient->SetHostingPlayerName(hostLobbyName);
 
 	if (!g_NetClient->SetupConnection("127.0.0.1", serverPort))
 	{
@@ -106,6 +118,7 @@ void JSI_Network::StartNetworkJoin(ScriptInterface::CxPrivate* pCxPrivate, const
 	g_Game = new CGame();
 	g_NetClient = new CNetClient(g_Game, false);
 	g_NetClient->SetUserName(playerName);
+	g_NetClient->SetHostingPlayerName(hostJID.substr(0, hostJID.find("@")));
 
 	if (g_XmppClient && useSTUN)
 		StunClient::SendHolePunchingMessages(enetClient, serverAddress.c_str(), serverPort);
@@ -212,8 +225,10 @@ void JSI_Network::SetTurnLength(ScriptInterface::CxPrivate* UNUSED(pCxPrivate), 
 void JSI_Network::RegisterScriptFunctions(const ScriptInterface& scriptInterface)
 {
 	scriptInterface.RegisterFunction<u16, &GetDefaultPort>("GetDefaultPort");
+	scriptInterface.RegisterFunction<bool, &HasNetServer>("HasNetServer");
+	scriptInterface.RegisterFunction<bool, &HasNetClient>("HasNetClient");
 	scriptInterface.RegisterFunction<JS::Value, int, &FindStunEndpoint>("FindStunEndpoint");
-	scriptInterface.RegisterFunction<void, CStrW, u16, &StartNetworkHost>("StartNetworkHost");
+	scriptInterface.RegisterFunction<void, CStrW, u16, CStr, bool, &StartNetworkHost>("StartNetworkHost");
 	scriptInterface.RegisterFunction<void, CStrW, CStr, u16, bool, CStr, &StartNetworkJoin>("StartNetworkJoin");
 	scriptInterface.RegisterFunction<void, &DisconnectNetworkGame>("DisconnectNetworkGame");
 	scriptInterface.RegisterFunction<CStr, &GetPlayerGUID>("GetPlayerGUID");

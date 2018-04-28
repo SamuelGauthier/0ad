@@ -1,29 +1,26 @@
+var elephantinePlayerID = 0;
+
 Trigger.prototype.InitElephantine = function()
 {
-	for (let ent of Engine.QueryInterface(SYSTEM_ENTITY, IID_RangeManager).GetEntitiesByPlayer(0))
-	{
-		let cmpIdentity = Engine.QueryInterface(ent, IID_Identity);
-		if (cmpIdentity && cmpIdentity.HasClass("Soldier"))
-			Engine.QueryInterface(ent, IID_UnitAI).SwitchToStance("defensive");
-	}
+	this.InitElephantine_DefenderStance();
+	this.InitElephantine_GarrisonBuildings();
+};
 
-	let kushSupportUnits = [
-		"units/kush_support_healer_e",
-		"units/kush_support_female_citizen"
-	];
+Trigger.prototype.InitElephantine_DefenderStance = function()
+{
+	for (let ent of TriggerHelper.GetPlayerEntitiesByClass(elephantinePlayerID, "Soldier"))
+		TriggerHelper.SetUnitStance(ent, "defensive")
+};
 
-	let kushInfantryUnits = [
-		"units/kush_infantry_archer_e",
-		"units/kush_infantry_spearman_e"
-	];
+Trigger.prototype.InitElephantine_GarrisonBuildings = function()
+{
+	let kushInfantryUnits = TriggerHelper.GetTemplateNamesByClasses("CitizenSoldier+Infantry", "kush", undefined, "Elite", true);
+	let kushSupportUnits = TriggerHelper.GetTemplateNamesByClasses("FemaleCitizen Healer", "kush", undefined, "Elite", true);
 
-	this.SpawnAndGarrison(0, "Tower", kushInfantryUnits, 1);
-
-	for (let identityClass of ["Wonder", "Temple", "Pyramid"])
-		this.SpawnAndGarrison(0, identityClass, kushInfantryUnits.concat(kushSupportUnits), 1);
+	TriggerHelper.SpawnAndGarrisonAtClasses(elephantinePlayerID, "Tower", kushInfantryUnits, 1);
+	TriggerHelper.SpawnAndGarrisonAtClasses(elephantinePlayerID, "Wonder Temple Pyramid", kushInfantryUnits.concat(kushSupportUnits), 1);
 };
 
 {
-	let cmpTrigger = Engine.QueryInterface(SYSTEM_ENTITY, IID_Trigger);
-	cmpTrigger.RegisterTrigger("OnInitGame", "InitElephantine", { "enabled": true });
+	Engine.QueryInterface(SYSTEM_ENTITY, IID_Trigger).RegisterTrigger("OnInitGame", "InitElephantine", { "enabled": true });
 }

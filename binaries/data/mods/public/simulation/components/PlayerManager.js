@@ -85,6 +85,9 @@ PlayerManager.prototype.GetPlayerByID = function(id)
 	return INVALID_ENTITY;
 };
 
+/**
+ * Returns the number of players including gaia.
+ */
 PlayerManager.prototype.GetNumPlayers = function()
 {
 	return this.playerEntities.length;
@@ -99,6 +102,25 @@ PlayerManager.prototype.GetAllPlayers = function()
 	for (let i = 0; i < this.playerEntities.length; ++i)
 		players.push(i);
 	return players;
+};
+
+/**
+ * Returns IDs of all players excluding gaia.
+ */
+PlayerManager.prototype.GetNonGaiaPlayers = function()
+{
+	let players = [];
+	for (let i = 1; i < this.playerEntities.length; ++i)
+		players.push(i);
+	return players;
+};
+
+/**
+ * Returns IDs of all players excluding gaia that are not defeated nor have won.
+ */
+PlayerManager.prototype.GetActivePlayers = function()
+{
+	return this.GetNonGaiaPlayers().filter(playerID => QueryPlayerIDInterface(playerID).GetState() == "active");
 };
 
 PlayerManager.prototype.RemoveAllPlayers = function()

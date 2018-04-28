@@ -234,11 +234,11 @@ m.HQ.prototype.regionAnalysis = function(gameState)
 m.HQ.prototype.structureAnalysis = function(gameState)
 {
 	let civref = gameState.playerData.civ;
-	let civ = civref in this.Config.buildings.advanced ? civref : 'default';
+	let civ = civref in this.Config.buildings ? civref : 'default';
 	this.bAdvanced = [];
-	for (let advanced of this.Config.buildings.advanced[civ])
-		if (gameState.isTemplateAvailable(gameState.applyCiv(advanced)))
-			this.bAdvanced.push(gameState.applyCiv(advanced));
+	for (let building of this.Config.buildings[civ])
+		if (gameState.isTemplateAvailable(gameState.applyCiv(building)))
+			this.bAdvanced.push(gameState.applyCiv(building));
 };
 
 /**
@@ -333,7 +333,7 @@ m.HQ.prototype.buildFirstBase = function(gameState)
 			break;
 		}
 		if (!found)
-			startingPoint.push({"pos": pos, "land": land, "sea": sea, "weight": 1});
+			startingPoint.push({ "pos": pos, "land": land, "sea": sea, "weight": 1 });
 	}
 	if (!startingPoint.length)
 		return;
@@ -343,7 +343,7 @@ m.HQ.prototype.buildFirstBase = function(gameState)
 		if (startingPoint[i].weight > startingPoint[imax].weight)
 			imax = i;
 
-	if (goal === "dock")
+	if (goal == "dock")
 	{
 		let sea = startingPoint[imax].sea > 1 ? startingPoint[imax].sea : undefined;
 		gameState.ai.queues.dock.addPlan(new m.ConstructionPlan(gameState, "structures/{civ}_dock", { "sea": sea, "proximity": startingPoint[imax].pos }));
@@ -369,7 +369,7 @@ m.HQ.prototype.dispatchUnits = function(gameState)
 		let num1 = Math.floor(num / 2);
 		let num2 = num1;
 		// first pass to affect ranged infantry
-		units.filter(API3.Filters.byClassesAnd(["Infantry", "Ranged"])).forEach(function (ent) {
+		units.filter(API3.Filters.byClassesAnd(["Infantry", "Ranged"])).forEach(ent => {
 			if (!num || !num1)
 				return;
 			if (ent.getMetadata(PlayerID, "allied"))
@@ -388,7 +388,7 @@ m.HQ.prototype.dispatchUnits = function(gameState)
 			}
 		});
 		// second pass to affect melee infantry
-		units.filter(API3.Filters.byClassesAnd(["Infantry", "Melee"])).forEach(function (ent) {
+		units.filter(API3.Filters.byClassesAnd(["Infantry", "Melee"])).forEach(ent => {
 			if (!num || !num2)
 				return;
 			if (ent.getMetadata(PlayerID, "allied"))
@@ -407,7 +407,7 @@ m.HQ.prototype.dispatchUnits = function(gameState)
 			}
 		});
 		// and now complete the affectation, including all support units
-		units.forEach(function (ent) {
+		units.forEach(ent => {
 			if (!num && !ent.hasClass("Support"))
 				return;
 			if (ent.getMetadata(PlayerID, "allied"))

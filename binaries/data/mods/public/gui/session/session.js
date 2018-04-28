@@ -7,8 +7,9 @@ const g_MapSizes = prepareForDropdown(g_Settings && g_Settings.MapSizes);
 const g_MapTypes = prepareForDropdown(g_Settings && g_Settings.MapTypes);
 const g_PopulationCapacities = prepareForDropdown(g_Settings && g_Settings.PopulationCapacities);
 const g_StartingResources = prepareForDropdown(g_Settings && g_Settings.StartingResources);
-const g_VictoryConditions = prepareForDropdown(g_Settings && g_Settings.VictoryConditions);
 const g_VictoryDurations = prepareForDropdown(g_Settings && g_Settings.VictoryDurations);
+const g_VictoryConditions = g_Settings && g_Settings.VictoryConditions;
+
 var g_GameSpeeds;
 
 /**
@@ -21,11 +22,6 @@ var g_DiplomacyColorsToggle = false;
  * The array of displayed player colors (either the diplomacy color or regular color for each player).
  */
 var g_DisplayedPlayerColors;
-
-/**
- * The self/ally/neutral/enemy color codes.
- */
-var g_DiplomacyColorPalette;
 
 /**
  * Colors to flash when pop limit reached.
@@ -49,14 +45,14 @@ var g_Ambient = ["audio/ambient/dayscape/day_temperate_gen_03.ogg"];
 const g_GameAttributes = deepfreeze(Engine.GetInitAttributes());
 
 /**
- * Is this user in control of game settings (i.e. is a network server, or offline player).
- */
-var g_IsController;
-
-/**
  * True if this is a multiplayer game.
  */
-var g_IsNetworked = false;
+const g_IsNetworked = Engine.HasNetClient();
+
+/**
+ * Is this user in control of game settings (i.e. is a network server, or offline player).
+ */
+var g_IsController = !g_IsNetworked || Engine.HasNetServer();
 
 /**
  * Whether we have finished the synchronization and
@@ -126,12 +122,11 @@ var g_StatusBarUpdate = 200;
  */
 var g_ReplaySelectionData;
 
-var g_PlayerAssignments = {
-	"local": {
-		"name": singleplayerName(),
-		"player": 1
-	}
-};
+/**
+ * Remembers which clients are assigned to which player slots.
+ * The keys are guids or "local" in Singleplayer.
+ */
+var g_PlayerAssignments;
 
 /**
  * Cache dev-mode settings that are frequently or widely used.
@@ -265,53 +260,29 @@ function init(initData, hotloadData)
 		return;
 	}
 
+	// Fallback used by atlas
+	g_PlayerAssignments = initData ? initData.playerAssignments : { "local": { "player": 1 } };
+
+	// Fallback used by atlas and autostart games
+	if (g_PlayerAssignments.local && !g_PlayerAssignments.local.name)
+		g_PlayerAssignments.local.name = singleplayerName();
+
 	if (initData)
 	{
-		g_IsNetworked = initData.isNetworked;
-		g_IsController = initData.isController;
-		g_PlayerAssignments = initData.playerAssignments;
 		g_ReplaySelectionData = initData.replaySelectionData;
 		g_HasRejoined = initData.isRejoining;
 
 		if (initData.savedGUIData)
 			restoreSavedGameData(initData.savedGUIData);
-
-		Engine.GetGUIObjectByName("gameSpeedButton").hidden = g_IsNetworked;
 	}
-	else if (g_IsReplay)// Needed for autostart loading option
-		g_PlayerAssignments.local.player = -1;
 
 	LoadModificationTemplates();
-
 	updatePlayerData();
-
-	g_BarterSell = g_ResourceData.GetCodes()[0];
-
 	initializeMusic(); // before changing the perspective
-
-	initSessionMenuButtons();
-
-	for (let slot in Engine.GetGUIObjectByName("panelEntityPanel").children)
-		initPanelEntities(slot);
-
-	g_DiplomacyColorPalette = Engine.ReadJSONFile(g_SettingsDirectory + "diplomacy_colors.json");
-	g_DisplayedPlayerColors = g_Players.map(player => player.color);
-	updateViewedPlayerDropdown();
-
-	// Select "observer" in the view player dropdown when rejoining as a defeated player
-	let player = g_Players[Engine.GetPlayerID()];
-	Engine.GetGUIObjectByName("viewPlayer").selected = player && player.state == "defeated" ? 0 : Engine.GetPlayerID() + 1;
-
-	// If in Atlas editor, disable the exit button
-	if (Engine.IsAtlasRunning())
-		Engine.GetGUIObjectByName("menuExitButton").enabled = false;
+	initGUIObjects();
 
 	if (hotloadData)
 		g_Selection.selected = hotloadData.selection;
-
-	Engine.SetBoundingBoxDebugOverlay(false);
-
-	initChatWindow();
 
 	sendLobbyPlayerlistUpdate();
 	onSimulationUpdate();
@@ -326,6 +297,20 @@ function init(initData, hotloadData)
 	// and it generates a massive amount of data to transmit and store
 	// setTimeout(function() { reportPerformance(5); }, 5000);
 	// setTimeout(function() { reportPerformance(60); }, 60000);
+}
+
+function initGUIObjects()
+{
+	initMenu();
+	updateGameSpeedControl();
+	resizeDiplomacyDialog();
+	resizeTradeDialog();
+	initBarterButtons();
+	initPanelEntities();
+	initViewedPlayerDropdown();
+	initChatWindow();
+	Engine.SetBoundingBoxDebugOverlay(false);
+	updateEnabledRangeOverlayTypes();
 }
 
 function updatePlayerData()
@@ -379,16 +364,21 @@ function updatePlayerData()
 function updateDiplomacyColorsButton()
 {
 	g_DiplomacyColorsToggle = !g_DiplomacyColorsToggle;
+
 	let diplomacyColorsButton = Engine.GetGUIObjectByName("diplomacyColorsButton");
+
 	diplomacyColorsButton.sprite = g_DiplomacyColorsToggle ?
 		"stretched:session/minimap-diplomacy-on.png" :
 		"stretched:session/minimap-diplomacy-off.png";
+
 	diplomacyColorsButton.sprite_over = g_DiplomacyColorsToggle ?
 		"stretched:session/minimap-diplomacy-on-highlight.png" :
 		"stretched:session/minimap-diplomacy-off-highlight.png";
+
 	Engine.GetGUIObjectByName("diplomacyColorsWindowButtonIcon").sprite = g_DiplomacyColorsToggle ?
 		"stretched:session/icons/diplomacy-on.png" :
 		"stretched:session/icons/diplomacy.png";
+
 	updateDisplayedPlayerColors();
 }
 
@@ -399,6 +389,10 @@ function updateDisplayedPlayerColors()
 {
 	if (g_DiplomacyColorsToggle)
 	{
+		let getDiplomacyColor = stance =>
+			guiToRgbColor(Engine.ConfigDB_GetValue("user", "gui.session.diplomacycolors." + stance)) ||
+			guiToRgbColor(Engine.ConfigDB_GetValue("default", "gui.session.diplomacycolors." + stance));
+
 		let teamRepresentatives = {};
 		for (let i = 1; i < g_Players.length; ++i)
 			if (g_ViewedPlayer <= 0)
@@ -412,10 +406,10 @@ function updateDisplayedPlayerColors()
 			else
 				// Players see colors depending on diplomacy
 				g_DisplayedPlayerColors[i] =
-					g_ViewedPlayer == i ? g_DiplomacyColorPalette.Self :
-					g_Players[g_ViewedPlayer].isAlly[i] ? g_DiplomacyColorPalette.Ally :
-					g_Players[g_ViewedPlayer].isNeutral[i] ? g_DiplomacyColorPalette.Neutral :
-					g_DiplomacyColorPalette.Enemy;
+					g_ViewedPlayer == i ? getDiplomacyColor("self") :
+					g_Players[g_ViewedPlayer].isAlly[i] ? getDiplomacyColor("ally") :
+					g_Players[g_ViewedPlayer].isNeutral[i] ? getDiplomacyColor("neutral") :
+					getDiplomacyColor("enemy");
 
 		g_DisplayedPlayerColors[0] = g_Players[0].color;
 	}
@@ -472,26 +466,27 @@ function updateHotkeyTooltips()
 		});
 }
 
-function initPanelEntities(slot)
+function initPanelEntities()
 {
-	let button = Engine.GetGUIObjectByName("panelEntityButton[" + slot + "]");
+	Engine.GetGUIObjectByName("panelEntityPanel").children.forEach((button, slot) => {
 
-	button.onPress = function() {
-		let panelEnt = g_PanelEntities.find(ent => ent.slot !== undefined && ent.slot == slot);
-		if (!panelEnt)
-			return;
+		button.onPress = function() {
+			let panelEnt = g_PanelEntities.find(ent => ent.slot !== undefined && ent.slot == slot);
+			if (!panelEnt)
+				return;
 
-		if (!Engine.HotkeyIsPressed("selection.add"))
-			g_Selection.reset();
+			if (!Engine.HotkeyIsPressed("selection.add"))
+				g_Selection.reset();
 
-		g_Selection.addList([panelEnt.ent]);
-	};
+			g_Selection.addList([panelEnt.ent]);
+		};
 
-	button.onDoublePress = function() {
-		let panelEnt = g_PanelEntities.find(ent => ent.slot !== undefined && ent.slot == slot);
-		if (panelEnt)
-			selectAndMoveTo(getEntityOrHolder(panelEnt.ent));
-	};
+		button.onDoublePress = function() {
+			let panelEnt = g_PanelEntities.find(ent => ent.slot !== undefined && ent.slot == slot);
+			if (panelEnt)
+				selectAndMoveTo(getEntityOrHolder(panelEnt.ent));
+		};
+	});
 }
 
 /**
@@ -501,7 +496,7 @@ function getEntityOrHolder(ent)
 {
 	let entState = GetEntityState(ent);
 	if (entState && !entState.position && entState.unitAI && entState.unitAI.orders.length &&
-			(entState.unitAI.orders[0].type == "Garrison" || entState.unitAI.orders[0].type == "Autogarrison"))
+			entState.unitAI.orders[0].type == "Garrison")
 		return getEntityOrHolder(entState.unitAI.orders[0].data.target);
 
 	return ent;
@@ -514,6 +509,16 @@ function initializeMusic()
 		global.music.storeTracks(g_CivData[g_Players[g_ViewedPlayer].civ].Music);
 	global.music.setState(global.music.states.PEACE);
 	playAmbient();
+}
+
+function initViewedPlayerDropdown()
+{
+	g_DisplayedPlayerColors = g_Players.map(player => player.color);
+	updateViewedPlayerDropdown();
+
+	// Select "observer" in the view player dropdown when rejoining as a defeated player
+	let player = g_Players[Engine.GetPlayerID()];
+	Engine.GetGUIObjectByName("viewPlayer").selected = player && player.state == "defeated" ? 0 : Engine.GetPlayerID() + 1;
 }
 
 function updateViewedPlayerDropdown()
@@ -663,7 +668,8 @@ function updateTopPanel()
 			});
 	}
 
-	Engine.GetGUIObjectByName("optionFollowPlayer").hidden = !g_IsObserver || !isPlayer;
+	// Following gaia can be interesting on scripted maps
+	Engine.GetGUIObjectByName("optionFollowPlayer").hidden = !g_IsObserver || g_ViewedPlayer == -1;
 
 	let viewPlayer = Engine.GetGUIObjectByName("viewPlayer");
 	viewPlayer.hidden = !g_IsObserver && !g_DevSettings.changePerspective;
@@ -694,8 +700,8 @@ function updateTopPanel()
 	resPop.size = resPopSize;
 
 	Engine.GetGUIObjectByName("population").hidden = !isPlayer;
-	Engine.GetGUIObjectByName("diplomacyButton1").hidden = !isPlayer;
-	Engine.GetGUIObjectByName("tradeButton1").hidden = !isPlayer;
+	Engine.GetGUIObjectByName("diplomacyButton").hidden = !isPlayer;
+	Engine.GetGUIObjectByName("tradeButton").hidden = !isPlayer;
 	Engine.GetGUIObjectByName("observerText").hidden = isPlayer;
 
 	let alphaLabel = Engine.GetGUIObjectByName("alphaLabel");
@@ -890,12 +896,6 @@ function onSimulationUpdate()
 	handleNotifications();
 	updateGUIObjects();
 
-	for (let type of ["Attack", "Auras", "Heal"])
-		Engine.GuiInterfaceCall("EnableVisualRangeOverlayType", {
-			"type": type,
-			"enabled": Engine.ConfigDB_GetValue("user", "gui.session." + type.toLowerCase() + "range") == "true"
-		});
-
 	if (g_ConfirmExit)
 		confirmExit();
 }
@@ -911,8 +911,7 @@ function confirmExit()
 	closeOpenDialogs();
 
 	// Don't ask for exit if other humans are still playing
-	let isHost = g_IsController && g_IsNetworked;
-	let askExit = !isHost || isHost && g_Players.every((player, i) =>
+	let askExit = !Engine.HasNetServer() || g_Players.every((player, i) =>
 		i == 0 ||
 		player.state != "active" ||
 		g_GameAttributes.settings.PlayerData[i].AI != "");
@@ -934,11 +933,17 @@ function confirmExit()
 	g_ConfirmExit = false;
 }
 
+function toggleGUI()
+{
+	g_ShowGUI = !g_ShowGUI;
+	updateCinemaPath();
+}
+
 function updateCinemaPath()
 {
 	let isPlayingCinemaPath = GetSimState().cinemaPlaying && !g_Disconnected;
 
-	Engine.GetGUIObjectByName("sn").hidden = !g_ShowGUI || isPlayingCinemaPath;
+	Engine.GetGUIObjectByName("session").hidden = !g_ShowGUI || isPlayingCinemaPath;
 	Engine.Renderer_SetSilhouettesEnabled(!isPlayingCinemaPath && Engine.ConfigDB_GetValue("user", "silhouettes") == "true");
 }
 
@@ -1419,6 +1424,15 @@ function toggleRangeOverlay(type)
 		"entities": selected,
 		"enabled": enabled
 	});
+}
+
+function updateEnabledRangeOverlayTypes()
+{
+	for (let type of ["Attack", "Auras", "Heal"])
+		Engine.GuiInterfaceCall("EnableVisualRangeOverlayType", {
+			"type": type,
+			"enabled": Engine.ConfigDB_GetValue("user", "gui.session." + type.toLowerCase() + "range") == "true"
+		});
 }
 
 // Update the additional list of entities to be highlighted.

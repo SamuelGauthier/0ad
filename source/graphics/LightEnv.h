@@ -1,4 +1,4 @@
-/* Copyright (C) 2012 Wildfire Games.
+/* Copyright (C) 2018 Wildfire Games.
  * This file is part of 0 A.D.
  *
  * 0 A.D. is free software: you can redistribute it and/or modify
@@ -128,7 +128,7 @@ public:
 	SColor4ub EvaluateTerrainDiffuseFactor(const CVector3D& normal) const
 	{
 		float dot = -normal.Dot(m_SunDir);
-		int c = clamp((int)(dot * 255), 0, 255);
+		u8 c = static_cast<u8>(clamp(dot * 255.f, 0.f, 255.f));
 		return SColor4ub(c, c, c, 255);
 	}
 

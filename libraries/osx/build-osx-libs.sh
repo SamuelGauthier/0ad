@@ -21,18 +21,18 @@
 # --------------------------------------------------------------
 # Library versions for ease of updating:
 ZLIB_VERSION="zlib-1.2.11"
-CURL_VERSION="curl-7.58.0"
+CURL_VERSION="curl-7.59.0"
 ICONV_VERSION="libiconv-1.15"
-XML2_VERSION="libxml2-2.9.4"
+XML2_VERSION="libxml2-2.9.8"
 SDL2_VERSION="SDL2-2.0.5"
 BOOST_VERSION="boost_1_64_0"
 # NOTE: remember to also update LIB_URL below when changing version
 WXWIDGETS_VERSION="wxWidgets-3.1.1-rc"
 # libpng was included as part of X11 but that's removed from Mountain Lion
 # (also the Snow Leopard version was ancient 1.2)
-PNG_VERSION="libpng-1.6.29"
-OGG_VERSION="libogg-1.3.2"
-VORBIS_VERSION="libvorbis-1.3.5"
+PNG_VERSION="libpng-1.6.34"
+OGG_VERSION="libogg-1.3.3"
+VORBIS_VERSION="libvorbis-1.3.6"
 # gloox is necessary for multiplayer lobby
 GLOOX_VERSION="gloox-1.0.20"
 # NSPR is necessary for threadsafe Spidermonkey
@@ -41,7 +41,8 @@ NSPR_VERSION="4.15"
 # NOTE: remember to also update LIB_URL below when changing version
 ICU_VERSION="icu4c-59_1"
 ENET_VERSION="enet-1.3.13"
-MINIUPNPC_VERSION="miniupnpc-2.0.20170509"
+MINIUPNPC_VERSION="miniupnpc-2.0.20180222"
+SODIUM_VERSION="libsodium-1.0.16"
 FFTW_VERSION="fftw-3.3.7"
 # --------------------------------------------------------------
 # Bundled with the game:
@@ -196,7 +197,7 @@ then
   tar -xf $LIB_ARCHIVE
   pushd $LIB_DIRECTORY
 
-  (./configure CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS" --prefix="$INSTALL_DIR" --enable-ipv6 --without-gnutls --without-gssapi --without-nghttp2 --without-libmetalink --without-librtmp --without-libssh2 --without-nss --without-polarssl --without-spnego --without-ssl --disable-ares --disable-ldap --disable-ldaps --without-libidn --without-libidn2 --with-zlib="${ZLIB_DIR}" --enable-shared=no && make ${JOBS} && make install) || die "libcurl build failed"
+  (./configure CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS" --prefix="$INSTALL_DIR" --enable-ipv6 --with-darwinssl --without-gssapi --without-libmetalink --without-librtmp --without-libssh2 --without-nss --without-polarssl --without-spnego --disable-ares --disable-ldap --disable-ldaps --without-libidn --with-zlib="${ZLIB_DIR}" --enable-shared=no && make ${JOBS} && make install) || die "libcurl build failed"
   popd
   touch .already-built
 else
@@ -617,6 +618,36 @@ then
   popd
   # TODO: how can we not build the dylibs?
   rm -f lib/*.dylib
+  touch .already-built
+else
+  already_built
+fi
+popd > /dev/null
+
+# --------------------------------------------------------------
+echo -e "Building libsodium..."
+
+LIB_VERSION="${SODIUM_VERSION}"
+LIB_ARCHIVE="$SODIUM_VERSION.tar.gz"
+LIB_DIRECTORY="$LIB_VERSION"
+LIB_URL="https://download.libsodium.org/libsodium/releases/"
+
+mkdir -p libsodium
+pushd libsodium > /dev/null
+
+if [[ "$force_rebuild" = "true" ]] || [[ ! -e .already-built ]] || [[ .already-built -ot $LIB_DIRECTORY ]]
+then
+  INSTALL_DIR="$(pwd)"
+
+  rm -f .already-built
+  download_lib $LIB_URL $LIB_ARCHIVE
+
+  rm -rf $LIB_DIRECTORY include lib
+  tar -xf $LIB_ARCHIVE
+  pushd $LIB_DIRECTORY
+
+  (./configure CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS" --prefix=${INSTALL_DIR} && make clean && CFLAGS=$CFLAGS LDFLAGS=$LDFLAGS make ${JOBS} && make check && INSTALLPREFIX="$INSTALL_DIR" make install) || die "libsodium build failed"
+  popd
   touch .already-built
 else
   already_built

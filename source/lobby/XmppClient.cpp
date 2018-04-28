@@ -75,24 +75,26 @@ IXmppClient* IXmppClient::create(const std::string& sUsername, const std::string
  * @param regOpt If we are just registering or not.
  */
 XmppClient::XmppClient(const std::string& sUsername, const std::string& sPassword, const std::string& sRoom, const std::string& sNick, const int historyRequestSize, bool regOpt)
-	: m_client(NULL), m_mucRoom(NULL), m_registration(NULL), m_username(sUsername), m_password(sPassword), m_nick(sNick), m_initialLoadComplete(false), m_isConnected(false), m_sessionManager()
+	: m_client(NULL), m_mucRoom(NULL), m_registration(NULL), m_username(sUsername), m_password(sPassword), m_room(sRoom), m_nick(sNick), m_initialLoadComplete(false), m_isConnected(false), m_sessionManager()
 {
 	// Read lobby configuration from default.cfg
-	std::string sServer;
 	std::string sXpartamupp;
-	CFG_GET_VAL("lobby.server", sServer);
+	std::string sEchelon;
+	CFG_GET_VAL("lobby.server", m_server);
 	CFG_GET_VAL("lobby.xpartamupp", sXpartamupp);
+	CFG_GET_VAL("lobby.echelon", sEchelon);
 
-	m_xpartamuppId = sXpartamupp + "@" + sServer + "/CC";
-	glooxwrapper::JID clientJid(sUsername + "@" + sServer + "/0ad");
-	glooxwrapper::JID roomJid(sRoom + "@conference." + sServer + "/" + sNick);
+	m_xpartamuppId = sXpartamupp + "@" + m_server + "/CC";
+	m_echelonId = sEchelon + "@" + m_server + "/CC";
+	glooxwrapper::JID clientJid(sUsername + "@" + m_server + "/0ad");
+	glooxwrapper::JID roomJid(m_room + "@conference." + m_server + "/" + sNick);
 
 	// If we are connecting, use the full jid and a password
 	// If we are registering, only use the server name
 	if (!regOpt)
 		m_client = new glooxwrapper::Client(clientJid, sPassword);
 	else
-		m_client = new glooxwrapper::Client(sServer);
+		m_client = new glooxwrapper::Client(m_server);
 
 	// Disable TLS as we haven't set a certificate on the server yet
 	m_client->setTls(gloox::TLSDisabled);
@@ -117,6 +119,9 @@ XmppClient::XmppClient(const std::string& sUsername, const std::string& sPasswor
 
 	m_client->registerStanzaExtension(new ProfileQuery());
 	m_client->registerIqHandler(this, EXTPROFILEQUERY);
+
+	m_client->registerStanzaExtension(new LobbyAuth());
+	m_client->registerIqHandler(this, EXTLOBBYAUTH);
 
 	m_client->registerMessageHandler(this);
 
@@ -277,12 +282,12 @@ void XmppClient::handleMUCError(glooxwrapper::MUCRoom*, gloox::StanzaError err)
  */
 void XmppClient::SendIqGetBoardList()
 {
-	glooxwrapper::JID xpartamuppJid(m_xpartamuppId);
+	glooxwrapper::JID echelonJid(m_echelonId);
 
 	// Send IQ
 	BoardListQuery* b = new BoardListQuery();
 	b->m_Command = "getleaderboard";
-	glooxwrapper::IQ iq(gloox::IQ::Get, xpartamuppJid, m_client->getID());
+	glooxwrapper::IQ iq(gloox::IQ::Get, echelonJid, m_client->getID());
 	iq.addExtension(b);
 	DbgXMPP("SendIqGetBoardList [" << tag_xml(iq) << "]");
 	m_client->send(iq);
@@ -293,12 +298,12 @@ void XmppClient::SendIqGetBoardList()
  */
 void XmppClient::SendIqGetProfile(const std::string& player)
 {
-	glooxwrapper::JID xpartamuppJid(m_xpartamuppId);
+	glooxwrapper::JID echelonJid(m_echelonId);
 
 	// Send IQ
 	ProfileQuery* b = new ProfileQuery();
 	b->m_Command = player;
-	glooxwrapper::IQ iq(gloox::IQ::Get, xpartamuppJid, m_client->getID());
+	glooxwrapper::IQ iq(gloox::IQ::Get, echelonJid, m_client->getID());
 	iq.addExtension(b);
 	DbgXMPP("SendIqGetProfile [" << tag_xml(iq) << "]");
 	m_client->send(iq);
@@ -311,7 +316,7 @@ void XmppClient::SendIqGetProfile(const std::string& player)
  */
 void XmppClient::SendIqGameReport(const ScriptInterface& scriptInterface, JS::HandleValue data)
 {
-	glooxwrapper::JID xpartamuppJid(m_xpartamuppId);
+	glooxwrapper::JID echelonJid(m_echelonId);
 
 	// Setup some base stanza attributes
 	GameReport* game = new GameReport();
@@ -331,7 +336,7 @@ void XmppClient::SendIqGameReport(const ScriptInterface& scriptInterface, JS::Ha
 	game->m_GameReport.emplace_back(report);
 
 	// Send IQ
-	glooxwrapper::IQ iq(gloox::IQ::Set, xpartamuppJid, m_client->getID());
+	glooxwrapper::IQ iq(gloox::IQ::Set, echelonJid, m_client->getID());
 	iq.addExtension(game);
 	DbgXMPP("SendGameReport [" << tag_xml(iq) << "]");
 	m_client->send(iq);
@@ -413,6 +418,25 @@ void XmppClient::SendIqChangeStateGame(const std::string& nbp, const std::string
 	glooxwrapper::IQ iq(gloox::IQ::Set, xpartamuppJid, m_client->getID());
 	iq.addExtension(g);
 	DbgXMPP("SendIqChangeStateGame [" << tag_xml(iq) << "]");
+	m_client->send(iq);
+}
+
+/*****************************************************
+ * iq to clients                                     *
+ *****************************************************/
+
+/**
+ * Send lobby authentication token.
+ */
+void XmppClient::SendIqLobbyAuth(const std::string& to, const std::string& token)
+{
+	LobbyAuth* auth = new LobbyAuth();
+	auth->m_Token = token;
+
+	glooxwrapper::JID clientJid(to + "@" + m_server + "/0ad");
+	glooxwrapper::IQ iq(gloox::IQ::Set, clientJid, m_client->getID());
+	iq.addExtension(auth);
+	DbgXMPP("SendIqLobbyAuth [" << tag_xml(iq) << "]");
 	m_client->send(iq);
 }
 
@@ -742,6 +766,20 @@ bool XmppClient::handleIq(const glooxwrapper::IQ& iq)
 			CreateGUIMessage("game", "profile");
 		}
 	}
+	else if (iq.subtype() == gloox::IQ::Set)
+	{
+		const LobbyAuth* lobbyAuth = iq.findExtension<LobbyAuth>(EXTLOBBYAUTH);
+		if (lobbyAuth)
+		{
+			LOGMESSAGE("XmppClient: Received lobby auth: %s from %s", lobbyAuth->m_Token.to_string(), iq.from().username());
+
+			glooxwrapper::IQ response(gloox::IQ::Result, iq.from(), iq.id());
+			m_client->send(response);
+
+			if (g_NetServer)
+				g_NetServer->OnLobbyAuth(iq.from().username(), lobbyAuth->m_Token.to_string());
+		}
+	}
 	else if (iq.subtype() == gloox::IQ::Error)
 		CreateGUIMessage("system", "error", "text", StanzaErrorToString(iq.error_error()));
 	else
@@ -949,7 +987,7 @@ std::time_t XmppClient::ComputeTimestamp(const glooxwrapper::Message& msg) const
 	// The locale is irrelevant, because the XMPP date format doesn't contain written month names
 	for (const std::string& format : std::vector<std::string>{ "Y-M-d'T'H:m:sZ", "Y-M-d'T'H:m:s.SZ" })
 	{
-		UDate dateTime = g_L10n.ParseDateTime(msg.when()->stamp().to_string(), format, Locale::getUS());
+		UDate dateTime = g_L10n.ParseDateTime(msg.when()->stamp().to_string(), format, icu::Locale::getUS());
 		if (dateTime)
 			return dateTime / 1000.0;
 	}

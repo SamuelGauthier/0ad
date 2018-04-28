@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 0 A.D.\n"
-"POT-Creation-Date: 2018-02-23 09:05+0100\n"
-"PO-Revision-Date: 2018-02-23 20:23+0000\n"
+"POT-Creation-Date: 2018-04-16 09:04+0200\n"
+"PO-Revision-Date: 2018-04-17 20:23+0000\n"
 "Last-Translator: David Sowa <isithere2@yahoo.com>\n"
 "Language-Team: Asturian (http://www.transifex.com/wildfire-games/0ad/language/ast/)\n"
 "MIME-Version: 1.0\n"
@@ -247,7 +247,7 @@ msgstr "Tolos aliaos algamen automáticamente una pinga lenta d'ingresos aliment
 
 #: simulation/data/auras/teambonuses/rome_player_teambonus.jsonauraName
 msgid "Conscription"
-msgstr "Serviciu militar"
+msgstr "Allistamientu"
 
 #: simulation/data/auras/teambonuses/rome_player_teambonus.jsonauraDescription
 msgid "-20% training time for allied citizen-soldier infantry."
@@ -429,7 +429,7 @@ msgstr "Gran constructor"
 msgid ""
 "Throughout his reign, much of Artaxerxes' wealth was spent on building projects. He restored the Palace of Darius I at Susa and restored the ancient city of Ecbatana.\n"
 "+5% health and -10% resource cost for all buildings."
-msgstr "A lo llargo'l so reináu, Artaxerxes gastó muncha riqueza en proyeutos de construcción. Restauró'l Palaciu de Dariu I en Susa y restauró l'antigua ciudá d'Ecbátana.\nAumenta nun +5% la vida y amenorga nun -10% el costu de tolos edificios."
+msgstr "A lo llargo'l so reináu, Artaxerxes gastó muncha riqueza en proyeutos de construcción. Restauró'l Palaciu de Daríu I en Susa y restauró l'antigua ciudá d'Ecbátana.\nAumenta nun +5% la vida y amenorga nun -10% el costu de tolos edificios."
 
 #: simulation/data/auras/units/catafalques/ptol_catafalque.jsonauraName
 msgid "Great Librarian"
@@ -666,7 +666,7 @@ msgstr "Proteutor valiente"
 msgid ""
 "75% more arrows per soldier for the building or siege tower he is garrisoned"
 " in."
-msgstr "Un 75% más de fleches por cada soldáu guarecíu n'edificiu o torre d'asediu."
+msgstr "El 75% más de fleches por soldáu na construcción o torre d'asediu onde tea guarecíu."
 
 #: simulation/data/auras/units/heroes/iber_hero_caros_2.jsonauraName
 msgid "Battle Fervor"
@@ -703,8 +703,9 @@ msgid "Warrior Queen"
 msgstr "Reina guerrera"
 
 #: simulation/data/auras/units/heroes/kush_hero_amanirenas.jsonauraDescription
-msgid "+20% attack and +2 capture for soldiers and elephants."
-msgstr "El +20% más del ataque y +2 puntos más del prinde pa soldaos y elefantes."
+#: simulation/data/auras/units/heroes/mace_hero_philip.jsonauraDescription
+msgid "+20% attack and +2 capture for champion units."
+msgstr "Aumenta nun +20% l'ataque y en +2 la captura a los campeones."
 
 #: simulation/data/auras/units/heroes/kush_hero_arakamani_1.jsonauraName
 msgid "Defier of Tradition"
@@ -730,15 +731,25 @@ msgstr "Matancia de los fieles"
 msgid "Enemy healrate reduced by 50%."
 msgstr "La velocidá de cura del enemigu amenorga nun 50%."
 
-#: simulation/data/auras/units/heroes/kush_hero_nastasen.jsonauraName
-msgid "Saviour of Kush"
+#: simulation/data/auras/units/heroes/kush_hero_nastasen_1.jsonauraName
+msgid "Savior of Kush"
 msgstr "Salvador de Cux"
 
-#: simulation/data/auras/units/heroes/kush_hero_nastasen.jsonauraDescription
+#: simulation/data/auras/units/heroes/kush_hero_nastasen_1.jsonauraDescription
 msgid ""
 "Own units +10% attack.\n"
 "Nastasen acquired lots of bounty from the defeated invaders. Gain +50% loot from killing enemy units."
 msgstr "Un +10% más del ataque pa les tos unidaes.\nNastasen pescanció bien de botín de los invasores vencíos. Algámase'l +50% más del botín al matar a unidaes enemigues."
+
+#: simulation/data/auras/units/heroes/kush_hero_nastasen_2.jsonauraName
+msgid "Gift of Warships"
+msgstr "Regalu de naves de guerra"
+
+#: simulation/data/auras/units/heroes/kush_hero_nastasen_2.jsonauraDescription
+msgid ""
+"Train Ptolemaic Mercenary Triremes at -25% resource cost.\n"
+"Crushing the Ptolemaic invasion of Kush, Nastasen seized numerous enemy warships."
+msgstr "Llevantar trirremes mercenaries tolemaiques al -25% del costu en recursos. Aplastando la invasión tolemaica de Cux, Nastasen prindó numberoses naves de guerra enemigues."
 
 #: simulation/data/auras/units/heroes/mace_hero_alexander_1.jsonauraName
 msgid "Imperialism"
@@ -769,16 +780,12 @@ msgid "Besieger"
 msgstr "Asediador"
 
 #: simulation/data/auras/units/heroes/mace_hero_demetrius.jsonauraDescription
-msgid "+10% attack, +10% range and +1 armor for siege engines."
-msgstr "Aumenta nun +10% l'ataque, nun +10% l'algame y en +1 l'armadura a les máquines d'asediu."
+msgid "+20% attack, +10% range and +1 armor for siege engines."
+msgstr "El +20% al ataque, +10% al algame y +1 armadura pa les máquines d'asediu."
 
 #: simulation/data/auras/units/heroes/mace_hero_philip.jsonauraName
 msgid "Rise of Macedon"
 msgstr "Ascensu de Macedonia"
-
-#: simulation/data/auras/units/heroes/mace_hero_philip.jsonauraDescription
-msgid "+20% attack and +2 capture for champion units."
-msgstr "Aumenta nun +20% l'ataque y en +2 la captura a los campeones."
 
 #: simulation/data/auras/units/heroes/mace_hero_pyrrhus.jsonauraName
 msgid "Pyrrhic Victory"
@@ -898,8 +905,8 @@ msgid "Shield of Rome"
 msgstr "Escudu de Roma"
 
 #: simulation/data/auras/units/heroes/rome_hero_maximus.jsonauraDescription
-msgid "+2 armor for all units and structures."
-msgstr "+2 d'armadura pa toles unidaes y estructures."
+msgid "+1 armor for all units and structures."
+msgstr "+1 armadura pa toles unidaes y estructures."
 
 #: simulation/data/auras/units/heroes/rome_hero_scipio.jsonauraName
 msgid "Triumph"
@@ -914,8 +921,8 @@ msgid "Ilarchès"
 msgstr "Ilarca"
 
 #: simulation/data/auras/units/heroes/sele_hero_antiochus_great.jsonauraDescription
-msgid "All cavalry gains +2 levels of all armor types."
-msgstr "Tola caballería gana +2 niveles de toa triba d'armadura."
+msgid "Nearby cavalry gains +2 levels of all armor types."
+msgstr "La caballería cercano algama +2 niveles de toa triba d'armadura."
 
 #: simulation/data/auras/units/heroes/sele_hero_antiochus_righteous.jsonauraName
 msgid "Renowned Conqueror"

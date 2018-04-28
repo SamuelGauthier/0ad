@@ -10,12 +10,13 @@
 # Антон Курило, 2017
 # Viktor Hrechaninov <hrechaninovvf@gmail.com>, 2016
 # Антон Курило, 2017
+# Микола Франчук <thekolian1996@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: 0 A.D.\n"
-"POT-Creation-Date: 2018-02-23 09:05+0100\n"
-"PO-Revision-Date: 2018-02-23 19:25+0000\n"
-"Last-Translator: Adrián Chaves Fernández <adriyetichaves@gmail.com>\n"
+"POT-Creation-Date: 2018-04-16 09:04+0200\n"
+"PO-Revision-Date: 2018-04-26 08:58+0000\n"
+"Last-Translator: Микола Франчук <thekolian1996@gmail.com>\n"
 "Language-Team: Ukrainian (http://www.transifex.com/wildfire-games/0ad/language/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -256,7 +257,7 @@ msgstr "Військова повинність"
 
 #: simulation/data/auras/teambonuses/rome_player_teambonus.jsonauraDescription
 msgid "-20% training time for allied citizen-soldier infantry."
-msgstr ""
+msgstr "-20% до часу тренування піших городян-солдат у союзників."
 
 #: simulation/data/auras/teambonuses/sele_player_teambonus.jsonauraName
 msgid "Syrian Tetrapolis"
@@ -384,7 +385,7 @@ msgstr "Найдавніша Нубійська королева"
 msgid ""
 "Ruling with full power in the Meroë Empire and also playing a significant role in the Meroitic religion, Shanakdakheto represented the might of Kush, something not to be taken lightly.\n"
 "Awe: All enemy female citizens -15% gather rate."
-msgstr ""
+msgstr "Володіючи всією повнотою влади в імперії Мерое, а також відіграючи значну роль у Мероїтській релігії, Шанакдахето уособлювало могутність держави Куш, яку доводилося враховувати. Трепет: Швидкість збору всіх жінок-городянок супротивників знижується на -15%."
 
 #: simulation/data/auras/units/catafalques/kush_catafalque_2.jsonauraName
 msgid "Temple at Naqa"
@@ -394,7 +395,7 @@ msgstr "Храм у Наці"
 msgid ""
 "As in all cultures, relgion played a significant part in the Meroë Empire. Shanakdakheto had the Temple buit around 160 B.C. as a symbol of the advancedness of Meroë.\n"
 "+1 garrisoned heal rate for nearby temples."
-msgstr ""
+msgstr "Як і в усіх культурах, релігія відіграла значну роль у імперії Мерое. Близько 160 р. до н.е., цариця Шанакдахето побудувала Храм, що уособлював світанок Мерое.\n+1 до швидкості відновлення здоров'я юнітів, розміщених в храмах поблизу."
 
 #: simulation/data/auras/units/catafalques/mace_catafalque.jsonauraName
 msgid "Sacker of Cities"
@@ -602,15 +603,15 @@ msgstr "Блискучий воєначальник"
 
 #: simulation/data/auras/units/heroes/cart_hero_hamilcar_1.jsonauraDescription
 msgid "Nearby soldiers and siege engines +15% speed."
-msgstr ""
+msgstr "Швидкість солдатів і облогових знарядь, що знаходяться поруч, збільшується на + 15%."
 
 #: simulation/data/auras/units/heroes/cart_hero_hamilcar_2.jsonauraName
 msgid "Subduer of Mercenaries"
-msgstr ""
+msgstr "Приборкувач Найманців"
 
 #: simulation/data/auras/units/heroes/cart_hero_hamilcar_2.jsonauraDescription
 msgid "-20% attack for enemy mercenaries."
-msgstr ""
+msgstr "-20% до атаки для ворожих найманців."
 
 #: simulation/data/auras/units/heroes/cart_hero_hannibal.jsonauraName
 msgid "Tactician"
@@ -619,7 +620,7 @@ msgstr "Тактик"
 #: simulation/data/auras/units/heroes/cart_hero_hannibal.jsonauraDescription
 msgid ""
 "+20% attack and +1 capture for nearby allied soldiers and siege engines."
-msgstr ""
+msgstr "+20% до атаки та +1 до захоплення для союзних солдат і облогових знарядь, що знаходяться поблизу."
 
 #: simulation/data/auras/units/heroes/cart_hero_maharbal.jsonauraName
 msgid "Cavalry Commander"
@@ -708,8 +709,9 @@ msgid "Warrior Queen"
 msgstr "Королева-войовниця"
 
 #: simulation/data/auras/units/heroes/kush_hero_amanirenas.jsonauraDescription
-msgid "+20% attack and +2 capture for soldiers and elephants."
-msgstr "+20% Атака і +2 Захвату для солдатів та слонів."
+#: simulation/data/auras/units/heroes/mace_hero_philip.jsonauraDescription
+msgid "+20% attack and +2 capture for champion units."
+msgstr "+20% до атаки та +2 до захоплення чемпіонів."
 
 #: simulation/data/auras/units/heroes/kush_hero_arakamani_1.jsonauraName
 msgid "Defier of Tradition"
@@ -717,7 +719,7 @@ msgstr "Хранитель Традиції"
 
 #: simulation/data/auras/units/heroes/kush_hero_arakamani_1.jsonauraDescription
 msgid "Temple of Amun and its Napatan Temple Guards +20% cost and build time."
-msgstr ""
+msgstr "+20% вартості і часу побудови для Храму Амуна і його Хранителя Храму Напатана."
 
 #: simulation/data/auras/units/heroes/kush_hero_arakamani_2.jsonauraName
 msgid "Follower of Apedemak"
@@ -725,7 +727,7 @@ msgstr "Послідовник Апедемака"
 
 #: simulation/data/auras/units/heroes/kush_hero_arakamani_2.jsonauraDescription
 msgid "Apedemak temples and its Meroe Temple Guard -20% cost and build time."
-msgstr ""
+msgstr "-20% вартості і часу побудови для храмів Апедемак і їх Хранителя Храму Мерое."
 
 #: simulation/data/auras/units/heroes/kush_hero_arakamani_3.jsonauraName
 msgid "Slaugther of the Faithful"
@@ -733,17 +735,27 @@ msgstr "Убиття вірних"
 
 #: simulation/data/auras/units/heroes/kush_hero_arakamani_3.jsonauraDescription
 msgid "Enemy healrate reduced by 50%."
-msgstr ""
+msgstr "Швидкість лікування у ворога зменшена на 50%."
 
-#: simulation/data/auras/units/heroes/kush_hero_nastasen.jsonauraName
-msgid "Saviour of Kush"
-msgstr "Спаситель Куша"
+#: simulation/data/auras/units/heroes/kush_hero_nastasen_1.jsonauraName
+msgid "Savior of Kush"
+msgstr "Спаситель Куш"
 
-#: simulation/data/auras/units/heroes/kush_hero_nastasen.jsonauraDescription
+#: simulation/data/auras/units/heroes/kush_hero_nastasen_1.jsonauraDescription
 msgid ""
 "Own units +10% attack.\n"
 "Nastasen acquired lots of bounty from the defeated invaders. Gain +50% loot from killing enemy units."
-msgstr ""
+msgstr "+10% до атаки власним юнітам.\nНастасен отримав багато дарів від переможених загарбників. Отримайте +50% грабованого від вбивства ворожих юнітів."
+
+#: simulation/data/auras/units/heroes/kush_hero_nastasen_2.jsonauraName
+msgid "Gift of Warships"
+msgstr "Корабельний дар"
+
+#: simulation/data/auras/units/heroes/kush_hero_nastasen_2.jsonauraDescription
+msgid ""
+"Train Ptolemaic Mercenary Triremes at -25% resource cost.\n"
+"Crushing the Ptolemaic invasion of Kush, Nastasen seized numerous enemy warships."
+msgstr "Тренування Птолемейських Найманців Трирем на -25% дешевше.\nПтолемейське вторгнення в Куш відбито, Настасен захопив численні ворожі кораблі."
 
 #: simulation/data/auras/units/heroes/mace_hero_alexander_1.jsonauraName
 msgid "Imperialism"
@@ -774,16 +786,12 @@ msgid "Besieger"
 msgstr "Осадник"
 
 #: simulation/data/auras/units/heroes/mace_hero_demetrius.jsonauraDescription
-msgid "+10% attack, +10% range and +1 armor for siege engines."
-msgstr "+10% до атаки, +10% до захвату та +1 броні для облогових машин."
+msgid "+20% attack, +10% range and +1 armor for siege engines."
+msgstr "+20% до атаки, +10% до дальності та +1 захисту до облогових знарядь."
 
 #: simulation/data/auras/units/heroes/mace_hero_philip.jsonauraName
 msgid "Rise of Macedon"
 msgstr "Розквіт македонців"
-
-#: simulation/data/auras/units/heroes/mace_hero_philip.jsonauraDescription
-msgid "+20% attack and +2 capture for champion units."
-msgstr "+20% до атаки та +2 до захоплення чемпіонів."
 
 #: simulation/data/auras/units/heroes/mace_hero_pyrrhus.jsonauraName
 msgid "Pyrrhic Victory"
@@ -830,7 +838,7 @@ msgstr "Лідерство"
 
 #: simulation/data/auras/units/heroes/pers_hero_darius.jsonauraDescription
 msgid "+15% movement speed for all soldiers, siege engines and traders."
-msgstr ""
+msgstr "+15% до швидкості пересування для всіх солдат, облогових знарядь і торговців."
 
 #: simulation/data/auras/units/heroes/pers_hero_xerxes.jsonauraName
 msgid "Administrator"
@@ -883,7 +891,7 @@ msgstr "Покровитель найманців"
 
 #: simulation/data/auras/units/heroes/ptol_hero_ptolemy_I_2.jsonauraDescription
 msgid "Mercenaries cost -35% resources during his lifetime."
-msgstr ""
+msgstr "Вартість найманців зменшується на -35%, поки він живий."
 
 #: simulation/data/auras/units/heroes/rome_hero_marcellus_1.jsonauraName
 #: simulation/data/auras/units/heroes/rome_hero_marcellus_2.jsonauraName
@@ -903,8 +911,8 @@ msgid "Shield of Rome"
 msgstr "Римський щит"
 
 #: simulation/data/auras/units/heroes/rome_hero_maximus.jsonauraDescription
-msgid "+2 armor for all units and structures."
-msgstr "+2 до броні для всіх юнітів та будівель."
+msgid "+1 armor for all units and structures."
+msgstr "+1 Броні для всіх пристроїв і споруд."
 
 #: simulation/data/auras/units/heroes/rome_hero_scipio.jsonauraName
 msgid "Triumph"
@@ -919,8 +927,8 @@ msgid "Ilarchès"
 msgstr "Іларх"
 
 #: simulation/data/auras/units/heroes/sele_hero_antiochus_great.jsonauraDescription
-msgid "All cavalry gains +2 levels of all armor types."
-msgstr "Вся кавалерія отримує +2 рівні для всіх типів броні."
+msgid "Nearby cavalry gains +2 levels of all armor types."
+msgstr "Кавалерія, що знаходиться поруч, отримує +2 рівні до всіх типів броні."
 
 #: simulation/data/auras/units/heroes/sele_hero_antiochus_righteous.jsonauraName
 msgid "Renowned Conqueror"
@@ -944,7 +952,7 @@ msgstr "Реформи ілотів"
 
 #: simulation/data/auras/units/heroes/spart_hero_brasidas.jsonauraDescription
 msgid "+25% attack and +1 armor for javelin infantry citizen-soldiers."
-msgstr ""
+msgstr "+25% до атаки і +1 до обладунків для піхотинців-застрільників."
 
 #: simulation/data/auras/units/heroes/spart_hero_leonidas.jsonauraName
 msgid "Last Stand"

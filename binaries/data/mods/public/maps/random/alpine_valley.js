@@ -228,7 +228,7 @@ MountainRangeBuilder.prototype.CreateMountainRanges = function()
 
 if (randBool())
 {
-	g_Map.log("Late spring biome");
+	RandomMapLogger.prototype.printDirectly("Setting late spring biome.\n");
 	var tPrimary = ["alpine_dirt_grass_50"];
 	var tForestFloor = "alpine_forrestfloor";
 	var tCliff = ["alpine_cliff_a", "alpine_cliff_b", "alpine_cliff_c"];
@@ -256,7 +256,7 @@ if (randBool())
 }
 else
 {
-	g_Map.log("Winter biome");
+	RandomMapLogger.prototype.printDirectly("Setting winter biome.\n");
 	var tPrimary = ["alpine_snow_a", "alpine_snow_b"];
 	var tForestFloor = "alpine_forrestfloor_snow";
 	var tCliff = ["alpine_cliff_snow"];
@@ -540,10 +540,5 @@ placePlayersNomad(clPlayer, avoidClasses(clForest, 1, clMetal, 4, clRock, 4, clH
 setSkySet(pickRandom(["cirrus", "cumulus", "sunny"]));
 setSunRotation(randomAngle());
 setSunElevation(Math.PI * randFloat(1/5, 1/3));
-setWaterColor(0.0, 0.047, 0.286);				// dark majestic blue
-setWaterTint(0.471, 0.776, 0.863);				// light blue
-setWaterMurkiness(0.72);
-setWaterWaviness(2.0);
-setWaterType("lake");
 
 g_Map.ExportMap();

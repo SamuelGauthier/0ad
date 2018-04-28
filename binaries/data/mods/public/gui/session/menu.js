@@ -74,17 +74,13 @@ var g_SummarySelectedData;
 // Redefined every time someone makes a tribute (so we can save some data in a closure). Called in input.js handleInputBeforeGui.
 var g_FlushTributing = function() {};
 
-function initSessionMenuButtons()
-{
-	initMenuPosition();
-	updateGameSpeedControl();
-	resizeDiplomacyDialog();
-	resizeTradeDialog();
-}
-
-function initMenuPosition()
+function initMenu()
 {
 	Engine.GetGUIObjectByName("menu").size = "100%-164 " + MENU_TOP + " 100% " + MENU_BOTTOM;
+
+	// TODO: Atlas should pass g_GameAttributes.settings
+	for (let button of ["menuExitButton", "summaryButton", "objectivesButton", "diplomacyButton"])
+		Engine.GetGUIObjectByName(button).enabled = !Engine.IsAtlasRunning();
 }
 
 function updateMenuPosition(dt)
@@ -252,8 +248,17 @@ function openOptions()
 	pauseGame();
 
 	Engine.PushGuiPage("page_options.xml", {
-		"callback": "resumeGame"
+		"callback": "optionsPageClosed"
 	});
+}
+
+function optionsPageClosed(data)
+{
+	for (let callback of data)
+		if (global[callback])
+			global[callback]();
+
+	resumeGame();
 }
 
 function openChat(command = "")
@@ -758,6 +763,11 @@ function updateTraderTexts()
 	Engine.GetGUIObjectByName("traderCountText").caption = getIdleLandTradersText(traderNumber) + "\n\n" + getIdleShipTradersText(traderNumber);
 }
 
+function initBarterButtons()
+{
+	g_BarterSell = g_ResourceData.GetCodes()[0];
+}
+
 /**
  * Code common to both the Barter Panel and the Trade/Barter Dialog, that
  * only needs to be run when the panel or dialog is opened by the player.
@@ -862,12 +872,8 @@ function updateBarterButtons()
 	Engine.GetGUIObjectByName("barterResources").hidden = !canBarter;
 	Engine.GetGUIObjectByName("barterHelp").hidden = !canBarter;
 
-	if (!canBarter)
-		return;
-
-	let resCodes = g_ResourceData.GetCodes();
-	for (let i = 0; i < resCodes.length; ++i)
-		barterUpdateCommon(resCodes[i], i, "barter", g_ViewedPlayer);
+	if (canBarter)
+		g_ResourceData.GetCodes().forEach((resCode, i) => { barterUpdateCommon(resCode, i, "barter", g_ViewedPlayer) });
 }
 
 function getIdleLandTradersText(traderNumber)
@@ -1020,6 +1026,8 @@ function toggleTutorial()
 
 function updateGameSpeedControl()
 {
+	Engine.GetGUIObjectByName("gameSpeedButton").hidden = g_IsNetworked;
+
 	let player = g_Players[Engine.GetPlayerID()];
 	g_GameSpeeds = getGameSpeedChoices(!player || player.state != "active");
 
@@ -1062,7 +1070,7 @@ function openObjectives()
 	let playerState = player && player.state;
 	let isActive = !playerState || playerState == "active";
 
-	Engine.GetGUIObjectByName("gameDescriptionText").caption = getGameDescription(true);
+	Engine.GetGUIObjectByName("gameDescriptionText").caption = getGameDescription();
 
 	let objectivesPlayerstate = Engine.GetGUIObjectByName("objectivesPlayerstate");
 	objectivesPlayerstate.hidden = isActive;

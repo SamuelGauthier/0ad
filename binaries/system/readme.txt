@@ -12,11 +12,15 @@ Autostart:
 -autostart-ai=PLAYER:AI         sets the AI for PLAYER (e.g. 2:petra)
 -autostart-aidiff=PLAYER:DIFF   sets the DIFFiculty of PLAYER's AI (0: sandbox, 5: very hard)
 -autostart-aiseed=AISEED        sets the seed used for the AI random generator (default 0, use -1 for random)
+-autostart-player=NUMBER        sets the playerID in non-networked games (default 1, use -1 for observer)
 -autostart-civ=PLAYER:CIV       sets PLAYER's civilisation to CIV (skirmish and random maps only)
 -autostart-team=PLAYER:TEAM     sets the team for PLAYER (e.g. 2:2).
+-autostart-ceasefire=NUM        sets a ceasefire duration NUM (default 0 minutes)
 -autostart-nonvisual            disable any graphics and sounds
 -autostart-victory=SCRIPTNAME   sets the victory conditions with SCRIPTNAME located in simulation/data/settings/victory_conditions/
--autostart-victoryduration=NUM  sets the victory duration NUM for specific victory conditions
+-autostart-wonderduration=NUM   sets the victory duration NUM for wonder victory condition (default 10 minutes)
+-autostart-relicduration=NUM    sets the victory duration NUM for relic victory condition (default 10 minutes)
+-autostart-reliccount=NUM       sets the number of relics for relic victory condition (default 2 relics)
 Multiplayer:
 -autostart-playername=NAME      sets local player NAME (default 'anonymous')
 -autostart-host                 sets multiplayer host mode
@@ -29,8 +33,13 @@ Multiplayer:
 Examples:
 1) "Bob" will host a 2 player game on the Arcadia map:
  -autostart="scenarios/Arcadia" -autostart-host -autostart-host-players=2 -autostart-playername="Bob"
+ "Alice" joins the match as player 2:
+ -autostart="scenarios/Arcadia" -autostart-client=127.0.0.1 -autostart-playername="Alice"
+ The players use the developer overlay to control players.
 2) Load Alpine Lakes random map with random seed, 2 players (Athens and Britons), and player 2 is PetraBot:
  -autostart="random/alpine_lakes" -autostart-seed=-1 -autostart-players=2 -autostart-civ=1:athen -autostart-civ=2:brit -autostart-ai=2:petra
+3) Observe the PetraBot on a triggerscript map:
+ -autostart="random/jebel_barkal" -autostart-seed=-1 -autostart-players=2 -autostart-civ=1:athen -autostart-civ=2:brit -autostart-ai=1:petra -autostart-ai=2:petra -autostart-player=-1
 
 Configuration:
 -conf=KEY:VALUE     set a config value
@@ -41,6 +50,9 @@ Configuration:
 -vsync              enable VSync, i.e. lock FPS to monitor refresh rate
 -xres=N             set screen X resolution to 'N'
 -yres=N             set screen Y resolution to 'N'
+
+Installing mods:
+PATHS               install mods located at PATHS. For instance: "./pyrogenesis mod1.pyromod mod2.zip"
 
 Advanced / diagnostic:
 -version            print the version of the engine and exit

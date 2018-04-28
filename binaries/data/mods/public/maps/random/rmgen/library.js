@@ -61,6 +61,23 @@ function actorTemplate(templateName)
 	return g_ActorPrefix + templateName + ".xml";
 }
 
+function getObstructionSize(templateName, margin = 0)
+{
+	let obstruction = Engine.GetTemplate(templateName).Obstruction;
+
+	let obstructionSize =
+		obstruction.Static ?
+			new Vector2D(obstruction.Static["@depth"], obstruction.Static["@width"]) :
+		// Used for gates, should consider the position too
+		obstruction.Obstructions ?
+			new Vector2D(
+				Object.keys(obstruction.Obstructions).reduce((depth, key) => Math.max(depth, +obstruction.Obstructions[key]["@depth"]), 0),
+				Object.keys(obstruction.Obstructions).reduce((width, key) => width + +obstruction.Obstructions[key]["@width"], 0)) :
+			new Vector2D(0, 0);
+
+	return obstructionSize.div(TERRAIN_TILE_SIZE).add(new Vector2D(2, 2).mult(margin));
+}
+
 function fractionToTiles(f)
 {
 	return g_MapSettings.Size * f;
@@ -106,25 +123,25 @@ function retryPlacing(placeFunc, retryFactor, amount, behaveDeprecated = false)
 
 // TODO this is a hack to simulate the old behaviour of those functions
 // until all old maps are changed to use the correct version of these functions
-function createObjectGroupsDeprecated(group, player, constraint, amount, retryFactor = 10)
+function createObjectGroupsDeprecated(group, player, constraints, amount, retryFactor = 10)
 {
-	return createObjectGroups(group, player, constraint, amount, retryFactor, true);
+	return createObjectGroups(group, player, constraints, amount, retryFactor, true);
 }
 
-function createObjectGroupsByAreasDeprecated(group, player, constraint, amount, retryFactor, areas)
+function createObjectGroupsByAreasDeprecated(group, player, constraints, amount, retryFactor, areas)
 {
-	return createObjectGroupsByAreas(group, player, constraint, amount, retryFactor, areas, true);
+	return createObjectGroupsByAreas(group, player, constraints, amount, retryFactor, areas, true);
 }
 
 /**
  * Attempts to place the given number of areas in random places of the map.
  * Returns actually placed areas.
  */
-function createAreas(centeredPlacer, painter, constraint, amount, retryFactor = 10)
+function createAreas(centeredPlacer, painter, constraints, amount, retryFactor = 10)
 {
 	let placeFunc = function() {
 		centeredPlacer.setCenterPosition(g_Map.randomCoordinate(false));
-		return createArea(centeredPlacer, painter, constraint);
+		return createArea(centeredPlacer, painter, constraints);
 	};
 
 	return retryPlacing(placeFunc, retryFactor, amount, false);
@@ -134,11 +151,11 @@ function createAreas(centeredPlacer, painter, constraint, amount, retryFactor = 
  * Attempts to place the given number of areas in random places of the given areas.
  * Returns actually placed areas.
  */
-function createAreasInAreas(centeredPlacer, painter, constraint, amount, retryFactor, areas)
+function createAreasInAreas(centeredPlacer, painter, constraints, amount, retryFactor, areas)
 {
 	let placeFunc = function() {
 		centeredPlacer.setCenterPosition(pickRandom(pickRandom(areas).getPoints()));
-		return createArea(centeredPlacer, painter, constraint);
+		return createArea(centeredPlacer, painter, constraints);
 	};
 
 	return retryPlacing(placeFunc, retryFactor, amount, false);
@@ -148,11 +165,11 @@ function createAreasInAreas(centeredPlacer, painter, constraint, amount, retryFa
  * Attempts to place the given number of groups in random places of the map.
  * Returns the number of actually placed groups.
  */
-function createObjectGroups(group, player, constraint, amount, retryFactor = 10, behaveDeprecated = false)
+function createObjectGroups(group, player, constraints, amount, retryFactor = 10, behaveDeprecated = false)
 {
 	let placeFunc = function() {
 		group.setCenterPosition(g_Map.randomCoordinate(true));
-		return createObjectGroup(group, player, constraint);
+		return createObjectGroup(group, player, constraints);
 	};
 
 	return retryPlacing(placeFunc, retryFactor, amount, behaveDeprecated);
@@ -162,11 +179,11 @@ function createObjectGroups(group, player, constraint, amount, retryFactor = 10,
  * Attempts to place the given number of groups in random places of the given areas.
  * Returns the number of actually placed groups.
  */
-function createObjectGroupsByAreas(group, player, constraint, amount, retryFactor, areas, behaveDeprecated = false)
+function createObjectGroupsByAreas(group, player, constraints, amount, retryFactor, areas, behaveDeprecated = false)
 {
 	let placeFunc = function() {
 		group.setCenterPosition(pickRandom(pickRandom(areas).getPoints()));
-		return createObjectGroup(group, player, constraint);
+		return createObjectGroup(group, player, constraints);
 	};
 
 	return retryPlacing(placeFunc, retryFactor, amount, behaveDeprecated);
@@ -201,21 +218,21 @@ function createArea(placer, painters, constraints)
  */
 function paintTerrainBasedOnHeight(minHeight, maxHeight, mode, terrain)
 {
-	createArea(
+	return createArea(
 		new HeightPlacer(mode, minHeight, maxHeight),
 		new TerrainPainter(terrain));
 }
 
 function paintTileClassBasedOnHeight(minHeight, maxHeight, mode, tileClass)
 {
-	createArea(
+	return createArea(
 		new HeightPlacer(mode, minHeight, maxHeight),
 		new TileClassPainter(tileClass));
 }
 
 function unPaintTileClassBasedOnHeight(minHeight, maxHeight, mode, tileClass)
 {
-	createArea(
+	return createArea(
 		new HeightPlacer(mode, minHeight, maxHeight),
 		new TileClassUnPainter(tileClass));
 }
@@ -303,4 +320,18 @@ function convertHeightmap1Dto2D(heightmap)
 			result[x][y] = heightmap[y * hmSize + x];
 	}
 	return result;
+}
+
+function getDifficulties()
+{
+	return Engine.ReadJSONFile("simulation/data/settings/trigger_difficulties.json").Data;
+}
+
+/**
+ * Returns the numeric difficulty level the player chose.
+ */
+function getDifficulty()
+{
+	let level = g_MapSettings.TriggerDifficulty || 3;
+	return getDifficulties().find(difficulty => difficulty.Difficulty == level).Difficulty;
 }

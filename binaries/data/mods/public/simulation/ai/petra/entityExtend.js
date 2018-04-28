@@ -188,7 +188,7 @@ m.allowCapture = function(gameState, ent, target)
 		}
 		capture = capturable.strength;
 	}
-	capture *= 1 / ( 0.1 + 0.9*target.healthLevel());
+	capture *= 1 / (0.1 + 0.9*target.healthLevel());
 	let sumCapturePoints = target.capturePoints().reduce((a, b) => a + b);
 	if (target.hasDefensiveFire() && target.isGarrisonHolder() && target.garrisoned())
 		return capture > antiCapture + sumCapturePoints/50;
@@ -332,6 +332,15 @@ m.getHolder = function(gameState, ent)
 	return undefined;
 };
 
+/** return the template of the built foundation if a foundation, otherwise return the entity itself */
+m.getBuiltEntity = function(gameState, ent)
+{
+	if (ent.foundationProgress() !== undefined)
+		return gameState.getBuiltTemplate(ent.templateName());
+
+	return ent;
+};
+
 /**
  * return true if it is not worth finishing this building (it would surely decay)
  * TODO implement the other conditions
@@ -419,9 +428,12 @@ m.dumpEntity = function(ent)
 		  " subrole " + ent.getMetadata(PlayerID, "subrole"));
 	API3.warn("owner " + ent.owner() + " health " + ent.hitpoints() + " healthMax " + ent.maxHitpoints() +
 	          " foundationProgress " + ent.foundationProgress());
-	API3.warn(" garrisoning " + ent.getMetadata(PlayerID, "garrisoning") + " garrisonHolder " + ent.getMetadata(PlayerID, "garrisonHolder") +
-		  " plan " + ent.getMetadata(PlayerID, "plan")	+ " transport " + ent.getMetadata(PlayerID, "transport") +
-		  " gather-type " + ent.getMetadata(PlayerID, "gather-type") + " target-foundation " + ent.getMetadata(PlayerID, "target-foundation") +
+	API3.warn(" garrisoning " + ent.getMetadata(PlayerID, "garrisoning") +
+		  " garrisonHolder " + ent.getMetadata(PlayerID, "garrisonHolder") +
+		  " plan " + ent.getMetadata(PlayerID, "plan")	+ " transport " + ent.getMetadata(PlayerID, "transport"));
+	API3.warn(" stance " + ent.getStance() + " transporter " + ent.getMetadata(PlayerID, "transporter") +
+		  " gather-type " + ent.getMetadata(PlayerID, "gather-type") +
+		  " target-foundation " + ent.getMetadata(PlayerID, "target-foundation") +
 		  " PartOfArmy " + ent.getMetadata(PlayerID, "PartOfArmy"));
 };
 

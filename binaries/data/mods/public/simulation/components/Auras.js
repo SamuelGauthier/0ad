@@ -100,9 +100,9 @@ Auras.prototype.GetRangeOverlays = function()
 				// Specify default in order not to specify it in about 40 auras
 				{
 					"radius": this.GetRange(name),
-					"texture":  "outline_border.png",
-					"textureMask":  "outline_border_mask.png",
-					"thickness":  0.2
+					"texture": "outline_border.png",
+					"textureMask": "outline_border_mask.png",
+					"thickness": 0.2
 				});
 	}
 
@@ -117,20 +117,19 @@ Auras.prototype.CalculateAffectedPlayers = function(name)
 	var cmpPlayer = Engine.QueryInterface(this.entity, IID_Player);
 	if (!cmpPlayer)
 		cmpPlayer = QueryOwnerInterface(this.entity);
+
 	if (!cmpPlayer || cmpPlayer.GetState() == "defeated")
 		return;
 
-	var numPlayers = Engine.QueryInterface(SYSTEM_ENTITY, IID_PlayerManager).GetNumPlayers();
-	for (var i = 0; i < numPlayers; ++i)
+	let cmpPlayerManager = Engine.QueryInterface(SYSTEM_ENTITY, IID_PlayerManager);
+	for (let i of cmpPlayerManager.GetAllPlayers())
 	{
-		for (let p of affectedPlayers)
-		{
-			if (p == "Player" ? cmpPlayer.GetPlayerID() == i : cmpPlayer["Is" + p](i))
-			{
-				this.affectedPlayers[name].push(i);
-				break;
-			}
-		}
+		let cmpAffectedPlayer = QueryPlayerIDInterface(i);
+		if (!cmpAffectedPlayer || cmpAffectedPlayer.GetState() == "defeated")
+			continue;
+
+		if (affectedPlayers.some(p => p == "Player" ? cmpPlayer.GetPlayerID() == i : cmpPlayer["Is" + p](i)))
+			this.affectedPlayers[name].push(i);
 	}
 };
 
@@ -188,7 +187,7 @@ Auras.prototype.IsRangeAura = function(name)
 
 Auras.prototype.IsGlobalAura = function(name)
 {
-	return this.GetType(name) == "global" || this.GetType(name) == "player";
+	return this.GetType(name) == "global";
 };
 
 Auras.prototype.IsPlayerAura = function(name)
@@ -243,18 +242,16 @@ Auras.prototype.Clean = function()
 
 		if (this.IsGlobalAura(name))
 		{
+			this.ApplyTemplateBonus(name, affectedPlayers);
 			for (let player of affectedPlayers)
-			{
-				this.ApplyTemplateBonus(name, affectedPlayers);
-				if (this.IsPlayerAura(name))
-				{
-					let cmpPlayerManager = Engine.QueryInterface(SYSTEM_ENTITY, IID_PlayerManager);
-					let playerEnts = affectedPlayers.map(player => cmpPlayerManager.GetPlayerByID(player));
-					this.ApplyBonus(name, playerEnts);
-				}
-				else
-					this.ApplyBonus(name, cmpRangeManager.GetEntitiesByPlayer(player));
-			}
+				this.ApplyBonus(name, cmpRangeManager.GetEntitiesByPlayer(player));
+			continue;
+		}
+
+		if (this.IsPlayerAura(name))
+		{
+			let cmpPlayerManager = Engine.QueryInterface(SYSTEM_ENTITY, IID_PlayerManager);
+			this.ApplyBonus(name, affectedPlayers.map(p => cmpPlayerManager.GetPlayerByID(p)));
 			continue;
 		}
 
@@ -480,9 +477,15 @@ Auras.prototype.OnGlobalResearchFinished = function(msg)
 	}
 };
 
-Auras.prototype.OnPlayerDefeated = function(msg)
+/**
+ * Update auras of the player entity and entities affecting player entities that didn't change ownership.
+ */
+Auras.prototype.OnGlobalPlayerDefeated = function(msg)
 {
-	this.Clean();
+	let cmpPlayer = Engine.QueryInterface(this.entity, IID_Player);
+	if (cmpPlayer && cmpPlayer.GetPlayerID() == msg.playerId ||
+	    this.GetAuraNames().some(name => this.GetAffectedPlayers(name).indexOf(msg.playerId) != -1))
+		this.Clean();
 };
 
 Engine.RegisterComponentType(IID_Auras, "Auras", Auras);

@@ -4,12 +4,13 @@
 # 
 # Translators:
 # adin hykin <adin1664@gmail.com>, 2017
+# aqua - <aqua194@gmail.com>, 2018
 # Yam Huss <yam52@walla.co.il>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: 0 A.D.\n"
-"POT-Creation-Date: 2018-02-28 09:04+0100\n"
-"PO-Revision-Date: 2018-02-28 15:24+0000\n"
+"POT-Creation-Date: 2018-04-23 09:05+0200\n"
+"PO-Revision-Date: 2018-04-23 14:16+0000\n"
 "Last-Translator: Adrián Chaves Fernández <adriyetichaves@gmail.com>\n"
 "Language-Team: Hebrew (http://www.transifex.com/wildfire-games/0ad/language/he/)\n"
 "MIME-Version: 1.0\n"
@@ -62,7 +63,7 @@ msgstr ""
 
 #: maps/random/ambush.jsonsettings.Name
 msgid "Ambush"
-msgstr ""
+msgstr "מארב"
 
 #: maps/random/anatolian_plateau.jsonsettings.Description
 msgid ""
@@ -82,7 +83,7 @@ msgstr ""
 
 #: maps/random/archipelago.jsonsettings.Name
 msgid "Archipelago"
-msgstr ""
+msgstr "ארכיפלג"
 
 #: maps/random/arctic_summer.jsonsettings.Description
 msgid ""
@@ -130,7 +131,7 @@ msgstr ""
 
 #: maps/random/bahrain.jsonsettings.Name
 msgid "Bahrain"
-msgstr ""
+msgstr "בחריין"
 
 #: maps/random/belgian_uplands.jsonsettings.Description
 msgid ""
@@ -305,6 +306,19 @@ msgstr ""
 msgid "Extinct Volcano"
 msgstr ""
 
+#: maps/random/fields_of_meroe.jsonsettings.Description
+msgid ""
+"The \"Island of Meroe\", a vast peninsula flanked by the Nile and Atbarah "
+"rivers, formed the heartland of ancient Kush. Where the harsh deserts start "
+"making way for the semi-arid savannahs and small acacia forests dot the "
+"landscape. The area is rich in resources and the ever-present Nile brings "
+"life, but grave threats loom on the opposite riverbank."
+msgstr ""
+
+#: maps/random/fields_of_meroe.jsonsettings.Name
+msgid "Fields of Meroe"
+msgstr ""
+
 #: maps/random/flood.jsonsettings.Description
 msgid ""
 "A great flood has moved across the valley enabling ships and troops to "
@@ -438,6 +452,22 @@ msgstr ""
 msgid "Islands"
 msgstr "איים "
 
+#: maps/random/jebel_barkal.jsonsettings.Description
+msgid ""
+"Starting near the fertile banks of the Nile, the players besiege the heavily"
+" defended city Napata which lies at the foot of the hill Jebel Barkal, the "
+"\"Pure Mountain\". It is the Southern home of Amun, and according to "
+"Kushites and Egyptians alike, the birthplace of man. Known as the Throne of "
+"the Two Lands, the ancient religious capital of Napata lay in its shadow. "
+"This is where Kings were made... and unmade! Abutting a rich floodplain "
+"downstream from the 4th cataract, this area became the breadbasket of "
+"ancient Kush."
+msgstr ""
+
+#: maps/random/jebel_barkal.jsonsettings.Name
+msgid "Jebel Barkal"
+msgstr ""
+
 #: maps/random/kerala.jsonsettings.Description
 msgid ""
 "Players start in the southwestern shores of India between a sea and "
@@ -490,7 +520,7 @@ msgstr ""
 #: maps/random/lower_nubia.jsonsettings.Description
 msgid ""
 "Known in the Greco-Roman world as the Triakontaschoinos, Lower Nubia was the"
-" area between the first and second cataracts of Nile and formed the "
+" area between the first and second cataracts of the Nile and formed the "
 "traditional border region between Kush and Egypt. The scorching desert, "
 "steep valleys and towering cliffs of the area make this an inhospitable "
 "place to live, but the control of this ancient corridor was vital for any "
@@ -543,7 +573,7 @@ msgstr ""
 #: maps/random/mediterranean.jsonsettings.Name
 #: maps/random/rmbiome/generic/mediterranean.jsonDescription.Title
 msgid "Mediterranean"
-msgstr ""
+msgstr "ים תיכוני"
 
 #: maps/random/migration.jsonsettings.Description
 msgid ""
@@ -690,7 +720,7 @@ msgstr ""
 
 #: maps/random/red_sea.jsonsettings.Name
 msgid "Red Sea"
-msgstr ""
+msgstr "הים האדום"
 
 #: maps/random/rhine_marshlands.jsonsettings.Description
 msgid ""
@@ -831,7 +861,7 @@ msgstr "לא ידוע "
 
 #: maps/random/unknown_land.jsonsettings.Description
 msgid "The unknown."
-msgstr ""
+msgstr "הלא נודע"
 
 #: maps/random/unknown_land.jsonsettings.Name
 msgid "Unknown Land"
@@ -857,12 +887,56 @@ msgstr "דמו חומות "
 
 #: maps/random/wild_lake.jsonsettings.Description
 msgid "A lake surrounded by hills."
-msgstr ""
+msgstr "אגם מוקף בגבעות"
 
 #: maps/random/wild_lake.jsonsettings.Name
 msgid "Wild Lake"
 msgstr ""
 
+#: maps/random/rmbiome/fields_of_meroe/dry.jsonDescription.Description
+msgid ""
+"The vitalizing waters of the Nile sustain life along its banks, while the "
+"long dry season scorches the land."
+msgstr ""
+
+#: maps/random/rmbiome/fields_of_meroe/dry.jsonDescription.Description
+msgctxt "biome definition"
+msgid ""
+"The vitalizing waters of the Nile sustain life along its banks, while the "
+"long dry season scorches the land."
+msgstr ""
+
+#: maps/random/rmbiome/fields_of_meroe/dry.jsonDescription.Title
+msgid "Dry Season"
+msgstr ""
+
+#: maps/random/rmbiome/fields_of_meroe/dry.jsonDescription.Title
+msgctxt "biome definition"
+msgid "Dry Season"
+msgstr ""
+
+#: maps/random/rmbiome/fields_of_meroe/rainy.jsonDescription.Description
+msgid ""
+"Revelling in the much awaited rain, the baked land transforms into a lush "
+"haven for both man and beast."
+msgstr ""
+
+#: maps/random/rmbiome/fields_of_meroe/rainy.jsonDescription.Description
+msgctxt "biome definition"
+msgid ""
+"Revelling in the much awaited rain, the baked land transforms into a lush "
+"haven for both man and beast."
+msgstr ""
+
+#: maps/random/rmbiome/fields_of_meroe/rainy.jsonDescription.Title
+msgid "Rainy Season"
+msgstr ""
+
+#: maps/random/rmbiome/fields_of_meroe/rainy.jsonDescription.Title
+msgctxt "biome definition"
+msgid "Rainy Season"
+msgstr ""
+
 #: maps/random/rmbiome/generic/alpine.jsonDescription.Description
 msgid ""
 "A region in the high snowy mountains. Biting winds sweep through the "
@@ -906,12 +980,12 @@ msgstr ""
 
 #: maps/random/rmbiome/generic/autumn.jsonDescription.Title
 msgid "Autumn"
-msgstr ""
+msgstr "סתיו"
 
 #: maps/random/rmbiome/generic/autumn.jsonDescription.Title
 msgctxt "biome definition"
 msgid "Autumn"
-msgstr ""
+msgstr "סתיו"
 
 #: maps/random/rmbiome/generic/desert.jsonDescription.Description
 msgid ""
@@ -930,12 +1004,12 @@ msgstr ""
 
 #: maps/random/rmbiome/generic/desert.jsonDescription.Title
 msgid "Desert"
-msgstr ""
+msgstr "מדבר"
 
 #: maps/random/rmbiome/generic/desert.jsonDescription.Title
 msgctxt "biome definition"
 msgid "Desert"
-msgstr ""
+msgstr "מדבר"
 
 #: maps/random/rmbiome/generic/mediterranean.jsonDescription.Description
 msgid ""
@@ -993,12 +1067,12 @@ msgstr ""
 
 #: maps/random/rmbiome/generic/snowy.jsonDescription.Title
 msgid "Snowy"
-msgstr ""
+msgstr "מושלג"
 
 #: maps/random/rmbiome/generic/snowy.jsonDescription.Title
 msgctxt "biome definition"
 msgid "Snowy"
-msgstr ""
+msgstr "מושלג"
 
 #: maps/random/rmbiome/generic/temperate.jsonDescription.Description
 msgid ""
@@ -1045,12 +1119,12 @@ msgstr ""
 
 #: maps/random/rmbiome/generic/tropic.jsonDescription.Title
 msgid "Tropic"
-msgstr ""
+msgstr "טרופי"
 
 #: maps/random/rmbiome/generic/tropic.jsonDescription.Title
 msgctxt "biome definition"
 msgid "Tropic"
-msgstr ""
+msgstr "טרופי"
 
 #: maps/random/rmbiome/gulf_of_bothnia/frozen_lake.jsonDescription.Description
 msgid ""
@@ -1067,12 +1141,12 @@ msgstr ""
 
 #: maps/random/rmbiome/gulf_of_bothnia/frozen_lake.jsonDescription.Title
 msgid "Frozen Lake"
-msgstr ""
+msgstr "אגם קפוא"
 
 #: maps/random/rmbiome/gulf_of_bothnia/frozen_lake.jsonDescription.Title
 msgctxt "biome definition"
 msgid "Frozen Lake"
-msgstr ""
+msgstr "אגם קפוא"
 
 #: maps/random/rmbiome/gulf_of_bothnia/late_spring.jsonDescription.Description
 msgid ""
@@ -1113,12 +1187,12 @@ msgstr ""
 
 #: maps/random/rmbiome/gulf_of_bothnia/winter.jsonDescription.Title
 msgid "Winter"
-msgstr ""
+msgstr "חורף"
 
 #: maps/random/rmbiome/gulf_of_bothnia/winter.jsonDescription.Title
 msgctxt "biome definition"
 msgid "Winter"
-msgstr ""
+msgstr "חורף"
 
 #: maps/random/rmbiome/persian_highlands/spring.jsonDescription.Description
 msgid ""
@@ -1137,12 +1211,12 @@ msgstr ""
 
 #: maps/random/rmbiome/persian_highlands/spring.jsonDescription.Title
 msgid "Spring"
-msgstr ""
+msgstr "אביב"
 
 #: maps/random/rmbiome/persian_highlands/spring.jsonDescription.Title
 msgctxt "biome definition"
 msgid "Spring"
-msgstr ""
+msgstr "אביב"
 
 #: maps/random/rmbiome/persian_highlands/summer.jsonDescription.Description
 msgid ""
@@ -1159,12 +1233,12 @@ msgstr ""
 
 #: maps/random/rmbiome/persian_highlands/summer.jsonDescription.Title
 msgid "Summer"
-msgstr ""
+msgstr "קיץ"
 
 #: maps/random/rmbiome/persian_highlands/summer.jsonDescription.Title
 msgctxt "biome definition"
 msgid "Summer"
-msgstr ""
+msgstr "קיץ"
 
 #: maps/random/extinct_volcano_triggers.js:65
 msgid "It keeps on raining, we will have to evacuate soon!"
@@ -1182,16 +1256,25 @@ msgstr ""
 msgid "The lakes start swallowing the land, we have to find shelter!"
 msgstr ""
 
-#: maps/random/survivalofthefittest_triggers.js:190
+#: maps/random/jebel_barkal_triggers.js:578
+msgid "Napata is attacking!"
+msgstr ""
+
+#: maps/random/jebel_barkal_triggers.js:590
+#, javascript-format
+msgid "Napata will attack in %(time)s!"
+msgstr ""
+
+#: maps/random/survivalofthefittest_triggers.js:163
 #, javascript-format
 msgid "The first wave will start in %(time)s!"
 msgstr ""
 
-#: maps/random/survivalofthefittest_triggers.js:325
+#: maps/random/survivalofthefittest_triggers.js:264
 msgid "An enemy wave is attacking!"
 msgstr ""
 
-#: maps/random/survivalofthefittest_triggers.js:349
+#: maps/random/survivalofthefittest_triggers.js:289
 #, javascript-format
 msgid "%(player)s has been defeated (lost civic center)."
 msgstr ""
@@ -1895,7 +1978,7 @@ msgstr ""
 
 #: maps/scenarios/Polynesia.xml:PlayerData[0].Name:39
 msgid "Samoa"
-msgstr ""
+msgstr "סמואה"
 
 #: maps/scenarios/Polynesia.xml:PlayerData[1].Name:39
 msgid "Vanuatu"
@@ -1911,7 +1994,7 @@ msgstr ""
 
 #: maps/scenarios/Resource_demo.xml:Description:27
 msgid "Demo map for resource gathering."
-msgstr ""
+msgstr "מפת דמו לאיסוף משאבים"
 
 #: maps/scenarios/Saharan Oases.xml:Description:27
 msgid ""
@@ -2028,7 +2111,7 @@ msgstr ""
 
 #: maps/scenarios/Sandbox - Kushites.xml:PlayerData[2].Name:40
 msgid "Egyptians"
-msgstr ""
+msgstr "מצרים"
 
 #: maps/scenarios/Sandbox - Kushites.xml:Name:40
 msgid "Sandbox - The Kushites"
@@ -2277,7 +2360,7 @@ msgstr ""
 
 #: maps/scenarios/Treasure Islands.xml:Name:39
 msgid "Treasure Islands"
-msgstr ""
+msgstr "איי מטמון"
 
 #: maps/scenarios/Triggers_demo.xml:Description:39
 msgid ""
@@ -2541,6 +2624,51 @@ msgstr ""
 
 #: maps/skirmishes/Dueling Cliffs (3v3).xml:Name:40
 msgid "Dueling Cliffs (3v3)"
+msgstr ""
+
+#: maps/skirmishes/Egypt (3v3).xml:Name:40
+msgid "Egypt (3v3)"
+msgstr ""
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[1].Name:40
+msgid "Alexandria"
+msgstr ""
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[2].Name:40
+msgid "Theben"
+msgstr ""
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[3].Name:40
+msgid "Siwa"
+msgstr ""
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[4].Name:40
+msgid "Sinai"
+msgstr ""
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[5].Name:40
+msgid "Memphis"
+msgstr ""
+
+#: maps/skirmishes/Egypt (3v3).xml:PlayerData[6].Name:40
+msgid "Cyrene"
+msgstr ""
+
+#: maps/skirmishes/Egypt (3v3).xml:Description:40
+msgid ""
+"Fight for the remains of ancient Egypt!\n"
+"\n"
+"Players start with full grown cities and small armies, each having distinct advantages and drawbacks. Take care, there are 7 mighty forts and marauding bandids!\n"
+"\n"
+"It is the last century before 0 A.D. Egypt is internally divided between hellenistic (Alexandria, represented by Seleucids) and traditional influences (Memphis, represented by Ptolemies). Thebes in the southern clime of river Nile has already been taken over by the Kush. In the north western Al-Dschabal al-Achdar, where the mediterranean city of Cyrene is located the Romans are preparing their invasion. From the eastern desert at-Tih and mount Sinai enemies (represented by Persians) are pushing forward and the oasis Siwa. Charga (represented by Carthage) in the south western desert are trying to get a share of the pie as well.\n"
+"Locations:\n"
+"- Alexandria: library, harbor\n"
+"- Memphis: Necropolis, pyramids, Apis shrine\n"
+"- Thebes: temple district, Valley of the Kings \n"
+"- Cyrene: mediterranean Macchie, olive groves\n"
+"- Fayyum: crocodile shrine, nile dam\n"
+"- Eastern desert: mount Sinai, deep Wadi, Red Sea reefs\n"
+"- Western desert: Oasis Charga and Siwa, Qattara Depression\n"
 msgstr ""
 
 #: maps/skirmishes/Forest Battle (4).xml:Description:40
@@ -2828,7 +2956,7 @@ msgstr ""
 
 #: maps/skirmishes/Syria (2).xml:Name:39
 msgid "Syria (2)"
-msgstr ""
+msgstr "סוריה (2)"
 
 #: maps/skirmishes/Team Oasis - 2v2.xml:Description:39
 msgid ""
@@ -2909,4 +3037,4 @@ msgstr ""
 #: maps/random/rmbiome/generic/mediterranean.jsonDescription.Title
 msgctxt "biome definition"
 msgid "Mediterranean"
-msgstr ""
+msgstr "ים תיכוני"

@@ -3,11 +3,12 @@
 # This file is distributed under the same license as the 0 A.D. — Empires Ascendant project.
 # 
 # Translators:
+# Woramet Chaleenoi <best10210@hotmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: 0 A.D.\n"
-"POT-Creation-Date: 2018-02-23 09:04+0100\n"
-"PO-Revision-Date: 2018-02-23 15:32+0000\n"
+"POT-Creation-Date: 2018-04-23 09:03+0200\n"
+"PO-Revision-Date: 2018-04-23 14:50+0000\n"
 "Last-Translator: Adrián Chaves Fernández <adriyetichaves@gmail.com>\n"
 "Language-Team: Thai (http://www.transifex.com/wildfire-games/0ad/language/th/)\n"
 "MIME-Version: 1.0\n"
@@ -18,24 +19,24 @@ msgstr ""
 
 #: gui/lobby/lobby.js:50
 msgid "Online"
-msgstr ""
+msgstr "ออนไลน์"
 
 #: gui/lobby/lobby.js:51
 msgid "Away"
-msgstr ""
+msgstr "ไม่อยู่"
 
 #: gui/lobby/lobby.js:52
 msgid "Busy"
-msgstr ""
+msgstr "ไม่ว่าง"
 
 #: gui/lobby/lobby.js:53
 msgid "Offline"
-msgstr ""
+msgstr "ออฟไลน์"
 
 #: gui/lobby/lobby.js:54
 msgctxt "lobby presence"
 msgid "Unknown"
-msgstr ""
+msgstr "ไม่ทราบ"
 
 #: gui/lobby/lobby.js:58
 msgid "Moderator"
@@ -43,7 +44,7 @@ msgstr ""
 
 #: gui/lobby/lobby.js:59
 msgid "Player"
-msgstr ""
+msgstr "ผู้เล่น"
 
 #: gui/lobby/lobby.js:60
 msgid "Muted Player"
@@ -51,7 +52,7 @@ msgstr ""
 
 #: gui/lobby/lobby.js:156
 msgid "Disconnected."
-msgstr ""
+msgstr "ถูกตัดการเชื่อมต่อ"
 
 #: gui/lobby/lobby.js:178
 #, javascript-format
@@ -111,15 +112,15 @@ msgstr ""
 
 #: gui/lobby/lobby.js:279
 msgid "Notice"
-msgstr ""
+msgstr "ประกาศ"
 
 #: gui/lobby/lobby.js:320
 msgid "Set your state to 'Away'."
-msgstr ""
+msgstr "ตั้งค่าสถานะเป็น 'ไม่อยู่'"
 
 #: gui/lobby/lobby.js:327
 msgid "Set your state to 'Online'."
-msgstr ""
+msgstr "ตั้งค่าสถานะเป็น 'ออนไลน์'"
 
 #: gui/lobby/lobby.js:334
 msgid "Kick a specified user from the lobby. Usage: /kick nick reason"
@@ -131,7 +132,7 @@ msgstr ""
 
 #: gui/lobby/lobby.js:350
 msgid "Show this help."
-msgstr ""
+msgstr "แสดงความช่วยเหลือ"
 
 #: gui/lobby/lobby.js:353
 msgid "Chat commands:"
@@ -159,33 +160,35 @@ msgstr ""
 
 #: gui/lobby/lobby.js:385
 msgid "Return to the main menu."
-msgstr ""
+msgstr "กลับไปหน้าเมนูหลัก"
 
 #: gui/lobby/lobby.js:443
 msgid "You have been disconnected from the lobby. Do you want to reconnect?"
-msgstr ""
+msgstr "คุณถูกตัดการเชื่อมต่อกับล็อบบี้ ต้องการจะเชื่อมต่อใหม่หรื่อไม่?"
 
-#: gui/lobby/lobby.js:444 gui/lobby/lobby.js:1192 gui/prelobby/prelobby.js:299
+#: gui/lobby/lobby.js:444 gui/lobby/lobby.js:1200 gui/prelobby/prelobby.js:299
 msgid "Confirmation"
-msgstr ""
+msgstr "การยืนยัน"
 
-#: gui/lobby/lobby.js:445 gui/lobby/lobby.js:1193 gui/prelobby/prelobby.js:300
+#: gui/lobby/lobby.js:445 gui/lobby/lobby.js:1184 gui/lobby/lobby.js:1201
+#: gui/prelobby/prelobby.js:300
 msgid "No"
-msgstr ""
+msgstr "ไม่"
 
-#: gui/lobby/lobby.js:445 gui/lobby/lobby.js:1193 gui/prelobby/prelobby.js:300
+#: gui/lobby/lobby.js:445 gui/lobby/lobby.js:1184 gui/lobby/lobby.js:1201
+#: gui/prelobby/prelobby.js:300
 msgid "Yes"
-msgstr ""
+msgstr "ใช่"
 
 #: gui/lobby/lobby.js:460
 msgctxt "previous page"
 msgid "Back"
-msgstr ""
+msgstr "ย้อนกลับ"
 
 #: gui/lobby/lobby.js:461
 msgctxt "previous page"
 msgid "Main Menu"
-msgstr ""
+msgstr "เมนูหลัก"
 
 #: gui/lobby/lobby.js:530
 msgctxt "map size"
@@ -240,11 +243,11 @@ msgstr ""
 
 #: gui/lobby/lobby.js:656
 msgid "BANNED"
-msgstr ""
+msgstr "ถูกแบน"
 
 #: gui/lobby/lobby.js:656
 msgid "KICKED"
-msgstr ""
+msgstr "ถูกเตะออก"
 
 #: gui/lobby/lobby.js:687
 msgid "Unmark as Buddy"
@@ -270,7 +273,7 @@ msgstr ""
 msgid "Game started at %(time)s"
 msgstr ""
 
-#: gui/lobby/lobby.js:1135 gui/lobby/lobby.js:1506
+#: gui/lobby/lobby.js:1135 gui/lobby/lobby.js:1514
 msgid "HH:mm"
 msgstr ""
 
@@ -284,141 +287,141 @@ msgid "Your active mods do not match the mods of this game."
 msgstr ""
 
 #: gui/lobby/lobby.js:1182
-msgid "Incompatible mods"
+msgid "Do you want to switch to the mod selection page?"
 msgstr ""
 
 #: gui/lobby/lobby.js:1183
-msgid "Ok"
+msgid "Incompatible mods"
 msgstr ""
 
-#: gui/lobby/lobby.js:1191
+#: gui/lobby/lobby.js:1199
 msgid "The game has already started. Do you want to join as observer?"
 msgstr ""
 
-#: gui/lobby/lobby.js:1225
+#: gui/lobby/lobby.js:1233
 #, javascript-format
 msgid "This game's address '%(ip)s' does not appear to be valid."
 msgstr ""
 
-#: gui/lobby/lobby.js:1341
+#: gui/lobby/lobby.js:1349
 #, javascript-format
 msgid "The command '%(cmd)s' is not supported."
 msgstr ""
 
-#: gui/lobby/lobby.js:1353
+#: gui/lobby/lobby.js:1361
 #, javascript-format
 msgid "The command '%(cmd)s' is restricted to moderators."
 msgstr ""
 
 #. Translation: IRC message prefix when the sender uses the /me command.
-#: gui/lobby/lobby.js:1426
+#: gui/lobby/lobby.js:1434
 #, javascript-format
 msgid "* %(sender)s"
 msgstr ""
 
 #. Translation: IRC message issued using the ‘/me’ command.
-#: gui/lobby/lobby.js:1431
+#: gui/lobby/lobby.js:1439
 #, javascript-format
 msgid "%(sender)s %(action)s"
 msgstr ""
 
 #. Translation: IRC message prefix.
-#: gui/lobby/lobby.js:1440 gui/lobby/lobby.js:1461 gui/lobby/lobby.js:1488
+#: gui/lobby/lobby.js:1448 gui/lobby/lobby.js:1469 gui/lobby/lobby.js:1496
 #, javascript-format
 msgid "<%(sender)s>"
 msgstr ""
 
 #. Translation: IRC message.
-#: gui/lobby/lobby.js:1445 gui/lobby/lobby.js:1466 gui/lobby/lobby.js:1493
+#: gui/lobby/lobby.js:1453 gui/lobby/lobby.js:1474 gui/lobby/lobby.js:1501
 #, javascript-format
 msgid "%(sender)s %(message)s"
 msgstr ""
 
 #. Translation: IRC system message.
-#: gui/lobby/lobby.js:1455
+#: gui/lobby/lobby.js:1463
 #, javascript-format
 msgid "== %(message)s"
 msgstr ""
 
-#: gui/lobby/lobby.js:1483
+#: gui/lobby/lobby.js:1491
 #, javascript-format
 msgctxt "lobby private message"
 msgid "(%(private)s) <%(sender)s>"
 msgstr ""
 
-#: gui/lobby/lobby.js:1484
+#: gui/lobby/lobby.js:1492
 msgid "Private"
 msgstr ""
 
 #. Translation: Time prefix as shown in the multiplayer lobby (when you enable
 #. it in the options page).
-#: gui/lobby/lobby.js:1509
+#: gui/lobby/lobby.js:1517
 #, javascript-format
 msgid "\\[%(time)s]"
 msgstr ""
 
 #. Translation: IRC message format when there is a time prefix.
-#: gui/lobby/lobby.js:1514
+#: gui/lobby/lobby.js:1522
 #, javascript-format
 msgid "%(time)s %(message)s"
 msgstr ""
 
-#: gui/lobby/lobby.js:1553
+#: gui/lobby/lobby.js:1561
 #, javascript-format
 msgid "%(nick)s (%(rating)s)"
 msgstr ""
 
-#: gui/lobby/lobby.js:1569
+#: gui/lobby/lobby.js:1577
 msgctxt "Used for an undefined winning rate"
 msgid "-"
 msgstr ""
 
-#: gui/lobby/lobby.js:1571
+#: gui/lobby/lobby.js:1579
 #, javascript-format
 msgid "%(percentage)s%%"
 msgstr ""
 
 #: gui/prelobby/prelobby.js:43
 msgid "Connecting…"
-msgstr ""
+msgstr "กำลังเชื่อมต่อ..."
 
 #: gui/prelobby/prelobby.js:66
 msgid "Registering…"
-msgstr ""
+msgstr "กำลังดำเนินการสมัครสมาชิก...."
 
 #: gui/prelobby/prelobby.js:96
 msgid "Please enter your username"
-msgstr ""
+msgstr "กรุณาใส่ชื่่อผู้เล่น:"
 
 #: gui/prelobby/prelobby.js:102
 msgid "Invalid username"
-msgstr ""
+msgstr "ไม่สามารถใช้ชื่อนี้ได้"
 
 #: gui/prelobby/prelobby.js:109
 msgctxt "login"
 msgid "Please enter your password"
-msgstr ""
+msgstr "กรุณากรอกรหัสผ่าน"
 
 #: gui/prelobby/prelobby.js:110
 msgctxt "register"
 msgid "Please enter your password"
-msgstr ""
+msgstr "กรุณากรอกรหัสผ่าน"
 
 #: gui/prelobby/prelobby.js:123
 msgid "Please enter your password again"
-msgstr ""
+msgstr "กรุณากรอกรหัสผ่านอีกครั้ง"
 
 #: gui/prelobby/prelobby.js:129
 msgid "Passwords do not match"
-msgstr ""
+msgstr "รหัสผ่านไม่ตรงกัน"
 
 #: gui/prelobby/prelobby.js:135
 msgid "Please read the Terms of Service"
-msgstr ""
+msgstr "กรุณาอ่านข้อตกลงการใช้บริการ"
 
 #: gui/prelobby/prelobby.js:141
 msgid "Please read the Terms of Use"
-msgstr ""
+msgstr "กรุณาอ่านเงื่อนไขการเล่นเกม"
 
 #: gui/prelobby/prelobby.js:147
 msgid "Please agree to the Terms of Service and Terms of Use"

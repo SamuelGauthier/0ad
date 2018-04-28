@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 Wildfire Games.
+/* Copyright (C) 2018 Wildfire Games.
  * This file is part of 0 A.D.
  *
  * 0 A.D. is free software: you can redistribute it and/or modify
@@ -71,11 +71,12 @@ public:
 	 */
 	enum EFlags
 	{
-		FLAG_BLOCK_MOVEMENT     = (1 << 0), // prevents units moving through this shape
-		FLAG_BLOCK_FOUNDATION   = (1 << 1), // prevents foundations being placed on this shape
-		FLAG_BLOCK_CONSTRUCTION = (1 << 2), // prevents buildings being constructed on this shape
-		FLAG_BLOCK_PATHFINDING  = (1 << 3), // prevents the tile pathfinder choosing paths through this shape
-		FLAG_MOVING             = (1 << 4)  // indicates this unit is currently moving
+		FLAG_BLOCK_MOVEMENT           = (1 << 0), // prevents units moving through this shape
+		FLAG_BLOCK_FOUNDATION         = (1 << 1), // prevents foundations being placed on this shape
+		FLAG_BLOCK_CONSTRUCTION       = (1 << 2), // prevents buildings being constructed on this shape
+		FLAG_BLOCK_PATHFINDING        = (1 << 3), // prevents the tile pathfinder choosing paths through this shape
+		FLAG_MOVING                   = (1 << 4), // indicates this unit is currently moving
+		FLAG_DELETE_UPON_CONSTRUCTION = (1 << 5)  // this entity is deleted when construction of a building placed on top of this entity starts
 	};
 
 	/**
@@ -245,6 +246,7 @@ public:
 	virtual void GetObstructionsInRange(const IObstructionTestFilter& filter, entity_pos_t x0, entity_pos_t z0, entity_pos_t x1, entity_pos_t z1, std::vector<ObstructionSquare>& squares) const = 0;
 	virtual void GetStaticObstructionsInRange(const IObstructionTestFilter& filter, entity_pos_t x0, entity_pos_t z0, entity_pos_t x1, entity_pos_t z1, std::vector<ObstructionSquare>& squares) const = 0;
 	virtual void GetUnitObstructionsInRange(const IObstructionTestFilter& filter, entity_pos_t x0, entity_pos_t z0, entity_pos_t x1, entity_pos_t z1, std::vector<ObstructionSquare>& squares) const = 0;
+	virtual void GetStaticObstructionsOnObstruction(const ObstructionSquare& square, std::vector<entity_id_t>& out, const IObstructionTestFilter& filter) const = 0;
 
 	/**
 	 * Returns the entity IDs of all unit shapes that intersect the given
