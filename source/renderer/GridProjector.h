@@ -40,7 +40,6 @@ public:
 	void Initialize() override;
 
 private:
-	//void SetupGrid();
 	void GenerateVertices();
 	void GenerateIndices();
 	void UpdateMatrices();

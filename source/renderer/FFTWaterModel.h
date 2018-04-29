@@ -17,7 +17,7 @@
 
 #include <complex.h>
 #include <tuple>
-#include "lib/external_libraries/fftw.h"
+#include "lib/external_libraries/fftw.h" // needs to be here otherwise std::complex does not work
 
 #include "maths/Vector2D.h"
 #include "maths/Vector3D.h"

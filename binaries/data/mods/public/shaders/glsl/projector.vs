@@ -1,7 +1,4 @@
 #version 120
-#define TEST 0
-#define OLD 0
-#define FFT 1
 
 attribute vec4 vertexPosition; 
 
@@ -26,7 +23,6 @@ float DistanceToPlane(vec4 point);
 
 void main()
 {
-	//vec4 t = transform * vec4(vertexPosition, 1);
 	vec4 start = vertexPosition;
 	vec4 end = vertexPosition;
 
@@ -43,53 +39,31 @@ void main()
     vec2 wind1 = vec2(1, 3);
     vec2 wind2 = vec2(-3, 1);
     vec2 wind3 = vec2(0.3, -1);
-    vec3 timeScale = vec3(0.01, 0.01, 0.03);
+    float timeScale1 = 0.01;
+    float timeScale2 = 0.01;
+    float timeScale3 = 0.03;
+    float amplitude1 = 0.8;
+    float amplitude2 = 1.2;
+    float amplitude3 = 0.5;
     vec3 amplitude = vec3(0.8, 1.2, 0.5);
 
-#if TEST
-	vec3 imgHeight = texture2D(heightMap1, 0.005 * intersection.xz + wind1).rgb
-        * amplitude.x - 0.5;
-	intersection.y += imgHeight.g;
-	intersection.xz += imgHeight.rb;
+    vec3 h = texture2D(heightMap1, scale.x * intersection.xz +
+            wind1 * timeScale1 * time).rgb * amplitude1;
 
-	imgHeight = texture2D(heightMap2, 0.004 * intersection.xz + wind2).rgb *
-        amplitude.y - 0.5;
-	intersection.y += imgHeight.g;
-	intersection.xz += imgHeight.rb;
+    intersection.y += h.g;
+    intersection.xz += h.rb;
 
-	imgHeight = texture2D(heightMap3, 0.04 * intersection.xz + wind3).rgb *
-        amplitude.z - 0.5;
-	intersection.y += imgHeight.g;
-	intersection.xz += imgHeight.rb;
-#endif
+    h = texture2D(heightMap2, scale.x * intersection.xz +
+            wind1 * timeScale2 * time).rgb * amplitude2;
 
-#if NEW
-	vec3 imgHeight = texture2D(heightMap1, scale.x * intersection.xz + wind1 *
-            timeScale.x * time).rgb * amplitude.x - 0.5;
-	intersection.y += imgHeight.g;
-	intersection.xz += imgHeight.rb;
+    intersection.y += h.g;
+    intersection.xz += h.rb;
 
-	imgHeight = texture2D(heightMap2, scale.y * intersection.xz + wind2 *
-            timeScale.y * time).rgb * amplitude.y - 0.5;
-	intersection.y += imgHeight.g;
-	intersection.xz += imgHeight.rb;
+    h = texture2D(heightMap3, scale.x * intersection.xz +
+            wind1 * timeScale3 * time).rgb * amplitude3;
 
-	imgHeight = texture2D(heightMap2, scale.z * intersection.xz + wind3 *
-            timeScale.z * time).rgb * amplitude.z - 0.5;
-	intersection.y += imgHeight.g;
-	intersection.xz += imgHeight.rb;
-#endif
-
-#if FFT
-    vec3 imgHeight = texture2D(heightMap1, 0.06 * intersection.xz).rgb - 0.5;
-    intersection.y += imgHeight.g;
-    intersection.xz += imgHeight.rb;
-    waterHeight = imgHeight.y;
-#endif
-
-#if 1
-    waterHeight = intersection.y;
-#endif
+    intersection.y += h.g;
+    intersection.xz += h.rb;
 
 	losCoords = (losMatrix * intersection).rg;
 

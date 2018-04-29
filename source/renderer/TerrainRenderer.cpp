@@ -948,7 +948,7 @@ void TerrainRenderer::RenderWater(const CShaderDefines& context, int cullGroup, 
 
 void TerrainRenderer::RenderProjectedWater(const CShaderDefines& context, int cullGroup)
 {
-    /*
+    
     PROFILE3_GPU("projected water");
     
     if(g_Renderer.m_WaterRenderMode == WIREFRAME)
@@ -967,7 +967,6 @@ void TerrainRenderer::RenderProjectedWater(const CShaderDefines& context, int cu
 		m->projectorShader = g_Renderer.GetShaderManager().LoadProgram("glsl/projector", defines);
 
     m->projectorShader->Bind();
-   // m->projectorShader->Uniform(str_transform, g_Renderer.GetViewCamera().GetViewProjection());
      
     projectionSystem->Render(m->projectorShader);
     
@@ -980,7 +979,7 @@ void TerrainRenderer::RenderProjectedWater(const CShaderDefines& context, int cu
     
     if(g_Renderer.m_WaterRenderMode == WIREFRAME)
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-     */
+    
 }
 
 void TerrainRenderer::RenderPriorities(int cullGroup)

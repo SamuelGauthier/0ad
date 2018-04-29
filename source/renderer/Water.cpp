@@ -25,7 +25,7 @@
 
 Water::Water(PhysicalWaterModel& waterModel) : m_waterModel{ waterModel } {
 	//m_heightfield = 0;
-	m_area = 0;
+	//m_area = 0;
 	// Temporary
 	m_height = 5.0f;
 	// nullPtr m_height = g_Renderer.GetWaterManager()->m_WaterHeight;
@@ -41,3 +41,8 @@ Water::~Water() {}
 
 //float Water::GetMaxWaterHeight() { return m_waterModel.GetMaxHeight(); }
 //float Water::GetMinWaterHeight() { return m_waterModel.GetMinHeight(); }
+
+void Water::GenerateVariationMap()
+{
+    
+}

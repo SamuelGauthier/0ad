@@ -21,7 +21,6 @@
 #include <time.h>
 #include <math.h>
 
-//#include "lib/external_libraries/fftw.h"
 #include "ps/CLogger.h"
 #include "renderer/Renderer.h"
 
@@ -58,35 +57,30 @@ FFTWaterModel::FFTWaterModel(WaterProperties waterProperty) : m_WaterProperties(
 
 FFTWaterModel::FFTWaterModel(std::vector<FFTWaterProperties> waterProperties) : m_WaterProperties(waterProperties)
 {
-    LOGWARNING("Been in FFTWaterModel::FFTWaterModel(std::vector<FFTWaterProperties> waterProperties)");
 	// TODO: Temp ugly stuff:
 	m_WaterProperty = waterProperties.at(0);
-/*
+
     u32 length = m_WaterProperty.m_resolution*m_WaterProperty.m_resolution;
     m_h_0 = std::vector<std::complex<float>>(length);
     m_h_0_star = std::vector<std::complex<float>>(length);
     //m_h_tilde = std::vector<std::complex<float>>(length);
     //m_HeightField = std::vector<CVector3D>(length);
     //m_NormalMap = std::vector<CVector3D>(length);
-	m_HeightMaps = std::vector<std::vector<u8>>(waterProperties.size());
-	m_NormalMaps = std::vector<std::vector<u8>>(waterProperties.size());
-	m_VariationMap = std::vector<u8>(length);
+	//m_HeightMaps = std::vector<std::vector<u8>>(waterProperties.size());
+	//m_NormalMaps = std::vector<std::vector<u8>>(waterProperties.size());
+	//m_VariationMap = std::vector<u8>(length);
 
     //PrecomputePhillipsSpectrum();
 	//TupleVecComplexF t = ComputePhillipsSpectrum(m_WaterProperties);
 	std::tie(m_h_0, m_h_0_star) = ComputePhillipsSpectrum(m_WaterProperty);
-	//m_h_0 = std::get<0>(t);
-	//m_h_0_star = std::get<1>(t);
-*/
+
 	// TODO: temporary value
 	SetMaxHeight(5.0f);
 	SetMinHeight(-5.0f);
 
 }
 
-FFTWaterModel::~FFTWaterModel() {
-    LOGWARNING("Been in FFTWaterModel::~FFTWaterModel()");
-}
+FFTWaterModel::~FFTWaterModel() {}
 
 void FFTWaterModel::GetHeightMapAtTime(double time, std::vector<u8>* heightMap, std::vector<u8>* normalMap)
 {
@@ -361,7 +355,7 @@ TupleVecU8 FFTWaterModel::GetHeightAndNormalMapAtTime(double time, FFTWaterPrope
     fftwf_plan p_ifft_D_z;
     
     u32 resolution = waterProps.m_resolution * waterProps.m_resolution;
-	LOGWARNING("%u", resolution);
+	//LOGWARNING("%u", resolution);
     
     std::complex<float>* slope_x_term = new std::complex<float>[resolution];
     std::complex<float>* slope_z_term = new std::complex<float>[resolution];
@@ -512,35 +506,16 @@ std::vector<u8> FFTWaterModel::GetNormalMapAtLevel(u8 level)
 
 void FFTWaterModel::GenerateHeightMaps()
 {
-    //wchar_t pathname[PATH_MAX];
-    
-    //for (int i = 0; i < 3; i++) {
-    //    swprintf_s(pathname, ARRAY_SIZE(pathname), L"art/textures/terrain/types/water/heightmap%1d.png", i+1);
-    //    CTextureProperties textureProps(pathname);
-    //    textureProps.SetWrap(GL_REPEAT);
-    //    CTexturePtr texture = g_Renderer.GetTextureManager().CreateTexture(textureProps);
-    //    texture->Prefetch();
-    //    m_HeightMaps[i] = texture;
-    //}
-
-	// TODO: Temp here
-	//WaterProperties current = m_WaterProperty;
-
-	LOGWARNING("%d", m_WaterProperties.size());
-
 	for (size_t i = 0; i < m_WaterProperties.size(); i++)
 	{
-		u32 resolution = m_WaterProperties.at(i).m_resolution * m_WaterProperties.at(i).m_resolution;
-		std::vector<u8> heightMap = std::vector<u8>(resolution);
-		std::vector<u8> normalMap = std::vector<u8>(resolution);
+        std::vector<u8> heightMap;// = std::vector<u8>(resolution);
+        std::vector<u8> normalMap;// = std::vector<u8>(resolution);
 
 		std::tie(heightMap, normalMap) = GetHeightAndNormalMapAtTime(m_WaterProperties.at(i).m_time, m_WaterProperties.at(i));
-
+        
 		m_HeightMaps.push_back(heightMap);
 		m_NormalMaps.push_back(normalMap);
 	}
-    
-	// TODO: Create variation maps
 }
 
 //void FFTWaterModel::ComputePhillipsSpectrum(WaterProperties waterProps, std::vector<std::complex<float>>* h0, std::vector<std::complex<float>>* h0star)
@@ -597,18 +572,7 @@ std::complex<float> FFTWaterModel::GetHTildeAt(u16 n, u16 m, double time)
     
     std::complex<float> term1 = m_h_0[index] * exp(std::complex<float>(0.0f, w * time));
     std::complex<float> term2 = m_h_0_star[index] * exp(std::complex<float>(0.0f, -w * time));
-    
-#if 0
-    if(n == 2 && m == 2){
-        LOGWARNING("w @ 2,2: %f", w);
-        LOGWARNING("k @ 2,2: (%f; %f)", k.X, k.Y);
-        LOGWARNING("term1: %u and %f + (%f)i", index, term1.real(), term1.imag());
-        LOGWARNING("term2: %u and %f; (%f)i", index, term2.real(), term2.imag());
-        LOGWARNING("m_h_0: %u and %f; (%f)i", index, m_h_0[index].real(), m_h_0[index].imag());
-        LOGWARNING("m_h_0_star: %u and %f; (%f)i", index, m_h_0_star[index].real(), m_h_0_star[index].imag());
-                   
-    }
-#endif
+
     
     return term1 + term2;
 }

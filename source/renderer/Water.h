@@ -37,6 +37,8 @@ public:
 	//CPlane GetBasePlane() { return m_base; }
 
 	PhysicalWaterModel& GetPhysicalWaterModel() { return m_waterModel; }
+    
+    void GenerateVariationMap();
 
 	CPlane m_base;
 
@@ -46,7 +48,7 @@ private:
     std::vector<std::vector<u8>> m_heightFields;
     std::vector<std::vector<u8>> m_normalMaps;
     std::vector<u8> m_variationMap;
-	int* m_area;
+	//int* m_area;
 	float m_height;
 	//float m_maxHeight;
 	//float m_minHeight;
