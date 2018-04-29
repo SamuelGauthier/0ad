@@ -65,6 +65,7 @@ libraries/osx/libcurl/
 libraries/osx/libjpg/
 libraries/osx/libogg/
 libraries/osx/libpng/
+libraries/osx/libsodium
 libraries/osx/libxml2/
 libraries/osx/miniupnpc/
 libraries/osx/nspr/
