@@ -65,9 +65,8 @@ WaterProps mediumWaves = WaterProps(6e-7, 20, CVector2D(4, 1.5), 2, 0.1, 2048, 5
 WaterProps detailedWaves = WaterProps(6e-7, 20, CVector2D(1, 1.5), 1, 0.1, 2048, 8000, TIME);
 std::vector<WaterProps> wps = { coarseWaves, mediumWaves, detailedWaves };
 
-GridProjector::GridProjector() : m_model(FFTWaterModel(wps)), m_water(m_model), m_gridVBIndices(0), m_gridVBVertices(0)
+GridProjector::GridProjector() : m_water(FFTWaterModel(wps)), m_gridVBIndices(0), m_gridVBVertices(0)
 {
-	m_isInitialized = false;
 	m_time = 0.0;
 	m_resolutionX = 256;
 	m_resolutionY = 256;
@@ -137,8 +136,6 @@ void GridProjector::Initialize()
 
 	CreateTextureHeightMaps();
 	CreateTextureNormalMaps();
-
-	m_isInitialized = true;
 }
 
 void GridProjector::GenerateVertices()

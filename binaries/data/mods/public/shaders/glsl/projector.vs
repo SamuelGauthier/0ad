@@ -48,19 +48,19 @@ void main()
     vec3 amplitude = vec3(0.8, 1.2, 0.5);
 
     vec3 h = texture2D(heightMap1, scale.x * intersection.xz +
-            wind1 * timeScale1 * time).rgb * amplitude1;
+            wind1 * timeScale1 * time).rgb * amplitude1 - 0.5;
 
     intersection.y += h.g;
     intersection.xz += h.rb;
 
     h = texture2D(heightMap2, scale.x * intersection.xz +
-            wind1 * timeScale2 * time).rgb * amplitude2;
+            wind1 * timeScale2 * time).rgb * amplitude2 - 0.5;
 
     intersection.y += h.g;
     intersection.xz += h.rb;
 
     h = texture2D(heightMap3, scale.x * intersection.xz +
-            wind1 * timeScale3 * time).rgb * amplitude3;
+            wind1 * timeScale3 * time).rgb * amplitude3 - 0.5;
 
     intersection.y += h.g;
     intersection.xz += h.rb;

@@ -27,7 +27,7 @@
 class Water
 {
 public:
-	Water(PhysicalWaterModel& model);
+	Water(PhysicalWaterModel model);
 	~Water();
 
 	// TODO: This is not very beautiful
@@ -55,7 +55,7 @@ private:
 	//CColor m_color;
 	//CColor m_tint;
 
-	PhysicalWaterModel& m_waterModel;
+	PhysicalWaterModel m_waterModel;
 };
 
 #endif // INCLUDED_WATER

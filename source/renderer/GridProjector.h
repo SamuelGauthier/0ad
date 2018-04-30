@@ -47,13 +47,12 @@ private:
 	void CreateTextureHeightMaps();
 	void CreateTextureNormalMaps();
 
-	bool m_isInitialized;
 	float m_time;
 	uint m_resolutionX;
 	uint m_resolutionY;
 	u32 m_totalResolution;
 	Water m_water;
-	FFTWaterModel m_model;
+	//FFTWaterModel m_model;
 	CCamera m_PCamera;
 	CVertexBuffer::VBChunk* m_gridVBIndices;
 	CVertexBuffer::VBChunk* m_gridVBVertices;
