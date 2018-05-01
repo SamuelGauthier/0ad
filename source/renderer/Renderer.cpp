@@ -64,7 +64,6 @@
 #include "renderer/ModelRenderer.h"
 #include "renderer/OverlayRenderer.h"
 #include "renderer/ParticleRenderer.h"
-#include "renderer/ProjectionSystem.h"
 #include "renderer/PostprocManager.h"
 #include "renderer/RenderModifiers.h"
 #include "renderer/ShadowMap.h"
@@ -275,8 +274,8 @@ public:
 	SkyManager skyManager;
     
     // Projection System
-    //ProjectionSystem projectionSystem; can't do that
-    GridProjector projectionSystem;
+    //ProjectionSystem& projectionSystem;// can't do that
+    //GridProjector projectionSystem;
 
 	/// Texture manager
 	CTextureManager textureManager;
@@ -295,6 +294,9 @@ public:
 
 	/// Material manager
 	CMaterialManager materialManager;
+    
+    /// Grid projector
+    GridProjector gridProjector;
 
 	/// Time manager
 	CTimeManager timeManager;
@@ -344,7 +346,7 @@ public:
 	CShaderDefines globalContext;
 
 	CRendererInternals() :
-		IsOpen(false), ShadersDirty(true), profileTable(g_Renderer.m_Stats), textureManager(g_VFS, false, false)
+    IsOpen(false), ShadersDirty(true), profileTable(g_Renderer.m_Stats), textureManager(g_VFS, false, false)
 	{
 	}
 
@@ -421,8 +423,6 @@ CRenderer::CRenderer()
 	m = new CRendererInternals;
 	m_WaterManager = &m->waterManager;
 	m_SkyManager = &m->skyManager;
-    m_ProjectionSystem = &m->projectionSystem;
-    //m_ProjectionSystem = &m->projectionSystem;
 
 	g_ProfileViewer.AddRootTable(&m->profileTable);
 
@@ -2110,6 +2110,11 @@ void CRenderer::MakeShadersDirty()
 {
 	m->ShadersDirty = true;
 	m_WaterManager->m_NeedsReloading = true;
+}
+
+ProjectionSystem& CRenderer::GetProjectionSystem()
+{
+    return m->gridProjector;
 }
 
 CTextureManager& CRenderer::GetTextureManager()

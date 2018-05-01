@@ -47,7 +47,7 @@ class CShaderManager;
 class CSimulation2;
 class CTextureManager;
 class CTimeManager;
-class GridProjector;
+class ProjectionSystem;
 class RenderPathVertexShader;
 class ShadowMap;
 class SkyManager;
@@ -314,7 +314,7 @@ public:
 	 */
 	SkyManager* GetSkyManager() { return m_SkyManager; }
     
-    ProjectionSystem* GetProjectionSystem() { return m_ProjectionSystem; }
+    ProjectionSystem& GetProjectionSystem();
 
 	CTextureManager& GetTextureManager();
 
@@ -466,8 +466,6 @@ protected:
 	// per-frame renderer stats
 	Stats m_Stats;
 
-	GridProjector* m_GridProjector;
-
 	/**
 	 * m_WaterManager: the WaterManager object used for water textures and settings
 	 * (e.g. water color, water height)
@@ -478,8 +476,6 @@ protected:
 	 * m_SkyManager: the SkyManager object used for sky textures and settings
 	 */
 	SkyManager* m_SkyManager;
-    
-    ProjectionSystem* m_ProjectionSystem;
 
 	/**
 	 * Enable rendering of terrain tile priority text overlay, for debugging.

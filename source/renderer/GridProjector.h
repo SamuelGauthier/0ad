@@ -23,11 +23,12 @@
 #include "maths/Matrix3D.h"
 #include "maths/Vector4D.h"
 
-#include "renderer/FFTWaterModel.h"
+//#include "renderer/FFTWaterModel.h"
 #include "renderer/VertexArray.h"
 #include "renderer/VertexBuffer.h"
+#include "renderer/OceanWater.h"
 #include "renderer/ProjectionSystem.h"
-#include "renderer/Water.h"
+//#include "renderer/Water.h"
 
 class GridProjector : public ProjectionSystem
 {
@@ -44,15 +45,15 @@ private:
 	void GenerateIndices();
 	void UpdateMatrices();
 	void ComputeIntersection(std::vector<CVector4D>& cam_frustrum, std::vector<CVector4D>& span_buffer, CPlane& maxWater, CPlane& minWater, int start, int end);
-	void CreateTextureHeightMaps();
-	void CreateTextureNormalMaps();
+    void CreateTextures();
+
 
 	float m_time;
 	uint m_resolutionX;
 	uint m_resolutionY;
 	u32 m_totalResolution;
-	Water m_water;
-	//FFTWaterModel m_model;
+	OceanWater m_water;
+
 	CCamera m_PCamera;
 	CVertexBuffer::VBChunk* m_gridVBIndices;
 	CVertexBuffer::VBChunk* m_gridVBVertices;
@@ -68,9 +69,9 @@ private:
 	
 	std::vector<GLuint> m_heightMapsID;
 	std::vector<GLuint> m_normalMapsID;
+    GLuint m_variationMapID;
+    GLuint m_flowMapID;
 
-	std::vector<std::vector<u8>> m_heightMaps;
-	std::vector<std::vector<u8>> m_normalMaps;
 };
 
 #endif // !INCLUDED_GRIDPROJECTOR

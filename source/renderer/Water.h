@@ -27,35 +27,15 @@
 class Water
 {
 public:
-	Water(PhysicalWaterModel model);
-	~Water();
 
-	// TODO: This is not very beautiful
-	float GetMaxWaterHeight() { return m_waterModel.GetMaxHeight(); }
-	float GetMinWaterHeight() { return m_waterModel.GetMinHeight(); }
+	virtual ~Water() = 0;
 
-	//CPlane GetBasePlane() { return m_base; }
+    virtual float GetMaxWaterHeight() = 0;
+    virtual float GetMinWaterHeight() = 0;
 
-	PhysicalWaterModel& GetPhysicalWaterModel() { return m_waterModel; }
+    virtual PhysicalWaterModel& GetPhysicalWaterModel() = 0;
     
-    void GenerateVariationMap();
-
-	CPlane m_base;
-
-private:
-	//CTexture m_heightfield;
-	//CTexture m_area;
-    std::vector<std::vector<u8>> m_heightFields;
-    std::vector<std::vector<u8>> m_normalMaps;
-    std::vector<u8> m_variationMap;
-	//int* m_area;
-	float m_height;
-	//float m_maxHeight;
-	//float m_minHeight;
-	//CColor m_color;
-	//CColor m_tint;
-
-	PhysicalWaterModel m_waterModel;
+    virtual CPlane GetWaterBasePlane() = 0;
 };
 
 #endif // INCLUDED_WATER

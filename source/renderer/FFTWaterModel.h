@@ -29,8 +29,10 @@
 
 using TupleVecComplexF = std::tuple<std::vector<std::complex<float>>, std::vector<std::complex<float>>>;
 using TupleVecU8 = std::tuple<std::vector<u8>, std::vector<u8>>;
+using TupleVecVecU8 = std::tuple<std::vector<std::vector<u8>>, std::vector<std::vector<u8>>>;
+using VecComplexF = std::vector<std::complex<float>>;
 
-class FFTWaterModel : public PhysicalWaterModel
+class FFTWaterModel
 {
 public:
     struct FFTWaterProperties
@@ -53,28 +55,20 @@ public:
             m_width{ width }, m_time{ time } {}
     };
     
-	//FFTWaterModel(WaterProperties waterProperty);
 	FFTWaterModel(std::vector<FFTWaterProperties> waterProperties);
 	~FFTWaterModel();
 
-    void GetHeightMapAtTime(double time, std::vector<u8>* heightMap, std::vector<u8>* normalMap);
-	std::vector<u8> GetHeightMapAtLevel(u8 level);
-	std::vector<u8> GetNormalMapAtLevel(u8 level);
-	std::vector<u8> GetVariationMap() { return m_VariationMap; }
-	void GenerateHeightMaps();
+    TupleVecVecU8 GenerateHeightAndNormalMaps();
+    
+    std::vector<FFTWaterProperties> GetWaterProperties() { return m_WaterProperties; }
 
 private:
-    FFTWaterProperties m_WaterProperty;
-    std::vector<FFTWaterProperties> m_WaterProperties;
-	std::vector<std::vector<u8>> m_HeightMaps;
-	std::vector<std::vector<u8>> m_NormalMaps;
-	std::vector<u8> m_VariationMap;
-	
-    std::vector<std::complex<float>> m_h_0;
-    std::vector<std::complex<float>> m_h_0_star;
 
-	TupleVecU8 GetHeightAndNormalMapAtTime(double time, FFTWaterProperties waterProps);
+    std::vector<FFTWaterProperties> m_WaterProperties;
+	std::vector<u8> m_VariationMap;
+
+	TupleVecU8 GetHeightAndNormalMapAtTime(double time, FFTWaterProperties waterProps, VecComplexF* h_0, VecComplexF* h_0_star);
 	TupleVecComplexF ComputePhillipsSpectrum(FFTWaterProperties waterProps);
 
-	std::complex<float> GetHTildeAt(u16 n, u16 m, double time);
+	std::complex<float> GetHTildeAt(u16 n, u16 m, double time, FFTWaterProperties waterProperty, VecComplexF* h_0, VecComplexF* h_0_star);
 };

@@ -15,20 +15,37 @@
  * along with 0 A.D.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef INCLUDED_PHYSICALWATERMODEL
-#define INCLUDED_PHYSICALWATERMODEL
+#include "precompiled.h"
 
-class PhysicalWaterModel
+#include "renderer/OceanWater.h"
+
+
+
+OceanWater::OceanWater(FFTWaterModel waterModel) : m_waterModel(waterModel)
 {
-public:
-    virtual ~PhysicalWaterModel() = 0;
+}
 
-    virtual std::vector<std::vector<u8>> GenerateHeightMaps() = 0;
-    virtual std::vector<std::vector<u8>> GenerateNormalMaps() = 0;
-    virtual std::vector<std::vector<u8>> GenerateVariationMaps() = 0;
-    virtual std::vector<std::vector<u8>> GenerateFlowMaps() = 0;
+OceanWater::~OceanWater() {}
 
-};
+void OceanWater::SetWaterHeight(float height)
+{
+    m_waterBase.Set(CVector3D(0.f, 1.f, 0.f), CVector3D(0.f, height, 0.f));
+}
 
-#endif // !INCLUDED_PHYSICALWATERMODEL
+float OceanWater::GetMaxWaterHeight()
+{
+    // TODO: Temporary, should compute the max from the
+    return 5.0;
+}
 
+float OceanWater::GetMinWaterHeight()
+{
+    // Id. as in OceanWater::GetMaxWaterHeight()
+    return -5.0;
+}
+
+void OceanWater::GenerateWaterWaves()
+{
+    // TODO: Generate the water Data
+    std::tie(m_heightMaps, m_normalMaps) = m_waterModel.GenerateHeightAndNormalMaps();
+}

@@ -16,6 +16,8 @@
 
 #include "precompiled.h"
 
+#include "renderer/GridProjector.h"
+
 #include "graphics/LOSTexture.h"
 #include "graphics/Terrain.h"
 #include "graphics/ShaderManager.h"
@@ -38,8 +40,6 @@
 // TODO: Temp to be removed later
 #include "renderer/WaterManager.h"
 
-#include "renderer/GridProjector.h"
-
 #define DEBUG_COMPUTE_INTERSECTION 0
 #define DEBUG_UPDATE_MATRICES_CAMERA_INFOS 0
 #define DEBUG_UPDATE_MATRICES_PROJECTOR_INFOS 0
@@ -57,20 +57,20 @@
 #define DEBUG_UPDATE_POINTS 0
 #define DEBUG_UPDATE_POINTS_INTERSECT_INFO 0
 
-using WaterProps = FFTWaterModel::FFTWaterProperties;
+using WaterProperties = FFTWaterModel::FFTWaterProperties;
 
 double TIME = 3.2;
-WaterProps coarseWaves = WaterProps(3e-7, 43, CVector2D(1, 5), 1, 0.1, 2048, 4000, TIME);
-WaterProps mediumWaves = WaterProps(6e-7, 20, CVector2D(4, 1.5), 2, 0.1, 2048, 5000, TIME);
-WaterProps detailedWaves = WaterProps(6e-7, 20, CVector2D(1, 1.5), 1, 0.1, 2048, 8000, TIME);
-std::vector<WaterProps> wps = { coarseWaves, mediumWaves, detailedWaves };
+WaterProperties coarseWaves = WaterProperties(3e-7, 43, CVector2D(1, 5), 1, 0.1, 2048, 4000, TIME);
+WaterProperties mediumWaves = WaterProperties(6e-7, 20, CVector2D(4, 1.5), 2, 0.1, 2048, 5000, TIME);
+WaterProperties detailedWaves = WaterProperties(6e-7, 20, CVector2D(1, 1.5), 1, 0.1, 2048, 8000, TIME);
+std::vector<WaterProperties> wps = { coarseWaves, mediumWaves, detailedWaves };
 
 GridProjector::GridProjector() : m_water(FFTWaterModel(wps)), m_gridVBIndices(0), m_gridVBVertices(0)
 {
 	m_time = 0.0;
 	m_resolutionX = 256;
 	m_resolutionY = 256;
-	m_totalResolution = m_resolutionX*m_resolutionY;
+	m_totalResolution = m_resolutionX * m_resolutionY;
 
 	m_PCamera = CCamera();
 
@@ -81,14 +81,6 @@ GridProjector::GridProjector() : m_water(FFTWaterModel(wps)), m_gridVBIndices(0)
     
     m_normalMapsID = std::vector<GLuint>(3);
     m_heightMapsID = std::vector<GLuint>(3);
-    
-
-	for (size_t i = 0; i < wps.size(); i++)
-	{
-		u32 size = wps.at(i).m_resolution * wps.at(i).m_resolution * 3;
-		m_heightMaps.push_back(std::vector<u8>(size));
-	}
-
 }
 
 GridProjector::~GridProjector()
@@ -128,19 +120,12 @@ void GridProjector::Initialize()
 	
 	m_gridVBIndices->m_Owner->UpdateChunkVertices(m_gridVBIndices, &m_indices[0]);
 
-	// TODO: Temporary here
-	m_water.GetPhysicalWaterModel().GenerateHeightMaps();
-    
-    glGenTextures(3, &m_normalMapsID[0]);
-    glGenTextures(3, &m_heightMapsID[0]);
-
-	CreateTextureHeightMaps();
-	CreateTextureNormalMaps();
+    m_water.GenerateWaterWaves();
+    CreateTextures();
 }
 
 void GridProjector::GenerateVertices()
 {
-    LOGWARNING("Been in GridProjector::GenerateVertices()");
 	PROFILE3_GPU("generate vertices");
 	if (m_verticesModel.size() != 0)
 	{
@@ -160,7 +145,6 @@ void GridProjector::GenerateVertices()
 
 void GridProjector::GenerateIndices()
 {
-    LOGWARNING("Been in GridProjector::GenerateIndices()");
 	m_indices.clear();
 
 	for (uint j = 0; j < (m_resolutionY - 1); j++)
@@ -187,12 +171,8 @@ void GridProjector::GenerateIndices()
 void GridProjector::UpdateMatrices()
 {
 	PROFILE3_GPU("update matrices");
-	// TODO: Temporary here, don't know where to put else for know
-	//CPlane water = m_water.GetBasePlane();
-	m_water.m_base.Set(CVector3D(0.f, 1.f, 0.f), CVector3D(0.f, g_Renderer.GetWaterManager()->m_WaterHeight, 0.f));
-	//water.Set(CVector3D(0.f, 1.f, 0.f), CVector3D(0.f, g_Renderer.GetWaterManager()->m_WaterHeight, 0.f));
-	
-	//m_Mperspective = g_Renderer.GetViewCamera().GetProjection();
+	// TODO: Temporary here, dependecy to WaterManager should be cut by implementing a couple of CCmpOceanWater classes.
+	m_water.SetWaterHeight(g_Renderer.GetWaterManager()->m_WaterHeight);
 	
 	CCamera g_RCamera = g_Renderer.GetViewCamera();
 	CMatrix3D invV = g_RCamera.GetOrientation();
@@ -206,7 +186,7 @@ void GridProjector::UpdateMatrices()
 
 	CVector3D intersection;
 
-	bool gotWater = m_water.m_base.FindRayIntersection(camPosition, camDirection, &intersection);
+	bool gotWater = m_water.GetWaterBase().FindRayIntersection(camPosition, camDirection, &intersection);
 
 	ssize_t mapSize = g_Game->GetWorld()->GetTerrain()->GetVerticesPerSide();
 	if (gotWater)
@@ -256,7 +236,7 @@ void GridProjector::UpdateMatrices()
 	// Compute Mrange conversion matrix
 	// Project frustrum corner points into world coordinates
 	
-	CPlane water = m_water.m_base;
+	CPlane water = m_water.GetWaterBase();
 	std::vector<CVector4D> span_buffer;
 	std::vector<CVector4D> cam_frustrum;
 	cam_frustrum.push_back(CVector4D(+1, +1, +1, 1));
@@ -385,7 +365,6 @@ void GridProjector::UpdateMatrices()
 	LOGWARNING("x_max-x_min: %f, y_max-y_min: %f", x_max-x_min, y_max-y_min);
 #endif
 	
-	// Something fishy here
 	// Create Mrange matrix
 	m_Mrange = CMatrix3D(x_max - x_min, 0,			   0, x_min,
 						 0,				y_max - y_min, 0, y_min,
@@ -451,8 +430,8 @@ void GridProjector::Render(CShaderProgramPtr& shader)
 
 	shader->Uniform(str_transform, g_Renderer.GetViewCamera().GetViewProjection());
 	shader->Uniform(str_projector, m_Mprojector);
-	shader->Uniform(str_waterNormal, m_water.m_base.m_Norm);
-	shader->Uniform(str_waterD, m_water.m_base.m_Dist);
+	shader->Uniform(str_waterNormal, m_water.GetWaterBase().m_Norm);
+	shader->Uniform(str_waterD, m_water.GetWaterBase().m_Dist);
 	shader->Uniform(str_time, m_time);
     
     shader->BindTexture(str_heightMap1, m_heightMapsID.at(0));
@@ -473,30 +452,39 @@ void GridProjector::Render(CShaderProgramPtr& shader)
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
-void GridProjector::CreateTextureHeightMaps()
-{
-	for (size_t i = 0; i < m_heightMaps.size(); i++)
-	{
-        m_heightMaps.at(i) = m_water.GetPhysicalWaterModel().GetHeightMapAtLevel(i);
-		g_Renderer.BindTexture(i, m_heightMapsID.at(i));
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, wps.at(i).m_resolution, wps.at(i).m_resolution, 0, GL_RGB, GL_UNSIGNED_BYTE, &m_heightMaps.at(i)[0]);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	}
-}
 
-void GridProjector::CreateTextureNormalMaps()
+void GridProjector::CreateTextures()
 {
-	for (size_t i = 0; i < m_normalMaps.size(); i++)
-	{
-        m_normalMaps.at(i) = m_water.GetPhysicalWaterModel().GetNormalMapAtLevel(i);
-		g_Renderer.BindTexture(i, m_normalMapsID.at(i));
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, wps.at(i).m_resolution, wps.at(i).m_resolution, 0, GL_RGB, GL_UNSIGNED_BYTE, &m_normalMaps.at(i)[0]);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	}
+    std::vector<WaterProperties> waterProperties = m_water.GetWaterModel().GetWaterProperties();
+    
+    m_heightMapsID = std::vector<GLuint>(waterProperties.size());
+    m_normalMapsID = std::vector<GLuint>(waterProperties.size());
+    
+    glGenTextures(m_heightMapsID.size(), &m_heightMapsID[0]);
+    glGenTextures(m_normalMapsID.size(), &m_normalMapsID[0]);
+    glGenTextures(1, &m_variationMapID);
+    glGenTextures(1, &m_flowMapID);
+    
+    std::vector<std::vector<u8>> heightMaps = m_water.GetHeightMaps();
+    
+    for (size_t i = 0; i < heightMaps.size(); i++)
+    {
+        g_Renderer.BindTexture(i, m_heightMapsID.at(i));
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, waterProperties.at(i).m_resolution, waterProperties.at(i).m_resolution, 0, GL_RGB, GL_UNSIGNED_BYTE, &heightMaps.at(i)[0]);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    }
+    
+    std::vector<std::vector<u8>> normalMaps = m_water.GetNormalMaps();
+    for (size_t i = 0; i < normalMaps.size(); i++)
+    {
+        g_Renderer.BindTexture(i, m_normalMapsID.at(i));
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, waterProperties.at(i).m_resolution, waterProperties.at(i).m_resolution, 0, GL_RGB, GL_UNSIGNED_BYTE, &normalMaps.at(i)[0]);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    }
 }
