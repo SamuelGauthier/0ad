@@ -14,6 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with 0 A.D.  If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef INCLUDED_FFTWATERMODEL
+#define INCLUDED_FFTWATERMODEL
 
 #include <complex.h>
 #include <tuple>
@@ -72,3 +74,5 @@ private:
 
 	std::complex<float> GetHTildeAt(u16 n, u16 m, double time, FFTWaterProperties waterProperty, VecComplexF* h_0, VecComplexF* h_0_star);
 };
+
+#endif // INCLUDED_FFTWATERMODEL
