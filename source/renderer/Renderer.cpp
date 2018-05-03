@@ -58,6 +58,7 @@
 #include "graphics/Terrain.h"
 #include "graphics/Texture.h"
 #include "graphics/TextureManager.h"
+//#include "renderer/ProjectionSystem.h"
 #include "renderer/GridProjector.h"
 #include "renderer/HWLightingModelRenderer.h"
 #include "renderer/InstancingModelRenderer.h"
@@ -275,7 +276,7 @@ public:
     
     // Projection System
     //ProjectionSystem& projectionSystem;// can't do that
-    //GridProjector projectionSystem;
+    //CGridProjector projectionSystem;
 
 	/// Texture manager
 	CTextureManager textureManager;
@@ -296,7 +297,7 @@ public:
 	CMaterialManager materialManager;
     
     /// Grid projector
-    GridProjector gridProjector;
+    CGridProjector gridProjector;
 
 	/// Time manager
 	CTimeManager timeManager;

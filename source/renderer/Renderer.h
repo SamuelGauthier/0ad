@@ -47,7 +47,7 @@ class CShaderManager;
 class CSimulation2;
 class CTextureManager;
 class CTimeManager;
-class ProjectionSystem;
+//class ProjectionSystem;
 class RenderPathVertexShader;
 class ShadowMap;
 class SkyManager;

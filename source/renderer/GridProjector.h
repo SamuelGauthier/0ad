@@ -21,24 +21,28 @@
 #include "graphics/ShaderProgramPtr.h"
 
 #include "maths/Matrix3D.h"
-#include "maths/Vector4D.h"
+#include "maths/Plane.h"
 
-//#include "renderer/FFTWaterModel.h"
-#include "renderer/VertexArray.h"
+#include "ps/CLogger.h"
+
+#include "renderer/FFTWaterModel.h"
+//#include "renderer/VertexArray.h"
 #include "renderer/VertexBuffer.h"
 #include "renderer/OceanWater.h"
 #include "renderer/ProjectionSystem.h"
 //#include "renderer/Water.h"
 
-class GridProjector : public ProjectionSystem
+class CGridProjector : public ProjectionSystem
 {
 public:
-	GridProjector();
-	~GridProjector();
+	using WaterProperties = CFFTWaterModel::SFFTWaterProperties;
 
-	void Render(CShaderProgramPtr& shader) override;
+	CGridProjector();
+	~CGridProjector();
 
-	void Initialize() override;
+	void Render(CShaderProgramPtr& shader);// override;
+
+	void Initialize();// override;
 
 private:
 	void GenerateVertices();
@@ -52,7 +56,7 @@ private:
 	uint m_resolutionX;
 	uint m_resolutionY;
 	u32 m_totalResolution;
-	OceanWater m_water;
+	COceanWater m_water;
 
 	CCamera m_PCamera;
 	CVertexBuffer::VBChunk* m_gridVBIndices;

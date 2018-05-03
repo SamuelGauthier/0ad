@@ -16,7 +16,7 @@
 
 #include "precompiled.h"
 
-#include "renderer/GridProjector.h"
+#include "GridProjector.h"
 
 #include "graphics/LOSTexture.h"
 #include "graphics/Terrain.h"
@@ -29,13 +29,12 @@
 #include "maths/MathUtil.h"
 #include "maths/Vector3D.h"
 #include "maths/Vector2D.h"
+#include "maths/Vector4D.h"
 
-#include "ps/CLogger.h"
 #include "ps/Game.h"
 #include "ps/World.h"
 
 #include "renderer/Renderer.h"
-#include "renderer/VertexBuffer.h"
 #include "renderer/VertexBufferManager.h"
 // TODO: Temp to be removed later
 #include "renderer/WaterManager.h"
@@ -57,15 +56,14 @@
 #define DEBUG_UPDATE_POINTS 0
 #define DEBUG_UPDATE_POINTS_INTERSECT_INFO 0
 
-using WaterProperties = FFTWaterModel::FFTWaterProperties;
 
 double TIME = 3.2;
-WaterProperties coarseWaves = WaterProperties(3e-7, 43, CVector2D(1, 5), 1, 0.1, 2048, 4000, TIME);
-WaterProperties mediumWaves = WaterProperties(6e-7, 20, CVector2D(4, 1.5), 2, 0.1, 2048, 5000, TIME);
-WaterProperties detailedWaves = WaterProperties(6e-7, 20, CVector2D(1, 1.5), 1, 0.1, 2048, 8000, TIME);
-std::vector<WaterProperties> wps = { coarseWaves, mediumWaves, detailedWaves };
+CGridProjector::WaterProperties coarseWaves = CGridProjector::WaterProperties(3e-7f, 43, CVector2D(1.0f, 5.0f), 1.0f, 0.1f, 2048, 4000, TIME);
+CGridProjector::WaterProperties mediumWaves = CGridProjector::WaterProperties(6e-7f, 20, CVector2D(4.0f, 1.5f), 2.0f, 0.1f, 2048, 5000, TIME);
+CGridProjector::WaterProperties detailedWaves = CGridProjector::WaterProperties(6e-7f, 20, CVector2D(1.0f, 1.5f), 1.0f, 0.1f, 2049, 8000, TIME);
+std::vector<CGridProjector::WaterProperties> wps = { coarseWaves, mediumWaves, detailedWaves };
 
-GridProjector::GridProjector() : m_water(FFTWaterModel(wps)), m_gridVBIndices(0), m_gridVBVertices(0)
+CGridProjector::CGridProjector() : m_water(CFFTWaterModel(wps)), m_gridVBIndices(0), m_gridVBVertices(0)
 {
 	m_time = 0.0;
 	m_resolutionX = 256;
@@ -83,13 +81,13 @@ GridProjector::GridProjector() : m_water(FFTWaterModel(wps)), m_gridVBIndices(0)
     m_heightMapsID = std::vector<GLuint>(3);
 }
 
-GridProjector::~GridProjector()
+CGridProjector::~CGridProjector()
 {
 	if (m_gridVBIndices) g_VBMan.Release(m_gridVBIndices);
 	if (m_gridVBVertices) g_VBMan.Release(m_gridVBVertices);
 }
 
-void GridProjector::Initialize()
+void CGridProjector::Initialize()
 {
 	if(m_gridVBIndices)
 	{
@@ -124,7 +122,7 @@ void GridProjector::Initialize()
     CreateTextures();
 }
 
-void GridProjector::GenerateVertices()
+void CGridProjector::GenerateVertices()
 {
 	PROFILE3_GPU("generate vertices");
 	if (m_verticesModel.size() != 0)
@@ -143,7 +141,7 @@ void GridProjector::GenerateVertices()
 	m_vertices = m_verticesModel;
 }
 
-void GridProjector::GenerateIndices()
+void CGridProjector::GenerateIndices()
 {
 	m_indices.clear();
 
@@ -168,7 +166,7 @@ void GridProjector::GenerateIndices()
 	}
 }
 
-void GridProjector::UpdateMatrices()
+void CGridProjector::UpdateMatrices()
 {
 	PROFILE3_GPU("update matrices");
 	// TODO: Temporary here, dependecy to WaterManager should be cut by implementing a couple of CCmpOceanWater classes.
@@ -383,7 +381,7 @@ void GridProjector::UpdateMatrices()
 #endif
 }
 
-void GridProjector::ComputeIntersection(std::vector<CVector4D>& cam_frustrum, std::vector<CVector4D>& span_buffer, CPlane& maxWater, CPlane& minWater, int startIndice, int endIndice)
+void CGridProjector::ComputeIntersection(std::vector<CVector4D>& cam_frustrum, std::vector<CVector4D>& span_buffer, CPlane& maxWater, CPlane& minWater, int startIndice, int endIndice)
 {
 	CVector3D intMax;
 	CVector3D intMin;
@@ -407,7 +405,7 @@ void GridProjector::ComputeIntersection(std::vector<CVector4D>& cam_frustrum, st
 	}
 }
 
-void GridProjector::Render(CShaderProgramPtr& shader)
+void CGridProjector::Render(CShaderProgramPtr& shader)
 {
 	if (g_Renderer.m_SkipSubmit)
 		return;
@@ -453,9 +451,9 @@ void GridProjector::Render(CShaderProgramPtr& shader)
 }
 
 
-void GridProjector::CreateTextures()
+void CGridProjector::CreateTextures()
 {
-    std::vector<WaterProperties> waterProperties = m_water.GetWaterModel().GetWaterProperties();
+    std::vector<CGridProjector::WaterProperties> waterProperties = m_water.GetWaterModel().GetWaterProperties();
     
     m_heightMapsID = std::vector<GLuint>(waterProperties.size());
     m_normalMapsID = std::vector<GLuint>(waterProperties.size());
@@ -464,7 +462,7 @@ void GridProjector::CreateTextures()
     glGenTextures(m_normalMapsID.size(), &m_normalMapsID[0]);
     glGenTextures(1, &m_variationMapID);
     glGenTextures(1, &m_flowMapID);
-    
+   
     std::vector<std::vector<u8>> heightMaps = m_water.GetHeightMaps();
     
     for (size_t i = 0; i < heightMaps.size(); i++)

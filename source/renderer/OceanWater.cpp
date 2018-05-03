@@ -17,35 +17,43 @@
 
 #include "precompiled.h"
 
-#include "renderer/OceanWater.h"
+#include "OceanWater.h"
 
-
-
-OceanWater::OceanWater(FFTWaterModel waterModel) : m_waterModel(waterModel)
+COceanWater::COceanWater(CFFTWaterModel waterModel) : m_waterModel(waterModel)
 {
 }
 
-OceanWater::~OceanWater() {}
+COceanWater::~COceanWater() {}
 
-void OceanWater::SetWaterHeight(float height)
+void COceanWater::SetWaterHeight(float height)
 {
     m_waterBase.Set(CVector3D(0.f, 1.f, 0.f), CVector3D(0.f, height, 0.f));
 }
 
-float OceanWater::GetMaxWaterHeight()
+float COceanWater::GetMaxWaterHeight()
 {
     // TODO: Temporary, should compute the max from the
-    return 5.0;
+    return 5.0f;
 }
 
-float OceanWater::GetMinWaterHeight()
+float COceanWater::GetMinWaterHeight()
 {
-    // Id. as in OceanWater::GetMaxWaterHeight()
-    return -5.0;
+    // Id. as in COceanWater::GetMaxWaterHeight()
+    return -5.0f;
 }
 
-void OceanWater::GenerateWaterWaves()
+void COceanWater::GenerateWaterWaves()
 {
     // TODO: Generate the water Data
     std::tie(m_heightMaps, m_normalMaps) = m_waterModel.GenerateHeightAndNormalMaps();
+}
+
+void COceanWater::GenerateVariationMap()
+{
+	// TODO: implement
+}
+
+void COceanWater::GenerateFlowMap()
+{
+	// TODO: implement
 }

@@ -17,26 +17,26 @@
 
 #include "precompiled.h"
 
+#include "FFTWaterModel.h"
+
 #include <random>
 #include <time.h>
 #include <math.h>
 
-#include "ps/CLogger.h"
-#include "renderer/Renderer.h"
-
-#include "FFTWaterModel.h"
+//#include "ps/CLogger.h"
+//#include "renderer/Renderer.h"
 
 #define G 9.81
 #define SQRT_0_5 0.7071067 // 0.707106781186547524
 #define K_VEC(n, m, N, L) CVector2D(2 * M_PI * (n - N / 2) / L, 2 * M_PI * (m  - N / 2) / L)
 
-FFTWaterModel::FFTWaterModel(std::vector<FFTWaterProperties> waterProperties) : m_WaterProperties(waterProperties)
+CFFTWaterModel::CFFTWaterModel(std::vector<SFFTWaterProperties> waterProperties) : m_WaterProperties(waterProperties)
 {
 }
 
-FFTWaterModel::~FFTWaterModel() {}
+CFFTWaterModel::~CFFTWaterModel() {}
 
-TupleVecU8 FFTWaterModel::GetHeightAndNormalMapAtTime(double time, FFTWaterProperties waterProps, VecComplexF* h_0, VecComplexF* h_0_star)
+CFFTWaterModel::TupleVecU8 CFFTWaterModel::GetHeightAndNormalMapAtTime(double time, SFFTWaterProperties waterProps, VecComplexF* h_0, VecComplexF* h_0_star)
 {
     fftwf_complex* in_height;
     fftwf_complex* in_slope_x;
@@ -191,16 +191,15 @@ TupleVecU8 FFTWaterModel::GetHeightAndNormalMapAtTime(double time, FFTWaterPrope
 	return std::make_tuple(pixelHeightMap, pixelNormalMap);
 }
 
-TupleVecVecU8 FFTWaterModel::GenerateHeightAndNormalMaps()
+CFFTWaterModel::TupleVecVecU8 CFFTWaterModel::GenerateHeightAndNormalMaps()
 {
     std::vector<std::vector<u8>> heightMaps;
     std::vector<std::vector<u8>> normalMaps;
     
-    
     for (size_t i = 0; i < m_WaterProperties.size(); i++) {
         u32 resolution = m_WaterProperties.at(i).m_resolution * m_WaterProperties.at(i).m_resolution;
-        VecComplexF h_0 = VecComplexF(resolution);
-        VecComplexF h_0_star = VecComplexF(resolution);
+        CFFTWaterModel::VecComplexF h_0 = CFFTWaterModel::VecComplexF(resolution);
+        CFFTWaterModel::VecComplexF h_0_star = CFFTWaterModel::VecComplexF(resolution);
         
         std::tie(h_0, h_0_star) = ComputePhillipsSpectrum(m_WaterProperties.at(i));
         
@@ -217,14 +216,14 @@ TupleVecVecU8 FFTWaterModel::GenerateHeightAndNormalMaps()
     return std::make_tuple(heightMaps, normalMaps);
 }
 
-TupleVecComplexF FFTWaterModel::ComputePhillipsSpectrum(FFTWaterProperties waterProp)
+CFFTWaterModel::TupleVecComplexF CFFTWaterModel::ComputePhillipsSpectrum(SFFTWaterProperties waterProp)
 {
     float L = (waterProp.m_windSpeed * waterProp.m_windSpeed) / G;
     float L2 = L * L;
-    float l = 0.1;
+    float l = 0.1f;
 
-	VecComplexF h0 = VecComplexF(waterProp.m_resolution * waterProp.m_resolution);
-	VecComplexF h0star = VecComplexF(waterProp.m_resolution * waterProp.m_resolution);
+	CFFTWaterModel::VecComplexF h0 = CFFTWaterModel::VecComplexF(waterProp.m_resolution * waterProp.m_resolution);
+	CFFTWaterModel::VecComplexF h0star = CFFTWaterModel::VecComplexF(waterProp.m_resolution * waterProp.m_resolution);
 
     std::default_random_engine generator;
     std::normal_distribution<float> normal_dist;
@@ -262,7 +261,7 @@ TupleVecComplexF FFTWaterModel::ComputePhillipsSpectrum(FFTWaterProperties water
 	return std::make_tuple(h0, h0star);
 }
 
-std::complex<float> FFTWaterModel::GetHTildeAt(u16 n, u16 m, double time, FFTWaterProperties waterProperty, VecComplexF* h_0, VecComplexF* h_0_star)
+std::complex<float> CFFTWaterModel::GetHTildeAt(u16 n, u16 m, double time, SFFTWaterProperties waterProperty, CFFTWaterModel::VecComplexF* h_0, CFFTWaterModel::VecComplexF* h_0_star)
 {
     int index = n * waterProperty.m_resolution + m;
     CVector2D k = K_VEC(n, m, waterProperty.m_resolution, waterProperty.m_width);

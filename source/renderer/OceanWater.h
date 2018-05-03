@@ -18,16 +18,17 @@
 #ifndef INCLUDED_OCEANWATER
 #define INCLUDED_OCEANWATER
 
+#include "lib/ogl.h"
 #include "maths/Plane.h"
 
 #include "renderer/FFTWaterModel.h"
 
-class OceanWater
+class COceanWater
 {
 public:
     
-    OceanWater(FFTWaterModel waterModel);
-    ~OceanWater();
+    COceanWater(CFFTWaterModel waterModel);
+    ~COceanWater();
     
     void GenerateWaterWaves();
     
@@ -42,7 +43,7 @@ public:
     CPlane GetWaterBase() { return m_waterBase; }
     void SetWaterHeight(float height);
     
-    FFTWaterModel GetWaterModel() { return m_waterModel; }
+    CFFTWaterModel GetWaterModel() { return m_waterModel; }
     
 private:
     
@@ -60,7 +61,7 @@ private:
     std::vector<u8> m_flowMap;
     
     CPlane m_waterBase;
-    FFTWaterModel m_waterModel;
+    CFFTWaterModel m_waterModel;
 };
 
 #endif //INCLUDED_OCEANWATER
