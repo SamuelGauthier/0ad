@@ -22,6 +22,7 @@
 #include <random>
 #include <time.h>
 #include <math.h>
+#include <memory>
 
 //#include "ps/CLogger.h"
 //#include "renderer/Renderer.h"
@@ -39,6 +40,7 @@ CFFTWaterModel::~CFFTWaterModel() {}
 CFFTWaterModel::TupleVecU8 CFFTWaterModel::GetHeightAndNormalMapAtTime(double time, SFFTWaterProperties waterProps, VecComplexF* h_0, VecComplexF* h_0_star)
 {
     fftwf_complex* in_height;
+    //std::unique_ptr<fftwf_complex[]> in_height;
     fftwf_complex* in_slope_x;
     fftwf_complex* in_slope_z;
     fftwf_complex* in_D_x;
@@ -59,6 +61,7 @@ CFFTWaterModel::TupleVecU8 CFFTWaterModel::GetHeightAndNormalMapAtTime(double ti
     u32 resolution = waterProps.m_resolution * waterProps.m_resolution;
     
     std::complex<float>* slope_x_term = new std::complex<float>[resolution];
+	//std::unique_ptr<std::complex<float>[]> slope_x_term(new std::complex<float>[resolution]);
     std::complex<float>* slope_z_term = new std::complex<float>[resolution];
     
     std::complex<float>* D_x_term = new std::complex<float>[resolution];
@@ -68,6 +71,8 @@ CFFTWaterModel::TupleVecU8 CFFTWaterModel::GetHeightAndNormalMapAtTime(double ti
     
     CVector3D* heightField = new CVector3D[resolution * 3];
     CVector3D* normalMap = new CVector3D[resolution * 3];
+	//std::vector<CVector3D> heightField = std::vector<CVector3D>(resolution * 3);
+	//std::vector<CVector3D> normalMap = std::vector<CVector3D>(resolution * 3);
 
 	std::vector<u8> pixelHeightMap = std::vector<u8>(resolution * 3);
 	std::vector<u8> pixelNormalMap = std::vector<u8>(resolution * 3);
@@ -93,6 +98,7 @@ CFFTWaterModel::TupleVecU8 CFFTWaterModel::GetHeightAndNormalMapAtTime(double ti
     
     in_height = (fftwf_complex*) h_tilde;
     in_slope_x = (fftwf_complex*) slope_x_term;
+    //in_slope_x = std::reinterpret_cast<fftwf_complex*) slope_x_term;
     in_slope_z = (fftwf_complex*) slope_z_term;
     in_D_x = (fftwf_complex*) D_x_term;
     in_D_z = (fftwf_complex*) D_z_term;
@@ -175,6 +181,8 @@ CFFTWaterModel::TupleVecU8 CFFTWaterModel::GetHeightAndNormalMapAtTime(double ti
     fftwf_destroy_plan(p_ifft_D_x);
     fftwf_destroy_plan(p_ifft_D_z);
     
+	//std::vector<CVector3D>().swap(heightField);
+	//std::vector<CVector3D>().swap(normalMap);
     SAFE_ARRAY_DELETE(slope_x_term);
     SAFE_ARRAY_DELETE(slope_z_term);
     SAFE_ARRAY_DELETE(D_x_term);
@@ -182,7 +190,7 @@ CFFTWaterModel::TupleVecU8 CFFTWaterModel::GetHeightAndNormalMapAtTime(double ti
     SAFE_ARRAY_DELETE(h_tilde);
     SAFE_ARRAY_DELETE(heightField);
     SAFE_ARRAY_DELETE(normalMap);
-    fftw_free(out_height);
+	fftw_free(out_height);
     fftw_free(out_slope_x);
     fftw_free(out_slope_z);
     fftw_free(out_D_x);

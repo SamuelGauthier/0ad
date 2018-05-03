@@ -65,6 +65,7 @@ std::vector<CGridProjector::WaterProperties> wps = { coarseWaves, mediumWaves, d
 
 CGridProjector::CGridProjector() : m_water(CFFTWaterModel(wps)), m_gridVBIndices(0), m_gridVBVertices(0)
 {
+	LOGWARNING("CGridProjector::CGridProjector()");
 	m_time = 0.0;
 	m_resolutionX = 256;
 	m_resolutionY = 256;
@@ -89,6 +90,7 @@ CGridProjector::~CGridProjector()
 
 void CGridProjector::Initialize()
 {
+	LOGWARNING("Been in CGridProjector::Initialize()");
 	if(m_gridVBIndices)
 	{
 		g_VBMan.Release(m_gridVBIndices);
