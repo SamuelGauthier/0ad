@@ -24,7 +24,7 @@
 #include <math.h>
 #include <memory>
 
-//#include "ps/CLogger.h"
+#include "ps/CLogger.h"
 //#include "renderer/Renderer.h"
 
 #define G 9.81
@@ -37,10 +37,32 @@ CFFTWaterModel::CFFTWaterModel(std::vector<SFFTWaterProperties> waterProperties)
 
 CFFTWaterModel::~CFFTWaterModel() {}
 
-CFFTWaterModel::TupleVecU8 CFFTWaterModel::GetHeightAndNormalMapAtTime(double time, SFFTWaterProperties waterProps, VecComplexF* h_0, VecComplexF* h_0_star)
+void CFFTWaterModel::GenerateHeightAndNormalMaps(VecVecU8* heightMaps, VecVecU8* normalMaps)
+{
+    heightMaps->clear();
+    normalMaps->clear();
+    
+    for (size_t i = 0; i < m_WaterProperties.size(); i++) {
+        u32 resolution = m_WaterProperties.at(i).m_resolution * m_WaterProperties.at(i).m_resolution;
+        CFFTWaterModel::VecComplexF h_0 = CFFTWaterModel::VecComplexF(resolution);
+        CFFTWaterModel::VecComplexF h_0_star = CFFTWaterModel::VecComplexF(resolution);
+        
+        ComputePhillipsSpectrum(m_WaterProperties.at(i), &h_0, &h_0_star);
+        
+        resolution *= 3;
+        std::vector<u8> heightMap = std::vector<u8>(resolution);
+        std::vector<u8> normalMap = std::vector<u8>(resolution);
+        
+        GetHeightAndNormalMapAtTime(m_WaterProperties.at(i).m_time, m_WaterProperties.at(i), &h_0, &h_0_star, &heightMap, &normalMap);
+        
+        heightMaps->push_back(heightMap);
+        normalMaps->push_back(normalMap);
+    }
+}
+
+void CFFTWaterModel::GetHeightAndNormalMapAtTime(double time, SFFTWaterProperties waterProps, VecComplexF* h_0, VecComplexF* h_0_star, std::vector<u8>* pixelHeightMap, std::vector<u8>* pixelNormalMap)
 {
     fftwf_complex* in_height;
-    //std::unique_ptr<fftwf_complex[]> in_height;
     fftwf_complex* in_slope_x;
     fftwf_complex* in_slope_z;
     fftwf_complex* in_D_x;
@@ -60,22 +82,18 @@ CFFTWaterModel::TupleVecU8 CFFTWaterModel::GetHeightAndNormalMapAtTime(double ti
     
     u32 resolution = waterProps.m_resolution * waterProps.m_resolution;
     
-    std::complex<float>* slope_x_term = new std::complex<float>[resolution];
-	//std::unique_ptr<std::complex<float>[]> slope_x_term(new std::complex<float>[resolution]);
-    std::complex<float>* slope_z_term = new std::complex<float>[resolution];
+    if(pixelHeightMap->size() < resolution || pixelNormalMap->size() < resolution) return;
     
-    std::complex<float>* D_x_term = new std::complex<float>[resolution];
-    std::complex<float>* D_z_term = new std::complex<float>[resolution];
-    
-    std::complex<float>* h_tilde = new std::complex<float>[resolution];
-    
-    CVector3D* heightField = new CVector3D[resolution * 3];
-    CVector3D* normalMap = new CVector3D[resolution * 3];
-	//std::vector<CVector3D> heightField = std::vector<CVector3D>(resolution * 3);
-	//std::vector<CVector3D> normalMap = std::vector<CVector3D>(resolution * 3);
+    std::vector<std::complex<float>> slope_x_term(resolution);
+    std::vector<std::complex<float>> slope_z_term(resolution);
 
-	std::vector<u8> pixelHeightMap = std::vector<u8>(resolution * 3);
-	std::vector<u8> pixelNormalMap = std::vector<u8>(resolution * 3);
+    std::vector<std::complex<float>> D_x_term(resolution);
+    std::vector<std::complex<float>> D_z_term(resolution);
+    
+    std::vector<std::complex<float>> h_tilde(resolution);
+
+    std::vector<CVector3D> heightField(resolution);
+    std::vector<CVector3D> normalMap(resolution);
 
     for (int i = 0; i < waterProps.m_resolution; i++) {
         for (int j = 0; j < waterProps.m_resolution; j++) {
@@ -96,12 +114,11 @@ CFFTWaterModel::TupleVecU8 CFFTWaterModel::GetHeightAndNormalMapAtTime(double ti
         }
     }
     
-    in_height = (fftwf_complex*) h_tilde;
-    in_slope_x = (fftwf_complex*) slope_x_term;
-    //in_slope_x = std::reinterpret_cast<fftwf_complex*) slope_x_term;
-    in_slope_z = (fftwf_complex*) slope_z_term;
-    in_D_x = (fftwf_complex*) D_x_term;
-    in_D_z = (fftwf_complex*) D_z_term;
+    in_height = reinterpret_cast<fftwf_complex*>(&h_tilde[0]);
+    in_slope_x = reinterpret_cast<fftwf_complex*>(&slope_x_term[0]);
+    in_slope_z = reinterpret_cast<fftwf_complex*>(&slope_z_term[0]);
+    in_D_x = reinterpret_cast<fftwf_complex*>(&D_x_term[0]);
+    in_D_z = reinterpret_cast<fftwf_complex*>(&D_z_term[0]);
     
     out_height = (fftwf_complex*)fftwf_malloc(sizeof(fftwf_complex) * resolution);
     out_slope_x = (fftwf_complex*)fftwf_malloc(sizeof(fftwf_complex) * resolution);
@@ -164,13 +181,13 @@ CFFTWaterModel::TupleVecU8 CFFTWaterModel::GetHeightAndNormalMapAtTime(double ti
             int index = i * waterProps.m_resolution + j;
             int index2 = 3*index;
             
-            pixelHeightMap[index2] = (u8) round((heightField[index].X - min_height) * 255 / (max_height - min_height));
-            pixelHeightMap[index2 + 1] = (u8) round((heightField[index].Y - min_height) * 255 / (max_height - min_height));
-            pixelHeightMap[index2 + 2] = (u8) round((heightField[index].Z - min_height) * 255 / (max_height - min_height));
+            pixelHeightMap->at(index2) = (u8) round((heightField[index].X - min_height) * 255 / (max_height - min_height));
+            pixelHeightMap->at(index2 + 1) = (u8) round((heightField[index].Y - min_height) * 255 / (max_height - min_height));
+            pixelHeightMap->at(index2 + 2) = (u8) round((heightField[index].Z - min_height) * 255 / (max_height - min_height));
 
-            pixelNormalMap[index2] = (u8) round((normalMap[index].X - min_slope) * 255 / (max_slope - min_slope));
-            pixelNormalMap[index2 + 1] = (u8) round((normalMap[index].Y - min_slope) * 255 / (max_slope - min_slope));
-            pixelNormalMap[index2 + 2] = (u8) round((normalMap[index].Z - min_slope) * 255 / (max_slope - min_slope));
+            pixelNormalMap->at(index2) = (u8) round((normalMap[index].X - min_slope) * 255 / (max_slope - min_slope));
+            pixelNormalMap->at(index2 + 1) = (u8) round((normalMap[index].Y - min_slope) * 255 / (max_slope - min_slope));
+            pixelNormalMap->at(index2 + 2) = (u8) round((normalMap[index].Z - min_slope) * 255 / (max_slope - min_slope));
             
         }
     }
@@ -181,57 +198,18 @@ CFFTWaterModel::TupleVecU8 CFFTWaterModel::GetHeightAndNormalMapAtTime(double ti
     fftwf_destroy_plan(p_ifft_D_x);
     fftwf_destroy_plan(p_ifft_D_z);
     
-	//std::vector<CVector3D>().swap(heightField);
-	//std::vector<CVector3D>().swap(normalMap);
-    SAFE_ARRAY_DELETE(slope_x_term);
-    SAFE_ARRAY_DELETE(slope_z_term);
-    SAFE_ARRAY_DELETE(D_x_term);
-    SAFE_ARRAY_DELETE(D_z_term);
-    SAFE_ARRAY_DELETE(h_tilde);
-    SAFE_ARRAY_DELETE(heightField);
-    SAFE_ARRAY_DELETE(normalMap);
 	fftw_free(out_height);
     fftw_free(out_slope_x);
     fftw_free(out_slope_z);
     fftw_free(out_D_x);
     fftw_free(out_D_z);
-
-	return std::make_tuple(pixelHeightMap, pixelNormalMap);
 }
 
-CFFTWaterModel::TupleVecVecU8 CFFTWaterModel::GenerateHeightAndNormalMaps()
-{
-    std::vector<std::vector<u8>> heightMaps;
-    std::vector<std::vector<u8>> normalMaps;
-    
-    for (size_t i = 0; i < m_WaterProperties.size(); i++) {
-        u32 resolution = m_WaterProperties.at(i).m_resolution * m_WaterProperties.at(i).m_resolution;
-        CFFTWaterModel::VecComplexF h_0 = CFFTWaterModel::VecComplexF(resolution);
-        CFFTWaterModel::VecComplexF h_0_star = CFFTWaterModel::VecComplexF(resolution);
-        
-        std::tie(h_0, h_0_star) = ComputePhillipsSpectrum(m_WaterProperties.at(i));
-        
-        resolution *= 3;
-        std::vector<u8> heightMap = std::vector<u8>(resolution);
-        std::vector<u8> normalMap = std::vector<u8>(resolution);
-        
-        std::tie(heightMap, normalMap) = GetHeightAndNormalMapAtTime(m_WaterProperties.at(i).m_time, m_WaterProperties.at(i), &h_0, &h_0_star);
-        
-        heightMaps.push_back(heightMap);
-        normalMaps.push_back(normalMap);
-    }
-    
-    return std::make_tuple(heightMaps, normalMaps);
-}
-
-CFFTWaterModel::TupleVecComplexF CFFTWaterModel::ComputePhillipsSpectrum(SFFTWaterProperties waterProp)
+void CFFTWaterModel::ComputePhillipsSpectrum(SFFTWaterProperties waterProp, VecComplexF* h_0, VecComplexF* h_0_star)
 {
     float L = (waterProp.m_windSpeed * waterProp.m_windSpeed) / G;
     float L2 = L * L;
     float l = 0.1f;
-
-	CFFTWaterModel::VecComplexF h0 = CFFTWaterModel::VecComplexF(waterProp.m_resolution * waterProp.m_resolution);
-	CFFTWaterModel::VecComplexF h0star = CFFTWaterModel::VecComplexF(waterProp.m_resolution * waterProp.m_resolution);
 
     std::default_random_engine generator;
     std::normal_distribution<float> normal_dist;
@@ -246,8 +224,9 @@ CFFTWaterModel::TupleVecComplexF CFFTWaterModel::ComputePhillipsSpectrum(SFFTWat
             
             if(lengthK2 == 0.0f)
             {
-                h0[index] = 0.0f;
-                h0star[index] = 0.0f;
+                h_0->at(index) = 0.0f;
+                
+                h_0_star->at(index) = 0.0f;
                 continue;
             }
 
@@ -258,15 +237,14 @@ CFFTWaterModel::TupleVecComplexF CFFTWaterModel::ComputePhillipsSpectrum(SFFTWat
             float xi_r = normal_dist(generator);
             float xi_i = normal_dist(generator);
                 
-            h0[index] = (float)SQRT_0_5 * std::complex<float>(xi_r, xi_i) * sqrt(p);
+            h_0->at(index) = (float)SQRT_0_5 * std::complex<float>(xi_r, xi_i) * sqrt(p);
                 
             p = factor * pow(-normK.Dot(waterProp.m_windDirection), 2);
-            h0star[index] = (float)SQRT_0_5 * std::complex<float>(xi_r, -xi_i) * sqrt(p);
+            
+            h_0_star->at(index) = (float)SQRT_0_5 * std::complex<float>(xi_r, -xi_i) * sqrt(p);
 
         }
     }
-
-	return std::make_tuple(h0, h0star);
 }
 
 std::complex<float> CFFTWaterModel::GetHTildeAt(u16 n, u16 m, double time, SFFTWaterProperties waterProperty, CFFTWaterModel::VecComplexF* h_0, CFFTWaterModel::VecComplexF* h_0_star)

@@ -44,8 +44,7 @@ float COceanWater::GetMinWaterHeight()
 
 void COceanWater::GenerateWaterWaves()
 {
-    // TODO: Generate the water Data
-    std::tie(m_heightMaps, m_normalMaps) = m_waterModel.GenerateHeightAndNormalMaps();
+    m_waterModel.GenerateHeightAndNormalMaps(&m_heightMaps, &m_normalMaps);
 }
 
 void COceanWater::GenerateVariationMap()
