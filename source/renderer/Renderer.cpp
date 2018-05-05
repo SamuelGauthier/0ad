@@ -275,7 +275,7 @@ public:
 	SkyManager skyManager;
     
     // Projection System
-    //ProjectionSystem& projectionSystem;// can't do that
+    //CProjectionSystem& projectionSystem;// can't do that
     //CGridProjector projectionSystem;
 
 	/// Texture manager
@@ -430,8 +430,8 @@ CRenderer::CRenderer()
 	m_Width = 0;
 	m_Height = 0;
 	m_TerrainRenderMode = SOLID;
-	m_WaterRenderMode = WIREFRAME;// SOLID
-	//m_WaterRenderMode = SOLID;
+	//m_WaterRenderMode = WIREFRAME;// SOLID
+	m_WaterRenderMode = SOLID;
 	m_ModelRenderMode = SOLID;
 	m_ClearColor[0] = m_ClearColor[1] = m_ClearColor[2] = m_ClearColor[3] = 0;
 
@@ -2113,7 +2113,7 @@ void CRenderer::MakeShadersDirty()
 	m_WaterManager->m_NeedsReloading = true;
 }
 
-ProjectionSystem& CRenderer::GetProjectionSystem()
+CProjectionSystem& CRenderer::GetProjectionSystem()
 {
     return m->gridProjector;
 }

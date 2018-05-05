@@ -4,6 +4,7 @@ uniform sampler2D losMap;
 
 uniform sampler2D height;
 uniform sampler2D heightMap1;
+uniform sampler2D variationMap;
 
 varying vec2 losCoords;
 varying vec4 waterCoords;
@@ -27,9 +28,10 @@ void main()
     //color.a = alpha;
     //color = texture2D(heightMap1, 0.01 * waterCoords.xz);
     float t = texture2D(heightMap1, 0.01 * waterCoords.xz).g;
+    float c = texture2D(variationMap, waterCoords.xz).r;
     //float t = waterHeight;
     //color = vec4(t, t, t, 1);
-    color = vec4(1, 1, 1, 1);
+    color = vec4(c, c, c, 1);
     //float dh = waterHeight + 0.5;
     //color = vec4(dh, dh, dh, 1);
     //vec4 test = normalize(waterCoords);

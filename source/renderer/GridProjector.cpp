@@ -126,6 +126,7 @@ void CGridProjector::Initialize()
 	m_gridVBIndices->m_Owner->UpdateChunkVertices(m_gridVBIndices, &m_indices[0]);
 
     m_water.GenerateWaterWaves();
+    m_water.GenerateVariationMap();
     CreateTextures();
 }
 
@@ -442,6 +443,7 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
     shader->BindTexture(str_heightMap1, m_heightMapsID.at(0));
     shader->BindTexture(str_heightMap2, m_heightMapsID.at(1));
     shader->BindTexture(str_heightMap3, m_heightMapsID.at(2));
+    shader->BindTexture(str_variationMap, m_variationMapID);
 
 
 	CLOSTexture& losTexture = g_Renderer.GetScene().GetLOSTexture();
@@ -492,4 +494,12 @@ void CGridProjector::CreateTextures()
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     }
+    
+    std::vector<float> variationMap = m_water.GetVariationMap();
+    g_Renderer.BindTexture(1, m_variationMapID);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 2048, 2048, 0, GL_RED, GL_FLOAT, &variationMap[0]);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 }

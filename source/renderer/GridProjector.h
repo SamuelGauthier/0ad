@@ -32,7 +32,7 @@
 #include "renderer/ProjectionSystem.h"
 //#include "renderer/Water.h"
 
-class CGridProjector : public ProjectionSystem
+class CGridProjector : public CProjectionSystem
 {
 public:
 	using WaterProperties = CFFTWaterModel::SFFTWaterProperties;
@@ -40,9 +40,9 @@ public:
 	CGridProjector();
 	~CGridProjector();
 
-	void Render(CShaderProgramPtr& shader);// override;
+	void Render(CShaderProgramPtr& shader) override;
 
-	void Initialize();// override;
+	void Initialize() override;
 
 private:
 	void GenerateVertices();

@@ -959,7 +959,7 @@ void TerrainRenderer::RenderProjectedWater(const CShaderDefines& context, int cu
     //glEnable(GL_DEPTH_TEST);
     //glDepthFunc(GL_LEQUAL);
     
-    ProjectionSystem* projectionSystem = &g_Renderer.GetProjectionSystem();
+    CProjectionSystem* projectionSystem = &g_Renderer.GetProjectionSystem();
 	CShaderDefines defines = context;
     
     // TODO: Do not reload the shader every time

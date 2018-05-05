@@ -31,13 +31,14 @@ public:
     ~COceanWater();
     
     void GenerateWaterWaves();
+    void GenerateVariationMap();
     
     float GetMaxWaterHeight();
     float GetMinWaterHeight();
 
     std::vector<std::vector<u8>> GetHeightMaps () { return m_heightMaps; }
     std::vector<std::vector<u8>> GetNormalMaps () { return m_normalMaps; }
-    std::vector<u8> GetVariationMap () { return m_variationMap; }
+    std::vector<GLfloat> GetVariationMap () { return m_variationMap; }
     std::vector<u8> GetFlowMap () { return m_flowMap; }
     
     CPlane GetWaterBase() { return m_waterBase; }
@@ -47,17 +48,16 @@ public:
     
 private:
     
-    void GenerateVariationMap();
     void GenerateFlowMap();
     
-    std::vector<GLuint> m_heightMapsIDs;
-    std::vector<GLuint> m_normalMapsIDs;
-    GLuint m_variationMapID;
-    GLuint m_flowMapID;
+    //std::vector<GLuint> m_heightMapsIDs;
+    //std::vector<GLuint> m_normalMapsIDs;
+    //GLuint m_variationMapID;
+    //GLuint m_flowMapID;
     
     std::vector<std::vector<u8>> m_heightMaps;
     std::vector<std::vector<u8>> m_normalMaps;
-    std::vector<u8> m_variationMap;
+    std::vector<GLfloat> m_variationMap;
     std::vector<u8> m_flowMap;
     
     CPlane m_waterBase;

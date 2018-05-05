@@ -21,10 +21,10 @@
 #include "graphics/Camera.h"
 #include "graphics/ShaderProgramPtr.h"
 
-class ProjectionSystem
+class CProjectionSystem
 {
 public:
-	virtual ~ProjectionSystem() {}
+	virtual ~CProjectionSystem() {}
 
 	virtual void Render(CShaderProgramPtr& shader) = 0;
 	

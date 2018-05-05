@@ -19,6 +19,9 @@
 
 #include "OceanWater.h"
 
+#include "maths/Noise.h"
+#include "ps/CLogger.h"
+
 COceanWater::COceanWater(CFFTWaterModel waterModel) : m_waterModel(waterModel)
 {
 }
@@ -50,6 +53,23 @@ void COceanWater::GenerateWaterWaves()
 void COceanWater::GenerateVariationMap()
 {
 	// TODO: implement
+    int size = 2048;
+    Noise2D noise(size);
+    
+    m_variationMap = std::vector<GLfloat>(size*size);
+    
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            m_variationMap[i*size + j] = (GLfloat) noise(i, j);
+        }
+    }
+    LOGWARNING("%f", m_variationMap[0]);
+    LOGWARNING("%f", m_variationMap[200]);
+    LOGWARNING("%f", m_variationMap[456]);
+    LOGWARNING("%f", m_variationMap[123]);
+    LOGWARNING("%f", m_variationMap[1230]);
+
+    
 }
 
 void COceanWater::GenerateFlowMap()

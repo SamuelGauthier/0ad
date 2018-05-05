@@ -314,7 +314,7 @@ public:
 	 */
 	SkyManager* GetSkyManager() { return m_SkyManager; }
     
-    ProjectionSystem& GetProjectionSystem();
+    CProjectionSystem& GetProjectionSystem();
 
 	CTextureManager& GetTextureManager();
 
