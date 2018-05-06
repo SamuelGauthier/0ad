@@ -6,9 +6,15 @@ uniform sampler2D height;
 uniform sampler2D heightMap1;
 uniform sampler2D variationMap;
 
+uniform sampler2D normalMap1;
+uniform sampler2D normalMap2;
+uniform sampler2D normalMap3;
+
 varying vec2 losCoords;
 varying vec4 waterCoords;
 varying float waterHeight;
+
+vec3 calculateNormal(vec3 a, float t_cst, sampler2D normalMap);
 
 void main()
 {
@@ -27,8 +33,9 @@ void main()
     //color = mix(shallowColor, deepColor, waterHeight + 0.5);
     //color.a = alpha;
     //color = texture2D(heightMap1, 0.01 * waterCoords.xz);
-    float t = texture2D(heightMap1, 0.01 * waterCoords.xz).g;
-    float c = texture2D(variationMap, waterCoords.xz).r;
+    //float t = texture2D(heightMap1, 0.01 * waterCoords.xz).g;
+    //float c = texture2D(variationMap, 0.0001 * waterCoords.xz).r;
+    float c = 1;
     //float t = waterHeight;
     //color = vec4(t, t, t, 1);
     color = vec4(c, c, c, 1);
@@ -37,4 +44,29 @@ void main()
     //vec4 test = normalize(waterCoords);
     //vec4 color = vec4(waterHeight, 0, 0, 1);
 	gl_FragColor = color * losMod;
+}
+
+// Convert the normal form the normal map to the eye space. Attenuate it by a
+// factor a and attenuate the time scroll with a factor t_cst
+vec3 calculateNormal(vec3 a, float t_cst, sampler2D normalMap) {
+
+    // Gram-Schmidt process to re-orthogonalize the vectors
+    vec3 normal = normalize(l_normal);
+    vec3 tangent = normalize(l_tangent);
+    tangent = normalize(tangent - dot(tangent, normal) * normal);
+
+    // Fetch the normal from the normal map
+    vec3 binormal = cross(tangent, normal);
+    vec3 bumpMapNormal = texture(normalMap, l_position.xz + t_cst *
+            vec2(t)).xyz;
+    bumpMapNormal = 2.0 * bumpMapNormal - vec3(1.0, 1.0, 1.0);
+
+    // Create TBN matrix
+    mat3 tbn = mat3(tangent, binormal, normal);
+
+    // Transform the bumped normal int local space, dampen it and transform it
+    // into the eye space.
+    vec3 newNormal = tbn * bumpMapNormal;
+    newNormal = normalize(a * newNormal);
+    return vec3(V * M * vec4(newNormal, 0));
 }

@@ -14,6 +14,13 @@
  * along with 0 A.D.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/*
+ * Based on Claes Johanson's Master Thesis "Real-time water rendering
+ * Introducing the projected grid concept", 2004 and on Yury Kryachko's SIGGRAPH
+ * 2016 (http://wargaming.com/en/news/siggraph-2016/) and GDC18 talks
+ * (https://www.gdcvault.com/play/1025404/-World-of-Warships-Technical)
+ */
+
 #include "precompiled.h"
 
 #include "GridProjector.h"
@@ -443,8 +450,12 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
     shader->BindTexture(str_heightMap1, m_heightMapsID.at(0));
     shader->BindTexture(str_heightMap2, m_heightMapsID.at(1));
     shader->BindTexture(str_heightMap3, m_heightMapsID.at(2));
-    shader->BindTexture(str_variationMap, m_variationMapID);
 
+    shader->BindTexture(str_normalMap1, m_normalMapsID.at(0));
+    shader->BindTexture(str_normalMap2, m_normalMapsID.at(1));
+    shader->BindTexture(str_normalMap3, m_normalMapsID.at(2));
+    
+    shader->BindTexture(str_variationMap, m_variationMapID);
 
 	CLOSTexture& losTexture = g_Renderer.GetScene().GetLOSTexture();
 	shader->BindTexture(str_losMap, losTexture.GetTextureSmooth());

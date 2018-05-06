@@ -15,6 +15,12 @@
  * along with 0 A.D.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/*
+ * Based on Jerry Tessendorf's paper "Simulating Ocean Water" 2004 but not in
+ * real-time. Implementation based on the work of Jiashuo Li et al.,
+ *  https://github.com/JiashuoLi/OceanSurface
+ */
+
 #include "precompiled.h"
 
 #include "FFTWaterModel.h"
@@ -164,7 +170,7 @@ void CFFTWaterModel::GetHeightAndNormalMapAtTime(double time, SFFTWaterPropertie
             
             normalMap[index] = CVector3D(sign * out_slope_x[index][0],
                                            -1,
-                                           sign * out_slope_z[index][0]).Normalized();
+                                         sign * out_slope_z[index][0]).Normalized();
             
             if(normalMap[index].X > max_slope) max_slope = normalMap[index].X;
             if(normalMap[index].Y > max_slope) max_slope = normalMap[index].Y;

@@ -54,6 +54,8 @@ private:
     //std::vector<GLuint> m_normalMapsIDs;
     //GLuint m_variationMapID;
     //GLuint m_flowMapID;
+    static float grad(int hash, float x, float y);
+    static float pnoise(float x, float y, int px, int py);
     
     std::vector<std::vector<u8>> m_heightMaps;
     std::vector<std::vector<u8>> m_normalMaps;
@@ -62,6 +64,8 @@ private:
     
     CPlane m_waterBase;
     CFFTWaterModel m_waterModel;
+    
+    static u8 perm[];
 };
 
 #endif //INCLUDED_OCEANWATER

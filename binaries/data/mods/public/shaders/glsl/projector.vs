@@ -12,6 +12,7 @@ uniform float time;
 uniform sampler2D heightMap1;
 uniform sampler2D heightMap2;
 uniform sampler2D heightMap3;
+uniform sampler2D variationMap;
 
 varying vec2 losCoords;
 varying vec4 waterCoords;
@@ -34,40 +35,36 @@ void main()
 	end /= end.w;
 
 	vec4 intersection = FindLineSegIntersection(start, end);
+    waterCoords = intersection;
 
     vec3 scale = vec3(0.01, 0.01, 0.01);
     vec2 wind1 = vec2(1, 3);
     vec2 wind2 = vec2(-3, 1);
-    vec2 wind3 = vec2(0.3, -1);
-    float timeScale1 = 0.01;
-    float timeScale2 = 0.01;
-    float timeScale3 = 0.03;
+    vec2 wind3 = vec2(0, 1);
+    float timeScale1 = 0.006;
+    float timeScale2 = 0.006;
+    float timeScale3 = 0.005;
     float amplitude1 = 0.8;
     float amplitude2 = 1.2;
     float amplitude3 = 0.5;
     vec3 amplitude = vec3(0.8, 1.2, 0.5);
 
+    float variation = texture2D(variationMap, 0.0001 * waterCoords.xz).r;
+
     vec3 h = texture2D(heightMap1, scale.x * intersection.xz +
             wind1 * timeScale1 * time).rgb * amplitude1 - 0.5;
 
-    intersection.y += h.g;
-    intersection.xz += h.rb;
-
-    h = texture2D(heightMap2, scale.x * intersection.xz +
+    h += texture2D(heightMap2, scale.x * intersection.xz +
             wind1 * timeScale2 * time).rgb * amplitude2 - 0.5;
 
-    intersection.y += h.g;
-    intersection.xz += h.rb;
-
-    h = texture2D(heightMap3, scale.x * intersection.xz +
+    h += texture2D(heightMap3, scale.x * intersection.xz +
             wind1 * timeScale3 * time).rgb * amplitude3 - 0.5;
 
-    intersection.y += h.g;
-    intersection.xz += h.rb;
+    h *= variation;
+    intersection.xyz += h;
 
 	losCoords = (losMatrix * intersection).rg;
 
-    waterCoords = intersection;
 	gl_Position = transform * intersection;
 }
 
