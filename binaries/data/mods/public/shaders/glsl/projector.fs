@@ -3,18 +3,35 @@
 uniform sampler2D losMap;
 
 uniform sampler2D height;
-uniform sampler2D heightMap1;
 uniform sampler2D variationMap;
 
 uniform sampler2D normalMap1;
 uniform sampler2D normalMap2;
 uniform sampler2D normalMap3;
 
+uniform vec3 ambient;
+uniform vec3 sunDir;
+uniform vec3 sunColor;
+
 varying vec2 losCoords;
 varying vec4 waterCoords;
 varying float waterHeight;
+uniform float time;
 
-vec3 calculateNormal(vec3 a, float t_cst, sampler2D normalMap);
+// Properties
+varying vec3 scale;
+varying vec2 wind1;
+varying vec2 wind2;
+varying vec2 wind3;
+varying float timeScale1;
+varying float timeScale2;
+varying float timeScale3;
+varying float amplitude1;
+varying float amplitude2;
+varying float amplitude3;
+
+//vec3 calculateNormal(vec3 a, float t_cst, sampler2D normalMap);
+vec3 calculateNormal(vec3 position, sampler2D normalMap);
 
 void main()
 {
@@ -26,28 +43,15 @@ void main()
 	losMod = texture2D(losMap, losCoords.st).a;
 	losMod = losMod < 0.03 ? 0.0 : losMod;
 
-	vec4 color = vec4(1, 1, 1, 1);
-    //vec4 color = texture2D(height, 0.01 * waterCoords.xz);
-    //vec4 color = deepColor;
-    //float alpha = mix(1.0, 0.0, waterHeight + 0.5);
-    //color = mix(shallowColor, deepColor, waterHeight + 0.5);
-    //color.a = alpha;
-    //color = texture2D(heightMap1, 0.01 * waterCoords.xz);
-    //float t = texture2D(heightMap1, 0.01 * waterCoords.xz).g;
-    //float c = texture2D(variationMap, 0.0001 * waterCoords.xz).r;
+	vec4 color = vec4(0.0, 0.0, 0.0 , 0.0);
     float c = 1;
-    //float t = waterHeight;
-    //color = vec4(t, t, t, 1);
-    color = vec4(c, c, c, 1);
-    //float dh = waterHeight + 0.5;
-    //color = vec4(dh, dh, dh, 1);
-    //vec4 test = normalize(waterCoords);
-    //vec4 color = vec4(waterHeight, 0, 0, 1);
+    color += vec4(sunColor, 1.0);
 	gl_FragColor = color * losMod;
 }
 
 // Convert the normal form the normal map to the eye space. Attenuate it by a
 // factor a and attenuate the time scroll with a factor t_cst
+/*
 vec3 calculateNormal(vec3 a, float t_cst, sampler2D normalMap) {
 
     // Gram-Schmidt process to re-orthogonalize the vectors
@@ -69,4 +73,19 @@ vec3 calculateNormal(vec3 a, float t_cst, sampler2D normalMap) {
     vec3 newNormal = tbn * bumpMapNormal;
     newNormal = normalize(a * newNormal);
     return vec3(V * M * vec4(newNormal, 0));
+}
+*/
+
+vec3 calculateNormal(vec3 position)
+{
+    vec3 n = texture2D(normalMap1, scale.x * waterCoords.xy +
+            wind1 * timeScale1 * time).rgb * amplitude1 - 0.5;
+
+    n += texture2D(normalMap2, scale.x * waterCoords.xy +
+            wind1 * timeScale2 * time).rgb * amplitude2 - 0.5;
+
+    n += texture2D(normalMap3, scale.x * waterCoords.xy +
+            wind1 * timeScale3 * time).rgb * amplitude3 - 0.5;
+
+    return normalize(n);
 }

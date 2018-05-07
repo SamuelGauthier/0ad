@@ -25,6 +25,7 @@
 
 #include "GridProjector.h"
 
+#include "graphics/LightEnv.h"
 #include "graphics/LOSTexture.h"
 #include "graphics/Terrain.h"
 #include "graphics/ShaderManager.h"
@@ -446,6 +447,11 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
 	shader->Uniform(str_waterNormal, m_water.GetWaterBase().m_Norm);
 	shader->Uniform(str_waterD, m_water.GetWaterBase().m_Dist);
 	shader->Uniform(str_time, m_time);
+    
+    const CLightEnv& lightEnv = g_Renderer.GetLightEnv();
+    shader->Uniform(str_ambient, lightEnv.m_TerrainAmbientColor);
+    shader->Uniform(str_sunDir, lightEnv.GetSunDir());
+    shader->Uniform(str_sunColor, lightEnv.m_SunColor);
     
     shader->BindTexture(str_heightMap1, m_heightMapsID.at(0));
     shader->BindTexture(str_heightMap2, m_heightMapsID.at(1));

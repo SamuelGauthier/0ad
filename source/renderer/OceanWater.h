@@ -30,11 +30,12 @@ public:
     COceanWater(CFFTWaterModel waterModel);
     ~COceanWater();
     
-    void GenerateWaterWaves();
-    void GenerateVariationMap();
-    
     float GetMaxWaterHeight();
     float GetMinWaterHeight();
+    
+    void GenerateWaterWaves();
+    void GenerateVariationMap();
+
 
     std::vector<std::vector<u8>> GetHeightMaps () { return m_heightMaps; }
     std::vector<std::vector<u8>> GetNormalMaps () { return m_normalMaps; }
@@ -56,7 +57,7 @@ private:
     //GLuint m_flowMapID;
     static float grad(int hash, float x, float y);
     static float pnoise(float x, float y, int px, int py);
-    
+        
     std::vector<std::vector<u8>> m_heightMaps;
     std::vector<std::vector<u8>> m_normalMaps;
     std::vector<GLfloat> m_variationMap;

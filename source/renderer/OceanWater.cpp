@@ -121,6 +121,11 @@ void COceanWater::GenerateVariationMap()
     }
 }
 
+void COceanWater::GenerateFlowMap()
+{
+    // TODO: implement
+}
+
 float COceanWater::grad(int hash, float x, float y) {
     int h = hash & 7;      // Convert low 3 bits of hash code
     float u = h<4 ? x : y;  // into 8 simple gradient directions,
@@ -162,7 +167,3 @@ float COceanWater::pnoise(float x, float y, int px, int py)
     return 0.507f * ( LERP( s, n0, n1 ) );
 }
 
-void COceanWater::GenerateFlowMap()
-{
-	// TODO: implement
-}
