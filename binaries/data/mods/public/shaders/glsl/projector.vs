@@ -17,6 +17,7 @@ uniform sampler2D variationMap;
 varying vec2 losCoords;
 varying vec4 waterCoords;
 varying float waterHeight;
+varying vec3 intersectionPos;
 
 // Properties
 varying vec3 scale;
@@ -63,14 +64,18 @@ void main()
     */
     scale = vec3(0.01, 0.01, 0.01);
     wind1 = vec2(1, 3);
-    wind2 = vec2(-3, 1);
+    //wind2 = vec2(-3, 1);
+    wind2 = vec2(-1, -3);
     wind3 = vec2(0, 1);
     timeScale1 = 0.006;
     timeScale2 = 0.006;
     timeScale3 = 0.005;
-    amplitude1 = 0.8;
-    amplitude2 = 1.2;
-    amplitude3 = 0.5;
+    //amplitude1 = 0.8;
+    //amplitude2 = 1.2;
+    //amplitude3 = 0.5;
+    amplitude1 = 1.8;
+    amplitude2 = 2.2;
+    amplitude3 = 1.5;
 
     float variation = texture2D(variationMap, 0.0001 * waterCoords.xz).r;
 
@@ -85,6 +90,8 @@ void main()
 
     h *= variation;
     intersection.xyz += h;
+
+    intersectionPos = intersection.xyz;
 
 	losCoords = (losMatrix * intersection).rg;
 

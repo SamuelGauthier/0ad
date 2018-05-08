@@ -66,9 +66,12 @@
 
 
 double TIME = 3.2;
-CGridProjector::WaterProperties coarseWaves = CGridProjector::WaterProperties(3e-7f, 43, CVector2D(1.0f, 5.0f), 1.0f, 0.1f, 2048, 4000, TIME);
-CGridProjector::WaterProperties mediumWaves = CGridProjector::WaterProperties(6e-7f, 20, CVector2D(4.0f, 1.5f), 2.0f, 0.1f, 2048, 5000, TIME);
-CGridProjector::WaterProperties detailedWaves = CGridProjector::WaterProperties(6e-7f, 20, CVector2D(1.0f, 1.5f), 1.0f, 0.1f, 2049, 8000, TIME);
+//CGridProjector::WaterProperties coarseWaves = CGridProjector::WaterProperties(3e-7f, 43, CVector2D(1.0f, 5.0f), 1.0f, 0.1f, 2048, 4000, TIME);
+//CGridProjector::WaterProperties mediumWaves = CGridProjector::WaterProperties(6e-7f, 20, CVector2D(4.0f, 1.5f), 2.0f, 0.1f, 2048, 5000, TIME);
+//CGridProjector::WaterProperties detailedWaves = CGridProjector::WaterProperties(6e-7f, 20, CVector2D(1.0f, 1.5f), 1.0f, 0.1f, 2049, 8000, TIME);
+CGridProjector::WaterProperties coarseWaves = CGridProjector::WaterProperties(3e-7f, 43, CVector2D(1.0f, 5.0f), 1.0f, 0.1f, 2048, 1000, TIME);
+CGridProjector::WaterProperties mediumWaves = CGridProjector::WaterProperties(6e-7f, 50, CVector2D(4.0f, -1.5f), 5.0f, 0.1f, 2048, 2500, TIME);
+CGridProjector::WaterProperties detailedWaves = CGridProjector::WaterProperties(6e-7f, 30, CVector2D(-1.0f, 1.5f), 1.0f, 0.1f, 2049, 800, TIME);
 std::vector<CGridProjector::WaterProperties> wps = { coarseWaves, mediumWaves, detailedWaves };
 
 CGridProjector::CGridProjector() : m_water(CFFTWaterModel(wps)), m_gridVBIndices(0), m_gridVBVertices(0)
@@ -443,6 +446,7 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
 #endif
 
 	shader->Uniform(str_transform, g_Renderer.GetViewCamera().GetViewProjection());
+    shader->Uniform(str_cameraPos, g_Renderer.GetViewCamera().GetOrientation().GetTranslation());
 	shader->Uniform(str_projector, m_Mprojector);
 	shader->Uniform(str_waterNormal, m_water.GetWaterBase().m_Norm);
 	shader->Uniform(str_waterD, m_water.GetWaterBase().m_Dist);
