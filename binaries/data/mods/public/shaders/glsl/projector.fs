@@ -16,6 +16,8 @@ uniform sampler2D normalMap1;
 uniform sampler2D normalMap2;
 uniform sampler2D normalMap3;
 
+uniform sampler2D reflectionMap;
+
 uniform vec3 ambient;
 uniform vec3 sunDir;
 uniform vec3 sunColor;
@@ -89,6 +91,8 @@ void main()
 
 	//float specular2 = max(0, pow(dot(r,v), 18));
 	color.xyz += specular;
+
+	color = texture2D(reflectionMap, 0.01 * intersectionPos.xz);
 	//float c = calculateHeight(intersectionPos.xz, variation).b;
 	//color = vec4(c, c, c, 1.0);
 	//color = vec4(calculateHeight(intersectionPos.xz, variation), 1.0);

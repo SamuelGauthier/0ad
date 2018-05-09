@@ -430,7 +430,7 @@ CRenderer::CRenderer()
 	m_Width = 0;
 	m_Height = 0;
 	m_TerrainRenderMode = SOLID;
-	m_WaterRenderMode = WIREFRAME;// SOLID
+	//m_WaterRenderMode = WIREFRAME;// SOLID
 	m_WaterRenderMode = SOLID;
 	m_ModelRenderMode = SOLID;
 	m_ClearColor[0] = m_ClearColor[1] = m_ClearColor[2] = m_ClearColor[3] = 0;
@@ -1208,6 +1208,7 @@ void CRenderer::RenderReflections(const CShaderDefines& context, const CBounding
 	glGetIntegerv(GL_FRAMEBUFFER_BINDING_EXT, &fbo);
 
 	WaterManager& wm = m->waterManager;
+	CGridProjector& gp = m->gridProjector;
 
 	// Remember old camera
 	CCamera normalCamera = m_ViewCamera;
@@ -1218,9 +1219,12 @@ void CRenderer::RenderReflections(const CShaderDefines& context, const CBounding
 
 	// Save the model-view-projection matrix so the shaders can use it for projective texturing
 	wm.m_ReflectionMatrix = m_ViewCamera.GetViewProjection();
+	gp.SetReflectionMatrix(m_ViewCamera.GetViewProjection());
 
-	float vpHeight = wm.m_RefTextureSize;
-	float vpWidth = wm.m_RefTextureSize;
+	//float vpHeight = wm.m_RefTextureSize;
+	//float vpWidth = wm.m_RefTextureSize;
+	float vpHeight = gp.GetReflectionTexSize();
+	float vpWidth = vpHeight;
 
 	SScreenRect screenScissor;
 	screenScissor.x1 = (GLint)floor((scissor[0].X*0.5f+0.5f)*vpWidth);
@@ -1232,7 +1236,8 @@ void CRenderer::RenderReflections(const CShaderDefines& context, const CBounding
 	glScissor(screenScissor.x1, screenScissor.y1, screenScissor.x2 - screenScissor.x1, screenScissor.y2 - screenScissor.y1);
 
 	// try binding the framebuffer
-	pglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, wm.m_ReflectionFbo);
+	//pglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, wm.m_ReflectionFbo);
+	pglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, gp.GetReflectionFBOID());
 
 	glClearColor(0.5f,0.5f,1.0f,0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

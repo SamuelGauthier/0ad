@@ -44,6 +44,10 @@ public:
 
 	void Initialize() override;
 
+	void SetReflectionMatrix(CMatrix3D reflectionMatrix) { m_reflectionMatrix = reflectionMatrix; }
+	float GetReflectionTexSize() { return static_cast<float>(m_reflectionTexSize); }
+	GLuint GetReflectionFBOID() { return m_reflectionFBOID; }
+
 private:
 	void GenerateVertices();
 	void GenerateIndices();
@@ -75,6 +79,11 @@ private:
 	std::vector<GLuint> m_normalMapsID;
     GLuint m_variationMapID;
     GLuint m_flowMapID;
+	GLuint m_reflectionFBOID;
+	GLuint m_reflectionID;
+
+	uint m_reflectionTexSize;
+	CMatrix3D m_reflectionMatrix;
 
 };
 

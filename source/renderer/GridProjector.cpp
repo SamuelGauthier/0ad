@@ -91,6 +91,10 @@ CGridProjector::CGridProjector() : m_water(CFFTWaterModel(wps)), m_gridVBIndices
     
     m_normalMapsID = std::vector<GLuint>(3);
     m_heightMapsID = std::vector<GLuint>(3);
+	m_reflectionFBOID = 0;
+	m_reflectionID = 0;
+	
+	m_reflectionTexSize = 0;
 }
 
 CGridProjector::~CGridProjector()
@@ -102,6 +106,8 @@ CGridProjector::~CGridProjector()
     glDeleteTextures(m_normalMapsID.size(), &m_normalMapsID[0]);
     glDeleteTextures(1, &m_variationMapID);
     glDeleteTextures(1, &m_flowMapID);
+	glDeleteTextures(1, &m_reflectionID);
+	pglDeleteFramebuffersEXT(1, &m_reflectionFBOID);
 }
 
 void CGridProjector::Initialize()
@@ -467,6 +473,8 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
     
     shader->BindTexture(str_variationMap, m_variationMapID);
 
+	shader->BindTexture(str_reflectionMap, m_reflectionID);
+
 	CLOSTexture& losTexture = g_Renderer.GetScene().GetLOSTexture();
 	shader->BindTexture(str_losMap, losTexture.GetTextureSmooth());
 	shader->Uniform(str_losMatrix, losTexture.GetTextureMatrix());
@@ -492,6 +500,7 @@ void CGridProjector::CreateTextures()
     glGenTextures(m_normalMapsID.size(), &m_normalMapsID[0]);
     glGenTextures(1, &m_variationMapID);
     glGenTextures(1, &m_flowMapID);
+	glGenTextures(1, &m_reflectionID);
    
     std::vector<std::vector<u8>> heightMaps = m_water.GetHeightMaps();
     
@@ -523,4 +532,19 @@ void CGridProjector::CreateTextures()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	m_reflectionTexSize = g_Renderer.GetHeight();
+
+	glBindTexture(GL_TEXTURE_2D, m_reflectionID);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, (GLsizei)m_reflectionTexSize, (GLsizei)m_reflectionTexSize, 0,  GL_RGBA, GL_UNSIGNED_BYTE, 0);
+
+	pglGenFramebuffersEXT(1, &m_reflectionFBOID);
+	pglGenFramebuffersEXT(1, &m_reflectionFBOID);
+	pglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_reflectionFBOID);
+	pglFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, m_reflectionID, 0);
+	//pglFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, m_ReflFboDepthTexture, 0);
 }
