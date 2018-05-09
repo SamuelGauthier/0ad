@@ -49,6 +49,7 @@ void main()
 	vec4 intersection = FindLineSegIntersection(start, end);
     waterCoords = intersection;
 
+    intersectionPos = intersection.xyz;
     /*
     vec3 scale = vec3(0.01, 0.01, 0.01);
     vec2 wind1 = vec2(1, 3);
@@ -64,9 +65,10 @@ void main()
     */
     scale = vec3(0.01, 0.01, 0.01);
     wind1 = vec2(1, 3);
-    //wind2 = vec2(-3, 1);
-    wind2 = vec2(-1, -3);
-    wind3 = vec2(0, 1);
+    wind2 = vec2(-3, -2);
+    //wind2 = vec2(-1, -3);
+    //wind3 = vec2(0, 1);
+    wind3 = vec2(3, -1);
     timeScale1 = 0.006;
     timeScale2 = 0.006;
     timeScale3 = 0.005;
@@ -82,16 +84,16 @@ void main()
     vec3 h = texture2D(heightMap1, scale.x * intersection.xz + wind1 *
             timeScale1 * time).rgb * amplitude1 - 0.5;
 
-    h += texture2D(heightMap2, scale.x * intersection.xz + wind1 *
+    h += texture2D(heightMap2, scale.x * intersection.xz + wind2 *
             timeScale2 * time).rgb * amplitude2 - 0.5;
 
-    h += texture2D(heightMap3, scale.x * intersection.xz + wind1 *
+    h += texture2D(heightMap3, scale.x * intersection.xz + wind3 *
             timeScale3 * time).rgb * amplitude3 - 0.5;
 
     h *= variation;
     intersection.xyz += h;
 
-    intersectionPos = intersection.xyz;
+    //intersectionPos = intersection.xyz;
 
 	losCoords = (losMatrix * intersection).rg;
 
