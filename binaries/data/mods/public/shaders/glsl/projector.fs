@@ -10,6 +10,8 @@ uniform sampler2D height;
 uniform sampler2D variationMap;
 
 uniform sampler2D heightMap1;
+uniform sampler2D heightMap2;
+uniform sampler2D heightMap3;
 uniform sampler2D normalMap1;
 uniform sampler2D normalMap2;
 uniform sampler2D normalMap3;
@@ -38,8 +40,8 @@ varying float amplitude2;
 varying float amplitude3;
 
 //vec3 calculateNormal(vec3 a, float t_cst, sampler2D normalMap);
-vec3 calculateNormal(vec2 position);
-vec3 calculateHeight(vec2 position);
+vec3 calculateNormal(vec2 position, float variation);
+vec3 calculateHeight(vec2 position, float variation);
 float F(float F_0, vec3 v, vec3 h);
 float G_smith(float nx, float k);
 float G(float nl, float nv, float k);
@@ -54,7 +56,8 @@ void main()
 
 	float losMod;
     //vec3 n = texture2D(heightMap1, 0.01*waterCoords.xz).rgb;
-    vec3 n = calculateNormal(waterCoords.xz);
+    float variation = texture2D(variationMap, 0.0001 * waterCoords.xz).r;
+    vec3 n = calculateNormal(waterCoords.xz, variation);
 
     //vec3 n = vec3(0,1,0);
     vec3 l = normalize(sunDir);
@@ -71,16 +74,24 @@ void main()
     float D = D(nh, alpha2);
     float specular = F * G * D / max(4 * nl * nv, 0.001);
 
-    vec4 shallowColor = vec4(0.0, 0.64, 0.68, 0.5);
+    vec4 shallowColor = vec4(0.0, 0.64, 0.68, 1.0);
     vec4 deepColor = vec4(0.02, 0.05, 0.10, 1.0);
+	vec4 ambient = mix(shallowColor, deepColor, calculateHeight(intersectionPos.xz, variation).g);
 
 	losMod = texture2D(losMap, losCoords.st).a;
 	losMod = losMod < 0.03 ? 0.0 : losMod;
 
 	vec4 color = vec4(0.0, 0.0, 0.0 , 1.0);
-    color += shallowColor;
-    color += dot(l, n);
-    color += pow(dot(r,v), 18);
+    color += ambient;
+
+	float diffuse = max(0, dot(l, n));
+	color.xyz += diffuse;
+
+	//float specular2 = max(0, pow(dot(r,v), 18));
+	color.xyz += specular;
+	//float c = calculateHeight(intersectionPos.xz, variation).b;
+	//color = vec4(c, c, c, 1.0);
+	//color = vec4(calculateHeight(intersectionPos.xz, variation), 1.0);
 	gl_FragColor = color * losMod;
 }
 
@@ -111,30 +122,31 @@ vec3 calculateNormal(vec3 a, float t_cst, sampler2D normalMap) {
 }
 */
 
-vec3 calculateNormal(vec2 position) {
+vec3 calculateNormal(vec2 position, float variation) {
     vec3 n = texture2D(normalMap1, scale.x * position +
-            wind1 * timeScale1 * time).rgb;// * amplitude1 - 0.5;
+            wind1 * timeScale1 * time).rgb * amplitude1 - 0.5;
 
     n += texture2D(normalMap2, scale.x * position +
-            wind1 * timeScale2 * time).rgb;// * amplitude2 - 0.5;
+            wind2 * timeScale2 * time).rgb * amplitude2 - 0.5;
 
     n += texture2D(normalMap3, scale.x * position +
-            wind1 * timeScale3 * time).rgb;// * amplitude3 - 0.5;
+            wind3 * timeScale3 * time).rgb * amplitude3 - 0.5;
 
     return normalize(n);
 }
 
-vec3 calculateHeight(vec2 position) {
-    vec3 h = texture2D(heightMap1, scale.x * intersection.xz + wind1 *
+vec3 calculateHeight(vec2 position, float variation) {
+    vec3 h = texture2D(heightMap1, scale.x * intersectionPos.xz + wind1 *
             timeScale1 * time).rgb * amplitude1 - 0.5;
 
-    h += texture2D(heightMap2, scale.x * intersection.xz + wind1 *
+    h += texture2D(heightMap2, scale.x * intersectionPos.xz + wind2 *
             timeScale2 * time).rgb * amplitude2 - 0.5;
 
-    h += texture2D(heightMap3, scale.x * intersection.xz + wind1 *
+    h += texture2D(heightMap3, scale.x * intersectionPos.xz + wind3 *
             timeScale3 * time).rgb * amplitude3 - 0.5;
 
     return normalize(h);
+    //return h;
 }
 
 // Shlick approximation
