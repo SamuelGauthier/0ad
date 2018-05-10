@@ -1220,6 +1220,16 @@ void CRenderer::RenderReflections(const CShaderDefines& context, const CBounding
 	// Save the model-view-projection matrix so the shaders can use it for projective texturing
 	wm.m_ReflectionMatrix = m_ViewCamera.GetViewProjection();
 	gp.SetReflectionMatrix(m_ViewCamera.GetViewProjection());
+    gp.SetReflectionCamPos(m_ViewCamera.GetOrientation().GetTranslation());
+    gp.SetReflectionLookAt(m_ViewCamera.GetOrientation().GetIn());
+    //m_ProjMat * m_Orientation.GetInverse();
+    
+    CVector3D camPosition = m_ViewCamera.GetOrientation().GetTranslation();
+    CVector3D camDirection = m_ViewCamera.GetOrientation().GetIn();
+    CVector3D frustrumPoint = camPosition + camDirection * m_ViewCamera.GetFarPlane();
+    CPlane farClipPlane;
+    farClipPlane.Set(-camDirection, frustrumPoint);
+    gp.SetReflectionFarClip(farClipPlane);
 
 	//float vpHeight = wm.m_RefTextureSize;
 	//float vpWidth = wm.m_RefTextureSize;
@@ -1567,7 +1577,7 @@ void CRenderer::RenderSubmissions(const CBoundingBoxAligned& waterScissor)
 	ogl_WarnIfError();
 
     // Temp stuff
-    m->terrainRenderer.RenderProjectedWater(context, cullGroup);
+    m->terrainRenderer.RenderProjectedWater(context);//, cullGroup);
     //ogl_WarnIfError();
     
 	// render water

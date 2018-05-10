@@ -946,7 +946,7 @@ void TerrainRenderer::RenderWater(const CShaderDefines& context, int cullGroup, 
 		RenderFancyWater(context, cullGroup, shadow);
 }
 
-void TerrainRenderer::RenderProjectedWater(const CShaderDefines& context, int cullGroup)
+void TerrainRenderer::RenderProjectedWater(const CShaderDefines& context)//, int cullGroup)
 {
     
     PROFILE3_GPU("projected water");

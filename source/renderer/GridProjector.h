@@ -45,8 +45,15 @@ public:
 	void Initialize() override;
 
 	void SetReflectionMatrix(CMatrix3D reflectionMatrix) { m_reflectionMatrix = reflectionMatrix; }
+    //void SetReflectionTransMatrix(CMatrix3D reflectionTransMatrix)
+    void SetReflectionCamPos(CVector3D position) { m_reflectionCamPos = position; }
+    void SetReflectionLookAt(CVector3D lookAt) { m_reflectionLookAt = lookAt; }
+    void SetReflectionFarClip(CPlane farClippingPlane) { m_reflectionFarClip = farClippingPlane; }
+    
 	float GetReflectionTexSize() { return static_cast<float>(m_reflectionTexSize); }
 	GLuint GetReflectionFBOID() { return m_reflectionFBOID; }
+    CVector3D GetReflectionLookAt() { return m_reflectionLookAt; }
+    CPlane GetReflectionFarClip() { return m_reflectionFarClip; }
 
 private:
 	void GenerateVertices();
@@ -84,6 +91,9 @@ private:
 
 	uint m_reflectionTexSize;
 	CMatrix3D m_reflectionMatrix;
+    CVector3D m_reflectionCamPos;
+    CVector3D m_reflectionLookAt;
+    CPlane m_reflectionFarClip;
 
 };
 

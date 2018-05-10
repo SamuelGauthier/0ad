@@ -43,6 +43,7 @@
 #include "ps/World.h"
 
 #include "renderer/Renderer.h"
+#include "renderer/SkyManager.h"
 #include "renderer/VertexBufferManager.h"
 // TODO: Temp to be removed later
 #include "renderer/WaterManager.h"
@@ -453,6 +454,7 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
 
 	shader->Uniform(str_transform, g_Renderer.GetViewCamera().GetViewProjection());
     shader->Uniform(str_cameraPos, g_Renderer.GetViewCamera().GetOrientation().GetTranslation());
+    shader->Uniform(str_invV, g_Renderer.GetViewCamera().GetOrientation());
 	shader->Uniform(str_projector, m_Mprojector);
 	shader->Uniform(str_waterNormal, m_water.GetWaterBase().m_Norm);
 	shader->Uniform(str_waterD, m_water.GetWaterBase().m_Dist);
@@ -474,6 +476,14 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
     shader->BindTexture(str_variationMap, m_variationMapID);
 
 	shader->BindTexture(str_reflectionMap, m_reflectionID);
+    shader->Uniform(str_reflectionMatrix, m_reflectionMatrix);
+    shader->Uniform(str_reflectionLookAt, m_reflectionLookAt);
+    shader->Uniform(str_reflectionFarClipN, m_reflectionFarClip.m_Norm);
+    shader->Uniform(str_reflectionFarClipD, m_reflectionFarClip.m_Dist);
+    shader->BindTexture(str_skyCube, g_Renderer.GetSkyManager()->GetSkyCube());
+    
+    shader->Uniform(str_screenWidth, g_Renderer.GetWidth());
+    shader->Uniform(str_screenHeight, g_Renderer.GetHeight());
 
 	CLOSTexture& losTexture = g_Renderer.GetScene().GetLOSTexture();
 	shader->BindTexture(str_losMap, losTexture.GetTextureSmooth());

@@ -8,6 +8,7 @@ uniform mat4 losMatrix;
 uniform vec3 waterNormal;
 uniform float waterD;
 uniform float time;
+uniform mat4 reflectionMatrix;
 
 uniform sampler2D heightMap1;
 uniform sampler2D heightMap2;
@@ -18,6 +19,7 @@ varying vec2 losCoords;
 varying vec4 waterCoords;
 varying float waterHeight;
 varying vec3 intersectionPos;
+varying vec3 reflectionCoords;
 
 // Properties
 varying vec3 scale;
@@ -91,11 +93,13 @@ void main()
             timeScale3 * time).rgb * amplitude3 - 0.5;
 
     h *= variation;
-    intersection.xyz += h;
+    //intersection.xyz += h;
 
-    //intersectionPos = intersection.xyz;
+    intersectionPos = intersection.xyz;
 
-	losCoords = (losMatrix * intersection).rg;
+	losCoords = (losMatrix * vec4(intersection.xyz, 1.0)).rg;
+
+    reflectionCoords = (reflectionMatrix * vec4(intersectionPos.xyz, 1.0)).rga;
 
 	gl_Position = transform * intersection;
 }

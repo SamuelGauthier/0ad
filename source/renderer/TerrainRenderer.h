@@ -132,7 +132,7 @@ public:
 	 */
 	CBoundingBoxAligned ScissorWater(int cullGroup, const CMatrix3D& viewproj);
 
-    void RenderProjectedWater(const CShaderDefines& context, int cullGroup);
+    void RenderProjectedWater(const CShaderDefines& context);//, int cullGroup);
     
 	/**
 	 * Render priority text for all submitted patches, for debugging.
