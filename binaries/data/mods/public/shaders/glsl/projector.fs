@@ -115,16 +115,21 @@ void main()
 	//vec2 reflCoords = (0.5*reflectionCoords.xy - 15.0 * n.zx / refVY) / reflectionCoords.z + 0.5;
     //vec3 reflection = texture2D(reflectionMap, reflCoords.xy).rgb;
     //color = vec4(reflection, 1.0);
+	//float refVY = clamp(v.y*2.0,0.05,1.0);
+
+	// Distort the reflection coords based on waves.
+	//vec2 coords = (0.5*reflectionCoords.xy) / reflectionCoords.z + 0.5;
 
     vec3 frusturmInter = FindRayIntersection(intersectionPos, reflect,
             reflectionFarClipN, reflectionFarClipD);
-    //frusturmInter *= reflectionMatrix;
-    //vec2 coords = GetScreenCoordinates(frusturmInter);
-    vec2 coords = (reflectionMatrix * vec4(frusturmInter, 1.0)).xz;
-    coords.x /= screenWidth;
-    coords.y /= screenHeight;
-    vec3 reflection = texture2D(reflectionMap, coords).rgb;
-    color = vec4(reflection, 1.0);
+    ////frusturmInter *= reflectionMatrix;
+    vec2 coords = GetScreenCoordinates(frusturmInter);
+    //vec2 coords = (reflectionMatrix * vec4(frusturmInter, 1.0)).xz;
+    //coords.x /= screenWidth;
+    //coords.y /= screenHeight;
+    vec4 reflection = vec4(coords, 0, 1);//texture2D(reflectionMap, coords);
+    //color = vec4(reflection, 1.0);
+    color = reflection;
 
     vec3 reflected = vec3(invV * vec4(reflect, 0));
     vec3 skyReflection = textureCube(skyCube, reflected).rgb;
@@ -249,8 +254,9 @@ vec2 GetScreenCoordinates(vec3 world)
     vec4 screenSpace = reflectionMatrix * vec4(world, 1.0);
 
     vec2 xy = screenSpace.xz / screenSpace.w;
-    xy.x = (xy.x + 1) * 0.5;// * screenWidth;
-    xy.y = (1 - xy.y) * 0.5;//* screenHeight;
+    xy.x = (xy.x + 1) * 0.5 * screenWidth/screenHeight;//screenHeight/screenWidth;
+    //xy.y = (1 - xy.y) * 0.5;//* screenHeight;
+    xy.y = 1 - (xy.y + 1) * 0.5;//* screenHeight;
 
     return xy;
 }

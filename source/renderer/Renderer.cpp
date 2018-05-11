@@ -1223,12 +1223,14 @@ void CRenderer::RenderReflections(const CShaderDefines& context, const CBounding
     gp.SetReflectionCamPos(m_ViewCamera.GetOrientation().GetTranslation());
     gp.SetReflectionLookAt(m_ViewCamera.GetOrientation().GetIn());
     //m_ProjMat * m_Orientation.GetInverse();
+	//LOGWARNING("ratio = %f", m_Height / float(std::max(1, m_Width)));
+	//LOGWARNING("[W,H] = [%u, %u]", m_Width, m_Height);
     
     CVector3D camPosition = m_ViewCamera.GetOrientation().GetTranslation();
     CVector3D camDirection = m_ViewCamera.GetOrientation().GetIn();
-    CVector3D frustrumPoint = camPosition + camDirection * m_ViewCamera.GetFarPlane();
+    CVector3D frustrumPoint = camPosition + camDirection.Normalized() * m_ViewCamera.GetFarPlane();
     CPlane farClipPlane;
-    farClipPlane.Set(-camDirection, frustrumPoint);
+    farClipPlane.Set(-camDirection.Normalized(), frustrumPoint);
     gp.SetReflectionFarClip(farClipPlane);
 
 	//float vpHeight = wm.m_RefTextureSize;
