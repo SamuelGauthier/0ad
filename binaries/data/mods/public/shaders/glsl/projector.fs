@@ -123,11 +123,12 @@ void main()
     vec3 frusturmInter = FindRayIntersection(intersectionPos, reflect,
             reflectionFarClipN, reflectionFarClipD);
     ////frusturmInter *= reflectionMatrix;
-    vec2 coords = GetScreenCoordinates(frusturmInter);
+    float refVY = clamp(v.y*2.0,0.05,1.0);
+    vec2 coords = (0.5*reflectionCoords.xy - 15.0 * n.zx / refVY) / reflectionCoords.z + 0.5; //GetScreenCoordinates(frusturmInter);
     //vec2 coords = (reflectionMatrix * vec4(frusturmInter, 1.0)).xz;
     //coords.x /= screenWidth;
     //coords.y /= screenHeight;
-    vec4 reflection = vec4(coords, 0, 1);//texture2D(reflectionMap, coords);
+    vec4 reflection = texture2D(reflectionMap, coords);
     //color = vec4(reflection, 1.0);
     color = reflection;
 
@@ -251,12 +252,13 @@ vec3 FindRayIntersection(vec3 start, vec3 direction, vec3 planeNormal,
 
 vec2 GetScreenCoordinates(vec3 world)
 {
-    vec4 screenSpace = reflectionMatrix * vec4(world, 1.0);
+    vec4 screenSpace = reflectionMatrix * vec4(world, 0.0);
 
-    vec2 xy = screenSpace.xz / screenSpace.w;
-    xy.x = (xy.x + 1) * 0.5 * screenWidth/screenHeight;//screenHeight/screenWidth;
+    vec2 coordinates = screenSpace.xz / screenSpace.w;
+    coordinates.x = 0.0;//(coordinates.x + 1) * 0.5 ;//screenHeight/screenWidth;
     //xy.y = (1 - xy.y) * 0.5;//* screenHeight;
-    xy.y = 1 - (xy.y + 1) * 0.5;//* screenHeight;
+    coordinates.y = ( (coordinates.y + 1) * 0.5 );// - 55.0/255.0;// - 53.0/255.0;//* screenHeight;
 
-    return xy;
+
+    return coordinates;
 }

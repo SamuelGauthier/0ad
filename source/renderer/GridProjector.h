@@ -50,7 +50,7 @@ public:
     void SetReflectionLookAt(CVector3D lookAt) { m_reflectionLookAt = lookAt; }
     void SetReflectionFarClip(CPlane farClippingPlane) { m_reflectionFarClip = farClippingPlane; }
     
-	float GetReflectionTexSize() { return static_cast<float>(m_reflectionTexSize); }
+	float GetReflectionTexSize() { return m_reflectionTexSize; }
 	GLuint GetReflectionFBOID() { return m_reflectionFBOID; }
     CVector3D GetReflectionLookAt() { return m_reflectionLookAt; }
     CPlane GetReflectionFarClip() { return m_reflectionFarClip; }
@@ -87,9 +87,10 @@ private:
     GLuint m_variationMapID;
     GLuint m_flowMapID;
 	GLuint m_reflectionFBOID;
+    GLuint m_reflectionDepthBufferID;
 	GLuint m_reflectionID;
 
-	uint m_reflectionTexSize;
+	size_t m_reflectionTexSize;
 	CMatrix3D m_reflectionMatrix;
     CVector3D m_reflectionCamPos;
     CVector3D m_reflectionLookAt;

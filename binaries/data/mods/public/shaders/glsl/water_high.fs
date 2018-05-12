@@ -278,6 +278,7 @@ void main()
 #if USE_REFLECTION
 	// Reflections
 	// We use real reflections against the skybox, and distort a texture of objects closer.
+    n = vec3(0.0, 1.0, 0.0);
 	vec3 eye = reflect(v,n);
 
 	float refVY = clamp(v.y*2.0,0.05,1.0);
@@ -285,6 +286,8 @@ void main()
 	// Distort the reflection coords based on waves.
 	reflCoords = (0.5*reflectionCoords.xy - 15.0 * n.zx / refVY) / reflectionCoords.z + 0.5;
 	vec4 refTex = texture2D(reflectionMap, reflCoords);
+    vec4 toto = refTex;
+    toto.a = 1.0;
 
 	reflColor = refTex.rgb;
 
@@ -356,5 +359,5 @@ void main()
 		alpha = 0.0;
 #endif
 
-	gl_FragColor = vec4(color * losMod, alpha);
+	gl_FragColor = toto;//vec4(color * losMod, alpha);
 }
