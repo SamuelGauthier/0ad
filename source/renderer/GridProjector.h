@@ -49,8 +49,13 @@ public:
     void SetReflectionCamPos(CVector3D position) { m_reflectionCamPos = position; }
     void SetReflectionLookAt(CVector3D lookAt) { m_reflectionLookAt = lookAt; }
     void SetReflectionFarClip(CPlane farClippingPlane) { m_reflectionFarClip = farClippingPlane; }
+    void SetReflectionCamera(CCamera reflectionCamera) { m_reflectionCam = reflectionCamera; }
     
-	float GetReflectionTexSize() { return m_reflectionTexSize; }
+    float GetMaxWaterHeight() { return m_water.GetMaxWaterHeight(); }
+    float GetMinWaterHeight() { return m_water.GetMinWaterHeight(); }
+
+    float GetReflectionTexWidth() { return m_reflectionTexSizeW; }
+    float GetReflectionTexHeigth() { return m_reflectionTexSizeH; }
 	GLuint GetReflectionFBOID() { return m_reflectionFBOID; }
     CVector3D GetReflectionLookAt() { return m_reflectionLookAt; }
     CPlane GetReflectionFarClip() { return m_reflectionFarClip; }
@@ -61,6 +66,7 @@ private:
 	void UpdateMatrices();
 	void ComputeIntersection(std::vector<CVector4D>& cam_frustrum, std::vector<CVector4D>& span_buffer, CPlane& maxWater, CPlane& minWater, int start, int end);
     void CreateTextures();
+    void UpdateReflectionCamera();
 
 
 	float m_time;
@@ -90,7 +96,10 @@ private:
     GLuint m_reflectionDepthBufferID;
 	GLuint m_reflectionID;
 
-	size_t m_reflectionTexSize;
+	size_t m_reflectionTexSizeW;
+    size_t m_reflectionTexSizeH;
+
+    CCamera m_reflectionCam;
 	CMatrix3D m_reflectionMatrix;
     CVector3D m_reflectionCamPos;
     CVector3D m_reflectionLookAt;

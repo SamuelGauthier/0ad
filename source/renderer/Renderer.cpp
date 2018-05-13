@@ -1128,6 +1128,7 @@ void CRenderer::SetObliqueFrustumClipping(CCamera& camera, const CVector4D& worl
 
 void CRenderer::ComputeReflectionCamera(CCamera& camera, const CBoundingBoxAligned& scissor) const
 {
+    /*
 	WaterManager& wm = m->waterManager;
 
 	float fov = m_ViewCamera.GetFOV();
@@ -1162,6 +1163,50 @@ void CRenderer::ComputeReflectionCamera(CCamera& camera, const CBoundingBoxAlign
 
 	CVector4D camPlane(0, 1, 0, -wm.m_WaterHeight + 0.5f);
 	SetObliqueFrustumClipping(camera, camPlane);
+    */
+     
+    //--------------------------------------------------------------------------
+    
+    CGridProjector& gp = m->gridProjector;
+    
+    float fov = camera.GetFOV();
+    
+    fov *= 1.05f;
+    //LOGWARNING("Cam fov: %f", camera.GetFOV());
+    //LOGWARNING("RCam fov: %f", fov);
+    CVector3D p = camera.GetOrientation().GetTranslation();
+    CVector3D up = camera.GetOrientation().GetUp();
+    up.X = -up.X;
+    up.Z = -up.Z;
+    CVector3D v = camera.GetOrientation().GetIn();
+    v.Y = -v.Y;
+    //LOGWARNING("up dot v: %f", up.Dot(v));
+    
+    camera.LookAlong(p, v, up);
+    camera.UpdateFrustum(scissor);
+    //camera.ClipFrustum(CVector4D(0, 1, 0, gp.GetMinWaterHeight()));
+    
+    /*
+    camera.m_Orientation.Scale(1, -1, 1);
+    camera.m_Orientation.Translate(0, 2*gp.GetMaxWaterHeight(), 0);
+    camera.UpdateFrustum(scissor);
+    camera.ClipFrustum(CVector4D(0, 1, 0, -gp.GetMinWaterHeight()));
+    */
+    SViewPort vp;
+    vp.m_Height = g_Renderer.GetHeight();
+    vp.m_Width = g_Renderer.GetWidth();
+    vp.m_X = 0;
+    vp.m_Y = 0;
+    camera.SetViewPort(vp);
+    camera.SetProjection(m_ViewCamera.GetNearPlane(), m_ViewCamera.GetFarPlane(), fov);
+    /*
+    CMatrix3D scaleMat;
+    scaleMat.SetScaling(m_Height/float(std::max(1, m_Width)), 1.0f, 1.0f);
+    camera.m_ProjMat = scaleMat * camera.m_ProjMat;
+    */
+    
+    CVector4D camPlane(0, 1, 0, gp.GetMinWaterHeight() + 0.5f);
+    SetObliqueFrustumClipping(camera, camPlane);
 
 }
 
@@ -1207,7 +1252,7 @@ void CRenderer::RenderReflections(const CShaderDefines& context, const CBounding
 	GLint fbo;
 	glGetIntegerv(GL_FRAMEBUFFER_BINDING_EXT, &fbo);
 
-	WaterManager& wm = m->waterManager;
+	//WaterManager& wm = m->waterManager;
 	CGridProjector& gp = m->gridProjector;
 
 	// Remember old camera
@@ -1218,8 +1263,10 @@ void CRenderer::RenderReflections(const CShaderDefines& context, const CBounding
 	m->SetOpenGLCamera(m_ViewCamera);
 
 	// Save the model-view-projection matrix so the shaders can use it for projective texturing
-	wm.m_ReflectionMatrix = m_ViewCamera.GetViewProjection();
+	//wm.m_ReflectionMatrix = m_ViewCamera.GetViewProjection();
 	gp.SetReflectionMatrix(m_ViewCamera.GetViewProjection());
+    gp.SetReflectionCamera(m_ViewCamera);
+    /*
     gp.SetReflectionCamPos(m_ViewCamera.GetOrientation().GetTranslation());
     gp.SetReflectionLookAt(m_ViewCamera.GetOrientation().GetIn());
     //m_ProjMat * m_Orientation.GetInverse();
@@ -1232,11 +1279,12 @@ void CRenderer::RenderReflections(const CShaderDefines& context, const CBounding
     CPlane farClipPlane;
     farClipPlane.Set(-camDirection.Normalized(), frustrumPoint);
     gp.SetReflectionFarClip(farClipPlane);
+    */
 
 	//float vpHeight = wm.m_RefTextureSize;
 	//float vpWidth = wm.m_RefTextureSize;
-	float vpHeight = gp.GetReflectionTexSize();
-	float vpWidth = vpHeight;
+	float vpHeight = gp.GetReflectionTexHeigth();
+	float vpWidth = gp.GetReflectionTexWidth();;
 
 	SScreenRect screenScissor;
 	screenScissor.x1 = (GLint)floor((scissor[0].X*0.5f+0.5f)*vpWidth);

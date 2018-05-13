@@ -20,6 +20,7 @@ uniform sampler2D reflectionMap;
 uniform vec3 reflectionFarClipN;
 uniform float reflectionFarClipD;
 uniform mat4 reflectionMatrix; 
+uniform float reflectionFOV;
 uniform mat4 invV;
 
 uniform float screenWidth;
@@ -120,15 +121,30 @@ void main()
 	// Distort the reflection coords based on waves.
 	//vec2 coords = (0.5*reflectionCoords.xy) / reflectionCoords.z + 0.5;
 
-    vec3 frusturmInter = FindRayIntersection(intersectionPos, reflect,
+    vec4 reflection = vec4(0.0, 0.0, 1.0, 1.0);
+
+    // We are inside the view frustrum of the reflection camera
+    if(dot(normalize(-reflectionFarClipN), normalize(reflect)) >=
+            cos(0.5*reflectionFOV))
+    {
+        vec3 farClipInter = FindRayIntersection(intersectionPos, reflect,
             reflectionFarClipN, reflectionFarClipD);
-    ////frusturmInter *= reflectionMatrix;
-    float refVY = clamp(v.y*2.0,0.05,1.0);
-    vec2 coords = (0.5*reflectionCoords.xy - 15.0 * n.zx / refVY) / reflectionCoords.z + 0.5; //GetScreenCoordinates(frusturmInter);
-    //vec2 coords = (reflectionMatrix * vec4(frusturmInter, 1.0)).xz;
-    //coords.x /= screenWidth;
-    //coords.y /= screenHeight;
-    vec4 reflection = texture2D(reflectionMap, coords);
+        vec2 texCoords = (reflectionMatrix * vec4(farClipInter, 1.0)).xy;
+        texCoords = (texCoords - 1) * 0.5;
+        reflection = texture2D(reflectionMap, texCoords);
+
+    }
+
+    reflection.rgb = texture2D(reflectionMap, 0.1 * intersectionPos.xz).rgb;
+    //vec3 frusturmInter = FindRayIntersection(intersectionPos, reflect,
+    //        reflectionFarClipN, reflectionFarClipD);
+    //////frusturmInter *= reflectionMatrix;
+    //float refVY = clamp(v.y*2.0,0.05,1.0);
+    //vec2 coords = (0.5*reflectionCoords.xy - 15.0 * n.zx / refVY) / reflectionCoords.z + 0.5; //GetScreenCoordinates(frusturmInter);
+    ////vec2 coords = (reflectionMatrix * vec4(frusturmInter, 1.0)).xz;
+    ////coords.x /= screenWidth;
+    ////coords.y /= screenHeight;
+    //vec4 reflection = texture2D(reflectionMap, coords);
     //color = vec4(reflection, 1.0);
     color = reflection;
 
@@ -233,7 +249,7 @@ vec4 FindLineSegIntersection(vec4 start, vec4 end, vec3 planeNormal,
 
 float DistanceToPlane(vec4 p, vec3 normal, float D)
 {
-	//waterNormal * p + waterD;
+	//normal * p + waterD;
 	return normal.x * p.x + normal.y * p.y + normal.z * p.z + D;
 }
 
@@ -242,8 +258,7 @@ vec3 FindRayIntersection(vec3 start, vec3 direction, vec3 planeNormal,
 {
     float dot = dot(planeNormal, direction);
 
-    if(dot == 0.0f) return vec3(0, 0, 0); // Correct??? What should be
-                                             // returned??
+    if(dot == 0.0f) return vec3(0, 0, 0); // Correct??? What should be returned?
     vec3 intersection = start - (direction * ( DistanceToPlane(vec4(start, 1.0),
                     planeNormal, planeD) / dot));
 
@@ -262,3 +277,5 @@ vec2 GetScreenCoordinates(vec3 world)
 
     return coordinates;
 }
+
+//vec3 LinePlaneIntersection()

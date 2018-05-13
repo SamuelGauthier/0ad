@@ -96,7 +96,8 @@ CGridProjector::CGridProjector() : m_water(CFFTWaterModel(wps)), m_gridVBIndices
     m_reflectionDepthBufferID = 0;
 	m_reflectionID = 0;
 	
-	m_reflectionTexSize = 0;
+	m_reflectionTexSizeW = 0;
+    m_reflectionTexSizeH = 0;
 }
 
 CGridProjector::~CGridProjector()
@@ -444,6 +445,7 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
 
 	m_time = (float)timer_Time();
 	UpdateMatrices();
+    UpdateReflectionCamera();
 
 	u8* base = m_gridVBVertices->m_Owner->Bind();
 
@@ -482,6 +484,7 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
     shader->Uniform(str_reflectionLookAt, m_reflectionLookAt);
     shader->Uniform(str_reflectionFarClipN, m_reflectionFarClip.m_Norm);
     shader->Uniform(str_reflectionFarClipD, m_reflectionFarClip.m_Dist);
+    shader->Uniform(str_reflectionFOV, m_reflectionCam.GetFOV());
     shader->BindTexture(str_skyCube, g_Renderer.GetSkyManager()->GetSkyCube());
     
     shader->Uniform(str_screenWidth, g_Renderer.GetWidth());
@@ -546,27 +549,44 @@ void CGridProjector::CreateTextures()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	//m_reflectionTexSize = g_Renderer.GetHeight();
-	m_reflectionTexSize = round_up_to_pow2(g_Renderer.GetWidth());
+	m_reflectionTexSizeW = round_up_to_pow2(g_Renderer.GetWidth());
+    m_reflectionTexSizeH = round_up_to_pow2(g_Renderer.GetHeight());
 
 	glBindTexture(GL_TEXTURE_2D, m_reflectionID);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
-	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, (GLsizei)m_reflectionTexSize, (GLsizei)m_reflectionTexSize, 0,  GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, (GLsizei)m_reflectionTexSizeW, (GLsizei)m_reflectionTexSizeH, 0,  GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
-    // Create depth textures
+    // Create depth texture
     glGenTextures(1, &m_reflectionDepthBufferID);
     glBindTexture(GL_TEXTURE_2D, m_reflectionDepthBufferID);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexImage2D( GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, (GLsizei)m_reflectionTexSize, (GLsizei)m_reflectionTexSize, 0,  GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, NULL);
+    glTexImage2D( GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, (GLsizei)m_reflectionTexSizeW, (GLsizei)m_reflectionTexSizeH, 0,  GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, NULL);
     
 	pglGenFramebuffersEXT(1, &m_reflectionFBOID);
 	pglGenFramebuffersEXT(1, &m_reflectionFBOID);
 	pglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_reflectionFBOID);
 	pglFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, m_reflectionID, 0);
 	pglFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, m_reflectionDepthBufferID, 0);
+}
+
+void CGridProjector::UpdateReflectionCamera()
+{
+    m_reflectionCamPos = m_reflectionCam.GetOrientation().GetTranslation();
+    m_reflectionLookAt = m_reflectionCam.GetOrientation().GetIn();
+    //m_ProjMat * m_Orientation.GetInverse();
+    //LOGWARNING("ratio = %f", m_Height / float(std::max(1, m_Width)));
+    //LOGWARNING("[W,H] = [%u, %u]", m_Width, m_Height);
+    
+    //CVector3D camPosition = m_reflectionCam.GetOrientation().GetTranslation();
+    //CVector3D camDirection = m_reflectionCam.GetOrientation().GetIn();
+    CVector3D frustrumPoint = m_reflectionCamPos + m_reflectionLookAt.Normalized() * m_reflectionCam.GetFarPlane();
+    CPlane farClipPlane;
+    farClipPlane.Set(-m_reflectionLookAt.Normalized(), frustrumPoint);
+    m_reflectionFarClip = farClipPlane;
 }

@@ -131,6 +131,7 @@ X(projector)
 X(qualityLevel)
 X(reflectionFarClipN);
 X(reflectionFarClipD);
+X(reflectionFOV);
 X(reflectionLookAt)
 X(reflectionMap)
 X(reflectionMatrix)
