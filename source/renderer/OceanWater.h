@@ -32,7 +32,9 @@ public:
     
     float GetMaxWaterHeight();
     float GetMinWaterHeight();
+    float GetWaterHeight();
     
+    void UpdateWaterHeight();
     void GenerateWaterWaves();
     void GenerateVariationMap();
 
@@ -43,7 +45,8 @@ public:
     std::vector<u8> GetFlowMap () { return m_flowMap; }
     
     CPlane GetWaterBase() { return m_waterBase; }
-    void SetWaterHeight(float height);
+    //void SetWaterHeight(float height);
+
     
     CFFTWaterModel GetWaterModel() { return m_waterModel; }
     

@@ -173,10 +173,8 @@ void CFFTWaterModel::GetHeightAndNormalMapAtTime(double time, SFFTWaterPropertie
                                          sign * out_slope_z[index][0]).Normalized();
             
             if(normalMap[index].X > max_slope) max_slope = normalMap[index].X;
-            if(normalMap[index].Y > max_slope) max_slope = normalMap[index].Y;
             if(normalMap[index].Z > max_slope) max_slope = normalMap[index].Z;
             if(normalMap[index].X < min_slope) min_slope = normalMap[index].X;
-            if(normalMap[index].Y < min_slope) min_slope = normalMap[index].Y;
             if(normalMap[index].Z < min_slope) min_slope = normalMap[index].Z;
         }
     }
@@ -192,8 +190,8 @@ void CFFTWaterModel::GetHeightAndNormalMapAtTime(double time, SFFTWaterPropertie
             pixelHeightMap->at(index2 + 2) = (u8) round((heightField[index].Z - min_height) * 255 / (max_height - min_height));
 
             pixelNormalMap->at(index2) = (u8) round((normalMap[index].X - min_slope) * 255 / (max_slope - min_slope));
-            pixelNormalMap->at(index2 + 1) = (u8) round((normalMap[index].Y - min_slope) * 255 / (max_slope - min_slope));
-            pixelNormalMap->at(index2 + 2) = (u8) round((normalMap[index].Z - min_slope) * 255 / (max_slope - min_slope));
+            pixelNormalMap->at(index2 + 1) = (u8) round((normalMap[index].Z - min_slope) * 255 / (max_slope - min_slope));
+            pixelNormalMap->at(index2 + 2) = (u8) 255;
             
         }
     }

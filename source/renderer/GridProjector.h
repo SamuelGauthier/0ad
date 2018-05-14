@@ -53,6 +53,7 @@ public:
     
     float GetMaxWaterHeight() { return m_water.GetMaxWaterHeight(); }
     float GetMinWaterHeight() { return m_water.GetMinWaterHeight(); }
+    float GetWaterHeight() { return m_water.GetWaterHeight(); }
 
     float GetReflectionTexWidth() { return m_reflectionTexSizeW; }
     float GetReflectionTexHeigth() { return m_reflectionTexSizeH; }

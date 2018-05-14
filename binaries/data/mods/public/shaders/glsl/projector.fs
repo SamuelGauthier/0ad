@@ -59,8 +59,8 @@ float F(float F_0, vec3 v, vec3 h);
 float G_smith(float nx, float k);
 float G(float nl, float nv, float k);
 float D(float nh, float alpha2);
-float DistanceToPlane(vec4 p, vec3 normal, float D);
-vec4 FindLineSegIntersection(vec4 start, vec4 end, vec3 planeNormal,
+float DistanceToPlane(vec3 p, vec3 normal, float D);
+vec3 FindLineSegIntersection(vec3 start, vec3 end, vec3 planeNormal,
         float planeD);
 vec3 FindRayIntersection(vec3 start, vec3 direction, vec3 planeNormal,
         float planeD);
@@ -124,18 +124,21 @@ void main()
     vec4 reflection = vec4(0.0, 0.0, 1.0, 1.0);
 
     // We are inside the view frustrum of the reflection camera
-    if(dot(normalize(-reflectionFarClipN), normalize(reflect)) >=
+    if(dot(normalize(-reflectionFarClipN), normalize(reflect)) <=
             cos(0.5*reflectionFOV))
     {
         vec3 farClipInter = FindRayIntersection(intersectionPos, reflect,
             reflectionFarClipN, reflectionFarClipD);
-        vec2 texCoords = (reflectionMatrix * vec4(farClipInter, 1.0)).xy;
-        texCoords = (texCoords - 1) * 0.5;
+        //vec3 coords = mat3(reflectionMatrix) * farClipInter;
+        vec4 coords = reflectionMatrix * vec4(farClipInter, 1.0);
+        coords.xyz /= coords.w;
+        vec2 texCoords = coords.xy;//(reflectionMatrix * vec4(farClipInter, 1.0)).xy;
+        texCoords = (texCoords - 1.0) * 0.5;
         reflection = texture2D(reflectionMap, texCoords);
 
     }
 
-    reflection.rgb = texture2D(reflectionMap, 0.1 * intersectionPos.xz).rgb;
+    //reflection.rgb = texture2D(reflectionMap, 0.1 * intersectionPos.xz).rgb;
     //vec3 frusturmInter = FindRayIntersection(intersectionPos, reflect,
     //        reflectionFarClipN, reflectionFarClipD);
     //////frusturmInter *= reflectionMatrix;
@@ -236,7 +239,7 @@ float D(float nh, float alpha2) {
     return alpha2 / (PI * denom * denom);
 }
 
-vec4 FindLineSegIntersection(vec4 start, vec4 end, vec3 planeNormal,
+vec3 FindLineSegIntersection(vec3 start, vec3 end, vec3 planeNormal,
         float planeD)
 {
 	float dist1 = DistanceToPlane(start, planeNormal, planeD);
@@ -247,7 +250,7 @@ vec4 FindLineSegIntersection(vec4 start, vec4 end, vec3 planeNormal,
 	return mix(start, end, t);
 }
 
-float DistanceToPlane(vec4 p, vec3 normal, float D)
+float DistanceToPlane(vec3 p, vec3 normal, float D)
 {
 	//normal * p + waterD;
 	return normal.x * p.x + normal.y * p.y + normal.z * p.z + D;
@@ -259,9 +262,12 @@ vec3 FindRayIntersection(vec3 start, vec3 direction, vec3 planeNormal,
     float dot = dot(planeNormal, direction);
 
     if(dot == 0.0f) return vec3(0, 0, 0); // Correct??? What should be returned?
-    vec3 intersection = start - (direction * ( DistanceToPlane(vec4(start, 1.0),
-                    planeNormal, planeD) / dot));
-
+    float t = -(planeNormal.x * start.x + planeNormal.y * start.y +
+            planeNormal.z * start.z + planeD);
+    t /= dot;
+    vec3 intersection = start + t * direction;
+    //vec3 intersection = start - (direction * ( DistanceToPlane(start,
+    //                planeNormal, planeD) / dot));
     return intersection;
 }
 

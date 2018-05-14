@@ -45,8 +45,6 @@
 #include "renderer/Renderer.h"
 #include "renderer/SkyManager.h"
 #include "renderer/VertexBufferManager.h"
-// TODO: Temp to be removed later
-#include "renderer/WaterManager.h"
 
 #define DEBUG_COMPUTE_INTERSECTION 0
 #define DEBUG_UPDATE_MATRICES_CAMERA_INFOS 0
@@ -199,7 +197,9 @@ void CGridProjector::UpdateMatrices()
 {
 	PROFILE3_GPU("update matrices");
 	// TODO: Temporary here, dependecy to WaterManager should be cut by implementing a couple of CCmpOceanWater classes.
-	m_water.SetWaterHeight(g_Renderer.GetWaterManager()->m_WaterHeight);
+    //float waterHeight = g_Renderer.GetWaterManager()->m_WaterHeight;
+	//m_water.SetWaterHeight(waterHeight);
+    m_water.UpdateWaterHeight();
 	
 	CCamera g_RCamera = g_Renderer.GetViewCamera();
 	CMatrix3D invV = g_RCamera.GetOrientation();
@@ -555,8 +555,8 @@ void CGridProjector::CreateTextures()
 	glBindTexture(GL_TEXTURE_2D, m_reflectionID);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, (GLsizei)m_reflectionTexSizeW, (GLsizei)m_reflectionTexSizeH, 0,  GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
     // Create depth texture

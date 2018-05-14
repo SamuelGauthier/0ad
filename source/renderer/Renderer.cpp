@@ -1166,32 +1166,44 @@ void CRenderer::ComputeReflectionCamera(CCamera& camera, const CBoundingBoxAlign
     */
      
     //--------------------------------------------------------------------------
-    
+    //WaterManager& wm = m->waterManager;
     CGridProjector& gp = m->gridProjector;
     
     float fov = camera.GetFOV();
     
-    fov *= 1.05f;
+    fov *= 1.25f;
+    
     //LOGWARNING("Cam fov: %f", camera.GetFOV());
     //LOGWARNING("RCam fov: %f", fov);
     CVector3D p = camera.GetOrientation().GetTranslation();
+    //LOGWARNING("[Ori] p: %f, %f, %f", p.X, p.Y, p.Z);
+    p.Y = -p.Y;
+    //LOGWARNING("[Mod] p: %f, %f, %f", p.X, p.Y, p.Z);
     CVector3D up = camera.GetOrientation().GetUp();
+    //LOGWARNING("[Ori] up: %f, %f, %f", up.X, up.Y, up.Z);
     up.X = -up.X;
     up.Z = -up.Z;
+    //LOGWARNING("[Mod] up: %f, %f, %f", up.X, up.Y, up.Z);
     CVector3D v = camera.GetOrientation().GetIn();
+    //LOGWARNING("[Ori] v: %f, %f, %f", v.X, v.Y, v.Z);
     v.Y = -v.Y;
+    //LOGWARNING("[Mod] v: %f, %f, %f", v.X, v.Y, v.Z);
     //LOGWARNING("up dot v: %f", up.Dot(v));
     
     camera.LookAlong(p, v, up);
     camera.UpdateFrustum(scissor);
     //camera.ClipFrustum(CVector4D(0, 1, 0, gp.GetMinWaterHeight()));
     
+    
+    //camera.m_Orientation.Scale(1, -1, 1);
+    //camera.UpdateFrustum(scissor);
     /*
     camera.m_Orientation.Scale(1, -1, 1);
     camera.m_Orientation.Translate(0, 2*gp.GetMaxWaterHeight(), 0);
     camera.UpdateFrustum(scissor);
     camera.ClipFrustum(CVector4D(0, 1, 0, -gp.GetMinWaterHeight()));
     */
+    /*
     SViewPort vp;
     vp.m_Height = g_Renderer.GetHeight();
     vp.m_Width = g_Renderer.GetWidth();
@@ -1199,13 +1211,18 @@ void CRenderer::ComputeReflectionCamera(CCamera& camera, const CBoundingBoxAlign
     vp.m_Y = 0;
     camera.SetViewPort(vp);
     camera.SetProjection(m_ViewCamera.GetNearPlane(), m_ViewCamera.GetFarPlane(), fov);
+    */
     /*
     CMatrix3D scaleMat;
     scaleMat.SetScaling(m_Height/float(std::max(1, m_Width)), 1.0f, 1.0f);
     camera.m_ProjMat = scaleMat * camera.m_ProjMat;
     */
+    //LOGWARNING("[WM] h = %f", -wm.m_WaterHeight);
+    //LOGWARNING("[GP] h = %f", gp.GetWaterHeight());
     
-    CVector4D camPlane(0, 1, 0, gp.GetMinWaterHeight() + 0.5f);
+    CVector4D camPlane(0, 1, 0, gp.GetWaterHeight() + 0.5f);
+    camera.SetProjection(m_ViewCamera.GetNearPlane(), m_ViewCamera.GetFarPlane(), fov);
+    //CVector4D camPlane(0, 1, 0, -wm.m_WaterHeight + 0.5f);
     SetObliqueFrustumClipping(camera, camPlane);
 
 }

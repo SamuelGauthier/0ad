@@ -22,6 +22,10 @@
 #include "maths/Noise.h"
 #include "ps/CLogger.h"
 
+// TODO: Remove dependency
+#include "renderer/Renderer.h"
+#include "renderer/WaterManager.h"
+
 // Taken from https://gamedev.stackexchange.com/questions/23625/how-do-you-generate-tileable-perlin-noise
 // And from http://staffwww.itn.liu.se/~stegu/aqsis/aqsis-newnoise/noise1234.cpp,
 // http://staffwww.itn.liu.se/~stegu/aqsis/aqsis-newnoise/noise1234.h
@@ -65,10 +69,10 @@ COceanWater::COceanWater(CFFTWaterModel waterModel) : m_waterModel(waterModel)
 
 COceanWater::~COceanWater() {}
 
-void COceanWater::SetWaterHeight(float height)
-{
-    m_waterBase.Set(CVector3D(0.f, 1.f, 0.f), CVector3D(0.f, height, 0.f));
-}
+//void COceanWater::SetWaterHeight(float height)
+//{
+//    m_waterBase.Set(CVector3D(0.f, 1.f, 0.f), CVector3D(0.f, height, 0.f));
+//}
 
 float COceanWater::GetMaxWaterHeight()
 {
@@ -80,6 +84,18 @@ float COceanWater::GetMinWaterHeight()
 {
     // Id. as in COceanWater::GetMaxWaterHeight()
     return -5.0f;
+}
+
+float COceanWater::GetWaterHeight()
+{
+    return m_waterBase.m_Dist;
+}
+
+void COceanWater::UpdateWaterHeight()
+{
+    // TODO: Remove dependency to WaterManager
+    float waterHeight = g_Renderer.GetWaterManager()->m_WaterHeight;
+    m_waterBase.Set(CVector3D(0.f, 1.f, 0.f), CVector3D(0.f, waterHeight, 0.f));
 }
 
 void COceanWater::GenerateWaterWaves()
