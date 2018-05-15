@@ -44,7 +44,7 @@ public:
 
 	void Initialize() override;
 
-	void SetReflectionMatrix(CMatrix3D reflectionMatrix) { m_reflectionMatrix = reflectionMatrix; }
+	//void SetReflectionMatrix(CMatrix3D reflectionMatrix) { m_reflectionMatrix = reflectionMatrix; }
     //void SetReflectionTransMatrix(CMatrix3D reflectionTransMatrix)
     void SetReflectionCamPos(CVector3D position) { m_reflectionCamPos = position; }
     void SetReflectionLookAt(CVector3D lookAt) { m_reflectionLookAt = lookAt; }
@@ -101,7 +101,7 @@ private:
     size_t m_reflectionTexSizeH;
 
     CCamera m_reflectionCam;
-	CMatrix3D m_reflectionMatrix;
+	//CMatrix3D m_reflectionMatrix;
     CVector3D m_reflectionCamPos;
     CVector3D m_reflectionLookAt;
     CPlane m_reflectionFarClip;

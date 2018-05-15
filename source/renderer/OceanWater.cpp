@@ -88,7 +88,7 @@ float COceanWater::GetMinWaterHeight()
 
 float COceanWater::GetWaterHeight()
 {
-    return m_waterBase.m_Dist;
+    return -m_waterBase.m_Dist;
 }
 
 void COceanWater::UpdateWaterHeight()

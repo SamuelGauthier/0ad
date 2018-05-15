@@ -19,7 +19,7 @@ uniform sampler2D normalMap3;
 uniform sampler2D reflectionMap;
 uniform vec3 reflectionFarClipN;
 uniform float reflectionFarClipD;
-uniform mat4 reflectionMatrix; 
+uniform mat4 reflectionMVP; 
 uniform float reflectionFOV;
 uniform mat4 invV;
 
@@ -65,6 +65,7 @@ vec3 FindLineSegIntersection(vec3 start, vec3 end, vec3 planeNormal,
 vec3 FindRayIntersection(vec3 start, vec3 direction, vec3 planeNormal,
         float planeD);
 vec2 GetScreenCoordinates(vec3 world);
+vec3 computeReflection(vec3 n);
 
 void main()
 {
@@ -74,10 +75,10 @@ void main()
     float k = alpha / 2;
 
 	float losMod;
-    vec3 n = vec3(0, 1, 0);
+    //vec3 n = vec3(0, 1, 0);
     //vec3 n = texture2D(heightMap1, 0.01*waterCoords.xz).rgb;
-    float variation = texture2D(variationMap, 0.0001 * waterCoords.xz).r;
-    //vec3 n = calculateNormal(waterCoords.xz, variation);
+    float variation = texture2D(variationMap, 0.001 * waterCoords.xz).r;
+    vec3 n = calculateNormal(waterCoords.xz, variation);
 
     //vec3 n = vec3(0,1,0);
     vec3 l = normalize(sunDir);
@@ -111,15 +112,6 @@ void main()
 	color.xyz += specular;
 
 	vec3 reflect = reflect(v,n);
-	//float refVY = clamp(v.y*2.0,0.05,1.0);
-	// Distort the reflection coords based on waves.
-	//vec2 reflCoords = (0.5*reflectionCoords.xy - 15.0 * n.zx / refVY) / reflectionCoords.z + 0.5;
-    //vec3 reflection = texture2D(reflectionMap, reflCoords.xy).rgb;
-    //color = vec4(reflection, 1.0);
-	//float refVY = clamp(v.y*2.0,0.05,1.0);
-
-	// Distort the reflection coords based on waves.
-	//vec2 coords = (0.5*reflectionCoords.xy) / reflectionCoords.z + 0.5;
 
     vec4 reflection = vec4(0.0, 0.0, 1.0, 1.0);
 
@@ -129,30 +121,33 @@ void main()
     {
         vec3 farClipInter = FindRayIntersection(intersectionPos, reflect,
             reflectionFarClipN, reflectionFarClipD);
-        //vec3 coords = mat3(reflectionMatrix) * farClipInter;
-        vec4 coords = reflectionMatrix * vec4(farClipInter, 1.0);
+        //vec3 coords = mat3(reflectionMVP) * farClipInter;
+        vec4 coords = reflectionMVP * vec4(farClipInter, 1.0);
         coords.xyz /= coords.w;
-        vec2 texCoords = coords.xy;//(reflectionMatrix * vec4(farClipInter, 1.0)).xy;
-        texCoords = (texCoords - 1.0) * 0.5;
+        vec2 texCoords = coords.xy;//(reflectionMVP * vec4(farClipInter, 1.0)).xy;
+        texCoords = (texCoords + 1.0) * 0.5;
+        texCoords.y += 1/screenHeight;
         reflection = texture2D(reflectionMap, texCoords);
 
     }
 
+    //reflection.rgb = computeReflection(n);
+
     //reflection.rgb = texture2D(reflectionMap, 0.1 * intersectionPos.xz).rgb;
     //vec3 frusturmInter = FindRayIntersection(intersectionPos, reflect,
     //        reflectionFarClipN, reflectionFarClipD);
-    //////frusturmInter *= reflectionMatrix;
+    //////frusturmInter *= reflectionMVP;
     //float refVY = clamp(v.y*2.0,0.05,1.0);
     //vec2 coords = (0.5*reflectionCoords.xy - 15.0 * n.zx / refVY) / reflectionCoords.z + 0.5; //GetScreenCoordinates(frusturmInter);
-    ////vec2 coords = (reflectionMatrix * vec4(frusturmInter, 1.0)).xz;
+    ////vec2 coords = (reflectionMVP * vec4(frusturmInter, 1.0)).xz;
     ////coords.x /= screenWidth;
     ////coords.y /= screenHeight;
     //vec4 reflection = texture2D(reflectionMap, coords);
     //color = vec4(reflection, 1.0);
     color = reflection;
 
-    vec3 reflected = vec3(invV * vec4(reflect, 0));
-    vec3 skyReflection = textureCube(skyCube, reflected).rgb;
+    //vec3 reflected = vec3(invV * vec4(reflect, 0));
+    //vec3 skyReflection = textureCube(skyCube, reflected).rgb;
     //color = vec4(skyReflection, 1.0);
 
     //float c = calculateHeight(intersectionPos.xz, variation).b;
@@ -192,13 +187,13 @@ vec3 calculateNormal(vec2 position, float variation) {
     vec3 n = texture2D(normalMap1, scale.x * position +
             wind1 * timeScale1 * time).rgb * amplitude1 - 0.5;
 
-    n += texture2D(normalMap2, scale.x * position +
-            wind2 * timeScale2 * time).rgb * amplitude2 - 0.5;
+    //n += texture2D(normalMap2, scale.x * position +
+    //        wind2 * timeScale2 * time).rgb * amplitude2 - 0.5;
 
-    n += texture2D(normalMap3, scale.x * position +
-            wind3 * timeScale3 * time).rgb * amplitude3 - 0.5;
+    //n += texture2D(normalMap3, scale.x * position +
+    //        wind3 * timeScale3 * time).rgb * amplitude3 - 0.5;
 
-    return normalize(n);
+    return normalize(n * variation);
 }
 
 vec3 calculateHeight(vec2 position, float variation) {
@@ -273,7 +268,7 @@ vec3 FindRayIntersection(vec3 start, vec3 direction, vec3 planeNormal,
 
 vec2 GetScreenCoordinates(vec3 world)
 {
-    vec4 screenSpace = reflectionMatrix * vec4(world, 0.0);
+    vec4 screenSpace = reflectionMVP * vec4(world, 0.0);
 
     vec2 coordinates = screenSpace.xz / screenSpace.w;
     coordinates.x = 0.0;//(coordinates.x + 1) * 0.5 ;//screenHeight/screenWidth;
@@ -285,3 +280,26 @@ vec2 GetScreenCoordinates(vec3 world)
 }
 
 //vec3 LinePlaneIntersection()
+//
+
+vec3 computeReflection(vec3 n)
+{
+    vec3 wavePos = intersectionPos;
+    vec3 v = normalize(wavePos - cameraPos);
+    vec3 r = normalize(reflect(v, normalize(n))); // n should be normalized
+
+    vec4 pos0 = reflectionMVP * vec4(wavePos, 1.0);
+    vec4 dPos = reflectionMVP * vec4(r, 1.0);
+
+    float t_refl = (pos0.z - pos0.w) / (dPos.w - dPos.z);
+
+    vec4 farP = pos0 + t_refl * dPos;
+
+    //float reflShiftRight = 1 / screenWidth;
+    float reflShiftUp = 1 / screenHeight;
+    vec2 uv = vec2(0.5 * (farP.x / farP.w) + 0.5,
+                   0.5 * (farP.y / farP.w) + 0.5 + reflShiftUp);
+    
+    vec3 reflection = texture2D(reflectionMap, uv).rgb;
+    return reflection;
+}

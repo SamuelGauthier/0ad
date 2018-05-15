@@ -135,6 +135,7 @@ X(reflectionFOV);
 X(reflectionLookAt)
 X(reflectionMap)
 X(reflectionMatrix)
+X(reflectionMVP);
 X(refractionMap)
 X(refractionMatrix)
 X(renderedTex)

@@ -480,7 +480,8 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
     shader->BindTexture(str_variationMap, m_variationMapID);
 
 	shader->BindTexture(str_reflectionMap, m_reflectionID);
-    shader->Uniform(str_reflectionMatrix, m_reflectionMatrix);
+    shader->Uniform(str_reflectionMVP, m_reflectionCam.GetViewProjection());
+    //shader->Uniform(str_reflectionMatrix, m_reflectionMatrix);
     shader->Uniform(str_reflectionLookAt, m_reflectionLookAt);
     shader->Uniform(str_reflectionFarClipN, m_reflectionFarClip.m_Norm);
     shader->Uniform(str_reflectionFarClipD, m_reflectionFarClip.m_Dist);
