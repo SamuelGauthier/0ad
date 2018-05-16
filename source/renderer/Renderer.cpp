@@ -430,8 +430,8 @@ CRenderer::CRenderer()
 	m_Width = 0;
 	m_Height = 0;
 	m_TerrainRenderMode = SOLID;
-	//m_WaterRenderMode = WIREFRAME;// SOLID
 	m_WaterRenderMode = SOLID;
+	//m_WaterRenderMode = WIREFRAME;
 	m_ModelRenderMode = SOLID;
 	m_ClearColor[0] = m_ClearColor[1] = m_ClearColor[2] = m_ClearColor[3] = 0;
 
@@ -1137,7 +1137,7 @@ void CRenderer::ComputeReflectionCamera(CCamera& camera, const CBoundingBoxAlign
 	// Expand fov slightly since ripples can reflect parts of the scene that
 	// are slightly outside the normal camera view, and we want to avoid any
 	// noticeable edge-filtering artifacts
-	fov *= 1.05f;
+	fov *= 1.2f;
 
 	camera = m_ViewCamera;
 
@@ -1310,6 +1310,7 @@ void CRenderer::RenderRefractions(const CShaderDefines& context, const CBounding
 	glGetIntegerv(GL_FRAMEBUFFER_BINDING_EXT, &fbo);
 
 	WaterManager& wm = m->waterManager;
+	CGridProjector& gp = m->gridProjector;
 
 	// Remember old camera
 	CCamera normalCamera = m_ViewCamera;
@@ -1323,6 +1324,7 @@ void CRenderer::RenderRefractions(const CShaderDefines& context, const CBounding
 
 	// Save the model-view-projection matrix so the shaders can use it for projective texturing
 	wm.m_RefractionMatrix = m_ViewCamera.GetViewProjection();
+	gp.SetRefractionCamera(m_ViewCamera);
 
 	float vpHeight = wm.m_RefTextureSize;
 	float vpWidth = wm.m_RefTextureSize;
@@ -1337,7 +1339,8 @@ void CRenderer::RenderRefractions(const CShaderDefines& context, const CBounding
 	glScissor(screenScissor.x1, screenScissor.y1, screenScissor.x2 - screenScissor.x1, screenScissor.y2 - screenScissor.y1);
 
 	// try binding the framebuffer
-	pglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, wm.m_RefractionFbo);
+	//pglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, wm.m_RefractionFbo);
+	pglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, gp.GetRefractionFBOID());
 
 	glClearColor(1.0f,0.0f,0.0f,0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

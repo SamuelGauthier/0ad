@@ -93,6 +93,9 @@ CGridProjector::CGridProjector() : m_water(CFFTWaterModel(wps)), m_gridVBIndices
 	m_reflectionFBOID = 0;
     m_reflectionDepthBufferID = 0;
 	m_reflectionID = 0;
+	m_refractionFBOID = 0;
+	m_refractionDepthBufferID = 0;
+	m_refractionID = 0;
 	
 	m_reflectionTexSizeW = 0;
     m_reflectionTexSizeH = 0;
@@ -109,7 +112,11 @@ CGridProjector::~CGridProjector()
     glDeleteTextures(1, &m_flowMapID);
 	glDeleteTextures(1, &m_reflectionID);
     glDeleteTextures(1, &m_reflectionDepthBufferID);
+    glDeleteTextures(1, &m_refractionID);
+    glDeleteTextures(1, &m_refractionDepthBufferID);
+
 	pglDeleteFramebuffersEXT(1, &m_reflectionFBOID);
+	pglDeleteFramebuffersEXT(1, &m_refractionFBOID);
 }
 
 void CGridProjector::Initialize()
@@ -487,6 +494,9 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
     shader->Uniform(str_reflectionFarClipD, m_reflectionFarClip.m_Dist);
     shader->Uniform(str_reflectionFOV, m_reflectionCam.GetFOV());
     shader->BindTexture(str_skyCube, g_Renderer.GetSkyManager()->GetSkyCube());
+
+	shader->BindTexture(str_refractionMap, m_refractionID);
+	shader->Uniform(str_refractionMatrix, m_refractionCam.GetViewProjection());
     
     shader->Uniform(str_screenWidth, g_Renderer.GetWidth());
     shader->Uniform(str_screenHeight, g_Renderer.GetHeight());
@@ -517,6 +527,9 @@ void CGridProjector::CreateTextures()
     glGenTextures(1, &m_variationMapID);
     glGenTextures(1, &m_flowMapID);
 	glGenTextures(1, &m_reflectionID);
+    glGenTextures(1, &m_reflectionDepthBufferID);
+    glGenTextures(1, & m_refractionID);
+    glGenTextures(1, &m_refractionDepthBufferID);
    
     std::vector<std::vector<u8>> heightMaps = m_water.GetHeightMaps();
     
@@ -561,7 +574,6 @@ void CGridProjector::CreateTextures()
 	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, (GLsizei)m_reflectionTexSizeW, (GLsizei)m_reflectionTexSizeH, 0,  GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
     // Create depth texture
-    glGenTextures(1, &m_reflectionDepthBufferID);
     glBindTexture(GL_TEXTURE_2D, m_reflectionDepthBufferID);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -570,10 +582,45 @@ void CGridProjector::CreateTextures()
     glTexImage2D( GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, (GLsizei)m_reflectionTexSizeW, (GLsizei)m_reflectionTexSizeH, 0,  GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, NULL);
     
 	pglGenFramebuffersEXT(1, &m_reflectionFBOID);
-	pglGenFramebuffersEXT(1, &m_reflectionFBOID);
 	pglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_reflectionFBOID);
 	pglFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, m_reflectionID, 0);
 	pglFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, m_reflectionDepthBufferID, 0);
+
+	ogl_WarnIfError();
+
+	GLenum status = pglCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+	if (status != GL_FRAMEBUFFER_COMPLETE_EXT)
+	{
+		LOGWARNING("Reflection framebuffer object incomplete: 0x%04X", status);
+	}
+
+	glBindTexture(GL_TEXTURE_2D, m_refractionID);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB8, (GLsizei)m_reflectionTexSizeW, (GLsizei)m_reflectionTexSizeH, 0,  GL_RGB, GL_UNSIGNED_BYTE, 0);
+
+    // Create depth texture
+    glBindTexture(GL_TEXTURE_2D, m_refractionDepthBufferID);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexImage2D( GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, (GLsizei)m_reflectionTexSizeW, (GLsizei)m_reflectionTexSizeH, 0,  GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, NULL);
+
+	pglGenFramebuffersEXT(1, &m_refractionFBOID);
+	pglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_refractionFBOID);
+	pglFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, m_refractionID, 0);
+	pglFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, m_refractionDepthBufferID, 0);
+
+	ogl_WarnIfError();
+
+	status = pglCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+	if (status != GL_FRAMEBUFFER_COMPLETE_EXT)
+	{
+		LOGWARNING("Refraction framebuffer object incomplete: 0x%04X", status);
+	}
 }
 
 void CGridProjector::UpdateReflectionCamera()

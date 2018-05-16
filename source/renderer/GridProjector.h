@@ -50,6 +50,7 @@ public:
     void SetReflectionLookAt(CVector3D lookAt) { m_reflectionLookAt = lookAt; }
     void SetReflectionFarClip(CPlane farClippingPlane) { m_reflectionFarClip = farClippingPlane; }
     void SetReflectionCamera(CCamera reflectionCamera) { m_reflectionCam = reflectionCamera; }
+    void SetRefractionCamera(CCamera refractionCamera) { m_refractionCam = refractionCamera; }
     
     float GetMaxWaterHeight() { return m_water.GetMaxWaterHeight(); }
     float GetMinWaterHeight() { return m_water.GetMinWaterHeight(); }
@@ -57,9 +58,11 @@ public:
 
     float GetReflectionTexWidth() { return m_reflectionTexSizeW; }
     float GetReflectionTexHeigth() { return m_reflectionTexSizeH; }
+
 	GLuint GetReflectionFBOID() { return m_reflectionFBOID; }
     CVector3D GetReflectionLookAt() { return m_reflectionLookAt; }
     CPlane GetReflectionFarClip() { return m_reflectionFarClip; }
+	GLuint GetRefractionFBOID() { return m_refractionFBOID; }
 
 private:
 	void GenerateVertices();
@@ -96,6 +99,9 @@ private:
 	GLuint m_reflectionFBOID;
     GLuint m_reflectionDepthBufferID;
 	GLuint m_reflectionID;
+	GLuint m_refractionFBOID;
+    GLuint m_refractionDepthBufferID;
+	GLuint m_refractionID;
 
 	size_t m_reflectionTexSizeW;
     size_t m_reflectionTexSizeH;
@@ -105,6 +111,7 @@ private:
     CVector3D m_reflectionCamPos;
     CVector3D m_reflectionLookAt;
     CPlane m_reflectionFarClip;
+    CCamera m_refractionCam;
 
 };
 

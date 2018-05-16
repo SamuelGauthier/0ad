@@ -9,6 +9,7 @@ uniform vec3 waterNormal;
 uniform float waterD;
 uniform float time;
 uniform mat4 reflectionMatrix;
+uniform mat4 refractionMatrix;
 
 uniform sampler2D heightMap1;
 uniform sampler2D heightMap2;
@@ -20,6 +21,7 @@ varying vec4 waterCoords;
 varying float waterHeight;
 varying vec3 intersectionPos;
 varying vec3 reflectionCoords;
+varying vec3 refractionCoords;
 
 // Properties
 varying vec3 scale;
@@ -81,7 +83,8 @@ void main()
     amplitude2 = 2.2;
     amplitude3 = 1.5;
 
-    float variation = texture2D(variationMap, 0.0001 * waterCoords.xz).r;
+    //float variation = texture2D(variationMap, 0.0001 * waterCoords.xz).r;
+    float variation = texture2D(heightMap1, 0.0001 * waterCoords.xz).g;
 
     vec3 h = texture2D(heightMap1, scale.x * intersection.xz + wind1 *
             timeScale1 * time).rgb * amplitude1 - 0.5;
@@ -93,13 +96,14 @@ void main()
             timeScale3 * time).rgb * amplitude3 - 0.5;
 
     h *= variation;
-    //intersection.xyz += h;
+    intersection.xyz += h;
 
     intersectionPos = intersection.xyz;
 
 	losCoords = (losMatrix * vec4(intersection.xyz, 1.0)).rg;
 
     reflectionCoords = (reflectionMatrix * vec4(intersectionPos.xyz, 1.0)).rga;
+	refractionCoords = (refractionMatrix * vec4(intersectionPos.xyz, 1.0)).rga;
 
 	gl_Position = transform * intersection;
 }

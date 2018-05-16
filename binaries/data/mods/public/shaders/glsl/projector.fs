@@ -4,6 +4,9 @@
 #define F0 0.02037318784
 #define PI 3.14159265358979
 
+// air/water = 1/1.333
+#define RATIO 0.7501875469
+
 uniform sampler2D losMap;
 
 uniform sampler2D height;
@@ -23,6 +26,8 @@ uniform mat4 reflectionMVP;
 uniform float reflectionFOV;
 uniform mat4 invV;
 
+uniform sampler2D refractionMap;
+
 uniform float screenWidth;
 uniform float screenHeight;
 
@@ -39,6 +44,7 @@ varying vec4 waterCoords;
 varying float waterHeight;
 varying vec3 intersectionPos;
 varying vec3 reflectionCoords;
+varying vec3 refractionCoords;
 
 // Properties
 varying vec3 scale;
@@ -51,6 +57,8 @@ varying float timeScale3;
 varying float amplitude1;
 varying float amplitude2;
 varying float amplitude3;
+
+const vec3 normalAttenuation = vec3(0.1, 1, 0.1);
 
 //vec3 calculateNormal(vec3 a, float t_cst, sampler2D normalMap);
 vec3 calculateNormal(vec2 position, float variation);
@@ -75,10 +83,14 @@ void main()
     float k = alpha / 2;
 
 	float losMod;
-    //vec3 n = vec3(0, 1, 0);
-    //vec3 n = texture2D(heightMap1, 0.01*waterCoords.xz).rgb;
-    float variation = texture2D(variationMap, 0.001 * waterCoords.xz).r;
-    vec3 n = calculateNormal(waterCoords.xz, variation);
+    //float variation = texture2D(variationMap, 0.001 * waterCoords.xz).r;
+	vec2 variationWind = vec2(-1,-1);
+	float variationTS = 0.003;
+    float variation = texture2D(heightMap1, 0.001 * waterCoords.xz + variationWind * variationTS * time).g;
+	vec3 n;
+    n = calculateNormal(waterCoords.xz, variation);
+    //n = vec3(0, 1, 0);
+    //n = texture2D(heightMap1, 0.01*waterCoords.xz).rgb;
 
     //vec3 n = vec3(0,1,0);
     vec3 l = normalize(sunDir);
@@ -90,14 +102,14 @@ void main()
     float nv = max(dot(n, v), 0);
     float nh = max(dot(n, h), 0);
 
-    float F = F(F0, l, h);
+    float F_val = F(F0, l, h);
     float G = G(nl, nv, k);
     float D = D(nh, alpha2);
-    float specular = F * G * D / max(4 * nl * nv, 0.001);
+    float specular = F_val * G * D / max(4 * nl * nv, 0.001);
 
     vec4 shallowColor = vec4(0.0, 0.64, 0.68, 1.0);
     vec4 deepColor = vec4(0.02, 0.05, 0.10, 1.0);
-	vec4 ambient = mix(shallowColor, deepColor, calculateHeight(intersectionPos.xz, variation).g);
+	vec4 ambient = variation * mix(shallowColor, deepColor, calculateHeight(intersectionPos.xz, variation).g);
 
 	losMod = texture2D(losMap, losCoords.st).a;
 	losMod = losMod < 0.03 ? 0.0 : losMod;
@@ -106,14 +118,14 @@ void main()
     color += ambient;
 
 	float diffuse = max(0, dot(l, n));
-	color.xyz += diffuse;
+	//color.rgb += diffuse;
 
-	//float specular2 = max(0, pow(dot(r,v), 18));
-	color.xyz += specular;
+	float specular2 = max(0, pow(dot(r,v), 18));
+	color.rgb += specular2;
 
 	vec3 reflect = reflect(v,n);
 
-    vec4 reflection = vec4(0.0, 0.0, 1.0, 1.0);
+    vec4 reflection = vec4(0.0, 0.0, 0.0, 0.0);
 
     // We are inside the view frustrum of the reflection camera
     if(dot(normalize(-reflectionFarClipN), normalize(reflect)) <=
@@ -131,27 +143,30 @@ void main()
 
     }
 
-    //reflection.rgb = computeReflection(n);
+	vec4 refraction = vec4(0.0, 0.0, 0.0, 0.0);
+	vec2 refrCoords = (0.5 * refractionCoords.xy) / refractionCoords.z + 0.5;
+	refraction = texture2D(refractionMap, refrCoords);
 
-    //reflection.rgb = texture2D(reflectionMap, 0.1 * intersectionPos.xz).rgb;
-    //vec3 frusturmInter = FindRayIntersection(intersectionPos, reflect,
-    //        reflectionFarClipN, reflectionFarClipD);
-    //////frusturmInter *= reflectionMVP;
-    //float refVY = clamp(v.y*2.0,0.05,1.0);
-    //vec2 coords = (0.5*reflectionCoords.xy - 15.0 * n.zx / refVY) / reflectionCoords.z + 0.5; //GetScreenCoordinates(frusturmInter);
-    ////vec2 coords = (reflectionMVP * vec4(frusturmInter, 1.0)).xz;
-    ////coords.x /= screenWidth;
-    ////coords.y /= screenHeight;
-    //vec4 reflection = texture2D(reflectionMap, coords);
-    //color = vec4(reflection, 1.0);
-    color = reflection;
+    //color = vec4(n,1.0);//reflection;
+	//reflection = vec4(computeReflection(n), 1.0);
 
-    //vec3 reflected = vec3(invV * vec4(reflect, 0));
-    //vec3 skyReflection = textureCube(skyCube, reflected).rgb;
-    //color = vec4(skyReflection, 1.0);
+    vec3 reflected = vec3(invV * vec4(reflect, 0));
+    vec3 skyReflection = textureCube(skyCube, reflected).rgb;
+	vec4 refractionColor = refraction;
 
-    //float c = calculateHeight(intersectionPos.xz, variation).b;
+	//reflection += vec4(skyReflection, 1.0);
+	//color = vec4(skyReflection, 1.0);//vec4(n, 1.0);//reflection;
+	vec4 reflectionColor = vec4(mix(skyReflection, reflection.rgb, reflection.a), 1.0);// + reflection;
+
+	vec4 amb = mix(refractionColor, reflectionColor, F(F0, v, n));
+	color += amb;
+	///*
+	//color = reflectionColor;
+    //float c = F(F0, v, n);
+	//float c = variation;
 	//color = vec4(c, c, c, 1.0);
+	//*/
+	//color = variation;
 	//color = vec4(calculateHeight(intersectionPos.xz, variation), 1.0);
 	gl_FragColor = color * losMod;
 }
@@ -187,11 +202,11 @@ vec3 calculateNormal(vec2 position, float variation) {
     vec3 n = texture2D(normalMap1, scale.x * position +
             wind1 * timeScale1 * time).rgb * amplitude1 - 0.5;
 
-    //n += texture2D(normalMap2, scale.x * position +
-    //        wind2 * timeScale2 * time).rgb * amplitude2 - 0.5;
+    n += texture2D(normalMap2, scale.x * position +
+            wind2 * timeScale2 * time).rgb * amplitude2 - 0.5;
 
-    //n += texture2D(normalMap3, scale.x * position +
-    //        wind3 * timeScale3 * time).rgb * amplitude3 - 0.5;
+    n += texture2D(normalMap3, scale.x * position +
+            wind3 * timeScale3 * time).rgb * amplitude3 - 0.5;
 
     return normalize(n * variation);
 }
