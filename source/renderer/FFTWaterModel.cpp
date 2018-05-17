@@ -145,14 +145,25 @@ void CFFTWaterModel::GetHeightAndNormalMapAtTime(double time, SFFTWaterPropertie
     fftwf_execute(p_ifft_D_x);
     fftwf_execute(p_ifft_D_z);
     
-    float min_slope = std::numeric_limits<float>().max();
-    float max_slope = -min_slope;
-    float min_height = min_slope;
-    float max_height = -min_slope;
+    //float min_slope = std::numeric_limits<float>().max();
+    //float max_slope = -min_slope;
+    //float min_height = min_slope;
+    //float max_height = -min_slope;
+
+    float min_height_x = std::numeric_limits<float>().max();
+    float max_height_x = -min_height_x;
+    float min_height_y = std::numeric_limits<float>().max();
+    float max_height_y = -min_height_y;
+    float min_height_z = std::numeric_limits<float>().max();
+    float max_height_z = -min_height_z;
+    float min_slope_x = std::numeric_limits<float>().max();
+    float max_slope_x = -min_slope_x;
+    float min_slope_z = std::numeric_limits<float>().max();
+    float max_slope_z = -min_slope_z;
     
     for (int i = 0; i < waterProps.m_resolution; i++) {
         for (int j = 0; j < waterProps.m_resolution; j++) {
-            int index = i * waterProps.m_resolution + j;
+            int index = j * waterProps.m_resolution + i;
             float sign = 1;
             
             if((i + j) % 2) sign = -1;
@@ -161,37 +172,37 @@ void CFFTWaterModel::GetHeightAndNormalMapAtTime(double time, SFFTWaterPropertie
                                              sign * out_height[index][0],
                                            - sign * waterProps.m_lambda * out_D_z[index][0]);
             
-            if(heightField[index].X > max_height) max_height = heightField[index].X;
-            if(heightField[index].Y > max_height) max_height = heightField[index].Y;
-            if(heightField[index].Z > max_height) max_height = heightField[index].Z;
-            if(heightField[index].X < min_height) min_height = heightField[index].X;
-            if(heightField[index].Y < min_height) min_height = heightField[index].Y;
-            if(heightField[index].Z < min_height) min_height = heightField[index].Z;
+            if(heightField[index].X > max_height_x) max_height_x = heightField[index].X;
+            if(heightField[index].Y > max_height_y) max_height_y = heightField[index].Y;
+            if(heightField[index].Z > max_height_z) max_height_z = heightField[index].Z;
+            if(heightField[index].X < min_height_x) min_height_x = heightField[index].X;
+            if(heightField[index].Y < min_height_y) min_height_y = heightField[index].Y;
+            if(heightField[index].Z < min_height_z) min_height_z = heightField[index].Z;
             
             normalMap[index] = CVector3D(sign * out_slope_x[index][0],
                                            -1,
                                          sign * out_slope_z[index][0]).Normalized();
             
-            if(normalMap[index].X > max_slope) max_slope = normalMap[index].X;
-            if(normalMap[index].Z > max_slope) max_slope = normalMap[index].Z;
-            if(normalMap[index].X < min_slope) min_slope = normalMap[index].X;
-            if(normalMap[index].Z < min_slope) min_slope = normalMap[index].Z;
+            if(normalMap[index].X > max_slope_x) max_slope_x = normalMap[index].X;
+            if(normalMap[index].Z > max_slope_z) max_slope_z = normalMap[index].Z;
+            if(normalMap[index].X < min_slope_x) min_slope_x = normalMap[index].X;
+            if(normalMap[index].Z < min_slope_z) min_slope_z = normalMap[index].Z;
         }
     }
     
 	// Transform form floating point values to pixel data (unsigned byte)
     for (int i = 0; i < waterProps.m_resolution; i++) {
         for (int j = 0; j < waterProps.m_resolution; j++) {
-            int index = i * waterProps.m_resolution + j;
+            int index = j * waterProps.m_resolution + i;
             int index2 = 3*index;
             
-            pixelHeightMap->at(index2) = (u8) round((heightField[index].X - min_height) * 255 / (max_height - min_height));
-            pixelHeightMap->at(index2 + 1) = (u8) round((heightField[index].Y - min_height) * 255 / (max_height - min_height));
-            pixelHeightMap->at(index2 + 2) = (u8) round((heightField[index].Z - min_height) * 255 / (max_height - min_height));
+            pixelHeightMap->at(index2) = (u8) round((heightField[index].X - min_height_x) * 255.0 / (max_height_x - min_height_x));
+            pixelHeightMap->at(index2 + 1) = (u8) round((heightField[index].Y - min_height_y) * 255.0 / (max_height_y - min_height_y));
+            pixelHeightMap->at(index2 + 2) = (u8) round((heightField[index].Z - min_height_z) * 255.0 / (max_height_z - min_height_z));
 
-            pixelNormalMap->at(index2) = (u8) round((normalMap[index].X - min_slope) * 255 / (max_slope - min_slope));
-            pixelNormalMap->at(index2 + 1) = (u8) round((normalMap[index].Z - min_slope) * 255 / (max_slope - min_slope));
-            pixelNormalMap->at(index2 + 2) = (u8) 255;
+			pixelNormalMap->at(index2) = (u8)round((normalMap[index].X - min_slope_x) * 255.0 / (max_slope_x -min_slope_x));
+            pixelNormalMap->at(index2 + 1) = (u8) round((normalMap[index].Z - min_slope_z) * 255.0 / (max_slope_z - min_slope_z));
+            pixelNormalMap->at(index2 + 2) = (u8) 255.0;
             
         }
     }

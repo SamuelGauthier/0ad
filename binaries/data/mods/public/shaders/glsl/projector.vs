@@ -22,6 +22,7 @@ varying float waterHeight;
 varying vec3 intersectionPos;
 varying vec3 reflectionCoords;
 varying vec3 refractionCoords;
+varying vec3 gradient;
 
 // Properties
 varying vec3 scale;
@@ -124,3 +125,22 @@ float DistanceToPlane(vec4 p)
 	//waterNormal * p + waterD;
 	return waterNormal.x * p.x + waterNormal.y * p.y + waterNormal.z * p.z + waterD;
 }
+
+//vec3 computeDisplacement(vec2 uv)
+//{
+//    vec3 h = texture2D(heightMap1, scale.x * intersection.xz + wind1 *
+//            timeScale1 * time).rgb * amplitude1 - 0.5;
+
+//    h += texture2D(heightMap2, scale.x * intersection.xz + wind2 *
+//            timeScale2 * time).rgb * amplitude2 - 0.5;
+
+//    h += texture2D(heightMap3, scale.x * intersection.xz + wind3 *
+//            timeScale3 * time).rgb * amplitude3 - 0.5;
+
+//	return h;
+//}
+
+//vec2 sobel(vec2 uv)
+//{
+
+//}

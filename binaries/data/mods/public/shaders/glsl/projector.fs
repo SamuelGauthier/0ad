@@ -45,6 +45,7 @@ varying float waterHeight;
 varying vec3 intersectionPos;
 varying vec3 reflectionCoords;
 varying vec3 refractionCoords;
+varying vec3 gradient;
 
 // Properties
 varying vec3 scale;
@@ -95,6 +96,8 @@ void main()
     //vec3 n = vec3(0,1,0);
     vec3 l = normalize(sunDir);
     vec3 r = reflect(l, n);
+	vec3 p = cameraPos;
+	p.yz = cameraPos.zy;
     vec3 v = normalize(cameraPos - intersectionPos);
     vec3 h = normalize(l + v);
 
@@ -105,7 +108,7 @@ void main()
     float F_val = F(F0, l, h);
     float G = G(nl, nv, k);
     float D = D(nh, alpha2);
-    float specular = F_val * G * D / max(4 * nl * nv, 0.001);
+    float specular = F_val * G * D / max(4 * nl * nv, 0.01);
 
     vec4 shallowColor = vec4(0.0, 0.64, 0.68, 1.0);
     vec4 deepColor = vec4(0.02, 0.05, 0.10, 1.0);
@@ -120,8 +123,8 @@ void main()
 	float diffuse = max(0, dot(l, n));
 	//color.rgb += diffuse;
 
-	float specular2 = max(0, pow(dot(r,v), 18));
-	color.rgb += specular2;
+	//float specular2 = max(0, pow(dot(r,v), 18));
+	color.rgb += specular;
 
 	vec3 reflect = reflect(v,n);
 
@@ -161,13 +164,15 @@ void main()
 	vec4 amb = mix(refractionColor, reflectionColor, F(F0, v, n));
 	color += amb;
 	///*
-	//color = reflectionColor;
+	color = reflectionColor;
     //float c = F(F0, v, n);
 	//float c = variation;
 	//color = vec4(c, c, c, 1.0);
+	//color = vec4(v, 1.0);
+	//color = reflection;
 	//*/
-	//color = variation;
 	//color = vec4(calculateHeight(intersectionPos.xz, variation), 1.0);
+	//color = vec4(n, 1.0);
 	gl_FragColor = color * losMod;
 }
 
@@ -199,16 +204,20 @@ vec3 calculateNormal(vec3 a, float t_cst, sampler2D normalMap) {
 */
 
 vec3 calculateNormal(vec2 position, float variation) {
+    //vec3 n = texture2D(normalMap1, scale.x * position).rgb;
+
     vec3 n = texture2D(normalMap1, scale.x * position +
-            wind1 * timeScale1 * time).rgb * amplitude1 - 0.5;
-
+            wind1 * timeScale1 * time).rgb * amplitude1;
     n += texture2D(normalMap2, scale.x * position +
-            wind2 * timeScale2 * time).rgb * amplitude2 - 0.5;
-
+            wind2 * timeScale2 * time).rgb * amplitude2;
     n += texture2D(normalMap3, scale.x * position +
-            wind3 * timeScale3 * time).rgb * amplitude3 - 0.5;
+            wind3 * timeScale3 * time).rgb * amplitude3;
 
-    return normalize(n * variation);
+    //return normalAttenuation * (2.0 * normalize(n * variation) - 1.0);
+    //return (2.0 * normalize(n * variation) - 1.0);
+	vec3 normal = n;
+	normal.yz = n.zy;
+    return normalize(2.0 * normal - 1.0);
 }
 
 vec3 calculateHeight(vec2 position, float variation) {
