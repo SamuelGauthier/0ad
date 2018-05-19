@@ -14,8 +14,12 @@ uniform mat4 refractionMatrix;
 uniform sampler2D heightMap1;
 uniform sampler2D heightMap2;
 uniform sampler2D heightMap3;
+uniform sampler2D normalMap1;
+uniform sampler2D normalMap2;
+uniform sampler2D normalMap3;
 uniform sampler2D variationMap;
 
+varying vec3 normal;
 varying vec2 losCoords;
 varying vec4 waterCoords;
 varying float waterHeight;
@@ -38,6 +42,8 @@ varying float amplitude3;
 
 vec4 FindLineSegIntersection(vec4 start, vec4 end);
 float DistanceToPlane(vec4 point);
+vec3 computeDisplacement(vec2 uv, float variation);
+vec3 computeNormal(vec2 uv, float variation);
 
 void main()
 {
@@ -86,18 +92,20 @@ void main()
 
     //float variation = texture2D(variationMap, 0.0001 * waterCoords.xz).r;
     float variation = texture2D(heightMap1, 0.0001 * waterCoords.xz).g;
+    normal = computeNormal(intersection.xz, variation);
+    vec3 h = computeDisplacement(intersection.xz, variation);
 
-    vec3 h = texture2D(heightMap1, scale.x * intersection.xz + wind1 *
-            timeScale1 * time).rgb * amplitude1 - 0.5;
+    //vec3 h = texture2D(heightMap1, scale.x * intersection.xz + wind1 *
+    //        timeScale1 * time).rgb * amplitude1 - 0.5;
 
-    h += texture2D(heightMap2, scale.x * intersection.xz + wind2 *
-            timeScale2 * time).rgb * amplitude2 - 0.5;
+    //h += texture2D(heightMap2, scale.x * intersection.xz + wind2 *
+    //        timeScale2 * time).rgb * amplitude2 - 0.5;
 
-    h += texture2D(heightMap3, scale.x * intersection.xz + wind3 *
-            timeScale3 * time).rgb * amplitude3 - 0.5;
+    //h += texture2D(heightMap3, scale.x * intersection.xz + wind3 *
+    //        timeScale3 * time).rgb * amplitude3 - 0.5;
 
-    h *= variation;
-    intersection.xyz += h;
+    //h *= variation;
+    //intersection.xyz += h;
 
     intersectionPos = intersection.xyz;
 
@@ -126,21 +134,40 @@ float DistanceToPlane(vec4 p)
 	return waterNormal.x * p.x + waterNormal.y * p.y + waterNormal.z * p.z + waterD;
 }
 
-//vec3 computeDisplacement(vec2 uv)
-//{
-//    vec3 h = texture2D(heightMap1, scale.x * intersection.xz + wind1 *
-//            timeScale1 * time).rgb * amplitude1 - 0.5;
+vec3 computeDisplacement(vec2 uv, float variation)
+{
+    //float variation = texture2D(heightMap1, 0.0001 * waterCoords.xz).g;
 
-//    h += texture2D(heightMap2, scale.x * intersection.xz + wind2 *
-//            timeScale2 * time).rgb * amplitude2 - 0.5;
+    //vec3 h = texture2D(heightMap1, scale.x * uv + wind1 *
+    //        timeScale1 * time).rgb * amplitude1 - 0.5;
+    vec3 h = normalize( texture2D(heightMap1, scale.x * uv).rgb * 10 - 10.0 );// - 0.5;
 
-//    h += texture2D(heightMap3, scale.x * intersection.xz + wind3 *
-//            timeScale3 * time).rgb * amplitude3 - 0.5;
+    //h += texture2D(heightMap2, scale.x * uv + wind2 *
+    //        timeScale2 * time).rgb * amplitude2 - 0.5;
 
-//	return h;
-//}
+    //h += texture2D(heightMap3, scale.x * uv + wind3 *
+    //        timeScale3 * time).rgb * amplitude3 - 0.5;
+
+	return h * variation;
+}
 
 //vec2 sobel(vec2 uv)
 //{
 
 //}
+//
+
+vec3 computeNormal(vec2 uv, float variation)
+{
+    vec3 n = texture2D(normalMap1, scale.x * uv).rgb * amplitude1;
+    //vec3 n = texture2D(normalMap1, scale.x * uv +
+    //        wind1 * timeScale1 * time).rgb * amplitude1;
+    //n += texture2D(normalMap2, scale.x * uv +
+    //        wind2 * timeScale2 * time).rgb * amplitude2;
+    //n += texture2D(normalMap3, scale.x * uv +
+    //        wind3 * timeScale3 * time).rgb * amplitude3;
+
+	vec3 normal = n;
+	normal.yz = n.zy;
+    return normalize(2.0 * normal - 1.0);
+}

@@ -1255,6 +1255,7 @@ void CRenderer::RenderReflections(const CShaderDefines& context, const CBounding
 	// try binding the framebuffer
 	//pglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, wm.m_ReflectionFbo);
 	pglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, gp.GetReflectionFBOID());
+    glGenerateMipmap(GL_TEXTURE_2D);
 
 	glClearColor(0.5f,0.5f,1.0f,0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -1341,6 +1342,7 @@ void CRenderer::RenderRefractions(const CShaderDefines& context, const CBounding
 	// try binding the framebuffer
 	//pglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, wm.m_RefractionFbo);
 	pglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, gp.GetRefractionFBOID());
+    glGenerateMipmap(GL_TEXTURE_2D);
 
 	glClearColor(1.0f,0.0f,0.0f,0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
