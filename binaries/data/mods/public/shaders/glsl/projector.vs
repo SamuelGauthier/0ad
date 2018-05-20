@@ -140,7 +140,9 @@ vec3 computeDisplacement(vec2 uv, float variation)
 
     //vec3 h = texture2D(heightMap1, scale.x * uv + wind1 *
     //        timeScale1 * time).rgb * amplitude1 - 0.5;
-    vec3 h = normalize( texture2D(heightMap1, scale.x * uv).rgb * 10 - 10.0 );// - 0.5;
+    vec3 h = texture2D(heightMap1, scale.x * uv).rgb - 0.5;
+    h.y *= 2;
+    h.xz *= 3;
 
     //h += texture2D(heightMap2, scale.x * uv + wind2 *
     //        timeScale2 * time).rgb * amplitude2 - 0.5;
@@ -148,7 +150,7 @@ vec3 computeDisplacement(vec2 uv, float variation)
     //h += texture2D(heightMap3, scale.x * uv + wind3 *
     //        timeScale3 * time).rgb * amplitude3 - 0.5;
 
-	return h * variation;
+	return h;//* variation;
 }
 
 //vec2 sobel(vec2 uv)

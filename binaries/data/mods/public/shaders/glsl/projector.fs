@@ -60,7 +60,7 @@ varying float amplitude1;
 varying float amplitude2;
 varying float amplitude3;
 
-const vec3 normalAttenuation = vec3(0.1, 1, 0.1);
+const vec3 normalAttenuation = vec3(0.7, 1, 0.7);
 
 //vec3 calculateNormal(vec3 a, float t_cst, sampler2D normalMap);
 vec3 calculateNormal(vec2 uv, float variation);
@@ -79,7 +79,7 @@ vec3 computeReflection(vec3 n);
 
 void main()
 {
-    float roughness = 0.6;
+    float roughness = 0.3;
     float alpha = roughness * roughness;
     float alpha2 = alpha * alpha;
     float k = alpha / 2;
@@ -89,9 +89,10 @@ void main()
 	vec2 variationWind = vec2(-1,-1);
 	float variationTS = 0.003;
     //float variation = texture2D(heightMap1, 0.001 * waterCoords.xz + variationWind * variationTS * time).g;
-	vec3 n = normalAttenuation * normalize(normal);
-    n = calculateNormal(waterCoords.xz, variation);
-    //n = vec3(0, 1, 0);
+	vec3 n = normalize(normal);
+    //n = calculateNormal(waterCoords.xz, variation);
+    //n = normalize(normalAttenuation * n);
+    n = vec3(0, 1, 0);
     //n = texture2D(heightMap1, 0.01*waterCoords.xz).rgb;
 
     //vec3 n = vec3(0,1,0);
@@ -113,7 +114,7 @@ void main()
 
     vec4 shallowColor = vec4(0.0, 0.64, 0.68, 1.0);
     vec4 deepColor = vec4(0.02, 0.05, 0.10, 1.0);
-	vec4 ambient = variation * mix(shallowColor, deepColor, calculateHeight(intersectionPos.xz, variation).g);
+	vec4 ambient = mix(shallowColor, deepColor, calculateHeight(intersectionPos.xz, variation).y);
 
 	losMod = texture2D(losMap, losCoords.st).a;
 	losMod = losMod < 0.03 ? 0.0 : losMod;
@@ -124,18 +125,20 @@ void main()
 	float diffuse = max(0, dot(l, n));
 	//color.rgb += diffuse;
 
-	//float specular2 = max(0, pow(dot(r,v), 18));
+	float specular2 = max(0, pow(dot(r,v), 18));
 	color.rgb += specular;
 
-	vec3 reflect = reflect(v,n);
+	//vec3 reflected = reflect(v,n);
+	vec3 reflected = reflect(v, vec3(0,1,0));
 
     vec4 reflection = vec4(1.0, 0.0, 0.0, 1.0);
 
     // We are inside the view frustrum of the reflection camera
-    if(dot(normalize(-reflectionFarClipN), normalize(reflect)) <=
+    if(dot(normalize(-reflectionFarClipN), normalize(reflected)) <=
             cos(0.5*reflectionFOV))
     {
-        vec3 farClipInter = FindRayIntersection(intersectionPos, reflect,
+        reflection.b = 1.0;
+        vec3 farClipInter = FindRayIntersection(intersectionPos, reflected,
             reflectionFarClipN, reflectionFarClipD);
         //vec3 coords = mat3(reflectionMVP) * farClipInter;
         vec4 coords = reflectionMVP * vec4(farClipInter, 1.0);
@@ -144,20 +147,21 @@ void main()
         texCoords = (texCoords + 1.0) * 0.5;
         texCoords.y += 1/screenHeight;
         reflection = texture2D(reflectionMap, texCoords);
-        reflection.ba = vec2(1.0, 1.0);
+        //reflection.ba = vec2(1.0, 1.0);
 
     }
 
 	vec4 refraction = vec4(0.0, 0.0, 0.0, 0.0);
 	vec2 refrCoords = (0.5 * refractionCoords.xy) / refractionCoords.z + 0.5;
 	refraction = texture2D(refractionMap, refrCoords);
+	vec4 refractionColor = refraction;
 
     //color = vec4(n,1.0);//reflection;
 	//reflection = vec4(computeReflection(n), 1.0);
 
-    vec3 reflected = vec3(invV * vec4(reflect, 0));
-    vec3 skyReflection = textureCube(skyCube, reflected).rgb;
-	vec4 refractionColor = refraction;
+    reflected = reflect(v, n);
+    vec3 reflectedV = vec3(invV * vec4(reflected, 0));
+    vec3 skyReflection = textureCube(skyCube, reflectedV).rgb;
 
 	//reflection += vec4(skyReflection, 1.0);
 	//color = vec4(skyReflection, 1.0);//vec4(n, 1.0);//reflection;
@@ -166,11 +170,15 @@ void main()
 	vec4 amb = mix(refractionColor, reflectionColor, F(F0, v, n));
 	color += amb;
 	///*
-	color = reflection;
-    //float c = F(F0, v, n);
-	//float c = 1.0;
-	//color = vec4(c, c, c, 1.0);
-	//color = vec4(v, 1.0);
+	color = amb;
+    //color = vec4(reflected, 1.0);
+    //color = amb;
+    //float c = F(F0, v, vec3(0,1,0));
+	float c = 1.0;
+    c = F_val;
+	color = vec4(c, c, c, 1.0);
+    //color = ambient + specular;
+	//color = vec4(n, 1.0);
 	//color = reflection;
 	//*/
 	//color = vec4(calculateHeight(intersectionPos.xz, variation), 1.0);
@@ -223,17 +231,21 @@ vec3 calculateNormal(vec2 uv, float variation) {
 }
 
 vec3 calculateHeight(vec2 uv, float variation) {
-    vec3 h = texture2D(heightMap1, scale.x * uv + wind1 *
-            timeScale1 * time).rgb * amplitude1 - 0.5;
+    //vec3 h = texture2D(heightMap1, scale.x * uv + wind1 *
+    //        timeScale1 * time).rgb * amplitude1 - 0.5;
 
-    h += texture2D(heightMap2, scale.x * uv + wind2 *
-            timeScale2 * time).rgb * amplitude2 - 0.5;
+    //h += texture2D(heightMap2, scale.x * uv + wind2 *
+    //        timeScale2 * time).rgb * amplitude2 - 0.5;
 
-    h += texture2D(heightMap3, scale.x * uv + wind3 *
-            timeScale3 * time).rgb * amplitude3 - 0.5;
+    //h += texture2D(heightMap3, scale.x * uv + wind3 *
+    //        timeScale3 * time).rgb * amplitude3 - 0.5;
 
-    return normalize(h);
-    //return h;
+    //return normalize(h);
+
+    vec3 h = texture2D(heightMap1, scale.x * uv).rgb - 0.5;
+    h.y *= 2;
+    h.xz *= 3;
+    return h;
 }
 
 // Shlick approximation

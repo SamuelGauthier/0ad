@@ -77,9 +77,10 @@ CGridProjector::CGridProjector() : m_water(CFFTWaterModel(wps)), m_gridVBIndices
 {
 	//LOGWARNING("CGridProjector::CGridProjector()");
 	m_time = 0.0;
-	m_resolutionX = 16;
-	m_resolutionY = 16;
-	m_totalResolution = m_resolutionX * m_resolutionY;
+
+    m_resolutionX = 0;
+    m_resolutionY = 0;
+    m_totalResolution = 0;
 
 	m_PCamera = CCamera();
 
@@ -133,6 +134,10 @@ void CGridProjector::Initialize()
 		m_gridVBVertices = 0;
 	}
 
+    m_resolutionX = g_Renderer.GetWidth()/4;
+    m_resolutionY = g_Renderer.GetHeight()/4;
+    m_totalResolution = m_resolutionX * m_resolutionY;
+    
 	GenerateVertices();
 	
 	m_gridVBVertices = g_VBMan.Allocate(sizeof(CVector4D), m_vertices.size(), GL_STATIC_DRAW, GL_ARRAY_BUFFER);
@@ -529,7 +534,8 @@ void CGridProjector::CreateTextures()
     {
         g_Renderer.BindTexture(i, m_heightMapsID.at(i));
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, waterProperties.at(i).m_resolution, waterProperties.at(i).m_resolution, 0, GL_RGB, GL_UNSIGNED_BYTE, &heightMaps.at(i)[0]);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -542,7 +548,8 @@ void CGridProjector::CreateTextures()
     {
         g_Renderer.BindTexture(i, m_normalMapsID.at(i));
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, waterProperties.at(i).m_resolution, waterProperties.at(i).m_resolution, 0, GL_RGB, GL_UNSIGNED_BYTE, &normalMaps.at(i)[0]);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
