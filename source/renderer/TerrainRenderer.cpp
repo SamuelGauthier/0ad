@@ -948,7 +948,6 @@ void TerrainRenderer::RenderWater(const CShaderDefines& context, int cullGroup, 
 
 void TerrainRenderer::RenderProjectedWater(const CShaderDefines& context)//, int cullGroup)
 {
-    
     PROFILE3_GPU("projected water");
     
     if(g_Renderer.m_WaterRenderMode == WIREFRAME)
@@ -962,10 +961,9 @@ void TerrainRenderer::RenderProjectedWater(const CShaderDefines& context)//, int
     CProjectionSystem* projectionSystem = &g_Renderer.GetProjectionSystem();
 	CShaderDefines defines = context;
     
-    // TODO: Do not reload the shader every time
-	if(!m->projectorShader)
+    if(!m->projectorShader)
 		m->projectorShader = g_Renderer.GetShaderManager().LoadProgram("glsl/projector", defines);
-
+    
     m->projectorShader->Bind();
      
     projectionSystem->Render(m->projectorShader);

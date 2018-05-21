@@ -105,11 +105,11 @@ void main()
     //        timeScale3 * time).rgb * amplitude3 - 0.5;
 
     //h *= variation;
-    //intersection.xyz += h;
+	losCoords = (losMatrix * vec4(intersection.xyz, 1.0)).rg;
+    intersection.xyz += h;
 
     intersectionPos = intersection.xyz;
 
-	losCoords = (losMatrix * vec4(intersection.xyz, 1.0)).rg;
 
     reflectionCoords = (reflectionMatrix * vec4(intersectionPos.xyz, 1.0)).rga;
 	refractionCoords = (refractionMatrix * vec4(intersectionPos.xyz, 1.0)).rga;
@@ -140,9 +140,7 @@ vec3 computeDisplacement(vec2 uv, float variation)
 
     //vec3 h = texture2D(heightMap1, scale.x * uv + wind1 *
     //        timeScale1 * time).rgb * amplitude1 - 0.5;
-    vec3 h = texture2D(heightMap1, scale.x * uv).rgb - 0.5;
-    h.y *= 2;
-    h.xz *= 3;
+    vec3 h = 2.0 * texture2D(heightMap1, scale.x * uv).rgb - 1.0;
 
     //h += texture2D(heightMap2, scale.x * uv + wind2 *
     //        timeScale2 * time).rgb * amplitude2 - 0.5;
@@ -161,7 +159,7 @@ vec3 computeDisplacement(vec2 uv, float variation)
 
 vec3 computeNormal(vec2 uv, float variation)
 {
-    vec3 n = texture2D(normalMap1, scale.x * uv).rgb * amplitude1;
+    vec3 n = texture2D(normalMap1, scale.x * uv).rgb;
     //vec3 n = texture2D(normalMap1, scale.x * uv +
     //        wind1 * timeScale1 * time).rgb * amplitude1;
     //n += texture2D(normalMap2, scale.x * uv +

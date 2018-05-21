@@ -76,7 +76,7 @@ private:
 	float m_time;
 	uint m_resolutionX;
 	uint m_resolutionY;
-	u32 m_totalResolution;
+	uint m_totalResolution;
 	COceanWater m_water;
 
 	CCamera m_PCamera;

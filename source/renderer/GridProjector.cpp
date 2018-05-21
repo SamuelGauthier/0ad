@@ -44,6 +44,7 @@
 
 #include "renderer/Renderer.h"
 #include "renderer/SkyManager.h"
+#include "renderer/VertexBuffer.h"
 #include "renderer/VertexBufferManager.h"
 
 #define DEBUG_COMPUTE_INTERSECTION 0
@@ -71,7 +72,8 @@ double TIME = 3.2;
 CGridProjector::WaterProperties coarseWaves = CGridProjector::WaterProperties(3e-7f, 43, CVector2D(1.0f, 5.0f), 1.0f, 0.1f, 2048, 1000, TIME);
 CGridProjector::WaterProperties mediumWaves = CGridProjector::WaterProperties(6e-7f, 50, CVector2D(4.0f, -1.5f), 5.0f, 0.1f, 2048, 2500, TIME);
 CGridProjector::WaterProperties detailedWaves = CGridProjector::WaterProperties(6e-7f, 30, CVector2D(-1.0f, 1.5f), 1.0f, 0.1f, 2048, 800, TIME);
-std::vector<CGridProjector::WaterProperties> wps = { coarseWaves, mediumWaves, detailedWaves };
+//std::vector<CGridProjector::WaterProperties> wps = { coarseWaves, mediumWaves, detailedWaves };
+std::vector<CGridProjector::WaterProperties> wps = { coarseWaves};
 
 CGridProjector::CGridProjector() : m_water(CFFTWaterModel(wps)), m_gridVBIndices(0), m_gridVBVertices(0)
 {
@@ -134,8 +136,11 @@ void CGridProjector::Initialize()
 		m_gridVBVertices = 0;
 	}
 
-    m_resolutionX = g_Renderer.GetWidth()/4;
-    m_resolutionY = g_Renderer.GetHeight()/4;
+    // ATM only possible to have a grid of 65526 vertices
+    // Limitation due to constraints 16 bit indices constraints
+    // TODO: split the grid into the right amount of sub-grids
+    m_resolutionX = 128;//g_Renderer.GetWidth()/4;
+    m_resolutionY = 512;//g_Renderer.GetHeight()/2;
     m_totalResolution = m_resolutionX * m_resolutionY;
     
 	GenerateVertices();
@@ -482,12 +487,12 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
     shader->Uniform(str_sunColor, lightEnv.m_SunColor);
     
     shader->BindTexture(str_heightMap1, m_heightMapsID.at(0));
-    shader->BindTexture(str_heightMap2, m_heightMapsID.at(1));
-    shader->BindTexture(str_heightMap3, m_heightMapsID.at(2));
+    shader->BindTexture(str_heightMap2, m_heightMapsID.at(0));
+    shader->BindTexture(str_heightMap3, m_heightMapsID.at(0));
 
     shader->BindTexture(str_normalMap1, m_normalMapsID.at(0));
-    shader->BindTexture(str_normalMap2, m_normalMapsID.at(1));
-    shader->BindTexture(str_normalMap3, m_normalMapsID.at(2));
+    shader->BindTexture(str_normalMap2, m_normalMapsID.at(0));
+    shader->BindTexture(str_normalMap3, m_normalMapsID.at(0));
     
     shader->BindTexture(str_variationMap, m_variationMapID);
 
