@@ -574,19 +574,22 @@ void CGridProjector::CreateTextures()
     m_reflectionTexSizeH = round_up_to_pow2(g_Renderer.GetHeight());
 
     glGenTextures(1, &m_reflectionID);
-	glBindTexture(GL_TEXTURE_2D, m_reflectionID);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//GL_LINEAR_MIPMAP_LINEAR
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	//glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, (GLsizei)m_reflectionTexSizeW, (GLsizei)m_reflectionTexSizeH, 0,  GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    glBindTexture(GL_TEXTURE_2D, m_reflectionID);
+    /*
+	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, (GLsizei)m_reflectionTexSizeW, (GLsizei)m_reflectionTexSizeH, 0,  GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//GL_LINEAR_MIPMAP_LINEAR
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    */
+    ///*
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, (GLsizei)m_reflectionTexSizeW, (GLsizei)m_reflectionTexSizeH, 0, GL_BGRA, GL_UNSIGNED_BYTE, NULL);
     glGenerateMipmap(GL_TEXTURE_2D);  //Generate num_mipmaps number of mipmaps here.
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    
+    //*/
 
     // Create depth texture
     glGenTextures(1, &m_reflectionDepthBufferID);

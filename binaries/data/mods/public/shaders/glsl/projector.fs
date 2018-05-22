@@ -93,7 +93,7 @@ void main()
 	vec3 n = normalize(normal);
     //n = calculateNormal(waterCoords.xz, variation);
     //n = normalize(normalAttenuation * (n + vec3(0, 1, 0)));
-    n = vec3(-0.1, 1, 0.1);
+    n = vec3(0, 1, 0);
     //n = texture2D(heightMap1, 0.01*waterCoords.xz).rgb;
 
     //vec3 n = vec3(0,1,0);
@@ -121,16 +121,16 @@ void main()
 	losMod = losMod < 0.03 ? 0.0 : losMod;
 
 	vec4 color = vec4(0.0, 0.0, 0.0 , 1.0);
-    color += ambient;
+    //color += ambient;
 
-	float diffuse = max(0, dot(l, n));
-	//color.rgb += diffuse;
+	//float diffuse = max(0, dot(l, n));
+	////color.rgb += diffuse;
 
-	float specular2 = max(0, pow(dot(r,v), 18));
-	color.rgb += specular;
+	//float specular2 = max(0, pow(dot(r,v), 18));
+	//color.rgb += specular;
 
-    vec3 reflected = reflect(v,n);
-	//vec3 reflected = reflect(v, vec3(0,1,0));
+    //vec3 reflected = reflect(v,n);
+	vec3 reflected = reflect(v, vec3(0,1,-1));
 
     vec4 reflection = vec4(0.0, 0.0, 0.0, 1.0);
 
@@ -138,7 +138,6 @@ void main()
     if(dot(normalize(-reflectionFarClipN), normalize(reflected)) <=
             cos(0.5*reflectionFOV))
     {
-        reflection.r += 1.0;
         vec3 farClipInter = FindRayIntersection(intersectionPos, reflected,
             reflectionFarClipN, reflectionFarClipD);
         //vec3 coords = mat3(reflectionMVP) * farClipInter;
@@ -148,43 +147,41 @@ void main()
         texCoords = (texCoords + 1.0) * 0.5;
         texCoords.y += 1/screenHeight;
         reflection += texture2D(reflectionMap, texCoords);
-        //reflection.ba = vec2(1.0, 1.0);
-
     }
 
-	vec4 refraction = vec4(0.0, 0.0, 0.0, 0.0);
-	vec2 refrCoords = (0.5 * refractionCoords.xy) / refractionCoords.z + 0.5;
-	refraction = texture2D(refractionMap, refrCoords);
-	vec4 refractionColor = refraction;
+	//vec4 refraction = vec4(0.0, 0.0, 0.0, 0.0);
+	//vec2 refrCoords = (0.5 * refractionCoords.xy) / refractionCoords.z + 0.5;
+	//refraction = texture2D(refractionMap, refrCoords);
+	//vec4 refractionColor = refraction;
 
     //color = vec4(n,1.0);//reflection;
-	//reflection = vec4(computeReflection(n), 1.0);
+	//vec4 reflection = vec4(computeReflection(n), 1.0);
 
-    reflected = reflect(v, n);
-    vec3 reflectedV = vec3(invV * vec4(reflected, 0));
-    vec3 skyReflection = textureCube(skyCube, reflectedV).rgb;
+    //reflected = reflect(v, n);
+    //vec3 reflectedV = vec3(invV * vec4(reflected, 0));
+    //vec3 skyReflection = textureCube(skyCube, reflectedV).rgb;
 
 	//reflection += vec4(skyReflection, 1.0);
 	//color = vec4(skyReflection, 1.0);//vec4(n, 1.0);//reflection;
-	vec4 reflectionColor = vec4(mix(skyReflection, reflection.rgb, reflection.a), 1.0);// + reflection;
+	//vec4 reflectionColor = vec4(mix(skyReflection, reflection.rgb, reflection.a), 1.0);// + reflection;
 
-	vec4 amb = mix(refractionColor, reflectionColor, F(F0, v, n));
-	color += amb;
-	///*
-	color = amb;
-    //color = vec4(reflected, 1.0);
-    //color = amb;
-    //float c = F(F0, v, vec3(0,1,0));
-	float c = 1.0;
-    c = F_val;
-	color = vec4(c, c, c, 1.0);
-    //color = ambient + specular;
-	color = vec4(n, 1.0);
+	//vec4 amb = mix(refractionColor, reflectionColor, F(F0, v, n));
+	//color += amb;
+	/////*
+	//color = amb;
+    ////color = vec4(reflected, 1.0);
+    ////color = amb;
+    ////float c = F(F0, v, vec3(0,1,0));
+	//float c = 1.0;
+    //c = F_val;
+	//color = vec4(c, c, c, 1.0);
+    ////color = ambient + specular;
+	//color = vec4(n, 1.0);
 	color = reflection;
 	//*/
 	//color = vec4(calculateHeight(intersectionPos.xz, variation), 1.0);
 	//color = vec4(n, 1.0);
-	gl_FragColor = color * losMod;
+	gl_FragColor = color;// * losMod;
 }
 
 // Convert the normal form the normal map to the eye space. Attenuate it by a
@@ -326,20 +323,21 @@ vec3 computeReflection(vec3 n)
 {
     vec3 wavePos = intersectionPos;
     vec3 v = normalize(wavePos - cameraPos);
-    vec3 r = normalize(reflect(v, normalize(n))); // n should be normalized
+    vec3 r = reflect(v, normalize(n)); // n should be normalized
 
     vec4 pos0 = reflectionMVP * vec4(wavePos, 1.0);
     vec4 dPos = reflectionMVP * vec4(r, 1.0);
 
-    float t_refl = (pos0.z - pos0.w) / (dPos.w - dPos.z);
+    float t_refl = (-pos0.z - pos0.w) / (dPos.w + dPos.z);
 
     vec4 farP = pos0 + t_refl * dPos;
 
-    //float reflShiftRight = 1 / screenWidth;
+    float reflShiftRight = 1 / screenWidth;
     float reflShiftUp = 1 / screenHeight;
-    vec2 uv = vec2(0.5 * (farP.x / farP.w) + 0.5,
-                   0.5 * (farP.y / farP.w) + 0.5 + reflShiftUp);
+    vec2 uv = vec2(0.5 * (farP.x / farP.w + 1) - reflShiftRight,
+                   0.5 * (farP.y / farP.w + 1) + reflShiftUp);
     
     vec3 reflection = texture2D(reflectionMap, uv).rgb;
+    //reflection = vec3(uv, 0);
     return reflection;
 }
