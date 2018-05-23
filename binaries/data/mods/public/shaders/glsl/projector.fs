@@ -23,10 +23,13 @@ uniform sampler2D reflectionMap;
 uniform vec3 reflectionFarClipN;
 uniform float reflectionFarClipD;
 uniform mat4 reflectionMVP; 
-uniform float reflectionFOV;
-uniform mat4 invV;
 
 uniform sampler2D refractionMap;
+uniform vec3 refractionFarClipN;
+uniform float refractionFarClipD;
+uniform mat4 refractionMVP; 
+
+uniform mat4 invV;
 
 uniform float screenWidth;
 uniform float screenHeight;
@@ -76,6 +79,8 @@ vec3 FindRayIntersection(vec3 start, vec3 direction, vec3 planeNormal,
         float planeD);
 vec2 GetScreenCoordinates(vec3 world);
 vec3 computeReflection(vec3 n);
+vec3 computeRefraction(vec3 n);
+float sum(vec4 t);
 
 void main()
 {
@@ -91,12 +96,10 @@ void main()
     //float variation = texture2D(heightMap1, 0.001 * waterCoords.xz + variationWind * variationTS * time).g;
     vec3 normalAttenuation = vec3(0.1, 1, 0.1);
 	vec3 n = normalize(normal);
-    //n = calculateNormal(waterCoords.xz, variation);
-    //n = normalize(normalAttenuation * (n + vec3(0, 1, 0)));
+    n = calculateNormal(waterCoords.xz, variation);
     n = vec3(0, 1, 0);
     //n = texture2D(heightMap1, 0.01*waterCoords.xz).rgb;
 
-    //vec3 n = vec3(0,1,0);
     vec3 l = normalize(sunDir);
     vec3 r = reflect(l, n);
 	vec3 p = cameraPos;
@@ -129,25 +132,16 @@ void main()
 	//float specular2 = max(0, pow(dot(r,v), 18));
 	//color.rgb += specular;
 
-    //vec3 reflected = reflect(v,n);
-	vec3 reflected = reflect(v, vec3(0,1,-1));
+    vec4 reflection = vec4(computeReflection(n), 1.0);
+    vec4 refraction = vec4(computeRefraction(n), 1.0);
 
-    vec4 reflection = vec4(0.0, 0.0, 0.0, 1.0);
-
-    // We are inside the view frustrum of the reflection camera
-    if(dot(normalize(-reflectionFarClipN), normalize(reflected)) <=
-            cos(0.5*reflectionFOV))
-    {
-        vec3 farClipInter = FindRayIntersection(intersectionPos, reflected,
-            reflectionFarClipN, reflectionFarClipD);
-        //vec3 coords = mat3(reflectionMVP) * farClipInter;
-        vec4 coords = reflectionMVP * vec4(farClipInter, 1.0);
-        coords.xyz /= coords.w;
-        vec2 texCoords = coords.xy;//(reflectionMVP * vec4(farClipInter, 1.0)).xy;
-        texCoords = (texCoords + 1.0) * 0.5;
-        texCoords.y += 1/screenHeight;
-        reflection += texture2D(reflectionMap, texCoords);
-    }
+    //vec3 reflected = reflect(v, n);
+    //vec3 reflectedV = vec3(invV * vec4(reflected, 0));
+    //vec3 skyReflection = textureCube(skyCube, reflectedV).rgb;
+	//vec4 refractionColor = refraction;
+	//vec4 reflectionColor = vec4(mix(skyReflection, reflection.rgb, reflection.a), 1.0);
+	//vec4 amb = mix(refractionColor, reflectionColor, F(F0, v, n));
+	//---------------------------------------------------------------------------------------------------------
 
 	//vec4 refraction = vec4(0.0, 0.0, 0.0, 0.0);
 	//vec2 refrCoords = (0.5 * refractionCoords.xy) / refractionCoords.z + 0.5;
@@ -178,6 +172,7 @@ void main()
     ////color = ambient + specular;
 	//color = vec4(n, 1.0);
 	color = reflection;
+	color = refraction;
 	//*/
 	//color = vec4(calculateHeight(intersectionPos.xz, variation), 1.0);
 	//color = vec4(n, 1.0);
@@ -316,28 +311,75 @@ vec2 GetScreenCoordinates(vec3 world)
     return coordinates;
 }
 
-//vec3 LinePlaneIntersection()
-//
+float sum(vec4 t)
+{
+	return t.x + t.y + t.z + t.w;
+}
 
+// Compute the reflection color
+// The intersection between the far-clip of the reflection camera
+// is used to find the texture coordinates
 vec3 computeReflection(vec3 n)
 {
     vec3 wavePos = intersectionPos;
     vec3 v = normalize(wavePos - cameraPos);
     vec3 r = reflect(v, normalize(n)); // n should be normalized
 
-    vec4 pos0 = reflectionMVP * vec4(wavePos, 1.0);
-    vec4 dPos = reflectionMVP * vec4(r, 1.0);
+	// Use the Pluecker matrix to compute the intersection
+	// see https://math.stackexchange.com/questions/2433207#2434182
+	// and https://en.wikipedia.org/wiki/Pl%C3%BCcker_matrix#Intersection_with_a_plane
+	vec4 p = vec4(wavePos, 1);
+	vec4 q = vec4(r, 0);
+	vec4 s = vec4(reflectionFarClipN, reflectionFarClipD);
 
-    float t_refl = (-pos0.z - pos0.w) / (dPos.w + dPos.z);
+	vec4 i = p*sum(q*s) - q*sum(p*s);
+	vec3 iW = i.xyz/i.w;
 
-    vec4 farP = pos0 + t_refl * dPos;
+	vec4 farP = reflectionMVP * vec4(iW, 1);
 
-    float reflShiftRight = 1 / screenWidth;
     float reflShiftUp = 1 / screenHeight;
-    vec2 uv = vec2(0.5 * (farP.x / farP.w + 1) - reflShiftRight,
-                   0.5 * (farP.y / farP.w + 1) + reflShiftUp);
-    
+	vec2 uv = vec2(0.5 * (farP.x / farP.w + 1), 0.5 * (farP.y / farP.w + 1) + reflShiftUp);
+	
     vec3 reflection = texture2D(reflectionMap, uv).rgb;
-    //reflection = vec3(uv, 0);
     return reflection;
+
+    //// We are inside the view frustrum of the reflection camera
+    //if(dot(normalize(-reflectionFarClipN), normalize(reflected)) <=
+    //        cos(0.5*reflectionFOV))
+    //{
+    //    vec3 farClipInter = FindRayIntersection(intersectionPos, reflected,
+    //        reflectionFarClipN, reflectionFarClipD);
+    //    //vec3 coords = mat3(reflectionMVP) * farClipInter;
+    //    vec4 coords = reflectionMVP * vec4(farClipInter, 1.0);
+    //    coords.xyz /= coords.w;
+    //    vec2 texCoords = coords.xy;//(reflectionMVP * vec4(farClipInter, 1.0)).xy;
+    //    texCoords = (texCoords + 1.0) * 0.5;
+    //    texCoords.y += 1/screenHeight;
+    //    reflection += texture2D(reflectionMap, texCoords);
+    //}
+}
+
+// Compute the refraction color
+// The intersection between the far-clip of the refraction camera
+// is used to find the texture coordinates
+vec3 computeRefraction(vec3 n)
+{
+    vec3 wavePos = intersectionPos;
+    vec3 v = normalize(wavePos - cameraPos);
+    vec3 r = refract(v, normalize(n), RATIO); // n should be normalized
+
+	vec4 p = vec4(wavePos, 1);
+	vec4 q = vec4(r, 0);
+	vec4 s = vec4(refractionFarClipN, refractionFarClipD);
+
+	vec4 i = p*sum(q*s) - q*sum(p*s);
+	vec3 iW = i.xyz/i.w;
+
+	vec4 farP = refractionMVP * vec4(iW, 1);
+
+    float refrShiftUp = 1 / screenHeight;
+	vec2 uv = vec2(0.5 * (farP.x / farP.w + 1), 0.5 * (farP.y / farP.w + 1) + refrShiftUp);
+	
+    vec3 refraction = texture2D(refractionMap, uv).rgb;
+    return refraction;
 }

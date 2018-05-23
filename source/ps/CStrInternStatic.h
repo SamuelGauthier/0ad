@@ -129,15 +129,18 @@ X(playerColor)
 X(pointSize)
 X(projector)
 X(qualityLevel)
-X(reflectionFarClipN);
-X(reflectionFarClipD);
-X(reflectionFOV);
+X(reflectionFarClipN)
+X(reflectionFarClipD)
+X(reflectionFOV)
 X(reflectionLookAt)
 X(reflectionMap)
 X(reflectionMatrix)
-X(reflectionMVP);
+X(reflectionMVP)
+X(refractionFarClipN)
+X(refractionFarClipD)
 X(refractionMap)
 X(refractionMatrix)
+X(refractionMVP)
 X(renderedTex)
 X(repeatScale)
 X2(sans_10, "sans-10");

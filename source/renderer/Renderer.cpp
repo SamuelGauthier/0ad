@@ -1176,7 +1176,7 @@ void CRenderer::ComputeRefractionCamera(CCamera& camera, const CBoundingBoxAlign
 	// Expand fov slightly since ripples can reflect parts of the scene that
 	// are slightly outside the normal camera view, and we want to avoid any
 	// noticeable edge-filtering artifacts
-	fov *= 1.05f;
+	//fov *= 1.05f;
 
 	camera = m_ViewCamera;
 
@@ -1255,7 +1255,7 @@ void CRenderer::RenderReflections(const CShaderDefines& context, const CBounding
 	// try binding the framebuffer
 	//pglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, wm.m_ReflectionFbo);
 	pglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, gp.GetReflectionFBOID());
-    glGenerateMipmap(GL_TEXTURE_2D);
+    pglGenerateMipmapEXT(GL_TEXTURE_2D);
 
 	glClearColor(0.5f,0.5f,1.0f,0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -1342,7 +1342,7 @@ void CRenderer::RenderRefractions(const CShaderDefines& context, const CBounding
 	// try binding the framebuffer
 	//pglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, wm.m_RefractionFbo);
 	pglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, gp.GetRefractionFBOID());
-    glGenerateMipmap(GL_TEXTURE_2D);
+    pglGenerateMipmapEXT(GL_TEXTURE_2D);
 
 	glClearColor(1.0f,0.0f,0.0f,0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

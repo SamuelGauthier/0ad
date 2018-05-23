@@ -77,7 +77,6 @@ std::vector<CGridProjector::WaterProperties> wps = { coarseWaves};
 
 CGridProjector::CGridProjector() : m_water(CFFTWaterModel(wps)), m_gridVBIndices(0), m_gridVBVertices(0)
 {
-	//LOGWARNING("CGridProjector::CGridProjector()");
 	m_time = 0.0;
 
     m_resolutionX = 0;
@@ -124,7 +123,6 @@ CGridProjector::~CGridProjector()
 
 void CGridProjector::Initialize()
 {
-	//LOGWARNING("Been in CGridProjector::Initialize()");
 	if(m_gridVBIndices)
 	{
 		g_VBMan.Release(m_gridVBIndices);
@@ -462,7 +460,8 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
 
 	m_time = (float)timer_Time();
 	UpdateMatrices();
-    UpdateReflectionCamera();
+    UpdateReflectionFarPlane();
+	UpdateRefractionFarPlane();
 
 	u8* base = m_gridVBVertices->m_Owner->Bind();
 
@@ -498,16 +497,16 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
 
 	shader->BindTexture(str_reflectionMap, m_reflectionID);
     shader->Uniform(str_reflectionMVP, m_reflectionCam.GetViewProjection());
-    //shader->Uniform(str_reflectionMatrix, m_reflectionMatrix);
-    shader->Uniform(str_reflectionLookAt, m_reflectionLookAt);
     shader->Uniform(str_reflectionFarClipN, m_reflectionFarClip.m_Norm);
     shader->Uniform(str_reflectionFarClipD, m_reflectionFarClip.m_Dist);
-    shader->Uniform(str_reflectionFOV, m_reflectionCam.GetFOV());
-    shader->BindTexture(str_skyCube, g_Renderer.GetSkyManager()->GetSkyCube());
 
 	shader->BindTexture(str_refractionMap, m_refractionID);
-	shader->Uniform(str_refractionMatrix, m_refractionCam.GetViewProjection());
+	shader->Uniform(str_refractionMVP, m_refractionCam.GetViewProjection());
+    shader->Uniform(str_refractionFarClipN, m_refractionFarClip.m_Norm);
+    shader->Uniform(str_refractionFarClipD, m_refractionFarClip.m_Dist);
     
+    shader->BindTexture(str_skyCube, g_Renderer.GetSkyManager()->GetSkyCube());
+
     shader->Uniform(str_screenWidth, g_Renderer.GetWidth());
     shader->Uniform(str_screenHeight, g_Renderer.GetHeight());
 
@@ -532,6 +531,9 @@ void CGridProjector::CreateTextures()
     m_heightMapsID = std::vector<GLuint>(waterProperties.size());
     m_normalMapsID = std::vector<GLuint>(waterProperties.size());
    
+	// Create the mipmapped height textures
+	// Note: the information when looking towards the horizon becomes wrong when using mipmaps
+	// see http://www.gdcvault.com/play/1025404/-World-of-Warships-Technical
     std::vector<std::vector<u8>> heightMaps = m_water.GetHeightMaps();
     
     glGenTextures(m_heightMapsID.size(), &m_heightMapsID[0]);
@@ -539,13 +541,15 @@ void CGridProjector::CreateTextures()
     {
         g_Renderer.BindTexture(i, m_heightMapsID.at(i));
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, waterProperties.at(i).m_resolution, waterProperties.at(i).m_resolution, 0, GL_RGB, GL_UNSIGNED_BYTE, &heightMaps.at(i)[0]);
-        glGenerateMipmap(GL_TEXTURE_2D);
+        pglGenerateMipmapEXT(GL_TEXTURE_2D);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     }
     
+	// Create the mipmapped normal map textures
+	// Note: the same applies here as the upper comment
     std::vector<std::vector<u8>> normalMaps = m_water.GetNormalMaps();
     
     glGenTextures(m_normalMapsID.size(), &m_normalMapsID[0]);
@@ -553,55 +557,47 @@ void CGridProjector::CreateTextures()
     {
         g_Renderer.BindTexture(i, m_normalMapsID.at(i));
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, waterProperties.at(i).m_resolution, waterProperties.at(i).m_resolution, 0, GL_RGB, GL_UNSIGNED_BYTE, &normalMaps.at(i)[0]);
-        glGenerateMipmap(GL_TEXTURE_2D);
+        pglGenerateMipmapEXT(GL_TEXTURE_2D);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     }
     
+	// Create the variation map texture
     std::vector<float> variationMap = m_water.GetVariationMap();
     glGenTextures(1, &m_variationMapID);
     g_Renderer.BindTexture(1, m_variationMapID);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 2048, 2048, 0, GL_RED, GL_FLOAT, &variationMap[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 2048, 2048, 0, GL_RED, GL_FLOAT, &variationMap[0]);// TODO: fix hard coded resolution
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-	//m_reflectionTexSize = g_Renderer.GetHeight();
 	m_reflectionTexSizeW = round_up_to_pow2(g_Renderer.GetWidth());
     m_reflectionTexSizeH = round_up_to_pow2(g_Renderer.GetHeight());
 
+	// Create reflection texture with Mipmapping
     glGenTextures(1, &m_reflectionID);
     glBindTexture(GL_TEXTURE_2D, m_reflectionID);
-    /*
-	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, (GLsizei)m_reflectionTexSizeW, (GLsizei)m_reflectionTexSizeH, 0,  GL_RGBA, GL_UNSIGNED_BYTE, 0);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//GL_LINEAR_MIPMAP_LINEAR
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    */
-    ///*
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, (GLsizei)m_reflectionTexSizeW, (GLsizei)m_reflectionTexSizeH, 0, GL_BGRA, GL_UNSIGNED_BYTE, NULL);
-    glGenerateMipmap(GL_TEXTURE_2D);  //Generate num_mipmaps number of mipmaps here.
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    pglGenerateMipmapEXT(GL_TEXTURE_2D);  //Generate num_mipmaps number of mipmaps here.
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    //*/
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    // Create depth texture
+    // Create reflection depth texture with Mipmapping
     glGenTextures(1, &m_reflectionDepthBufferID);
     glBindTexture(GL_TEXTURE_2D, m_reflectionDepthBufferID);
     glTexImage2D( GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, (GLsizei)m_reflectionTexSizeW, (GLsizei)m_reflectionTexSizeH, 0,  GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, NULL);
-    glGenerateMipmap(GL_TEXTURE_2D);
+    pglGenerateMipmapEXT(GL_TEXTURE_2D);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);//GL_LINEAR_MIPMAP_LINEAR
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    
+	// Create reflection frame buffer
 	pglGenFramebuffersEXT(1, &m_reflectionFBOID);
 	pglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_reflectionFBOID);
 	pglFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, m_reflectionID, 0);
@@ -615,27 +611,28 @@ void CGridProjector::CreateTextures()
 		LOGWARNING("Reflection framebuffer object incomplete: 0x%04X", status);
 	}
 
+	// Create refraction texture with Mipmapping
     glGenTextures(1, & m_refractionID);
 	glBindTexture(GL_TEXTURE_2D, m_refractionID);
     glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, (GLsizei)m_reflectionTexSizeW, (GLsizei)m_reflectionTexSizeH, 0,  GL_RGB, GL_UNSIGNED_BYTE, 0);
-    glGenerateMipmap(GL_TEXTURE_2D);
+    pglGenerateMipmapEXT(GL_TEXTURE_2D);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 
-    // Create depth texture
+    // Create refraction camera depth texture with Mipmapping
     glGenTextures(1, &m_refractionDepthBufferID);
     glBindTexture(GL_TEXTURE_2D, m_refractionDepthBufferID);
     glTexImage2D( GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, (GLsizei)m_reflectionTexSizeW, (GLsizei)m_reflectionTexSizeH, 0,  GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, NULL);
-    glGenerateMipmap(GL_TEXTURE_2D);
+    pglGenerateMipmapEXT(GL_TEXTURE_2D);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-
+	// Create refraction frame buffer
 	pglGenFramebuffersEXT(1, &m_refractionFBOID);
 	pglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_refractionFBOID);
 	pglFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, m_refractionID, 0);
@@ -653,18 +650,29 @@ void CGridProjector::CreateTextures()
     glGenTextures(1, &m_flowMapID);
 }
 
-void CGridProjector::UpdateReflectionCamera()
+void CGridProjector::UpdateReflectionFarPlane()
 {
-    m_reflectionCamPos = m_reflectionCam.GetOrientation().GetTranslation();
-    m_reflectionLookAt = m_reflectionCam.GetOrientation().GetIn();
+    CVector3D reflectionCamPos = m_reflectionCam.GetOrientation().GetTranslation();
+    CVector3D reflectionLookAt = m_reflectionCam.GetOrientation().GetIn();
     //m_ProjMat * m_Orientation.GetInverse();
     //LOGWARNING("ratio = %f", m_Height / float(std::max(1, m_Width)));
     //LOGWARNING("[W,H] = [%u, %u]", m_Width, m_Height);
     
     //CVector3D camPosition = m_reflectionCam.GetOrientation().GetTranslation();
     //CVector3D camDirection = m_reflectionCam.GetOrientation().GetIn();
-    CVector3D frustrumPoint = m_reflectionCamPos + m_reflectionLookAt.Normalized() * m_reflectionCam.GetFarPlane();
+    CVector3D frustrumPoint = reflectionCamPos + reflectionLookAt.Normalized() * m_reflectionCam.GetFarPlane();
     CPlane farClipPlane;
-    farClipPlane.Set(-m_reflectionLookAt.Normalized(), frustrumPoint);
+    farClipPlane.Set(-reflectionLookAt.Normalized(), frustrumPoint);
     m_reflectionFarClip = farClipPlane;
+}
+
+void CGridProjector::UpdateRefractionFarPlane()
+{
+    CVector3D refractionCamPos = m_refractionCam.GetOrientation().GetTranslation();
+    CVector3D refractionLookAt = m_refractionCam.GetOrientation().GetIn();
+
+    CVector3D frustrumPoint = refractionCamPos + refractionLookAt.Normalized() * m_refractionCam.GetFarPlane();
+    CPlane farClipPlane;
+    farClipPlane.Set(-refractionLookAt.Normalized(), frustrumPoint);
+    m_refractionFarClip = farClipPlane;
 }

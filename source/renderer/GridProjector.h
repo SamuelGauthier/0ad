@@ -46,9 +46,9 @@ public:
 
 	//void SetReflectionMatrix(CMatrix3D reflectionMatrix) { m_reflectionMatrix = reflectionMatrix; }
     //void SetReflectionTransMatrix(CMatrix3D reflectionTransMatrix)
-    void SetReflectionCamPos(CVector3D position) { m_reflectionCamPos = position; }
-    void SetReflectionLookAt(CVector3D lookAt) { m_reflectionLookAt = lookAt; }
-    void SetReflectionFarClip(CPlane farClippingPlane) { m_reflectionFarClip = farClippingPlane; }
+    //void SetReflectionCamPos(CVector3D position) { m_reflectionCamPos = position; }
+    //void SetReflectionLookAt(CVector3D lookAt) { m_reflectionLookAt = lookAt; }
+    //void SetReflectionFarClip(CPlane farClippingPlane) { m_reflectionFarClip = farClippingPlane; }
     void SetReflectionCamera(CCamera reflectionCamera) { m_reflectionCam = reflectionCamera; }
     void SetRefractionCamera(CCamera refractionCamera) { m_refractionCam = refractionCamera; }
     
@@ -60,7 +60,7 @@ public:
     float GetReflectionTexHeigth() { return m_reflectionTexSizeH; }
 
 	GLuint GetReflectionFBOID() { return m_reflectionFBOID; }
-    CVector3D GetReflectionLookAt() { return m_reflectionLookAt; }
+    //CVector3D GetReflectionLookAt() { return m_reflectionLookAt; }
     CPlane GetReflectionFarClip() { return m_reflectionFarClip; }
 	GLuint GetRefractionFBOID() { return m_refractionFBOID; }
 
@@ -70,7 +70,8 @@ private:
 	void UpdateMatrices();
 	void ComputeIntersection(std::vector<CVector4D>& cam_frustrum, std::vector<CVector4D>& span_buffer, CPlane& maxWater, CPlane& minWater, int start, int end);
     void CreateTextures();
-    void UpdateReflectionCamera();
+    void UpdateReflectionFarPlane();
+    void UpdateRefractionFarPlane();
 
 
 	float m_time;
@@ -107,11 +108,9 @@ private:
     size_t m_reflectionTexSizeH;
 
     CCamera m_reflectionCam;
-	//CMatrix3D m_reflectionMatrix;
-    CVector3D m_reflectionCamPos;
-    CVector3D m_reflectionLookAt;
     CPlane m_reflectionFarClip;
     CCamera m_refractionCam;
+    CPlane m_refractionFarClip;
 
 };
 
