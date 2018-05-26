@@ -536,7 +536,7 @@ void CGridProjector::CreateTextures()
 	// see http://www.gdcvault.com/play/1025404/-World-of-Warships-Technical
     std::vector<std::vector<u8>> heightMaps = m_water.GetHeightMaps();
     
-    glGenTextures(m_heightMapsID.size(), &m_heightMapsID[0]);
+    glGenTextures((GLsizei)m_heightMapsID.size(), &m_heightMapsID[0]);
     for (size_t i = 0; i < heightMaps.size(); i++)
     {
         g_Renderer.BindTexture(i, m_heightMapsID.at(i));
@@ -552,7 +552,7 @@ void CGridProjector::CreateTextures()
 	// Note: the same applies here as the upper comment
     std::vector<std::vector<u8>> normalMaps = m_water.GetNormalMaps();
     
-    glGenTextures(m_normalMapsID.size(), &m_normalMapsID[0]);
+    glGenTextures((GLsizei)m_normalMapsID.size(), &m_normalMapsID[0]);
     for (size_t i = 0; i < normalMaps.size(); i++)
     {
         g_Renderer.BindTexture(i, m_normalMapsID.at(i));

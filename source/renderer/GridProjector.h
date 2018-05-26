@@ -56,8 +56,10 @@ public:
     float GetMinWaterHeight() { return m_water.GetMinWaterHeight(); }
     float GetWaterHeight() { return m_water.GetWaterHeight(); }
 
-    float GetReflectionTexWidth() { return m_reflectionTexSizeW; }
-    float GetReflectionTexHeigth() { return m_reflectionTexSizeH; }
+    int GetReflectionTexWidth() { return m_reflectionTexSizeW; }
+    int GetReflectionTexHeight() { return m_reflectionTexSizeH; }
+	int GetRefractionTexWidth() { return m_reflectionTexSizeW; }
+	int GetRefractionTexHeight() { return m_reflectionTexSizeH; }
 
 	GLuint GetReflectionFBOID() { return m_reflectionFBOID; }
     //CVector3D GetReflectionLookAt() { return m_reflectionLookAt; }
@@ -104,8 +106,8 @@ private:
     GLuint m_refractionDepthBufferID;
 	GLuint m_refractionID;
 
-	size_t m_reflectionTexSizeW;
-    size_t m_reflectionTexSizeH;
+	int m_reflectionTexSizeW;
+    int m_reflectionTexSizeH;
 
     CCamera m_reflectionCam;
     CPlane m_reflectionFarClip;

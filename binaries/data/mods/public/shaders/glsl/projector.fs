@@ -96,7 +96,7 @@ void main()
     //float variation = texture2D(heightMap1, 0.001 * waterCoords.xz + variationWind * variationTS * time).g;
     vec3 normalAttenuation = vec3(0.1, 1, 0.1);
 	vec3 n = normalize(normal);
-    n = calculateNormal(waterCoords.xz, variation);
+    //n = calculateNormal(waterCoords.xz, variation);
     n = vec3(0, 1, 0);
     //n = texture2D(heightMap1, 0.01*waterCoords.xz).rgb;
 
@@ -171,12 +171,12 @@ void main()
 	//color = vec4(c, c, c, 1.0);
     ////color = ambient + specular;
 	//color = vec4(n, 1.0);
-	color = reflection;
+	//color = reflection;
 	color = refraction;
 	//*/
 	//color = vec4(calculateHeight(intersectionPos.xz, variation), 1.0);
 	//color = vec4(n, 1.0);
-	gl_FragColor = color;// * losMod;
+	gl_FragColor = color * losMod;
 }
 
 // Convert the normal form the normal map to the eye space. Attenuate it by a
@@ -376,10 +376,12 @@ vec3 computeRefraction(vec3 n)
 	vec3 iW = i.xyz/i.w;
 
 	vec4 farP = refractionMVP * vec4(iW, 1);
+	//vec4 farP = refractionMVP * vec4(wavePos + 15*r, 1);
 
     float refrShiftUp = 1 / screenHeight;
 	vec2 uv = vec2(0.5 * (farP.x / farP.w + 1), 0.5 * (farP.y / farP.w + 1) + refrShiftUp);
 	
     vec3 refraction = texture2D(refractionMap, uv).rgb;
+
     return refraction;
 }

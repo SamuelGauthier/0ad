@@ -170,4 +170,5 @@ vec3 computeNormal(vec2 uv, float variation)
 	vec3 normal = n;
 	normal.yz = n.zy;
     return normalize(2.0 * normal - 1.0);
+    //return normalize(2.0 * normal - 3.0);
 }

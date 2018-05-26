@@ -1150,7 +1150,7 @@ void CRenderer::ComputeReflectionCamera(CCamera& camera, const CBoundingBoxAlign
 	camera.ClipFrustum(CVector4D(0, 1, 0, -waterHeight));
 
 	SViewPort vp;
-    vp.m_Height = gp.GetReflectionTexHeigth();//wm.m_RefTextureSize;
+    vp.m_Height = gp.GetReflectionTexHeight();//wm.m_RefTextureSize;
     vp.m_Width = gp.GetReflectionTexWidth();//;wm.m_RefTextureSize;
 	vp.m_X = 0;
 	vp.m_Y = 0;
@@ -1168,13 +1168,14 @@ void CRenderer::ComputeReflectionCamera(CCamera& camera, const CBoundingBoxAlign
 void CRenderer::ComputeRefractionCamera(CCamera& camera, const CBoundingBoxAligned& scissor) const
 {
 	WaterManager& wm = m->waterManager;
+	CGridProjector& gp = m->gridProjector;
 
 	float fov = m_ViewCamera.GetFOV();
 
 	// Expand fov slightly since ripples can reflect parts of the scene that
 	// are slightly outside the normal camera view, and we want to avoid any
 	// noticeable edge-filtering artifacts
-	//fov *= 1.05f;
+	fov *= 1.05f;
 
 	camera = m_ViewCamera;
 
@@ -1186,8 +1187,10 @@ void CRenderer::ComputeRefractionCamera(CCamera& camera, const CBoundingBoxAlign
 	camera.ClipFrustum(CVector4D(0, -1, 0, wm.m_WaterHeight + 0.5f));	// add some to avoid artifacts near steep shores.
 
 	SViewPort vp;
-	vp.m_Height = wm.m_RefTextureSize;
-	vp.m_Width = wm.m_RefTextureSize;
+	//vp.m_Height = wm.m_RefTextureSize;
+	//vp.m_Width = wm.m_RefTextureSize;
+	vp.m_Height = gp.GetRefractionTexHeight();
+	vp.m_Width = gp.GetRefractionTexWidth();
 	vp.m_X = 0;
 	vp.m_Y = 0;
 	camera.SetViewPort(vp);
@@ -1238,7 +1241,7 @@ void CRenderer::RenderReflections(const CShaderDefines& context, const CBounding
 
 	//float vpHeight = wm.m_RefTextureSize;
 	//float vpWidth = wm.m_RefTextureSize;
-	float vpHeight = gp.GetReflectionTexHeigth();
+	float vpHeight = gp.GetReflectionTexHeight();
 	float vpWidth = gp.GetReflectionTexWidth();;
 
 	SScreenRect screenScissor;
@@ -1316,7 +1319,7 @@ void CRenderer::RenderRefractions(const CShaderDefines& context, const CBounding
 
 	ComputeRefractionCamera(m_ViewCamera, scissor);
 
-	CVector4D camPlane(0, -1, 0, wm.m_WaterHeight + 2.0f);
+    CVector4D camPlane(0, -1, 0, wm.m_WaterHeight);// + 2.0f);
 	SetObliqueFrustumClipping(m_ViewCamera, camPlane);
 
 	m->SetOpenGLCamera(m_ViewCamera);
@@ -1342,7 +1345,7 @@ void CRenderer::RenderRefractions(const CShaderDefines& context, const CBounding
 	pglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, gp.GetRefractionFBOID());
     pglGenerateMipmapEXT(GL_TEXTURE_2D);
 
-	glClearColor(1.0f,0.0f,0.0f,0.0f);
+	glClearColor(0.0f,0.0f,0.0f,0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Render terrain and models
