@@ -81,6 +81,7 @@
 ; Keep in sync with remove-incomplete-translations.sh
  
   !insertmacro MUI_LANGUAGE "English" ;first language is the default language
+  !insertmacro MUI_LANGUAGE "Asturian"
   !insertmacro MUI_LANGUAGE "Basque"
   !insertmacro MUI_LANGUAGE "Bulgarian"
   !insertmacro MUI_LANGUAGE "Catalan"
@@ -93,6 +94,7 @@
   !insertmacro MUI_LANGUAGE "Hungarian"
   !insertmacro MUI_LANGUAGE "Indonesian"
   !insertmacro MUI_LANGUAGE "Italian"
+  !insertmacro MUI_LANGUAGE "Malay"
   !insertmacro MUI_LANGUAGE "Norwegian"
   !insertmacro MUI_LANGUAGE "Polish"
   !insertmacro MUI_LANGUAGE "Portuguese"
@@ -117,7 +119,7 @@ Section "!Game and data files" GameSection
     File /r /x "public" /x "mod" /x "dev.cfg" "${CHECKOUTPATH}\binaries"
   !else
     ;Exclude debug DLLs and related files
-    File /r /x "public" /x "mod" /x "dev.cfg" /x "*_d.dll" /x "enetd.dll" /x "FColladaD.dll" /x "gloox-1.0d.dll" /x "glooxwrapper_dbg.*" /x "libcurld.dll" /x "libpng16d.dll" /x "miniupnpcd.dll" /x "mozjs*-ps-debug.*" /x "msvc*d.dll" /x "zlib1d.dll" "${CHECKOUTPATH}\binaries"
+    File /r /x "public" /x "mod" /x "dev.cfg" /x "*_d.dll" /x "enetd.dll" /x "FColladaD.dll" /x "gloox-1.0d.dll" /x "glooxwrapper_dbg.*" /x "libcurld.dll" /x "libpng16d.dll" /x "libsodiumd.dll" /x "miniupnpcd.dll" /x "mozjs*-ps-debug*" /x "mozjs*vc140.*" /x "msvc*d.dll" /x "zlib1d.dll" "${CHECKOUTPATH}\binaries"
   !endif
 
   SetOutPath "$INSTDIR\binaries\data\mods\public"

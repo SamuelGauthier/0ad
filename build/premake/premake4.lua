@@ -723,6 +723,7 @@ function setup_all_libs ()
 		"icu",
 		"iconv",
 		"fftw",
+		"libsodium",
 	}
 
 	if not _OPTIONS["without-audio"] then
