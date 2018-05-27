@@ -473,6 +473,7 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
 #endif
 
 	shader->Uniform(str_transform, g_Renderer.GetViewCamera().GetViewProjection());
+	shader->Uniform(str_invTransform, g_Renderer.GetViewCamera().GetViewProjection().GetInverse());
     shader->Uniform(str_cameraPos, g_Renderer.GetViewCamera().GetOrientation().GetTranslation());
     shader->Uniform(str_invV, g_Renderer.GetViewCamera().GetOrientation());
 	shader->Uniform(str_projector, m_Mprojector);
@@ -496,6 +497,7 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
     shader->BindTexture(str_variationMap, m_variationMapID);
 
 	shader->BindTexture(str_reflectionMap, m_reflectionID);
+    shader->BindTexture(str_reflectionMapDepth, m_reflectionDepthBufferID);
     shader->Uniform(str_reflectionMVP, m_reflectionCam.GetViewProjection());
     shader->Uniform(str_reflectionFarClipN, m_reflectionFarClip.m_Norm);
     shader->Uniform(str_reflectionFarClipD, m_reflectionFarClip.m_Dist);
@@ -509,6 +511,8 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
 
     shader->Uniform(str_screenWidth, g_Renderer.GetWidth());
     shader->Uniform(str_screenHeight, g_Renderer.GetHeight());
+	shader->Uniform(str_nearPlane, g_Renderer.GetViewCamera().GetNearPlane());
+	shader->Uniform(str_farPlane, g_Renderer.GetViewCamera().GetFarPlane());
 
 	CLOSTexture& losTexture = g_Renderer.GetScene().GetLOSTexture();
 	shader->BindTexture(str_losMap, losTexture.GetTextureSmooth());
@@ -584,8 +588,8 @@ void CGridProjector::CreateTextures()
     pglGenerateMipmapEXT(GL_TEXTURE_2D);  //Generate num_mipmaps number of mipmaps here.
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 
     // Create reflection depth texture with Mipmapping
     glGenTextures(1, &m_reflectionDepthBufferID);
@@ -594,8 +598,8 @@ void CGridProjector::CreateTextures()
     pglGenerateMipmapEXT(GL_TEXTURE_2D);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);//GL_LINEAR_MIPMAP_LINEAR
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 
 	// Create reflection frame buffer
 	pglGenFramebuffersEXT(1, &m_reflectionFBOID);
@@ -618,8 +622,8 @@ void CGridProjector::CreateTextures()
     pglGenerateMipmapEXT(GL_TEXTURE_2D);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 
 
     // Create refraction camera depth texture with Mipmapping
@@ -629,8 +633,8 @@ void CGridProjector::CreateTextures()
     pglGenerateMipmapEXT(GL_TEXTURE_2D);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 
 	// Create refraction frame buffer
 	pglGenFramebuffersEXT(1, &m_refractionFBOID);
