@@ -20,7 +20,7 @@ uniform sampler2D normalMap2;
 uniform sampler2D normalMap3;
 
 uniform sampler2D reflectionMap;
-uniform sampler2D reflectionMapDepth;
+uniform sampler2D refractionMapDepth;
 uniform vec3 reflectionFarClipN;
 uniform float reflectionFarClipD;
 uniform mat4 reflectionMVP; 
@@ -85,6 +85,11 @@ vec4 ComputeReflection(vec3 n);
 vec3 ComputeRefraction(vec3 n);
 float Sum(vec4 t);
 vec3 LightAttenuation(vec3 color, float depth);
+vec3 WorldPosFromDepth(sampler2D depthTex, vec2 uv);
+vec3 LineLineIntersection(vec3 o1, vec3 d1, vec3 o2, vec3 d2);
+float determinant(mat3 m);
+
+float waterDepth;
 
 void main()
 {
@@ -101,7 +106,7 @@ void main()
     vec3 normalAttenuation = vec3(0.1, 1, 0.1);
 	vec3 n = normalize(normal);
     n = CalculateNormal(waterCoords.xz, variation);
-    //n = vec3(0, 1, 0);
+    n = vec3(0, 1, 0);
     //n = texture2D(heightMap1, 0.01*waterCoords.xz).rgb;
 
     vec3 l = normalize(sunDir);
@@ -147,7 +152,7 @@ void main()
 	vec4 amb = mix(refractionColor, reflectionColor, F(F0, v, n));
 	//---------------------------------------------------------------------------------------------------------
 
-    vec3 test = texture2D(reflectionMapDepth, 0.01*intersectionPos.xz).rgb;
+    vec3 test = texture2D(refractionMapDepth, 0.01*intersectionPos.xz).rgb;
 	//color += amb;
 	/////*
 	//color = amb;
@@ -157,11 +162,13 @@ void main()
     c = specular;
 	//float c = 1.0;
     //c = F_val;
+    c = 0.01*waterDepth;
 	color = vec4(c, c, c, 1.0);
     ////color = ambient + specular;
 	//color = vec4(n, 1.0);
 	//color = reflection;
-	color = amb + specular2;
+	//color = amb + specular2;
+	//color = refractionColor;
 	//*/
 	//color = vec4(CalculateHeight(intersectionPos.xz, variation), 1.0);
 	//color = vec4(n, 1.0);
@@ -371,6 +378,25 @@ vec3 ComputeRefraction(vec3 n)
 
     float refrShiftUp = 1 / screenHeight;
 	vec2 uv = vec2(0.5 * (farP.x / farP.w + 1), 0.5 * (farP.y / farP.w + 1) + refrShiftUp);
+    vec3 refractPos = WorldPosFromDepth(refractionMapDepth, uv);
+
+    waterDepth = length(refractPos - intersectionPos);
+
+	//farP = refractionMVP * vec4(intersectionPos, 1);
+	//uv = vec2(0.5 * (farP.x / farP.w + 1), 0.5 * (farP.y / farP.w + 1) + refrShiftUp);
+    //vec3 directPos = WorldPosFromDepth(refractionMapDepth, uv);
+
+    //vec3 o1 = intersectionPos;
+    //vec3 d1 = r;
+    //vec3 o2 = refractPos;
+    //vec3 d2 = directPos - refractPos;
+
+    //vec3 newPos = LineLineIntersection(o1, d1, o2, d2);
+    //waterDepth = length(newPos - intersectionPos);
+
+    //farP = refractionMVP * vec4(refractPos, 1);
+    ////farP = refractionMVP * vec4(intersectionPos, 1);
+	//uv = vec2(0.5 * (farP.x / farP.w + 1), 0.5 * (farP.y / farP.w + 1) + refrShiftUp);
 	
     vec3 refraction = texture2D(refractionMap, uv).rgb;
 
@@ -386,4 +412,37 @@ vec3 LightAttenuation(vec3 color, float depth)
     return color * vec3(red, green, blue);
 }
 
+// From https://stackoverflow.com/questions/22360810/
+vec3 WorldPosFromDepth(sampler2D depthTex, vec2 uv)
+{
+    vec4 clipSpaceLocation;
+    clipSpaceLocation.xy = uv * 2.0f - 1.0f;
+    clipSpaceLocation.z = texture2D(depthTex, uv).r * 2.0f - 1.0f;
+    clipSpaceLocation.w = 1.0f;
+    vec4 homogenousLocation = invTransform * clipSpaceLocation;
+    return homogenousLocation.xyz / homogenousLocation.w;
+}
 
+// From realtimerendering.com/intersections
+vec3 LineLineIntersection(vec3 o1, vec3 d1, vec3 o2, vec3 d2)
+{
+    vec3 d1xd2 = cross(d1,d2);
+    float lengthD1xD2 = length(d1xd2);
+    float denom = lengthD1xD2 * lengthD1xD2;
+
+    //if(denom <= 0) return vec3(0,0,0)
+
+    float t1 = determinant(mat3(o2-o1, d2, d1xd2)) / denom;
+
+    return o1 + t1*d1;
+}
+
+// Because 0 A.D. uses glsl 1.2 ...
+// From https://github.com/g-truc/glm/blob/master/glm/detail/func_matrix.inl
+float determinant(mat3 m)
+{
+    return
+        + m[0][0] * (m[1][1] * m[2][2] - m[2][1] * m[1][2])
+        - m[1][0] * (m[0][1] * m[2][2] - m[2][1] * m[0][2])
+        + m[2][0] * (m[0][1] * m[1][2] - m[1][1] * m[0][2]);
+}

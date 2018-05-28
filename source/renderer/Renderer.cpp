@@ -1175,7 +1175,7 @@ void CRenderer::ComputeRefractionCamera(CCamera& camera, const CBoundingBoxAlign
 	// Expand fov slightly since ripples can reflect parts of the scene that
 	// are slightly outside the normal camera view, and we want to avoid any
 	// noticeable edge-filtering artifacts
-	fov *= 1.05f;
+	fov *= 1.2f;
 
 	camera = m_ViewCamera;
 

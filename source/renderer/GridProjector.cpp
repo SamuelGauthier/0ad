@@ -497,12 +497,13 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
     shader->BindTexture(str_variationMap, m_variationMapID);
 
 	shader->BindTexture(str_reflectionMap, m_reflectionID);
-    shader->BindTexture(str_reflectionMapDepth, m_reflectionDepthBufferID);
+    //shader->BindTexture(str_reflectionMapDepth, m_reflectionDepthBufferID);
     shader->Uniform(str_reflectionMVP, m_reflectionCam.GetViewProjection());
     shader->Uniform(str_reflectionFarClipN, m_reflectionFarClip.m_Norm);
     shader->Uniform(str_reflectionFarClipD, m_reflectionFarClip.m_Dist);
 
 	shader->BindTexture(str_refractionMap, m_refractionID);
+    shader->BindTexture(str_refractionMapDepth, m_refractionDepthBufferID);
 	shader->Uniform(str_refractionMVP, m_refractionCam.GetViewProjection());
     shader->Uniform(str_refractionFarClipN, m_refractionFarClip.m_Norm);
     shader->Uniform(str_refractionFarClipD, m_refractionFarClip.m_Dist);
@@ -622,8 +623,9 @@ void CGridProjector::CreateTextures()
     pglGenerateMipmapEXT(GL_TEXTURE_2D);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    //glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, (float[]){1.0f, 0.0f, 0.0f, 1.0f});
 
 
     // Create refraction camera depth texture with Mipmapping
@@ -633,8 +635,9 @@ void CGridProjector::CreateTextures()
     pglGenerateMipmapEXT(GL_TEXTURE_2D);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, (float[]){1.0f, 0.0f, 0.0f, 1.0f});
 
 	// Create refraction frame buffer
 	pglGenFramebuffersEXT(1, &m_refractionFBOID);
