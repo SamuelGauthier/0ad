@@ -397,6 +397,7 @@ protected:
 	// render water reflection and refraction textures
 	void RenderReflections(const CShaderDefines& context, const CBoundingBoxAligned& scissor);
 	void RenderRefractions(const CShaderDefines& context, const CBoundingBoxAligned& scissor);
+	void RenderRefraction(const CShaderDefines& context);
 
 	void ComputeReflectionCamera(CCamera& camera, const CBoundingBoxAligned& scissor) const;
 	void ComputeRefractionCamera(CCamera& camera, const CBoundingBoxAligned& scissor) const;

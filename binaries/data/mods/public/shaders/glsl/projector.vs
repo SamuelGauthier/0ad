@@ -2,14 +2,14 @@
 
 attribute vec4 vertexPosition; 
 
-uniform mat4 transform;
+uniform mat4 MVP;
 uniform mat4 projector;
 uniform mat4 losMatrix;
 uniform vec3 waterNormal;
 uniform float waterD;
 uniform float time;
-uniform mat4 reflectionMatrix;
-uniform mat4 refractionMatrix;
+uniform mat4 reflectionMVP;
+uniform mat4 refractionMVP;
 
 uniform sampler2D heightMap1;
 uniform sampler2D heightMap2;
@@ -111,10 +111,10 @@ void main()
     intersectionPos = intersection.xyz;
 
 
-    reflectionCoords = (reflectionMatrix * vec4(intersectionPos.xyz, 1.0)).rga;
-	refractionCoords = (refractionMatrix * vec4(intersectionPos.xyz, 1.0)).rga;
+    reflectionCoords = (reflectionMVP * vec4(intersectionPos.xyz, 1.0)).rga;
+	refractionCoords = (refractionMVP * vec4(intersectionPos.xyz, 1.0)).rga;
 
-	gl_Position = transform * intersection;
+	gl_Position = MVP * intersection;
 }
 
 

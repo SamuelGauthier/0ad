@@ -5,7 +5,8 @@
 #define PI 3.14159265358979
 
 // air/water = 1/1.333
-#define RATIO 0.7501875469
+#define RATIO2 0.7501875469
+#define RATIO 0.909
 
 uniform sampler2D losMap;
 
@@ -30,8 +31,11 @@ uniform vec3 refractionFarClipN;
 uniform float refractionFarClipD;
 uniform mat4 refractionMVP; 
 
+uniform sampler2D entireSceneDepth;
+
+uniform mat4 MVP;
 uniform mat4 invV;
-uniform mat4 invTransform;
+uniform mat4 invMVP;
 
 uniform float screenWidth;
 uniform float screenHeight;
@@ -67,20 +71,12 @@ varying float amplitude1;
 varying float amplitude2;
 varying float amplitude3;
 
-//const vec3 normalAttenuation = vec3(0.3, 1, 0.3);
-
 vec3 CalculateNormal(vec2 uv, float variation);
 vec3 CalculateHeight(vec2 uv, float variation);
 float F(float F_0, vec3 v, vec3 h);
 float G_smith(float nx, float k);
 float G(float nl, float nv, float k);
 float D(float nh, float alpha2);
-//float DistanceToPlane(vec3 p, vec3 normal, float D);
-//vec3 FindLineSegIntersection(vec3 start, vec3 end, vec3 planeNormal,
-//        float planeD);
-//vec3 FindRayIntersection(vec3 start, vec3 direction, vec3 planeNormal,
-//        float planeD);
-//vec2 GetScreenCoordinates(vec3 world);
 vec4 ComputeReflection(vec3 n);
 vec3 ComputeRefraction(vec3 n);
 float Sum(vec4 t);
@@ -164,6 +160,15 @@ void main()
     //c = F_val;
     c = 0.01*waterDepth;
 	color = vec4(c, c, c, 1.0);
+
+    vec3 test2 = (refractionMVP * vec4(intersectionPos.xyz, 1.0)).rga;
+    test2 = (MVP * vec4(intersectionPos.xyz, 1.0)).rga;
+    //vec2 refrCoords = (0.5 * refractionCoords.xy) / refractionCoords.z + 0.5;
+    vec2 refrCoords = (0.5 * test2.xy) / test2.z + 0.5;
+    vec3 refColor = texture2D(entireSceneDepth, refrCoords).rgb;
+    c = (2.0 * nearPlane) / (farPlane + nearPlane - refColor.x * (farPlane - nearPlane));
+    color = vec4(refColor, 1.0);
+	color = vec4(c, c, c, 1.0);
     ////color = ambient + specular;
 	//color = vec4(n, 1.0);
 	//color = reflection;
@@ -173,35 +178,19 @@ void main()
 	//color = vec4(CalculateHeight(intersectionPos.xz, variation), 1.0);
 	//color = vec4(n, 1.0);
     //color = vec4(test, 1.0);
+    
+    ////
+    //vec4 farP = MVP * vec4(intersectionPos, 1);
+	//vec2 uv = 0.5 * (farP.xy / farP.w + 1);
+    ////float depth = texture2D(entireSceneDepth, uv).x;
+    //////c = (2.0 * nearPlane) / (farPlane + nearPlane - depth * (farPlane - nearPlane));
+    ////color = vec4(c, c, c, 1.0);
+    //color = vec4(uv, 0.0, 1.0);
+    //color = vec4(texture2D(entireSceneDepth, refrCoords).rgb, 1.0);
+    ////
+
 	gl_FragColor = color * losMod;
 }
-
-// Convert the normal form the normal map to the eye space. Attenuate it by a
-// factor a and attenuate the time scroll with a factor t_cst
-/*
-vec3 CalculateNormal(vec3 a, float t_cst, sampler2D normalMap) {
-
-    // Gram-Schmidt process to re-orthogonalize the vectors
-    vec3 normal = normalize(l_normal);
-    vec3 tangent = normalize(l_tangent);
-    tangent = normalize(tangent - dot(tangent, normal) * normal);
-
-    // Fetch the normal from the normal map
-    vec3 binormal = cross(tangent, normal);
-    vec3 bumpMapNormal = texture(normalMap, l_position.xz + t_cst *
-            vec2(t)).xyz;
-    bumpMapNormal = 2.0 * bumpMapNormal - vec3(1.0, 1.0, 1.0);
-
-    // Create TBN matrix
-    mat3 tbn = mat3(tangent, binormal, normal);
-
-    // Transform the bumped normal int local space, dampen it and transform it
-    // into the eye space.
-    vec3 newNormal = tbn * bumpMapNormal;
-    newNormal = normalize(a * newNormal);
-    return vec3(V * M * vec4(newNormal, 0));
-}
-*/
 
 vec3 CalculateNormal(vec2 uv, float variation) {
     //vec3 n = texture2D(normalMap1, scale.x * uv).rgb;
@@ -263,51 +252,6 @@ float D(float nh, float alpha2) {
     float denom = nh * nh * (alpha2 - 1) + 1;
     return alpha2 / (PI * denom * denom);
 }
-
-//vec3 FindLineSegIntersection(vec3 start, vec3 end, vec3 planeNormal,
-//        float planeD)
-//{
-//	float dist1 = DistanceToPlane(start, planeNormal, planeD);
-//	float dist2 = DistanceToPlane(end, planeNormal, planeD);
-//
-//	float t = (-dist1) / (dist2-dist1);
-//
-//	return mix(start, end, t);
-//}
-
-//float DistanceToPlane(vec3 p, vec3 normal, float D)
-//{
-//	//normal * p + waterD;
-//	return normal.x * p.x + normal.y * p.y + normal.z * p.z + D;
-//}
-//
-//vec3 FindRayIntersection(vec3 start, vec3 direction, vec3 planeNormal,
-//        float planeD)
-//{
-//    float dot = dot(planeNormal, direction);
-//
-//    if(dot == 0.0f) return vec3(0, 0, 0); // Correct??? What should be returned?
-//    float t = -(planeNormal.x * start.x + planeNormal.y * start.y +
-//            planeNormal.z * start.z + planeD);
-//    t /= dot;
-//    vec3 intersection = start + t * direction;
-//    //vec3 intersection = start - (direction * ( DistanceToPlane(start,
-//    //                planeNormal, planeD) / dot));
-//    return intersection;
-//}
-
-//vec2 GetScreenCoordinates(vec3 world)
-//{
-//    vec4 screenSpace = reflectionMVP * vec4(world, 0.0);
-//
-//    vec2 coordinates = screenSpace.xz / screenSpace.w;
-//    coordinates.x = 0.0;//(coordinates.x + 1) * 0.5 ;//screenHeight/screenWidth;
-//    //xy.y = (1 - xy.y) * 0.5;//* screenHeight;
-//    coordinates.y = ( (coordinates.y + 1) * 0.5 );// - 55.0/255.0;// - 53.0/255.0;//* screenHeight;
-//
-//
-//    return coordinates;
-//}
 
 float Sum(vec4 t)
 {
@@ -399,6 +343,8 @@ vec3 ComputeRefraction(vec3 n)
 	//uv = vec2(0.5 * (farP.x / farP.w + 1), 0.5 * (farP.y / farP.w + 1) + refrShiftUp);
 	
     vec3 refraction = texture2D(refractionMap, uv).rgb;
+    float c = (2.0 * nearPlane) / (farPlane + nearPlane - farP.z * (farPlane - nearPlane));
+    refraction = vec3(c,c,c);
 
     return refraction;
 }
@@ -419,7 +365,7 @@ vec3 WorldPosFromDepth(sampler2D depthTex, vec2 uv)
     clipSpaceLocation.xy = uv * 2.0f - 1.0f;
     clipSpaceLocation.z = texture2D(depthTex, uv).r * 2.0f - 1.0f;
     clipSpaceLocation.w = 1.0f;
-    vec4 homogenousLocation = invTransform * clipSpaceLocation;
+    vec4 homogenousLocation = invMVP * clipSpaceLocation;
     return homogenousLocation.xyz / homogenousLocation.w;
 }
 

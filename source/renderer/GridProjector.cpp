@@ -98,7 +98,10 @@ CGridProjector::CGridProjector() : m_water(CFFTWaterModel(wps)), m_gridVBIndices
 	m_refractionFBOID = 0;
 	m_refractionDepthBufferID = 0;
 	m_refractionID = 0;
-	
+	m_entireSceneFBOID = 0;
+	m_entireSceneDepthBufferID = 0;
+	m_entireSceneID = 0;
+
 	m_reflectionTexSizeW = 0;
     m_reflectionTexSizeH = 0;
 }
@@ -116,9 +119,12 @@ CGridProjector::~CGridProjector()
     glDeleteTextures(1, &m_reflectionDepthBufferID);
     glDeleteTextures(1, &m_refractionID);
     glDeleteTextures(1, &m_refractionDepthBufferID);
+	glDeleteTextures(1, &m_entireSceneID);
+	glDeleteTextures(1, &m_entireSceneDepthBufferID);
 
 	pglDeleteFramebuffersEXT(1, &m_reflectionFBOID);
 	pglDeleteFramebuffersEXT(1, &m_refractionFBOID);
+	pglDeleteFramebuffersEXT(1, &m_entireSceneFBOID);
 }
 
 void CGridProjector::Initialize()
@@ -472,8 +478,8 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
 	LOGWARNING("[W] pos: (%f, %f, %f)", worldPos.X, worldPos.Y, worldPos.Z);
 #endif
 
-	shader->Uniform(str_transform, g_Renderer.GetViewCamera().GetViewProjection());
-	shader->Uniform(str_invTransform, g_Renderer.GetViewCamera().GetViewProjection().GetInverse());
+	shader->Uniform(str_MVP, g_Renderer.GetViewCamera().GetViewProjection());
+	shader->Uniform(str_invMVP, g_Renderer.GetViewCamera().GetViewProjection().GetInverse());
     shader->Uniform(str_cameraPos, g_Renderer.GetViewCamera().GetOrientation().GetTranslation());
     shader->Uniform(str_invV, g_Renderer.GetViewCamera().GetOrientation());
 	shader->Uniform(str_projector, m_Mprojector);
@@ -507,6 +513,7 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
 	shader->Uniform(str_refractionMVP, m_refractionCam.GetViewProjection());
     shader->Uniform(str_refractionFarClipN, m_refractionFarClip.m_Norm);
     shader->Uniform(str_refractionFarClipD, m_refractionFarClip.m_Dist);
+    shader->BindTexture(str_entireSceneDepth, m_entireSceneDepthBufferID);
     
     shader->BindTexture(str_skyCube, g_Renderer.GetSkyManager()->GetSkyCube());
 
@@ -652,7 +659,44 @@ void CGridProjector::CreateTextures()
 	{
 		LOGWARNING("Refraction framebuffer object incomplete: 0x%04X", status);
 	}
-    
+
+    // Create entire scene texture with Mipmapping
+    glGenTextures(1, & m_entireSceneID);
+    glBindTexture(GL_TEXTURE_2D, m_entireSceneID);
+    glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, (GLsizei)m_reflectionTexSizeW, (GLsizei)m_reflectionTexSizeH, 0,  GL_RGB, GL_UNSIGNED_BYTE, 0);
+    pglGenerateMipmapEXT(GL_TEXTURE_2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    //glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, (float[]){1.0f, 0.0f, 0.0f, 1.0f});
+
+
+    // Create entire camera depth texture with Mipmapping
+    glGenTextures(1, &m_entireSceneDepthBufferID);
+    glBindTexture(GL_TEXTURE_2D, m_entireSceneDepthBufferID);
+    glTexImage2D( GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, (GLsizei)m_reflectionTexSizeW, (GLsizei)m_reflectionTexSizeH, 0,  GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, NULL);
+    pglGenerateMipmapEXT(GL_TEXTURE_2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, (float[]){1.0f, 0.0f, 0.0f, 1.0f});
+
+    // Create entire frame buffer
+    pglGenFramebuffersEXT(1, &m_entireSceneFBOID);
+    pglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_entireSceneFBOID);
+    pglFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, m_entireSceneID, 0);
+    pglFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, m_entireSceneDepthBufferID, 0);
+
+    ogl_WarnIfError();
+
+    status = pglCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+    if (status != GL_FRAMEBUFFER_COMPLETE_EXT)
+    {
+        LOGWARNING("Entire framebuffer object incomplete: 0x%04X", status);
+    }
+
     // TODO: create flow map
     glGenTextures(1, &m_flowMapID);
 }

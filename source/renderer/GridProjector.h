@@ -65,6 +65,7 @@ public:
     //CVector3D GetReflectionLookAt() { return m_reflectionLookAt; }
     CPlane GetReflectionFarClip() { return m_reflectionFarClip; }
 	GLuint GetRefractionFBOID() { return m_refractionFBOID; }
+	GLuint GetEntireSceneFBOID() { return m_entireSceneFBOID; }
 
 private:
 	void GenerateVertices();
@@ -105,6 +106,9 @@ private:
 	GLuint m_refractionFBOID;
     GLuint m_refractionDepthBufferID;
 	GLuint m_refractionID;
+    GLuint m_entireSceneFBOID;
+    GLuint m_entireSceneDepthBufferID;
+    GLuint m_entireSceneID;
 
 	int m_reflectionTexSizeW;
     int m_reflectionTexSizeH;

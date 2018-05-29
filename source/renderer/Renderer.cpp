@@ -1175,7 +1175,7 @@ void CRenderer::ComputeRefractionCamera(CCamera& camera, const CBoundingBoxAlign
 	// Expand fov slightly since ripples can reflect parts of the scene that
 	// are slightly outside the normal camera view, and we want to avoid any
 	// noticeable edge-filtering artifacts
-	fov *= 1.2f;
+	//fov *= 1.2f;
 
 	camera = m_ViewCamera;
 
@@ -1361,6 +1361,38 @@ void CRenderer::RenderRefractions(const CShaderDefines& context, const CBounding
   	// Reset old camera
   	m_ViewCamera = normalCamera;
   	m->SetOpenGLCamera(m_ViewCamera);
+
+	// rebind post-processing frambuffer.
+	pglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
+
+	return;
+}
+
+void CRenderer::RenderRefraction(const CShaderDefines& context)
+{
+	PROFILE3_GPU("Render refractions");
+
+	// Save the post-processing framebuffer.
+	GLint fbo;
+	glGetIntegerv(GL_FRAMEBUFFER_BINDING_EXT, &fbo);
+
+	CGridProjector& gp = m->gridProjector;
+
+	// try binding the framebuffer
+	//pglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, wm.m_RefractionFbo);
+	pglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, gp.GetEntireSceneFBOID());
+    pglGenerateMipmapEXT(GL_TEXTURE_2D);
+
+	glClearColor(0.0f,0.0f,0.0f,0.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	// Render terrain and models
+	RenderPatches(context, CULL_REFRACTIONS);
+	ogl_WarnIfError();
+	RenderModels(context, CULL_REFRACTIONS);
+	ogl_WarnIfError();
+	RenderTransparentModels(context, CULL_REFRACTIONS, TRANSPARENT_OPAQUE, false);
+	ogl_WarnIfError();
 
 	// rebind post-processing frambuffer.
 	pglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
@@ -1573,6 +1605,9 @@ void CRenderer::RenderSubmissions(const CBoundingBoxAligned& waterScissor)
 	{
 		m->skyManager.RenderSky();
 	}
+
+	RenderRefraction(context);
+	ogl_WarnIfError();
 
 	// render submitted patches and models
 	RenderPatches(context, cullGroup);
