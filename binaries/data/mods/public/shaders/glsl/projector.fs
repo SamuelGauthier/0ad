@@ -5,8 +5,8 @@
 #define PI 3.14159265358979
 
 // air/water = 1/1.333
-#define RATIO2 0.7501875469
-#define RATIO 0.909
+#define RATIO 0.7501875469
+//#define RATIO 0.909
 
 uniform sampler2D losMap;
 
@@ -83,13 +83,14 @@ float G_smith(float nx, float k);
 float G(float nl, float nv, float k);
 float D(float nh, float alpha2);
 vec4 ComputeReflection(vec3 n);
-vec3 ComputeRefraction(vec3 n);
+vec3 ComputeRefraction(vec3 n, vec3 v);
 float Sum(vec4 t);
 vec3 LightAttenuation(vec3 color, float depth);
-vec3 WorldPosFromDepth(sampler2D depthTex, vec2 uv);
+vec3 GetWorldPosFromDepth(sampler2D depthTex, vec2 uv);
 vec3 LineLineIntersection(vec3 o1, vec3 d1, vec3 o2, vec3 d2);
 float determinant(mat3 m);
 vec3 GetWorldHeight(vec2 worldXZ);
+vec3 GetPosOnTerrain(vec3 p);
 
 float waterDepth;
 
@@ -144,7 +145,7 @@ void main()
 	//color.rgb += specular;
 
     vec4 reflection = ComputeReflection(normal);
-    vec4 refraction = vec4(ComputeRefraction(n), 1.0);
+    vec4 refraction = vec4(ComputeRefraction(n, v), 1.0);
 
     vec3 reflected = reflect(v, n);
     vec3 reflectedV = vec3(invV * vec4(reflected, 0));
@@ -154,23 +155,11 @@ void main()
 	vec4 amb = mix(refractionColor, reflectionColor, F(F0, v, n));
 	//---------------------------------------------------------------------------------------------------------
 
-	//vec2 uv = (0.5 * refractionCoords.xy) / refractionCoords.z + 0.5;
-	//vec3 refColor = texture2D(refractionMap, uv).rgb;
-	//color = vec4(refColor, 1.0);
+    vec3 t = intersectionPos / terrainWorldSize;
+    float m = texture2D(terrain, t.xz).r;
 
-	vec4 pst = MVP * vec4(intersectionPos, 1.0);
-	//vec2 uv = (0.5 * pst.xy) / pst.w + 0.5;
-	//vec2 uv = (2 * pst.xy/pst.w) / pst.w + 0.5;
-    float refrShiftUp = 1 / screenHeight;
-	vec2 uv = vec2(0.5 * (pst.x / pst.w + 1), 0.5 * (pst.y / pst.w + 1) + refrShiftUp);
-	vec3 eColor = texture2D(entireSceneDepth, uv).rgb;
-	color = vec4(eColor, 1.0);
-	color = refraction;
-
-	float c = normalize(GetWorldHeight(intersectionPos.xz)).y;
-	color = vec4(c,c,c, 1);
-	//color = vec4(normalize(GetWorldHeight(intersectionPos.xz)), 1.0);
-
+    float c = m;
+    color = vec4(c,c,c,1.0);
 	//gl_FragColor = color * losMod;
 	gl_FragColor = color;
 }
@@ -287,8 +276,9 @@ vec4 ComputeReflection(vec3 n)
 // Compute the refraction color
 // The intersection between the far-clip of the refraction camera
 // is used to find the texture coordinates
-vec3 ComputeRefraction(vec3 n)
+vec3 ComputeRefraction(vec3 n, vec3 v)
 {
+    /*
     vec3 wavePos = intersectionPos;
     vec3 v = normalize(wavePos - cameraPos);
     vec3 r = refract(v, normalize(n), RATIO); // n should be normalized
@@ -343,6 +333,28 @@ vec3 ComputeRefraction(vec3 n)
 	farP = refractionMVP * vec4(refractionPos, 1);
 	uv = vec2(0.5 * (farP.x / farP.w + 1), 0.5 * (farP.y / farP.w + 1) + refrShiftUp);
     refraction = texture2D(refractionMapDepth, uv).rgb;
+    */
+
+    vec3 P1 = intersectionPos;
+    vec3 K1 = GetPosOnTerrain(P1);
+    vec3 K2 = GetWorldHeight(P1.xz);
+
+    vec3 r = refract(v, n, RATIO);
+
+    float theta_t = acos(dot(-n, r));
+    float theta_i = acos(dot(-v, n));
+    float theta_ratio = theta_t / theta_i;
+
+    vec3 d_V = K1 - P1;
+    vec3 d_N = K2 - P1;
+    vec3 P2 = theta_ratio * d_V + (1 - theta_ratio) * d_N;
+
+    vec4 I = refractionMVP * vec4(P2, 1.0);
+
+    float refractionShiftUp = 1/screenHeight;
+    vec2 uv = vec2(0.5 * (I.x / I.w + 1), 0.5 * (I.y / I.w + 1) +
+            refractionShiftUp);
+    vec3 refraction = texture2D(refractionMap, uv).rgb;
 
     return refraction;
 }
@@ -356,8 +368,18 @@ vec3 LightAttenuation(vec3 color, float depth)
     return color * vec3(red, green, blue);
 }
 
+vec3 GetPosOnTerrain(vec3 p)
+{
+    vec4 t = MVP * vec4(p, 1.0);
+    vec2 uv = t.xz/t.w;
+    uv = (uv + 1) * 0.5;
+    uv.y += 1/screenHeight;
+
+    return GetWorldPosFromDepth(entireSceneDepth, uv);
+}
+
 // From https://stackoverflow.com/questions/22360810/
-vec3 WorldPosFromDepth(sampler2D depthTex, vec2 uv)
+vec3 GetWorldPosFromDepth(sampler2D depthTex, vec2 uv)
 {
     vec4 clipSpaceLocation;
     clipSpaceLocation.xy = uv * 2.0f - 1.0f;
@@ -365,6 +387,18 @@ vec3 WorldPosFromDepth(sampler2D depthTex, vec2 uv)
     clipSpaceLocation.w = 1.0f;
     vec4 homogenousLocation = invMVP * clipSpaceLocation;
     return homogenousLocation.xyz / homogenousLocation.w;
+}
+
+vec3 GetWorldHeight(vec2 worldXZ)
+{
+	vec2 uv = worldXZ/terrainWorldSize;
+
+	float worldHeight = texture2D(terrain, uv).r;
+	//vec2 worldHeight = worldXZ/terrainWorldSize;
+	worldHeight *= 65536;
+	worldHeight /= 92;
+	return vec3(worldXZ.x, worldHeight, worldXZ.y);
+	//return vec3(worldHeight, 0);
 }
 
 // From realtimerendering.com/intersections
@@ -389,16 +423,4 @@ float determinant(mat3 m)
         + m[0][0] * (m[1][1] * m[2][2] - m[2][1] * m[1][2])
         - m[1][0] * (m[0][1] * m[2][2] - m[2][1] * m[0][2])
         + m[2][0] * (m[0][1] * m[1][2] - m[1][1] * m[0][2]);
-}
-
-vec3 GetWorldHeight(vec2 worldXZ)
-{
-	vec2 uv = worldXZ/terrainWorldSize;
-
-	float worldHeight = texture2D(terrain, uv).r;
-	//vec2 worldHeight = worldXZ/terrainWorldSize;
-	worldHeight *= 65536;
-	worldHeight /= 92;
-	return vec3(worldXZ.x, worldHeight, worldXZ.y);
-	//return vec3(worldHeight, 0);
 }

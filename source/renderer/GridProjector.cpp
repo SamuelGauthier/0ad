@@ -112,8 +112,8 @@ CGridProjector::~CGridProjector()
 	if (m_gridVBIndices) g_VBMan.Release(m_gridVBIndices);
 	if (m_gridVBVertices) g_VBMan.Release(m_gridVBVertices);
     
-    glDeleteTextures(m_heightMapsID.size(), &m_heightMapsID[0]);
-    glDeleteTextures(m_normalMapsID.size(), &m_normalMapsID[0]);
+    glDeleteTextures((GLsizei)m_heightMapsID.size(), &m_heightMapsID[0]);
+    glDeleteTextures((GLsizei)m_normalMapsID.size(), &m_normalMapsID[0]);
     glDeleteTextures(1, &m_variationMapID);
     glDeleteTextures(1, &m_flowMapID);
 	glDeleteTextures(1, &m_reflectionID);
