@@ -3,7 +3,7 @@
 attribute vec4 vertexPosition; 
 
 uniform mat4 MVP;
-uniform mat4 projector;
+uniform mat4 projectorMVP;
 uniform mat4 losMatrix;
 uniform vec3 waterNormal;
 uniform float waterD;
@@ -52,9 +52,9 @@ void main()
 
 	start.z = 1.0;
 	end.z = -1.0;
-	start = projector * start;
+	start = projectorMVP * start;
 	start /= start.w;
-	end = projector * end;
+	end = projectorMVP * end;
 	end /= end.w;
 
 	vec4 intersection = FindLineSegIntersection(start, end);

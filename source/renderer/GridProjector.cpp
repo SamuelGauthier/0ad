@@ -101,6 +101,7 @@ CGridProjector::CGridProjector() : m_water(CFFTWaterModel(wps)), m_gridVBIndices
 	m_entireSceneFBOID = 0;
 	m_entireSceneDepthBufferID = 0;
 	m_entireSceneID = 0;
+	m_terrainID = 0;
 
 	m_reflectionTexSizeW = 0;
     m_reflectionTexSizeH = 0;
@@ -121,6 +122,7 @@ CGridProjector::~CGridProjector()
     glDeleteTextures(1, &m_refractionDepthBufferID);
 	glDeleteTextures(1, &m_entireSceneID);
 	glDeleteTextures(1, &m_entireSceneDepthBufferID);
+	glDeleteTextures(1, &m_terrainID);
 
 	pglDeleteFramebuffersEXT(1, &m_reflectionFBOID);
 	pglDeleteFramebuffersEXT(1, &m_refractionFBOID);
@@ -168,6 +170,7 @@ void CGridProjector::Initialize()
     m_water.GenerateWaterWaves();
     m_water.GenerateVariationMap();
     CreateTextures();
+	CreateTerrainTexture();
 }
 
 void CGridProjector::GenerateVertices()
@@ -482,7 +485,7 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
 	shader->Uniform(str_invMVP, g_Renderer.GetViewCamera().GetViewProjection().GetInverse());
     shader->Uniform(str_cameraPos, g_Renderer.GetViewCamera().GetOrientation().GetTranslation());
     shader->Uniform(str_invV, g_Renderer.GetViewCamera().GetOrientation());
-	shader->Uniform(str_projector, m_Mprojector);
+	shader->Uniform(str_projectorMVP, m_Mprojector);
 	shader->Uniform(str_waterNormal, m_water.GetWaterBase().m_Norm);
 	shader->Uniform(str_waterD, m_water.GetWaterBase().m_Dist);
 	shader->Uniform(str_time, m_time);
@@ -513,7 +516,11 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
 	shader->Uniform(str_refractionMVP, m_refractionCam.GetViewProjection());
     shader->Uniform(str_refractionFarClipN, m_refractionFarClip.m_Norm);
     shader->Uniform(str_refractionFarClipD, m_refractionFarClip.m_Dist);
-    shader->BindTexture(str_entireSceneDepth, m_entireSceneDepthBufferID);
+    shader->BindTexture(str_entireSceneDepth, m_entireSceneID);
+
+    shader->BindTexture(str_terrain, m_terrainID);
+    shader->Uniform(str_terrainWorldSize, m_terrainWorldSize);
+    shader->Uniform(str_terrainHeightScale, HEIGHT_SCALE);
     
     shader->BindTexture(str_skyCube, g_Renderer.GetSkyManager()->GetSkyCube());
 
@@ -602,7 +609,7 @@ void CGridProjector::CreateTextures()
     // Create reflection depth texture with Mipmapping
     glGenTextures(1, &m_reflectionDepthBufferID);
     glBindTexture(GL_TEXTURE_2D, m_reflectionDepthBufferID);
-    glTexImage2D( GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, (GLsizei)m_reflectionTexSizeW, (GLsizei)m_reflectionTexSizeH, 0,  GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, (GLsizei)m_reflectionTexSizeW, (GLsizei)m_reflectionTexSizeH, 0,  GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, NULL);
     pglGenerateMipmapEXT(GL_TEXTURE_2D);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);//GL_LINEAR_MIPMAP_LINEAR
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -624,9 +631,9 @@ void CGridProjector::CreateTextures()
 	}
 
 	// Create refraction texture with Mipmapping
-    glGenTextures(1, & m_refractionID);
+    glGenTextures(1, &m_refractionID);
 	glBindTexture(GL_TEXTURE_2D, m_refractionID);
-    glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, (GLsizei)m_reflectionTexSizeW, (GLsizei)m_reflectionTexSizeH, 0,  GL_RGB, GL_UNSIGNED_BYTE, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, (GLsizei)m_reflectionTexSizeW, (GLsizei)m_reflectionTexSizeH, 0,  GL_RGB, GL_UNSIGNED_BYTE, 0);
     pglGenerateMipmapEXT(GL_TEXTURE_2D);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -638,13 +645,14 @@ void CGridProjector::CreateTextures()
     // Create refraction camera depth texture with Mipmapping
     glGenTextures(1, &m_refractionDepthBufferID);
     glBindTexture(GL_TEXTURE_2D, m_refractionDepthBufferID);
-    glTexImage2D( GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, (GLsizei)m_reflectionTexSizeW, (GLsizei)m_reflectionTexSizeH, 0,  GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, (GLsizei)m_reflectionTexSizeW, (GLsizei)m_reflectionTexSizeH, 0,  GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, NULL);
     pglGenerateMipmapEXT(GL_TEXTURE_2D);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, (float[]){1.0f, 0.0f, 0.0f, 1.0f});
+	float color[] = { 1.0f, 0.0f, 0.0f, 1.0f };
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
 
 	// Create refraction frame buffer
 	pglGenFramebuffersEXT(1, &m_refractionFBOID);
@@ -661,27 +669,27 @@ void CGridProjector::CreateTextures()
 	}
 
     // Create entire scene texture with Mipmapping
-    glGenTextures(1, & m_entireSceneID);
+    glGenTextures(1, &m_entireSceneID);
     glBindTexture(GL_TEXTURE_2D, m_entireSceneID);
-    glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, (GLsizei)m_reflectionTexSizeW, (GLsizei)m_reflectionTexSizeH, 0,  GL_RGB, GL_UNSIGNED_BYTE, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, (GLsizei)m_reflectionTexSizeW, (GLsizei)m_reflectionTexSizeH, 0,  GL_RGB, GL_UNSIGNED_BYTE, 0);
     pglGenerateMipmapEXT(GL_TEXTURE_2D);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     //glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, (float[]){1.0f, 0.0f, 0.0f, 1.0f});
 
 
     // Create entire camera depth texture with Mipmapping
     glGenTextures(1, &m_entireSceneDepthBufferID);
     glBindTexture(GL_TEXTURE_2D, m_entireSceneDepthBufferID);
-    glTexImage2D( GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, (GLsizei)m_reflectionTexSizeW, (GLsizei)m_reflectionTexSizeH, 0,  GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, (GLsizei)m_reflectionTexSizeW, (GLsizei)m_reflectionTexSizeH, 0,  GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, NULL);
     pglGenerateMipmapEXT(GL_TEXTURE_2D);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, (float[]){1.0f, 0.0f, 0.0f, 1.0f});
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
 
     // Create entire frame buffer
     pglGenFramebuffersEXT(1, &m_entireSceneFBOID);
@@ -726,4 +734,35 @@ void CGridProjector::UpdateRefractionFarPlane()
     CPlane farClipPlane;
     farClipPlane.Set(-refractionLookAt.Normalized(), frustrumPoint);
     m_refractionFarClip = farClipPlane;
+}
+
+void CGridProjector::CreateTerrainTexture()
+{
+	CTerrain* terrain = g_Game->GetWorld()->GetTerrain();
+	u16* terrainHM = terrain->GetHeightMap();
+	int terrainSize = terrain->GetTilesPerSide();
+	m_terrainWorldSize = (float)terrainSize * TERRAIN_TILE_SIZE;
+	LOGWARNING("terrain world size: %i", m_terrainWorldSize);
+	std::vector<u16> terrainData = std::vector<u16>(terrainSize * terrainSize);
+
+	//for (int i = 0; i < terrainSize; i++)
+	//{
+	//	for (int j = 0; j < terrainSize; j++)
+	//	{
+	//		int index = i * terrainSize + j;
+	//		terrainData[index] = terrainHM[index];
+	//	}
+	//}
+
+    glGenTextures(1, &m_terrainID);
+    glBindTexture(GL_TEXTURE_2D, m_terrainID);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, (GLuint)terrainSize, (GLuint)terrainSize, 0, GL_RED, GL_UNSIGNED_SHORT, &terrainHM[0]);
+	//pglGenerateMipmapEXT(GL_TEXTURE_2D);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	terrainHM = 0;
+	delete[] terrainHM;
 }

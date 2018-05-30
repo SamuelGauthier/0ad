@@ -33,9 +33,14 @@ uniform mat4 refractionMVP;
 
 uniform sampler2D entireSceneDepth;
 
+uniform sampler2D terrain;
+uniform float terrainWorldSize;
+uniform float terrainHeightScale;
+
 uniform mat4 MVP;
 uniform mat4 invV;
 uniform mat4 invMVP;
+uniform mat4 projectorMVP;
 
 uniform float screenWidth;
 uniform float screenHeight;
@@ -84,6 +89,7 @@ vec3 LightAttenuation(vec3 color, float depth);
 vec3 WorldPosFromDepth(sampler2D depthTex, vec2 uv);
 vec3 LineLineIntersection(vec3 o1, vec3 d1, vec3 o2, vec3 d2);
 float determinant(mat3 m);
+vec3 GetWorldHeight(vec2 worldXZ);
 
 float waterDepth;
 
@@ -148,48 +154,25 @@ void main()
 	vec4 amb = mix(refractionColor, reflectionColor, F(F0, v, n));
 	//---------------------------------------------------------------------------------------------------------
 
-    vec3 test = texture2D(refractionMapDepth, 0.01*intersectionPos.xz).rgb;
-	//color += amb;
-	/////*
-	//color = amb;
-    ////color = vec4(reflected, 1.0);
-    ////color = amb;
-    float c = F(F0, v, vec3(0,1,0));
-    c = specular;
-	//float c = 1.0;
-    //c = F_val;
-    c = 0.01*waterDepth;
-	color = vec4(c, c, c, 1.0);
+	//vec2 uv = (0.5 * refractionCoords.xy) / refractionCoords.z + 0.5;
+	//vec3 refColor = texture2D(refractionMap, uv).rgb;
+	//color = vec4(refColor, 1.0);
 
-    vec3 test2 = (refractionMVP * vec4(intersectionPos.xyz, 1.0)).rga;
-    test2 = (MVP * vec4(intersectionPos.xyz, 1.0)).rga;
-    //vec2 refrCoords = (0.5 * refractionCoords.xy) / refractionCoords.z + 0.5;
-    vec2 refrCoords = (0.5 * test2.xy) / test2.z + 0.5;
-    vec3 refColor = texture2D(entireSceneDepth, refrCoords).rgb;
-    c = (2.0 * nearPlane) / (farPlane + nearPlane - refColor.x * (farPlane - nearPlane));
-    color = vec4(refColor, 1.0);
-	color = vec4(c, c, c, 1.0);
-    ////color = ambient + specular;
-	//color = vec4(n, 1.0);
-	//color = reflection;
-	//color = amb + specular2;
-	//color = refractionColor;
-	//*/
-	//color = vec4(CalculateHeight(intersectionPos.xz, variation), 1.0);
-	//color = vec4(n, 1.0);
-    //color = vec4(test, 1.0);
-    
-    ////
-    //vec4 farP = MVP * vec4(intersectionPos, 1);
-	//vec2 uv = 0.5 * (farP.xy / farP.w + 1);
-    ////float depth = texture2D(entireSceneDepth, uv).x;
-    //////c = (2.0 * nearPlane) / (farPlane + nearPlane - depth * (farPlane - nearPlane));
-    ////color = vec4(c, c, c, 1.0);
-    //color = vec4(uv, 0.0, 1.0);
-    //color = vec4(texture2D(entireSceneDepth, refrCoords).rgb, 1.0);
-    ////
+	vec4 pst = MVP * vec4(intersectionPos, 1.0);
+	//vec2 uv = (0.5 * pst.xy) / pst.w + 0.5;
+	//vec2 uv = (2 * pst.xy/pst.w) / pst.w + 0.5;
+    float refrShiftUp = 1 / screenHeight;
+	vec2 uv = vec2(0.5 * (pst.x / pst.w + 1), 0.5 * (pst.y / pst.w + 1) + refrShiftUp);
+	vec3 eColor = texture2D(entireSceneDepth, uv).rgb;
+	color = vec4(eColor, 1.0);
+	color = refraction;
 
-	gl_FragColor = color * losMod;
+	float c = normalize(GetWorldHeight(intersectionPos.xz)).y;
+	color = vec4(c,c,c, 1);
+	//color = vec4(normalize(GetWorldHeight(intersectionPos.xz)), 1.0);
+
+	//gl_FragColor = color * losMod;
+	gl_FragColor = color;
 }
 
 vec3 CalculateNormal(vec2 uv, float variation) {
@@ -318,13 +301,9 @@ vec3 ComputeRefraction(vec3 n)
 	vec3 iW = i.xyz/i.w;
 
 	vec4 farP = refractionMVP * vec4(iW, 1);
-	//vec4 farP = refractionMVP * vec4(wavePos + 15*r, 1);
 
     float refrShiftUp = 1 / screenHeight;
 	vec2 uv = vec2(0.5 * (farP.x / farP.w + 1), 0.5 * (farP.y / farP.w + 1) + refrShiftUp);
-    vec3 refractPos = WorldPosFromDepth(refractionMapDepth, uv);
-
-    waterDepth = length(refractPos - intersectionPos);
 
 	//farP = refractionMVP * vec4(intersectionPos, 1);
 	//uv = vec2(0.5 * (farP.x / farP.w + 1), 0.5 * (farP.y / farP.w + 1) + refrShiftUp);
@@ -343,8 +322,27 @@ vec3 ComputeRefraction(vec3 n)
 	//uv = vec2(0.5 * (farP.x / farP.w + 1), 0.5 * (farP.y / farP.w + 1) + refrShiftUp);
 	
     vec3 refraction = texture2D(refractionMap, uv).rgb;
+    refraction = texture2D(refractionMapDepth, uv).rgb;
     float c = (2.0 * nearPlane) / (farPlane + nearPlane - farP.z * (farPlane - nearPlane));
-    refraction = vec3(c,c,c);
+    //refraction = vec3(c,c,c);
+
+	farP = refractionMVP * vec4(wavePos, 1);
+	uv = vec2(0.5 * (farP.x / farP.w + 1), 0.5 * (farP.y / farP.w + 1) + refrShiftUp);
+    vec3 refractPos = WorldPosFromDepth(refractionMapDepth, uv);
+    waterDepth = length(refractPos - intersectionPos);
+	refraction = normalize(refractPos);
+	
+	float d_n = length(wavePos - GetWorldHeight(wavePos.xz));
+	float d_v = waterDepth;//length(refractPos - intersectionPos);
+	float theta_i = acos(dot(normalize(-v), normalize(n)));
+	float theta_t = acos(dot(normalize(r), normalize(-n)));
+	float t_i_t = theta_i / theta_t;
+	float d = t_i_t * d_v + (1 - t_i_t) * d_n;
+
+	vec3 refractionPos = intersectionPos + d * r;
+	farP = refractionMVP * vec4(refractionPos, 1);
+	uv = vec2(0.5 * (farP.x / farP.w + 1), 0.5 * (farP.y / farP.w + 1) + refrShiftUp);
+    refraction = texture2D(refractionMapDepth, uv).rgb;
 
     return refraction;
 }
@@ -391,4 +389,16 @@ float determinant(mat3 m)
         + m[0][0] * (m[1][1] * m[2][2] - m[2][1] * m[1][2])
         - m[1][0] * (m[0][1] * m[2][2] - m[2][1] * m[0][2])
         + m[2][0] * (m[0][1] * m[1][2] - m[1][1] * m[0][2]);
+}
+
+vec3 GetWorldHeight(vec2 worldXZ)
+{
+	vec2 uv = worldXZ/terrainWorldSize;
+
+	float worldHeight = texture2D(terrain, uv).r;
+	//vec2 worldHeight = worldXZ/terrainWorldSize;
+	worldHeight *= 65536;
+	worldHeight /= 92;
+	return vec3(worldXZ.x, worldHeight, worldXZ.y);
+	//return vec3(worldHeight, 0);
 }

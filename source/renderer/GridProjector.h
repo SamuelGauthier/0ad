@@ -75,6 +75,7 @@ private:
     void CreateTextures();
     void UpdateReflectionFarPlane();
     void UpdateRefractionFarPlane();
+	void CreateTerrainTexture();
 
 
 	float m_time;
@@ -109,9 +110,11 @@ private:
     GLuint m_entireSceneFBOID;
     GLuint m_entireSceneDepthBufferID;
     GLuint m_entireSceneID;
+	GLuint m_terrainID;
 
 	int m_reflectionTexSizeW;
     int m_reflectionTexSizeH;
+	int m_terrainWorldSize;
 
     CCamera m_reflectionCam;
     CPlane m_reflectionFarClip;
