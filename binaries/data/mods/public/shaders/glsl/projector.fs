@@ -32,10 +32,15 @@ uniform float refractionFarClipD;
 uniform mat4 refractionMVP; 
 
 uniform sampler2D entireSceneDepth;
+uniform vec3 farClipN;
+uniform float farClipD;
+uniform mat4 fullMVP;
 
 uniform sampler2D terrain;
 uniform float terrainWorldSize;
 uniform float terrainHeightScale;
+uniform float maxTerrainElevation;
+uniform float minTerrainElevation;
 
 uniform mat4 MVP;
 uniform mat4 invV;
@@ -155,12 +160,58 @@ void main()
 	vec4 amb = mix(refractionColor, reflectionColor, F(F0, v, n));
 	//---------------------------------------------------------------------------------------------------------
 
-    vec3 t = intersectionPos / terrainWorldSize;
-    float m = texture2D(terrain, t.xz).r;
+    //vec3 t = intersectionPos / terrainWorldSize;
+	////vec4 t = MVP * vec4(intersectionPos.xyz, 1.0);
+	////t.xyz /= t.w;
+	////t.xyz = (t.xzy + 1) * 0.5;
 
-    float c = m;
-    color = vec4(c,c,c,1.0);
-	//gl_FragColor = color * losMod;
+    ////float m = texture2D(terrain, t.xz).r;
+    ////float m = texture2D(terrain, t.xz).r;
+
+	//vec4 q = MVP * vec4(intersectionPos, 1.0);
+	//q.xyz /= q.w;
+	//vec2 uv = vec2((q.x + 1) * 0.5, (q.z + 1) * 0.5);
+	//uv = t.xz;
+	////vec3 w = GetWorldPosFromDepth(entireSceneDepth, uv);
+	//float w = texture2D(entireSceneDepth, uv).r;
+
+    ////float c =  m;
+	//float c = w;
+    //color = vec4(c,c,c,1.0);
+	//color = vec4(texture2D(entireSceneDepth, uv).rgb, 1.0);
+	//color = vec4(uv, 0.0, 1.0);
+    color = vec4(ComputeRefraction(n, v), 1.0);
+    //color = vec4(ComputeReflection(n).rgb, 1.0);
+	////gl_FragColor = color * losMod;
+
+//---------------------------------------------------------------------------------
+
+    //vec3 wavePos = intersectionPos;
+
+	//vec4 e = vec4(wavePos, 1);
+	//vec4 q = vec4(v, 0);
+	//vec4 s = vec4(farClipN, farClipD);
+
+	//vec4 i = e*Sum(q*s) - q*Sum(e*s);
+	//vec3 iW = i.xyz/i.w;
+
+	//vec4 farP = MVP * vec4(iW, 1);
+
+    //float reflShiftUp = 1 / screenHeight;
+	//vec2 uv = vec2(0.5 * (farP.x / farP.w + 1), 0.5 * (farP.y / farP.w + 1) + reflShiftUp);
+	
+    //vec4 asd = texture2D(entireSceneDepth, uv);
+
+	//color = vec4(asd.rgb, 1.0);
+
+	//vec4 farP = fullMVP * vec4(intersectionPos, 1);
+
+    //float reflShiftUp = 1 / screenHeight;
+	//vec2 uv = vec2(0.5 * (farP.x / farP.w + 1), 0.5 * (farP.y / farP.w + 1) + reflShiftUp);
+	
+    //vec4 asd = texture2D(entireSceneDepth, uv);
+
+	//color = vec4(asd.rgb, 1.0);
 	gl_FragColor = color;
 }
 
@@ -273,9 +324,8 @@ vec4 ComputeReflection(vec3 n)
     //}
 }
 
-// Compute the refraction color
-// The intersection between the far-clip of the refraction camera
-// is used to find the texture coordinates
+// Compute the refraction color, based on the paper from 
+// Wymann "An approximate Image-Space Approach for Interactive Refraction"
 vec3 ComputeRefraction(vec3 n, vec3 v)
 {
     /*
@@ -347,7 +397,8 @@ vec3 ComputeRefraction(vec3 n, vec3 v)
 
     vec3 d_V = K1 - P1;
     vec3 d_N = K2 - P1;
-    vec3 P2 = theta_ratio * d_V + (1 - theta_ratio) * d_N;
+    //vec3 P2 = theta_ratio * d_V + (1 - theta_ratio) * d_N;
+    vec3 P2 = mix(d_N, d_V, theta_ratio);
 
     vec4 I = refractionMVP * vec4(P2, 1.0);
 
@@ -370,7 +421,7 @@ vec3 LightAttenuation(vec3 color, float depth)
 
 vec3 GetPosOnTerrain(vec3 p)
 {
-    vec4 t = MVP * vec4(p, 1.0);
+    vec4 t = fullMVP * vec4(p, 1.0);
     vec2 uv = t.xz/t.w;
     uv = (uv + 1) * 0.5;
     uv.y += 1/screenHeight;
@@ -389,16 +440,14 @@ vec3 GetWorldPosFromDepth(sampler2D depthTex, vec2 uv)
     return homogenousLocation.xyz / homogenousLocation.w;
 }
 
+// Compute the terrain world elevation at a world point (x, z) based on the terrain height map
 vec3 GetWorldHeight(vec2 worldXZ)
 {
 	vec2 uv = worldXZ/terrainWorldSize;
-
-	float worldHeight = texture2D(terrain, uv).r;
-	//vec2 worldHeight = worldXZ/terrainWorldSize;
-	worldHeight *= 65536;
-	worldHeight /= 92;
+	float h = texture2D(terrain, uv).r;
+	// Transform from the [0,1] range to the world range
+	float worldHeight = h * (maxTerrainElevation - minTerrainElevation) + minTerrainElevation;
 	return vec3(worldXZ.x, worldHeight, worldXZ.y);
-	//return vec3(worldHeight, 0);
 }
 
 // From realtimerendering.com/intersections

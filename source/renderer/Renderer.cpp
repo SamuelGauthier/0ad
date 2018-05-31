@@ -1370,13 +1370,35 @@ void CRenderer::RenderRefractions(const CShaderDefines& context, const CBounding
 
 void CRenderer::RenderRefraction(const CShaderDefines& context)
 {
-	PROFILE3_GPU("Render refractions");
+	PROFILE3_GPU("Render entire scene");
 
 	// Save the post-processing framebuffer.
 	GLint fbo;
 	glGetIntegerv(GL_FRAMEBUFFER_BINDING_EXT, &fbo);
 
 	CGridProjector& gp = m->gridProjector;
+
+	//---------------------------------------------------------------------------------
+	// Remember old camera
+	CCamera normalCamera = m_ViewCamera;
+
+
+	float fov = m_ViewCamera.GetFOV();
+	SViewPort vp;
+	vp.m_Height = gp.GetRefractionTexHeight();
+	vp.m_Width = gp.GetRefractionTexWidth();
+	vp.m_X = 0;
+	vp.m_Y = 0;
+	m_ViewCamera.SetViewPort(vp);
+	m_ViewCamera.SetProjection(m_ViewCamera.GetNearPlane(), m_ViewCamera.GetFarPlane(), fov);
+	CMatrix3D scaleMat;
+	scaleMat.SetScaling(m_Height/float(std::max(1, m_Width)), 1.0f, 1.0f);
+	m_ViewCamera.m_ProjMat = scaleMat * m_ViewCamera.m_ProjMat;
+
+	m->SetOpenGLCamera(m_ViewCamera);
+	gp.SetEntireSceneCamera(m_ViewCamera);
+
+	//---------------------------------------------------------------------------------
 
 	// try binding the framebuffer
 	//pglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, wm.m_RefractionFbo);
@@ -1393,6 +1415,10 @@ void CRenderer::RenderRefraction(const CShaderDefines& context)
 	ogl_WarnIfError();
 	RenderTransparentModels(context, CULL_REFRACTIONS, TRANSPARENT_OPAQUE, false);
 	ogl_WarnIfError();
+
+  	// Reset old camera
+  	m_ViewCamera = normalCamera;
+  	m->SetOpenGLCamera(m_ViewCamera);
 
 	// rebind post-processing frambuffer.
 	pglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);

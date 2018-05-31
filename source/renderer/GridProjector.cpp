@@ -471,6 +471,7 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
 	UpdateMatrices();
     UpdateReflectionFarPlane();
 	UpdateRefractionFarPlane();
+	UpdateFarPlane();
 
 	u8* base = m_gridVBVertices->m_Owner->Bind();
 
@@ -516,11 +517,16 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
 	shader->Uniform(str_refractionMVP, m_refractionCam.GetViewProjection());
     shader->Uniform(str_refractionFarClipN, m_refractionFarClip.m_Norm);
     shader->Uniform(str_refractionFarClipD, m_refractionFarClip.m_Dist);
-    shader->BindTexture(str_entireSceneDepth, m_entireSceneID);
+    shader->BindTexture(str_entireSceneDepth, m_entireSceneDepthBufferID);
+	shader->Uniform(str_farClipN, m_farClip.m_Norm);
+	shader->Uniform(str_farClipD, m_farClip.m_Dist);
+	shader->Uniform(str_fullMVP, m_entireSceneCam.GetViewProjection());
 
     shader->BindTexture(str_terrain, m_terrainID);
     shader->Uniform(str_terrainWorldSize, m_terrainWorldSize);
     shader->Uniform(str_terrainHeightScale, HEIGHT_SCALE);
+	shader->Uniform(str_maxTerrainElevation, m_maxTerrainElevation);
+	shader->Uniform(str_minTerrainElevation, m_minTerrainElevation);
     
     shader->BindTexture(str_skyCube, g_Renderer.GetSkyManager()->GetSkyCube());
 
@@ -736,33 +742,60 @@ void CGridProjector::UpdateRefractionFarPlane()
     m_refractionFarClip = farClipPlane;
 }
 
+void CGridProjector::UpdateFarPlane()
+{
+	CCamera camera = g_Renderer.GetViewCamera();
+    CVector3D camPos = camera.GetOrientation().GetTranslation();
+    CVector3D lookAt = camera.GetOrientation().GetIn();
+
+    CVector3D frustrumPoint = camPos + lookAt.Normalized() * camera.GetFarPlane();
+    CPlane farClipPlane;
+    farClipPlane.Set(-lookAt.Normalized(), frustrumPoint);
+    m_farClip = farClipPlane;
+}
+
 void CGridProjector::CreateTerrainTexture()
 {
 	CTerrain* terrain = g_Game->GetWorld()->GetTerrain();
-	u16* terrainHM = terrain->GetHeightMap();
-	int terrainSize = terrain->GetTilesPerSide();
+	int terrainSize = terrain->GetTilesPerSide() - 1;
 	m_terrainWorldSize = (float)terrainSize * TERRAIN_TILE_SIZE;
-	LOGWARNING("terrain world size: %i", m_terrainWorldSize);
-	std::vector<u16> terrainData = std::vector<u16>(terrainSize * terrainSize);
+	std::vector<float> terrainData = std::vector<float>(terrainSize * terrainSize);
 
-	//for (int i = 0; i < terrainSize; i++)
-	//{
-	//	for (int j = 0; j < terrainSize; j++)
-	//	{
-	//		int index = i * terrainSize + j;
-	//		terrainData[index] = terrainHM[index];
-	//	}
-	//}
+	LOGWARNING("terrain world size: %i", m_terrainWorldSize);
+
+	float MIN = std::numeric_limits<float>().max();
+	float MAX = -MIN;
+
+	for (int i = 0; i < terrainSize; i++)
+	{
+		for (int j = 0; j < terrainSize; j++)
+		{
+			int index = j * terrainSize + i;
+			float h = terrain->GetVertexGroundLevel(i, j);
+			terrainData[index] = h;
+			if (h > MAX) MAX = h;
+			if (h < MIN) MIN = h;
+		}
+	}
+
+	for (int i = 0; i < terrainSize; i++)
+	{
+		for (int j = 0; j < terrainSize; j++)
+		{
+			int index = j * terrainSize + i;
+			float h = terrainData[index];
+			terrainData[index] = (h - MIN) * 1 / (MAX - MIN);
+		}
+	}
+
+	m_maxTerrainElevation = MAX;
+	m_minTerrainElevation = MIN;
 
     glGenTextures(1, &m_terrainID);
     glBindTexture(GL_TEXTURE_2D, m_terrainID);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, (GLuint)terrainSize, (GLuint)terrainSize, 0, GL_RED, GL_UNSIGNED_SHORT, &terrainHM[0]);
-	//pglGenerateMipmapEXT(GL_TEXTURE_2D);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, (GLuint)terrainSize, (GLuint)terrainSize, 0, GL_RED, GL_FLOAT, &terrainData[0]);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	terrainHM = 0;
-	delete[] terrainHM;
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 }

@@ -51,6 +51,7 @@ public:
     //void SetReflectionFarClip(CPlane farClippingPlane) { m_reflectionFarClip = farClippingPlane; }
     void SetReflectionCamera(CCamera reflectionCamera) { m_reflectionCam = reflectionCamera; }
     void SetRefractionCamera(CCamera refractionCamera) { m_refractionCam = refractionCamera; }
+    void SetEntireSceneCamera(CCamera entireSceneCamera) { m_entireSceneCam = entireSceneCamera; }
     
     float GetMaxWaterHeight() { return m_water.GetMaxWaterHeight(); }
     float GetMinWaterHeight() { return m_water.GetMinWaterHeight(); }
@@ -75,6 +76,7 @@ private:
     void CreateTextures();
     void UpdateReflectionFarPlane();
     void UpdateRefractionFarPlane();
+	void UpdateFarPlane();
 	void CreateTerrainTexture();
 
 
@@ -116,11 +118,15 @@ private:
     int m_reflectionTexSizeH;
 	int m_terrainWorldSize;
 
+	float m_maxTerrainElevation;
+	float m_minTerrainElevation;
+
     CCamera m_reflectionCam;
     CPlane m_reflectionFarClip;
     CCamera m_refractionCam;
     CPlane m_refractionFarClip;
-
+    CCamera m_entireSceneCam;
+	CPlane m_farClip;
 };
 
 #endif // !INCLUDED_GRIDPROJECTOR
