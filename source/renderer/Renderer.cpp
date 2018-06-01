@@ -1632,8 +1632,8 @@ void CRenderer::RenderSubmissions(const CBoundingBoxAligned& waterScissor)
 		m->skyManager.RenderSky();
 	}
 
-	RenderRefraction(context);
-	ogl_WarnIfError();
+	//RenderRefraction(context);
+	//ogl_WarnIfError();
 
 	// render submitted patches and models
 	RenderPatches(context, cullGroup);

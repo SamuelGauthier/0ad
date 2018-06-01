@@ -72,8 +72,8 @@ double TIME = 3.2;
 CGridProjector::WaterProperties coarseWaves = CGridProjector::WaterProperties(3e-7f, 43, CVector2D(1.0f, 5.0f), 1.0f, 0.1f, 2048, 1000, TIME);
 CGridProjector::WaterProperties mediumWaves = CGridProjector::WaterProperties(6e-7f, 50, CVector2D(4.0f, -1.5f), 5.0f, 0.1f, 2048, 2500, TIME);
 CGridProjector::WaterProperties detailedWaves = CGridProjector::WaterProperties(6e-7f, 30, CVector2D(-1.0f, 1.5f), 1.0f, 0.1f, 2048, 800, TIME);
-//std::vector<CGridProjector::WaterProperties> wps = { coarseWaves, mediumWaves, detailedWaves };
-std::vector<CGridProjector::WaterProperties> wps = { coarseWaves};
+std::vector<CGridProjector::WaterProperties> wps = { coarseWaves, mediumWaves, detailedWaves };
+//std::vector<CGridProjector::WaterProperties> wps = { coarseWaves};
 
 CGridProjector::CGridProjector() : m_water(CFFTWaterModel(wps)), m_gridVBIndices(0), m_gridVBVertices(0)
 {
@@ -497,17 +497,16 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
     shader->Uniform(str_sunColor, lightEnv.m_SunColor);
     
     shader->BindTexture(str_heightMap1, m_heightMapsID.at(0));
-    shader->BindTexture(str_heightMap2, m_heightMapsID.at(0));
-    shader->BindTexture(str_heightMap3, m_heightMapsID.at(0));
+    shader->BindTexture(str_heightMap2, m_heightMapsID.at(1));
+    shader->BindTexture(str_heightMap3, m_heightMapsID.at(2));
 
     shader->BindTexture(str_normalMap1, m_normalMapsID.at(0));
-    shader->BindTexture(str_normalMap2, m_normalMapsID.at(0));
-    shader->BindTexture(str_normalMap3, m_normalMapsID.at(0));
+    shader->BindTexture(str_normalMap2, m_normalMapsID.at(1));
+    shader->BindTexture(str_normalMap3, m_normalMapsID.at(2));
     
     shader->BindTexture(str_variationMap, m_variationMapID);
 
 	shader->BindTexture(str_reflectionMap, m_reflectionID);
-    //shader->BindTexture(str_reflectionMapDepth, m_reflectionDepthBufferID);
     shader->Uniform(str_reflectionMVP, m_reflectionCam.GetViewProjection());
     shader->Uniform(str_reflectionFarClipN, m_reflectionFarClip.m_Norm);
     shader->Uniform(str_reflectionFarClipD, m_reflectionFarClip.m_Dist);
@@ -521,6 +520,7 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
 	shader->Uniform(str_farClipN, m_farClip.m_Norm);
 	shader->Uniform(str_farClipD, m_farClip.m_Dist);
 	shader->Uniform(str_fullMVP, m_entireSceneCam.GetViewProjection());
+	shader->Uniform(str_invFullMVP, m_entireSceneCam.GetViewProjection().GetInverse());
 
     shader->BindTexture(str_terrain, m_terrainID);
     shader->Uniform(str_terrainWorldSize, m_terrainWorldSize);
@@ -617,7 +617,7 @@ void CGridProjector::CreateTextures()
     glBindTexture(GL_TEXTURE_2D, m_reflectionDepthBufferID);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, (GLsizei)m_reflectionTexSizeW, (GLsizei)m_reflectionTexSizeH, 0,  GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, NULL);
     pglGenerateMipmapEXT(GL_TEXTURE_2D);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);//GL_LINEAR_MIPMAP_LINEAR
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
@@ -657,8 +657,8 @@ void CGridProjector::CreateTextures()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-	float color[] = { 1.0f, 0.0f, 0.0f, 1.0f };
-	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
+	//float color[] = { 1.0f, 0.0f, 0.0f, 1.0f };
+	//glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
 
 	// Create refraction frame buffer
 	pglGenFramebuffersEXT(1, &m_refractionFBOID);
@@ -695,7 +695,7 @@ void CGridProjector::CreateTextures()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
+    //glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
 
     // Create entire frame buffer
     pglGenFramebuffersEXT(1, &m_entireSceneFBOID);
@@ -736,9 +736,9 @@ void CGridProjector::UpdateRefractionFarPlane()
     CVector3D refractionCamPos = m_refractionCam.GetOrientation().GetTranslation();
     CVector3D refractionLookAt = m_refractionCam.GetOrientation().GetIn();
 
-    CVector3D frustrumPoint = refractionCamPos + refractionLookAt.Normalized() * m_refractionCam.GetFarPlane();
+    CVector3D frustumPoint = refractionCamPos + refractionLookAt.Normalized() * m_refractionCam.GetFarPlane();
     CPlane farClipPlane;
-    farClipPlane.Set(-refractionLookAt.Normalized(), frustrumPoint);
+    farClipPlane.Set(-refractionLookAt.Normalized(), frustumPoint);
     m_refractionFarClip = farClipPlane;
 }
 
@@ -748,9 +748,9 @@ void CGridProjector::UpdateFarPlane()
     CVector3D camPos = camera.GetOrientation().GetTranslation();
     CVector3D lookAt = camera.GetOrientation().GetIn();
 
-    CVector3D frustrumPoint = camPos + lookAt.Normalized() * camera.GetFarPlane();
+    CVector3D frustumPoint = camPos + lookAt.Normalized() * camera.GetFarPlane();
     CPlane farClipPlane;
-    farClipPlane.Set(-lookAt.Normalized(), frustrumPoint);
+    farClipPlane.Set(-lookAt.Normalized(), frustumPoint);
     m_farClip = farClipPlane;
 }
 
