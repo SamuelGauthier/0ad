@@ -43,6 +43,7 @@ uniform float terrainHeightScale;
 uniform float maxTerrainElevation;
 uniform float minTerrainElevation;
 
+uniform mat4 P;
 uniform mat4 MVP;
 uniform mat4 invV;
 uniform mat4 invMVP;
@@ -115,7 +116,7 @@ void main()
     vec3 normalAttenuation = vec3(0.1, 1, 0.1);
 	vec3 n = normalize(normal);
     n = CalculateNormal(waterCoords.xz, variation);
-    //n = vec3(0, 1, 0);
+    n = vec3(0, 1, 0);
     //n = texture2D(heightMap1, 0.01*waterCoords.xz).rgb;
 
     vec3 l = normalize(sunDir);
@@ -184,8 +185,27 @@ void main()
     
     color = vec4(reflection.rgb, 1.0);
     color = amb + specular2;
+    //color = vec4(1.0, 0.0, 0.0, 1.0);
+    color = vec4(ComputeRefraction(n, v), 1.0);
 
-	gl_FragColor = color * losMod;
+    float kk = gl_FragCoord.z;
+
+    //--------------------------------------------------------------------------
+
+
+    vec4 t = refractionMVP * vec4(intersectionPos, 1.0);
+    vec2 uv = t.xy/t.w;
+    uv = (uv + 1) * 0.5;
+    uv.y += 1/screenHeight;
+
+    float depth = texture2D(refractionMapDepth, uv).r;
+    float z = depth * 2.0 - 1.0;
+    z = ((2.0 * nearPlane * farPlane) / (farPlane + nearPlane - z * (farPlane -
+                    nearPlane)));// / farPlane;
+
+    gl_FragColor = vec4(vec3(z), 1.0);
+    //--------------------------------------------------------------------------
+	//gl_FragColor = color * losMod;
 }
 
 vec3 CalculateNormal(vec2 uv, float variation) {
@@ -347,6 +367,25 @@ vec3 GetWorldPosFromDepth(sampler2D depthTex, vec2 uv)
     vec4 homogenousLocation = invMVP * clipSpaceLocation;
     return homogenousLocation.xyz / homogenousLocation.w;
 }
+
+// From https://www.khronos.org/opengl/wiki/Compute_eye_space_from_window_space
+vec4 CalcEyeFromWindow(vec3 windowSpace)
+{
+    vec4 viewport = vec4();
+    vec2 depthrange = vec2(0, 1);
+
+	vec3 ndcPos;
+	ndcPos.xy = ((2.0 * windowSpace.xy) - (2.0 * viewport.xy)) / (viewport.zw) - 1;
+	ndcPos.z = (2.0 * windowSpace.z - depthrange.x - depthrange.y) /
+    (depthrange.y - depthrange.x);
+
+	vec4 clipPos;
+	clipPos.w = P[3][2] / (ndcPos.z - (P[2][2] / P[2][3]));
+	clipPos.xyz = ndcPos * clipPos.w;
+
+	return invP * clipPos;
+}
+
 
 // Compute the terrain world elevation at a world point (x, z) based on the
 // terrain height map

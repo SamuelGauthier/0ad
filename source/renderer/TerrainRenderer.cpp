@@ -961,9 +961,22 @@ void TerrainRenderer::RenderProjectedWater(const CShaderDefines& context)//, int
     CProjectionSystem* projectionSystem = &g_Renderer.GetProjectionSystem();
 	CShaderDefines defines = context;
     
-    if(!m->projectorShader)
-		m->projectorShader = g_Renderer.GetShaderManager().LoadProgram("glsl/projector", defines);
-    
+    //if(!m->projectorShader)
+	//	m->projectorShader = g_Renderer.GetShaderManager().LoadProgram("glsl/projector", defines);
+    m->projectorShader = g_Renderer.GetShaderManager().LoadProgram("glsl/projector", defines);
+
+	if (!m->projectorShader)
+	{
+		LOGERROR("Failed to load projector shader.\n");
+
+		glDisable(GL_BLEND);
+
+		if(g_Renderer.m_WaterRenderMode == WIREFRAME)
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+		return;
+	}
+
     m->projectorShader->Bind();
      
     projectionSystem->Render(m->projectorShader);

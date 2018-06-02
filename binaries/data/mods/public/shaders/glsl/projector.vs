@@ -106,7 +106,7 @@ void main()
 
     //h *= variation;
 	losCoords = (losMatrix * vec4(intersection.xyz, 1.0)).rg;
-    intersection.xyz += h;
+    //intersection.xyz += h;
 
     intersectionPos = intersection.xyz;
 

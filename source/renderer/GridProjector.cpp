@@ -47,7 +47,6 @@
 #include "renderer/VertexBuffer.h"
 #include "renderer/VertexBufferManager.h"
 
-#define DEBUG_COMPUTE_INTERSECTION 0
 #define DEBUG_UPDATE_MATRICES_CAMERA_INFOS 0
 #define DEBUG_UPDATE_MATRICES_PROJECTOR_INFOS 0
 #define DEBUG_UPDATE_MATRICES_PROJECTED_POINT 0
@@ -61,8 +60,7 @@
 #define DEBUG_RENDER_WORLD_POS 0
 #define DEBUG_COMPUTE_INTERSECTION_MINMAXINTER 0
 #define DEBUG_LEGEND 0
-#define DEBUG_UPDATE_POINTS 0
-#define DEBUG_UPDATE_POINTS_INTERSECT_INFO 0
+#define DEBUG_DISPLAY_PROJECTION_MATRIX 0
 
 
 double TIME = 3.2;
@@ -482,10 +480,25 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
 	LOGWARNING("[W] pos: (%f, %f, %f)", worldPos.X, worldPos.Y, worldPos.Z);
 #endif
 
-	shader->Uniform(str_MVP, g_Renderer.GetViewCamera().GetViewProjection());
-	shader->Uniform(str_invMVP, g_Renderer.GetViewCamera().GetViewProjection().GetInverse());
-    shader->Uniform(str_cameraPos, g_Renderer.GetViewCamera().GetOrientation().GetTranslation());
-    shader->Uniform(str_invV, g_Renderer.GetViewCamera().GetOrientation());
+#if DEBUG_DISPLAY_PROJECTION_MATRIX
+	CMatrix3D p = g_Renderer.GetViewCamera().GetProjection();
+	LOGWARNING("-----------------------------------------------------------------");
+	LOGWARNING("projection matrix:");
+	LOGWARNING("%f %f %f %f", p._11,  p._12, p._13, p._14);
+	LOGWARNING("%f %f %f %f", p._21,  p._22, p._23, p._24);
+	LOGWARNING("%f %f %f %f", p._31,  p._32, p._33, p._34);
+	LOGWARNING("%f %f %f %f", p._41,  p._42, p._43, p._44);
+	LOGWARNING("-----------------------------------------------------------------");
+#endif
+
+	CCamera camera = g_Renderer.GetViewCamera();
+
+	shader->Uniform(str_P, camera.GetProjection());
+	shader->Uniform(str_invP, camera.GetProjection().GetInverse());
+	shader->Uniform(str_MVP, camera.GetViewProjection());
+	shader->Uniform(str_invMVP, camera.GetViewProjection().GetInverse());
+    shader->Uniform(str_cameraPos, camera.GetOrientation().GetTranslation());
+    shader->Uniform(str_invV, camera.GetOrientation());
 	shader->Uniform(str_projectorMVP, m_Mprojector);
 	shader->Uniform(str_waterNormal, m_water.GetWaterBase().m_Norm);
 	shader->Uniform(str_waterD, m_water.GetWaterBase().m_Dist);
@@ -532,8 +545,8 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
 
     shader->Uniform(str_screenWidth, g_Renderer.GetWidth());
     shader->Uniform(str_screenHeight, g_Renderer.GetHeight());
-	shader->Uniform(str_nearPlane, g_Renderer.GetViewCamera().GetNearPlane());
-	shader->Uniform(str_farPlane, g_Renderer.GetViewCamera().GetFarPlane());
+	shader->Uniform(str_nearPlane, camera.GetNearPlane());
+	shader->Uniform(str_farPlane, camera.GetFarPlane());
 
 	CLOSTexture& losTexture = g_Renderer.GetScene().GetLOSTexture();
 	shader->BindTexture(str_losMap, losTexture.GetTextureSmooth());

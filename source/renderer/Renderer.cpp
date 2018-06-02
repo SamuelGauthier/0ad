@@ -1653,6 +1653,7 @@ void CRenderer::RenderSubmissions(const CBoundingBoxAligned& waterScissor)
     // Temp stuff
     //m->terrainRenderer.RenderProjectedWater(context);//, cullGroup);
     //ogl_WarnIfError();
+    ///*
     if (g_Game)
     {
         // render transparent stuff, but only the solid parts that can occlude block water
@@ -1672,6 +1673,7 @@ void CRenderer::RenderSubmissions(const CBoundingBoxAligned& waterScissor)
         RenderTransparentModels(context, cullGroup, TRANSPARENT, false);
         ogl_WarnIfError();
     }
+    //*/
     /*
 	// render water
 	if (m_WaterManager->m_RenderWater && g_Game && waterScissor.GetVolume() > 0)
