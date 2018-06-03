@@ -44,6 +44,7 @@ uniform float maxTerrainElevation;
 uniform float minTerrainElevation;
 
 uniform mat4 P;
+uniform mat4 invP;
 uniform mat4 MVP;
 uniform mat4 invV;
 uniform mat4 invMVP;
@@ -93,11 +94,12 @@ vec4 ComputeReflection(vec3 n);
 vec3 ComputeRefraction(vec3 n, vec3 v);
 float Sum(vec4 t);
 vec3 LightAttenuation(vec3 color, float depth);
-vec3 GetWorldPosFromDepth(sampler2D depthTex, vec2 uv);
+vec3 GetWorldPosFromDepth();
 vec3 LineLineIntersection(vec3 o1, vec3 d1, vec3 o2, vec3 d2);
 float determinant(mat3 m);
 vec3 GetWorldFromHeightMap(vec2 worldXZ);
 vec3 GetPosOnTerrain(vec3 p);
+vec4 CalcEyeFromWindow(vec3 windowSpace);
 
 float waterDepth;
 
@@ -200,10 +202,17 @@ void main()
 
     float depth = texture2D(refractionMapDepth, uv).r;
     float z = depth * 2.0 - 1.0;
-    z = ((2.0 * nearPlane * farPlane) / (farPlane + nearPlane - z * (farPlane -
-                    nearPlane)));// / farPlane;
+    //z = ((2.0 * nearPlane * farPlane) / (farPlane + nearPlane - z * (farPlane -
+    //                nearPlane)));// / farPlane;
+
+
+    //float depth = texture2D(refractionMapDepth, uv).r;
+    vec3 windowSpace = vec3(gl_FragCoord.x, gl_FragCoord.y, depth);
+    vec4 eyePos = CalcEyeFromWindow(windowSpace);
+    vec3 worldPos = vec3(invV * eyePos);
 
     gl_FragColor = vec4(vec3(z), 1.0);
+    gl_FragColor = vec4(ComputeRefraction(n, v), 1.0);
     //--------------------------------------------------------------------------
 	//gl_FragColor = color * losMod;
 }
@@ -312,7 +321,7 @@ vec4 ComputeReflection(vec3 n)
 vec3 ComputeRefraction(vec3 n, vec3 v)
 {
     vec3 P1 = intersectionPos;
-    vec3 K1 = GetPosOnTerrain(P1);
+    vec3 K1 = GetWorldPosFromDepth();
     vec3 K2 = GetWorldFromHeightMap(P1.xz);
 
     vec3 r = refract(v, n, RATIO);
@@ -326,12 +335,14 @@ vec3 ComputeRefraction(vec3 n, vec3 v)
     //vec3 P2 = theta_ratio * d_V + (1 - theta_ratio) * d_N;
     vec3 P2 = mix(d_N, d_V, theta_ratio);
 
-    vec4 I = refractionMVP * vec4(P1, 1.0);
+    vec4 I = refractionMVP * vec4(P2, 1.0);
 
     float refractionShiftUp = 1/screenHeight;
     vec2 uv = vec2(0.5 * (I.x / I.w + 1), 0.5 * (I.y / I.w + 1) +
             refractionShiftUp);
+    //uv = vec2(gl_FragCoord.x/screenWidth, gl_FragCoord.y/screenHeight);
     vec3 refraction = texture2D(refractionMap, uv).rgb;
+    //refraction = vec3(uv, 0.0);
 
     waterDepth = length(d_N);
     return refraction;
@@ -346,32 +357,42 @@ vec3 LightAttenuation(vec3 color, float depth)
     return color * vec3(red, green, blue);
 }
 
-vec3 GetPosOnTerrain(vec3 p)
+vec3 GetWorldPosFromDepth()
 {
-    vec4 t = refractionMVP * vec4(p, 1.0);
-    vec2 uv = t.xy/t.w;
-    uv = (uv + 1) * 0.5;
-    uv.y += 1/screenHeight;
-
-    return GetWorldPosFromDepth(refractionMapDepth, uv);
+    vec2 uv = vec2(gl_FragCoord.x/screenWidth, gl_FragCoord.y/screenHeight);
+    float depth = texture2D(refractionMapDepth, uv).r;
+    vec3 windowSpace = vec3(gl_FragCoord.x, gl_FragCoord.y, depth);
+    vec4 eyePos = CalcEyeFromWindow(windowSpace);
+    vec3 worldPos = vec3(invV * eyePos);
+    return worldPos;
 }
 
-// From https://stackoverflow.com/questions/22360810/
-vec3 GetWorldPosFromDepth(sampler2D depthTex, vec2 uv)
-{
-    vec4 clipSpaceLocation;
-    clipSpaceLocation.xy = uv * 2.0f - 1.0f;
-    clipSpaceLocation.z = texture2D(depthTex, uv).r * 2.0f - 1.0f;
-    clipSpaceLocation.w = 1.0f;
-    //vec4 homogenousLocation = invMVP * clipSpaceLocation;
-    vec4 homogenousLocation = invMVP * clipSpaceLocation;
-    return homogenousLocation.xyz / homogenousLocation.w;
-}
+//vec3 GetPosOnTerrain(vec3 p)
+//{
+//    vec4 t = refractionMVP * vec4(p, 1.0);
+//    vec2 uv = t.xy/t.w;
+//    uv = (uv + 1) * 0.5;
+//    uv.y += 1/screenHeight;
+//
+//    return GetWorldPosFromDepth(refractionMapDepth, uv);
+//}
+//
+//// From https://stackoverflow.com/questions/22360810/
+//vec3 GetWorldPosFromDepth(sampler2D depthTex, vec2 uv)
+//{
+//    vec4 clipSpaceLocation;
+//    clipSpaceLocation.xy = uv * 2.0f - 1.0f;
+//    clipSpaceLocation.z = texture2D(depthTex, uv).r * 2.0f - 1.0f;
+//    clipSpaceLocation.w = 1.0f;
+//    //vec4 homogenousLocation = invMVP * clipSpaceLocation;
+//    vec4 homogenousLocation = invMVP * clipSpaceLocation;
+//    return homogenousLocation.xyz / homogenousLocation.w;
+//}
 
 // From https://www.khronos.org/opengl/wiki/Compute_eye_space_from_window_space
 vec4 CalcEyeFromWindow(vec3 windowSpace)
 {
-    vec4 viewport = vec4();
+    vec4 viewport = vec4(0, 0, screenWidth, screenHeight);
     vec2 depthrange = vec2(0, 1);
 
 	vec3 ndcPos;
