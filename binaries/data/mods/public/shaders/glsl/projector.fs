@@ -54,6 +54,7 @@ uniform float screenWidth;
 uniform float screenHeight;
 uniform float nearPlane;
 uniform float farPlane;
+uniform vec4 unproject;
 
 uniform vec3 ambient;
 uniform vec3 sunDir;
@@ -100,6 +101,7 @@ float determinant(mat3 m);
 vec3 GetWorldFromHeightMap(vec2 worldXZ);
 vec3 GetPosOnTerrain(vec3 p);
 vec4 CalcEyeFromWindow(vec3 windowSpace);
+vec3 CalcPos(vec2 c);
 
 float waterDepth;
 
@@ -190,28 +192,13 @@ void main()
     //color = vec4(1.0, 0.0, 0.0, 1.0);
     color = vec4(ComputeRefraction(n, v), 1.0);
 
+
     float kk = gl_FragCoord.z;
 
     //--------------------------------------------------------------------------
 
 
-    vec4 t = refractionMVP * vec4(intersectionPos, 1.0);
-    vec2 uv = t.xy/t.w;
-    uv = (uv + 1) * 0.5;
-    uv.y += 1/screenHeight;
-
-    float depth = texture2D(refractionMapDepth, uv).r;
-    float z = depth * 2.0 - 1.0;
-    //z = ((2.0 * nearPlane * farPlane) / (farPlane + nearPlane - z * (farPlane -
-    //                nearPlane)));// / farPlane;
-
-
-    //float depth = texture2D(refractionMapDepth, uv).r;
-    vec3 windowSpace = vec3(gl_FragCoord.x, gl_FragCoord.y, depth);
-    vec4 eyePos = CalcEyeFromWindow(windowSpace);
-    vec3 worldPos = vec3(invV * eyePos);
-
-    gl_FragColor = vec4(vec3(z), 1.0);
+    //gl_FragColor = vec4(vec3(z), 1.0);
     gl_FragColor = vec4(ComputeRefraction(n, v), 1.0);
     //--------------------------------------------------------------------------
 	//gl_FragColor = color * losMod;
@@ -360,11 +347,25 @@ vec3 LightAttenuation(vec3 color, float depth)
 vec3 GetWorldPosFromDepth()
 {
     vec2 uv = vec2(gl_FragCoord.x/screenWidth, gl_FragCoord.y/screenHeight);
-    float depth = texture2D(refractionMapDepth, uv).r;
-    vec3 windowSpace = vec3(gl_FragCoord.x, gl_FragCoord.y, depth);
-    vec4 eyePos = CalcEyeFromWindow(windowSpace);
+    //float depth = texture2D(refractionMapDepth, uv).r;
+    //vec3 windowSpace = vec3(gl_FragCoord.x, gl_FragCoord.y, depth);
+    //vec4 eyePos = CalcEyeFromWindow(windowSpace);
+    //vec3 worldPos = vec3(invV * eyePos);
+    vec4 eyePos = vec4(CalcPos(uv), 1.0);
     vec3 worldPos = vec3(invV * eyePos);
     return worldPos;
+}
+
+vec3 CalcPos(vec2 c)
+{
+    float dstored = texture2D(entireSceneDepth, c).r;
+
+    float z_eye = unproject.x * unproject.y / ((unproject.y - unproject.x) *
+            dstored - unproject.y);
+
+    return vec3((2.0*c.x - 1.0) * (-z_eye) / unproject.z * unproject.w,
+                (2.0*c.y - 1.0) * (-z_eye) / unproject.z,
+                z_eye);
 }
 
 //vec3 GetPosOnTerrain(vec3 p)

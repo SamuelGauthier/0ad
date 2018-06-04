@@ -25,6 +25,8 @@
 
 #include "GridProjector.h"
 
+#include <cmath>
+
 #include "graphics/LightEnv.h"
 #include "graphics/LOSTexture.h"
 #include "graphics/Terrain.h"
@@ -547,6 +549,11 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
     shader->Uniform(str_screenHeight, g_Renderer.GetHeight());
 	shader->Uniform(str_nearPlane, camera.GetNearPlane());
 	shader->Uniform(str_farPlane, camera.GetFarPlane());
+	shader->Uniform(str_viewport, g_Renderer.GetWidth(), g_Renderer.GetHeight());
+
+	shader->Uniform(str_unproject, camera.GetNearPlane(), camera.GetFarPlane(),
+                                    std::cos(camera.GetFOV())/std::sin(camera.GetFOV()),
+                                    g_Renderer.GetHeight() / g_Renderer.GetWidth());
 
 	CLOSTexture& losTexture = g_Renderer.GetScene().GetLOSTexture();
 	shader->BindTexture(str_losMap, losTexture.GetTextureSmooth());
