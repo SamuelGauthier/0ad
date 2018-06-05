@@ -3,6 +3,7 @@
 attribute vec4 vertexPosition; 
 
 uniform mat4 MVP;
+uniform mat4 V;
 uniform mat4 projectorMVP;
 uniform mat4 losMatrix;
 uniform vec3 waterNormal;
@@ -39,6 +40,8 @@ varying float timeScale3;
 varying float amplitude1;
 varying float amplitude2;
 varying float amplitude3;
+
+varying vec3 positionCS;
 
 vec4 FindLineSegIntersection(vec4 start, vec4 end);
 float DistanceToPlane(vec4 point);
@@ -110,6 +113,7 @@ void main()
 
     intersectionPos = intersection.xyz;
 
+    positionCS = vec3(V * intersection);
 
     reflectionCoords = (reflectionMVP * vec4(intersectionPos.xyz, 1.0)).rga;
 	refractionCoords = (refractionMVP * vec4(intersectionPos.xyz, 1.0)).rga;

@@ -55,6 +55,8 @@ uniform float screenHeight;
 uniform float nearPlane;
 uniform float farPlane;
 uniform vec4 unproject;
+uniform vec2 viewport;
+uniform vec2 projectionAB;
 
 uniform vec3 ambient;
 uniform vec3 sunDir;
@@ -84,6 +86,8 @@ varying float timeScale3;
 varying float amplitude1;
 varying float amplitude2;
 varying float amplitude3;
+
+varying vec3 positionCS;
 
 vec3 CalculateNormal(vec2 uv, float variation);
 vec3 CalculateHeight(vec2 uv, float variation);
@@ -192,16 +196,32 @@ void main()
     //color = vec4(1.0, 0.0, 0.0, 1.0);
     color = vec4(ComputeRefraction(n, v), 1.0);
 
-
-    float kk = gl_FragCoord.z;
-
     //--------------------------------------------------------------------------
 
 
-    //gl_FragColor = vec4(vec3(z), 1.0);
-    gl_FragColor = vec4(ComputeRefraction(n, v), 1.0);
+    //vec2 uv = vec2(gl_FragCoord.xy/viewport);
+    //float depth = 2.0 * texture2D(refractionMapDepth, uv).r - 1.0;
+    //float linear = (2.0 * nearPlane * farPlane) / (farPlane + nearPlane - depth * (farPlane - nearPlane));
+    //float kkk = linear / farPlane;
+    //gl_FragColor = vec4(vec3(texture2D(refractionMapDepth, uv).r), 1.0);
     //--------------------------------------------------------------------------
+    //
+    vec3 viewRay = vec3(positionCS.xy/positionCS.z, 1.0);
+    vec2 uv = vec2(gl_FragCoord.xy/viewport);
+    float depth = texture2D(refractionMapDepth, uv).r;
+    float linearDepth = projectionAB.x / (depth - projectionAB.y);
+    vec3 positionCS2 = viewRay * linearDepth;
+    vec3 positionWS = vec3(invV * vec4(positionCS2,1.0));
+
+    vec4 I = refractionMVP * vec4(positionWS, 1.0);
+
+    float refractionShiftUp = 1/screenHeight;
+    uv = vec2(0.5 * (I.x / I.w + 1), 0.5 * (I.y / I.w + 1) +
+            refractionShiftUp);
+    vec3 fff = texture2D(refractionMap, uv).rgb;
+    gl_FragColor = vec4(fff, 1.0);
 	//gl_FragColor = color * losMod;
+    gl_FragColor = vec4(ComputeRefraction(n, v), 1.0);
 }
 
 vec3 CalculateNormal(vec2 uv, float variation) {
@@ -312,15 +332,18 @@ vec3 ComputeRefraction(vec3 n, vec3 v)
     vec3 K2 = GetWorldFromHeightMap(P1.xz);
 
     vec3 r = refract(v, n, RATIO);
+    vec3 T1 = r;
 
     float theta_t = acos(dot(-n, r));
     float theta_i = acos(dot(-v, n));
     float theta_ratio = theta_t / theta_i;
 
-    vec3 d_V = K1 - P1;
-    vec3 d_N = K2 - P1;
+    float d_V = length(K1 - P1);
+    float d_N = length(K2 - P1);
     //vec3 P2 = theta_ratio * d_V + (1 - theta_ratio) * d_N;
-    vec3 P2 = mix(d_N, d_V, theta_ratio);
+    float d_tilde = mix(d_N, d_V, theta_ratio);
+    vec3 P2 = P1 + d_V * normalize(K1-P1);
+    //if(true) return vec3(theta_ratio);
 
     vec4 I = refractionMVP * vec4(P2, 1.0);
 
@@ -346,14 +369,25 @@ vec3 LightAttenuation(vec3 color, float depth)
 
 vec3 GetWorldPosFromDepth()
 {
-    vec2 uv = vec2(gl_FragCoord.x/screenWidth, gl_FragCoord.y/screenHeight);
-    //float depth = texture2D(refractionMapDepth, uv).r;
-    //vec3 windowSpace = vec3(gl_FragCoord.x, gl_FragCoord.y, depth);
-    //vec4 eyePos = CalcEyeFromWindow(windowSpace);
+    //vec2 uv = vec2(gl_FragCoord.x/screenWidth, gl_FragCoord.y/screenHeight);
+    ////float depth = texture2D(refractionMapDepth, uv).r;
+    ////vec3 windowSpace = vec3(gl_FragCoord.x, gl_FragCoord.y, depth);
+    ////vec4 eyePos = CalcEyeFromWindow(windowSpace);
+    ////vec3 worldPos = vec3(invV * eyePos);
+    //vec4 eyePos = vec4(CalcPos(uv), 1.0);
     //vec3 worldPos = vec3(invV * eyePos);
-    vec4 eyePos = vec4(CalcPos(uv), 1.0);
-    vec3 worldPos = vec3(invV * eyePos);
-    return worldPos;
+
+    vec3 viewRay = vec3(positionCS.xy/positionCS.z, 1.0);
+
+    vec2 uv = vec2(gl_FragCoord.xy/viewport);
+    float depth = texture2D(refractionMapDepth, uv).r;
+
+    float linearDepth = projectionAB.x / (depth - projectionAB.y);
+
+    vec3 positionCS2 = viewRay * linearDepth;
+    vec3 positionWS = vec3(invV * vec4(positionCS2,1.0));
+
+    return positionWS;
 }
 
 vec3 CalcPos(vec2 c)

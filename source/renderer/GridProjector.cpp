@@ -501,6 +501,7 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
 	shader->Uniform(str_invMVP, camera.GetViewProjection().GetInverse());
     shader->Uniform(str_cameraPos, camera.GetOrientation().GetTranslation());
     shader->Uniform(str_invV, camera.GetOrientation());
+    shader->Uniform(str_V, camera.GetOrientation().GetInverse());
 	shader->Uniform(str_projectorMVP, m_Mprojector);
 	shader->Uniform(str_waterNormal, m_water.GetWaterBase().m_Norm);
 	shader->Uniform(str_waterD, m_water.GetWaterBase().m_Dist);
@@ -545,15 +546,22 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
     
     shader->BindTexture(str_skyCube, g_Renderer.GetSkyManager()->GetSkyCube());
 
+    float nearPlane = camera.GetNearPlane();
+    float farPlane = camera.GetFarPlane();
+
     shader->Uniform(str_screenWidth, g_Renderer.GetWidth());
     shader->Uniform(str_screenHeight, g_Renderer.GetHeight());
-	shader->Uniform(str_nearPlane, camera.GetNearPlane());
-	shader->Uniform(str_farPlane, camera.GetFarPlane());
+	shader->Uniform(str_nearPlane, nearPlane);
+	shader->Uniform(str_farPlane, farPlane);
 	shader->Uniform(str_viewport, g_Renderer.GetWidth(), g_Renderer.GetHeight());
-
-	shader->Uniform(str_unproject, camera.GetNearPlane(), camera.GetFarPlane(),
+	shader->Uniform(str_unproject, nearPlane, farPlane,
                                     std::cos(camera.GetFOV())/std::sin(camera.GetFOV()),
                                     g_Renderer.GetHeight() / g_Renderer.GetWidth());
+
+	float projectionA = farPlane / (farPlane - nearPlane);
+	float projectionB = (-farPlane * nearPlane) / (farPlane - nearPlane);
+
+	shader->Uniform(str_projectionAB, projectionA, projectionB);
 
 	CLOSTexture& losTexture = g_Renderer.GetScene().GetLOSTexture();
 	shader->BindTexture(str_losMap, losTexture.GetTextureSmooth());
