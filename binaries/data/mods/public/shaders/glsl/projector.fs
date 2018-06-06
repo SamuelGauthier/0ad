@@ -124,7 +124,7 @@ void main()
     vec3 normalAttenuation = vec3(0.1, 1, 0.1);
 	vec3 n = normalize(normal);
     n = CalculateNormal(waterCoords.xz, variation);
-    n = vec3(0, 1, 0);
+    //n = vec3(0, 1, 0);
     //n = texture2D(heightMap1, 0.01*waterCoords.xz).rgb;
 
     vec3 l = normalize(sunDir);
@@ -194,7 +194,7 @@ void main()
     color = vec4(reflection.rgb, 1.0);
     color = amb + specular2;
     //color = vec4(1.0, 0.0, 0.0, 1.0);
-    color = vec4(ComputeRefraction(n, v), 1.0);
+    //color = vec4(ComputeRefraction(n, v), 1.0);
 
     //--------------------------------------------------------------------------
 
@@ -206,22 +206,27 @@ void main()
     //gl_FragColor = vec4(vec3(texture2D(refractionMapDepth, uv).r), 1.0);
     //--------------------------------------------------------------------------
     //
-    vec3 viewRay = vec3(positionCS.xy/positionCS.z, 1.0);
-    vec2 uv = vec2(gl_FragCoord.xy/viewport);
-    float depth = texture2D(refractionMapDepth, uv).r;
-    float linearDepth = projectionAB.x / (depth - projectionAB.y);
-    vec3 positionCS2 = viewRay * linearDepth;
-    vec3 positionWS = vec3(invV * vec4(positionCS2,1.0));
+    //vec3 viewRay = vec3(positionCS.xy/positionCS.z, 1.0);
+    //vec2 uv = vec2(gl_FragCoord.xy/viewport);
+    //float depth = texture2D(refractionMapDepth, uv).r;
+    //float linearDepth = projectionAB.x / (depth - projectionAB.y);
+    //vec3 positionCS2 = viewRay * linearDepth;
+    //vec3 positionWS = vec3(invV * vec4(positionCS2,1.0));
 
-    vec4 I = refractionMVP * vec4(positionWS, 1.0);
+    //vec4 I = refractionMVP * vec4(positionWS, 1.0);
 
-    float refractionShiftUp = 1/screenHeight;
-    uv = vec2(0.5 * (I.x / I.w + 1), 0.5 * (I.y / I.w + 1) +
-            refractionShiftUp);
-    vec3 fff = texture2D(refractionMap, uv).rgb;
-    gl_FragColor = vec4(fff, 1.0);
-	//gl_FragColor = color * losMod;
-    gl_FragColor = vec4(ComputeRefraction(n, v), 1.0);
+    //float refractionShiftUp = 1/screenHeight;
+    //uv = vec2(0.5 * (I.x / I.w + 1), 0.5 * (I.y / I.w + 1) +
+    //        refractionShiftUp);
+    //vec3 fff = texture2D(refractionMap, uv).rgb;
+    //gl_FragColor = vec4(fff, 1.0);
+	////gl_FragColor = color * losMod;
+    //gl_FragColor = vec4(ComputeRefraction(n, v), 1.0);
+	//gl_FragColor = vec4(vec3(normalize(GetWorldFromHeightMap(vec2(intersectionPos.xz))).y), 1.0);
+
+	vec3 kkk = GetWorldFromHeightMap(intersectionPos.xz);
+	gl_FragColor = vec4(normalize(kkk), 1.0);
+	///gl_FragColor = color * losMod;
 }
 
 vec3 CalculateNormal(vec2 uv, float variation) {
