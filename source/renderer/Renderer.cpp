@@ -1175,7 +1175,7 @@ void CRenderer::ComputeRefractionCamera(CCamera& camera, const CBoundingBoxAlign
 	// Expand fov slightly since ripples can reflect parts of the scene that
 	// are slightly outside the normal camera view, and we want to avoid any
 	// noticeable edge-filtering artifacts
-	//fov *= 1.2f;
+	fov *= 1.05f;
 
 	camera = m_ViewCamera;
 
@@ -1184,7 +1184,7 @@ void CRenderer::ComputeRefractionCamera(CCamera& camera, const CBoundingBoxAlign
 	// the whole screen despite being rendered into a square, and cover slightly more
 	// of the view so we can see wavy refractions of slightly off-screen objects.
 	camera.UpdateFrustum(scissor);
-	camera.ClipFrustum(CVector4D(0, -1, 0, wm.m_WaterHeight + 0.5f));	// add some to avoid artifacts near steep shores.
+	camera.ClipFrustum(CVector4D(0, -1, 0, wm.m_WaterHeight + 1.5f));	// add some to avoid artifacts near steep shores.
 
 	SViewPort vp;
 	//vp.m_Height = wm.m_RefTextureSize;
@@ -1319,7 +1319,7 @@ void CRenderer::RenderRefractions(const CShaderDefines& context, const CBounding
 
 	ComputeRefractionCamera(m_ViewCamera, scissor);
 
-    CVector4D camPlane(0, -1, 0, wm.m_WaterHeight);// + 2.0f);
+    CVector4D camPlane(0, -1, 0, wm.m_WaterHeight + 2.0f);// + 2.0f);
 	SetObliqueFrustumClipping(m_ViewCamera, camPlane);
 
 	m->SetOpenGLCamera(m_ViewCamera);

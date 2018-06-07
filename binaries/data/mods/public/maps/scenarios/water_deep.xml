@@ -33,8 +33,8 @@
 		</Postproc>
 	</Environment>
 	<Camera>
-		<Position x="30.9768" y="196.306" z="260.09"/>
-		<Rotation angle="0.962367"/>
+		<Position x="143.083" y="168.718" z="263.277"/>
+		<Rotation angle="0.241548"/>
 		<Declination angle="0.610865"/>
 	</Camera>
 	<ScriptSettings><![CDATA[
@@ -50,15 +50,36 @@
   "Nomad": false,
   "PlayerData": [
     {
-      "Civ": "rome"
+      "Civ": "rome",
+      "Resources": {
+        "food": 999999999,
+        "metal": 999999999,
+        "stone": 999999999,
+        "wood": 999999999
+      },
+      "StartingCamera": {
+        "Position": {
+          "x": 174.676,
+          "y": 76.2392,
+          "z": 391.517
+        },
+        "Rotation": {
+          "x": 35,
+          "y": 13.8397,
+          "z": 0.00000131895
+        }
+      }
     },
     {
+      "AI": "petra",
       "Civ": "cart"
     },
     {
+      "AI": "petra",
       "Civ": "gaul"
     },
     {
+      "AI": "petra",
       "Civ": "iber"
     }
   ],
