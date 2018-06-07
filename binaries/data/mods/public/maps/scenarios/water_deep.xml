@@ -33,8 +33,8 @@
 		</Postproc>
 	</Environment>
 	<Camera>
-		<Position x="182.564" y="159.432" z="237.993"/>
-		<Rotation angle="0.747045"/>
+		<Position x="30.9768" y="196.306" z="260.09"/>
+		<Rotation angle="0.962367"/>
 		<Declination angle="0.610865"/>
 	</Camera>
 	<ScriptSettings><![CDATA[
@@ -49,7 +49,6 @@
   "Name": "Water Feature Demo",
   "Nomad": false,
   "PlayerData": [
-    "",
     {
       "Civ": "rome"
     },
@@ -2978,49 +2977,49 @@
 		</Entity>
 		<Entity uid="718">
 			<Template>structures/rome_house</Template>
-			<Player>0</Player>
+			<Player>1</Player>
 			<Position x="235.33274" z="472.16279"/>
 			<Orientation y="2.35621"/>
 			<Actor seed="28194"/>
 		</Entity>
 		<Entity uid="720">
 			<Template>structures/rome_dock</Template>
-			<Player>0</Player>
+			<Player>1</Player>
 			<Position x="153.97428" z="373.33658"/>
 			<Orientation y="-2.76014"/>
 			<Actor seed="43360"/>
 		</Entity>
 		<Entity uid="721">
 			<Template>structures/rome_defense_tower</Template>
-			<Player>0</Player>
+			<Player>1</Player>
 			<Position x="228.94922" z="409.67002"/>
-			<Orientation y="2.35621"/>
+			<Orientation y="-0.76078"/>
 			<Actor seed="34062"/>
 		</Entity>
 		<Entity uid="722">
 			<Template>structures/rome_defense_tower</Template>
-			<Player>0</Player>
+			<Player>1</Player>
 			<Position x="248.14039" z="445.38917"/>
 			<Orientation y="-1.25855"/>
 			<Actor seed="4802"/>
 		</Entity>
 		<Entity uid="723">
 			<Template>structures/rome_defense_tower</Template>
-			<Player>0</Player>
+			<Player>1</Player>
 			<Position x="240.1454" z="499.93091"/>
 			<Orientation y="-2.08123"/>
 			<Actor seed="27682"/>
 		</Entity>
 		<Entity uid="724">
 			<Template>structures/rome_defense_tower</Template>
-			<Player>0</Player>
-			<Position x="145.04184" z="445.20539"/>
+			<Player>1</Player>
+			<Position x="144.83558" z="445.32834"/>
 			<Orientation y="1.58632"/>
 			<Actor seed="31868"/>
 		</Entity>
 		<Entity uid="725">
 			<Template>structures/rome_defense_tower</Template>
-			<Player>0</Player>
+			<Player>1</Player>
 			<Position x="177.01883" z="401.82316"/>
 			<Orientation y="0.816"/>
 			<Actor seed="2656"/>
