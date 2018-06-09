@@ -63,6 +63,7 @@
 #define DEBUG_COMPUTE_INTERSECTION_MINMAXINTER 0
 #define DEBUG_LEGEND 0
 #define DEBUG_DISPLAY_PROJECTION_MATRIX 0
+#define DEBUG_Y_WORLD_POS 1
 
 
 double TIME = 3.2;
@@ -480,6 +481,8 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
 #if DEBUG_RENDER_WORLD_POS
 	CVector3D worldPos = g_Renderer.GetViewCamera().GetWorldCoordinates(512, 384);
 	LOGWARNING("[W] pos: (%f, %f, %f)", worldPos.X, worldPos.Y, worldPos.Z);
+	LOGWARNING("max terrain elevation: %f", m_maxTerrainElevation);
+	LOGWARNING("min terrain elevation: %f", m_minTerrainElevation);
 #endif
 
 #if DEBUG_DISPLAY_PROJECTION_MATRIX
@@ -505,6 +508,7 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
 	shader->Uniform(str_projectorMVP, m_Mprojector);
 	shader->Uniform(str_waterNormal, m_water.GetWaterBase().m_Norm);
 	shader->Uniform(str_waterD, m_water.GetWaterBase().m_Dist);
+	shader->Uniform(str_waterH, m_water.GetWaterHeight());
 	shader->Uniform(str_time, m_time);
     
     const CLightEnv& lightEnv = g_Renderer.GetLightEnv();
@@ -566,6 +570,11 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
 	CLOSTexture& losTexture = g_Renderer.GetScene().GetLOSTexture();
 	shader->BindTexture(str_losMap, losTexture.GetTextureSmooth());
 	shader->Uniform(str_losMatrix, losTexture.GetTextureMatrix());
+
+#if DEBUG_Y_WORLD_POS
+	shader->Uniform(str_screenCenter, camera.GetWorldCoordinates(512, 384));
+	//LOGWARNING("water height %f", m_water.GetWaterHeight());
+#endif
 
 	shader->AssertPointersBound();
 	

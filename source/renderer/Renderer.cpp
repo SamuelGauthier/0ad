@@ -1362,7 +1362,7 @@ void CRenderer::RenderRefractions(const CShaderDefines& context, const CBounding
   	m_ViewCamera = normalCamera;
   	m->SetOpenGLCamera(m_ViewCamera);
 
-	// rebind post-processing frambuffer.
+	// rebind post-processing framebuffer.
 	pglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
 
 	return;
@@ -1395,6 +1395,9 @@ void CRenderer::RenderRefraction(const CShaderDefines& context)
 	scaleMat.SetScaling(m_Height/float(std::max(1, m_Width)), 1.0f, 1.0f);
 	m_ViewCamera.m_ProjMat = scaleMat * m_ViewCamera.m_ProjMat;
 
+	//CVector4D camPlane(0, -1, 0, gp.GetWaterHeight() + 2.0f);// + 2.0f);
+	//SetObliqueFrustumClipping(m_ViewCamera, camPlane);
+
 	m->SetOpenGLCamera(m_ViewCamera);
 	gp.SetEntireSceneCamera(m_ViewCamera);
 
@@ -1420,8 +1423,8 @@ void CRenderer::RenderRefraction(const CShaderDefines& context)
   	m_ViewCamera = normalCamera;
   	m->SetOpenGLCamera(m_ViewCamera);
 
-	// rebind post-processing frambuffer.
-	pglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
+	// rebind post-processing framebuffer.
+	pglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, (GLuint)fbo);
 
 	return;
 }
@@ -1632,8 +1635,8 @@ void CRenderer::RenderSubmissions(const CBoundingBoxAligned& waterScissor)
 		m->skyManager.RenderSky();
 	}
 
-	//RenderRefraction(context);
-	//ogl_WarnIfError();
+	RenderRefraction(context);
+	ogl_WarnIfError();
 
 	// render submitted patches and models
 	RenderPatches(context, cullGroup);
