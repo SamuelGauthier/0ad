@@ -16,8 +16,8 @@
 		<Water>
 			<WaterBody>
 				<Type>ocean</Type>
-				<Color r="0.2" g="0.290196" b="0.486275"/>
-				<Tint r="0.207843" g="0.658824" b="0.921569"/>
+				<Color r="0.2" g="0.286275" b="0.486275"/>
+				<Tint r="0.203922" g="0.658824" b="0.921569"/>
 				<Height>167.791</Height>
 				<Waviness>3</Waviness>
 				<Murkiness>0.72</Murkiness>
@@ -33,20 +33,20 @@
 		</Postproc>
 	</Environment>
 	<Camera>
-		<Position x="758.859" y="450.731" z="114.68"/>
-		<Rotation angle="-0.792675"/>
-		<Declination angle="0.610866"/>
+		<Position x="393.428" y="236.62" z="151.537"/>
+		<Rotation angle="0"/>
+		<Declination angle="0.610865"/>
 	</Camera>
 	<ScriptSettings><![CDATA[
 {
   "AISeed": 0,
   "CircularMap": true,
-  "Description": "Each player starts on an island surrounded by water.\n\nThe Cyclades is an island group in the Aegean Sea, south-east of the mainland of Greece. They are one of the island groups which constitute the Aegean archipelago. The name refers to the islands around  the sacred island of Delos. The Cyclades comprise about 220 islands. The islands are peaks of a submerged mountainous terrain, with the exception of two volcanic islands, Milos and Santorini. The climate is generally dry and mild, but with the exception of Naxos the soil is not very fertile.",
+  "Description": "This is a demonstration map for bachelor thesis \u001cReal-Time Water Rendering\u001d.\n\n\u001eEach player starts on an island surrounded by water.\n\nThe Cyclades is an island group in the Aegean Sea, south-east of the mainland of Greece. They are one of the island groups which constitute the Aegean archipelago. The name refers to the islands around  the sacred island of Delos. The Cyclades comprise about 220 islands. The islands are peaks of a submerged mountainous terrain, with the exception of two volcanic islands, Milos and Santorini. The climate is generally dry and mild, but with the exception of Naxos the soil is not very fertile.",
   "Keywords": [
     "naval"
   ],
   "LockTeams": false,
-  "Name": "Cycladic Archipelago",
+  "Name": "Water Demo  ",
   "Nomad": false,
   "PlayerData": [
     {
@@ -56,15 +56,30 @@
         "metal": 2147483647,
         "stone": 2147483647,
         "wood": 2147483647
+      },
+      "StartingCamera": {
+        "Position": {
+          "x": 393.428,
+          "y": 167.791,
+          "z": 249.835
+        },
+        "Rotation": {
+          "x": 35,
+          "y": 0,
+          "z": 0
+        }
       }
     },
     {
+      "AI": "petra",
       "Civ": "cart"
     },
     {
+      "AI": "petra",
       "Civ": "gaul"
     },
     {
+      "AI": "petra",
       "Civ": "iber"
     }
   ],
@@ -474,175 +489,145 @@
 		<Entity uid="215">
 			<Template>structures/rome_civil_centre</Template>
 			<Player>1</Player>
-			<Position x="231.30808" z="120.30504"/>
+			<Position x="218.72959" z="117.66655"/>
 			<Orientation y="1.61207"/>
 		</Entity>
 		<Entity uid="216">
 			<Template>units/rome_support_female_citizen</Template>
 			<Player>1</Player>
-			<Position x="214.54413" z="111.51471"/>
-			<Orientation y="3.927"/>
+			<Position x="240.84827" z="104.3884"/>
+			<Orientation y="1.58744"/>
 		</Entity>
 		<Entity uid="217">
 			<Template>units/rome_support_female_citizen</Template>
 			<Player>1</Player>
-			<Position x="220.201" z="105.85785"/>
-			<Orientation y="3.927"/>
+			<Position x="240.98142" z="112.3873"/>
+			<Orientation y="1.58744"/>
 		</Entity>
 		<Entity uid="218">
 			<Template>units/rome_support_female_citizen</Template>
 			<Player>1</Player>
-			<Position x="225.85785" z="100.201"/>
-			<Orientation y="3.927"/>
+			<Position x="241.11454" z="120.3862"/>
+			<Orientation y="1.58744"/>
 		</Entity>
 		<Entity uid="219">
 			<Template>units/rome_support_female_citizen</Template>
 			<Player>1</Player>
-			<Position x="231.51471" z="94.54413"/>
-			<Orientation y="3.927"/>
-		</Entity>
-		<Entity uid="220">
-			<Template>units/rome_infantry_swordsman_b</Template>
-			<Player>1</Player>
-			<Position x="259.79902" z="105.85785"/>
-			<Orientation y="2.35621"/>
+			<Position x="241.24778" z="128.38501"/>
+			<Orientation y="1.58744"/>
 		</Entity>
 		<Entity uid="221">
 			<Template>units/rome_infantry_swordsman_b</Template>
 			<Player>1</Player>
-			<Position x="254.14216" z="100.201"/>
-			<Orientation y="2.35621"/>
-		</Entity>
-		<Entity uid="222">
-			<Template>units/rome_infantry_javelinist_b</Template>
-			<Player>1</Player>
-			<Position x="259.79902" z="134.14216"/>
-			<Orientation y="0.78541"/>
-		</Entity>
-		<Entity uid="223">
-			<Template>units/rome_infantry_javelinist_b</Template>
-			<Player>1</Player>
-			<Position x="254.14216" z="139.79902"/>
-			<Orientation y="0.78541"/>
+			<Position x="278.63538" z="112.75808"/>
+			<Orientation y="-7.9658"/>
 		</Entity>
 		<Entity uid="224">
 			<Template>units/rome_cavalry_spearman_b</Template>
 			<Player>1</Player>
-			<Position x="223.02942" z="136.97059"/>
-			<Orientation y="-0.78541"/>
-		</Entity>
-		<Entity uid="225">
-			<Template>gaia/flora_tree_medit_fan_palm</Template>
-			<Player>0</Player>
-			<Position x="275.9422" z="78.47016"/>
-			<Orientation y="-0.28081"/>
-		</Entity>
-		<Entity uid="226">
-			<Template>gaia/flora_tree_medit_fan_palm</Template>
-			<Player>0</Player>
-			<Position x="287.13819" z="84.09681"/>
-			<Orientation y="-2.40593"/>
+			<Position x="270.39975" z="150.13437"/>
+			<Orientation y="-2.54084"/>
 		</Entity>
 		<Entity uid="227">
 			<Template>gaia/geology_metal_mediterranean_slabs</Template>
 			<Player>0</Player>
-			<Position x="218" z="82"/>
-			<Orientation y="-3.29078"/>
+			<Position x="209.85273" z="71.94925"/>
+			<Orientation y="-0.59861"/>
 		</Entity>
 		<Entity uid="228">
 			<Template>gaia/geology_stonemine_medit_quarry</Template>
 			<Player>0</Player>
-			<Position x="198" z="106"/>
-			<Orientation y="-2.77202"/>
+			<Position x="179.3935" z="97.11088"/>
+			<Orientation y="0.94518"/>
 		</Entity>
 		<Entity uid="229">
 			<Template>gaia/flora_bush_berry</Template>
 			<Player>0</Player>
-			<Position x="278.90101" z="142.95051"/>
+			<Position x="181.76471" z="127.15337"/>
 			<Orientation y="1.2424"/>
 		</Entity>
 		<Entity uid="230">
 			<Template>gaia/flora_bush_berry</Template>
 			<Player>0</Player>
-			<Position x="287.97236" z="131.4391"/>
+			<Position x="179.77308" z="122.54532"/>
 			<Orientation y="-1.60338"/>
 		</Entity>
 		<Entity uid="231">
 			<Template>gaia/flora_bush_berry</Template>
 			<Player>0</Player>
-			<Position x="281.71241" z="129.22992"/>
+			<Position x="185.6077" z="118.90638"/>
 			<Orientation y="-4.24161"/>
 		</Entity>
 		<Entity uid="232">
 			<Template>gaia/flora_bush_berry</Template>
 			<Player>0</Player>
-			<Position x="289.13721" z="140.92096"/>
+			<Position x="180.86985" z="115.22762"/>
 			<Orientation y="-3.46796"/>
 		</Entity>
 		<Entity uid="233">
 			<Template>gaia/flora_bush_berry</Template>
 			<Player>0</Player>
-			<Position x="292.36103" z="144.99604"/>
+			<Position x="185.15705" z="131.94928"/>
 			<Orientation y="-2.13724"/>
 		</Entity>
 		<Entity uid="234">
 			<Template>gaia/fauna_chicken</Template>
 			<Player>0</Player>
-			<Position x="256.99677" z="86.58045"/>
+			<Position x="225.08713" z="93.09275"/>
 			<Orientation y="0.90552"/>
 		</Entity>
 		<Entity uid="235">
 			<Template>gaia/fauna_chicken</Template>
 			<Player>0</Player>
-			<Position x="256.21058" z="90.52997"/>
+			<Position x="224.30094" z="97.04227"/>
 			<Orientation y="-0.33288"/>
 		</Entity>
 		<Entity uid="236">
 			<Template>gaia/fauna_chicken</Template>
 			<Player>0</Player>
-			<Position x="260.51203" z="89.18757"/>
+			<Position x="228.60236" z="95.69986"/>
 			<Orientation y="0.47872"/>
 		</Entity>
 		<Entity uid="237">
 			<Template>gaia/fauna_chicken</Template>
 			<Player>0</Player>
-			<Position x="257.43042" z="96.7837"/>
+			<Position x="268.72678" z="123.14509"/>
 			<Orientation y="-4.55504"/>
 		</Entity>
 		<Entity uid="238">
 			<Template>gaia/fauna_chicken</Template>
 			<Player>0</Player>
-			<Position x="252.969" z="87.49738"/>
+			<Position x="221.05936" z="94.00968"/>
 			<Orientation y="-0.83254"/>
 		</Entity>
 		<Entity uid="239">
 			<Template>gaia/fauna_chicken</Template>
 			<Player>0</Player>
-			<Position x="214.78132" z="146.64795"/>
+			<Position x="246.11094" z="163.58536"/>
 			<Orientation y="-3.5443"/>
 		</Entity>
 		<Entity uid="240">
 			<Template>gaia/fauna_chicken</Template>
 			<Player>0</Player>
-			<Position x="223.08338" z="151.32917"/>
+			<Position x="244.17917" z="165.11039"/>
 			<Orientation y="-2.38108"/>
 		</Entity>
 		<Entity uid="241">
 			<Template>gaia/fauna_chicken</Template>
 			<Player>0</Player>
-			<Position x="222.97474" z="146.45002"/>
+			<Position x="244.27274" z="166.1922"/>
 			<Orientation y="-2.6134"/>
 		</Entity>
 		<Entity uid="242">
 			<Template>gaia/fauna_chicken</Template>
 			<Player>0</Player>
-			<Position x="219.41388" z="157.01288"/>
+			<Position x="245.28885" z="167.23588"/>
 			<Orientation y="-0.06551"/>
 		</Entity>
 		<Entity uid="243">
 			<Template>gaia/fauna_chicken</Template>
 			<Player>0</Player>
-			<Position x="218.00385" z="150.956"/>
+			<Position x="240.3311" z="164.43635"/>
 			<Orientation y="-3.96241"/>
 		</Entity>
 		<Entity uid="244">
@@ -1212,19 +1197,19 @@
 		<Entity uid="403">
 			<Template>gaia/flora_tree_aleppo_pine</Template>
 			<Player>0</Player>
-			<Position x="238" z="170"/>
+			<Position x="185.67939" z="147.15665"/>
 			<Orientation y="2.64463"/>
 		</Entity>
 		<Entity uid="404">
 			<Template>gaia/flora_tree_aleppo_pine</Template>
 			<Player>0</Player>
-			<Position x="234" z="170"/>
+			<Position x="226.7014" z="88.21273"/>
 			<Orientation y="0.56363"/>
 		</Entity>
 		<Entity uid="405">
 			<Template>gaia/flora_tree_aleppo_pine</Template>
 			<Player>0</Player>
-			<Position x="226" z="174"/>
+			<Position x="179.06693" z="140.68009"/>
 			<Orientation y="2.04038"/>
 		</Entity>
 		<Entity uid="415">
@@ -1272,67 +1257,67 @@
 		<Entity uid="423">
 			<Template>gaia/flora_tree_aleppo_pine</Template>
 			<Player>0</Player>
-			<Position x="302" z="166"/>
-			<Orientation y="4.66358"/>
+			<Position x="228.55317" z="169.63416"/>
+			<Orientation y="0.4357"/>
 		</Entity>
 		<Entity uid="424">
 			<Template>gaia/flora_tree_aleppo_pine</Template>
 			<Player>0</Player>
-			<Position x="306" z="166"/>
+			<Position x="222.9243" z="163.5257"/>
 			<Orientation y="2.0685"/>
 		</Entity>
 		<Entity uid="425">
 			<Template>gaia/flora_tree_aleppo_pine</Template>
 			<Player>0</Player>
-			<Position x="298" z="166"/>
+			<Position x="221.7975" z="170.37876"/>
 			<Orientation y="3.98673"/>
 		</Entity>
 		<Entity uid="426">
 			<Template>gaia/flora_tree_aleppo_pine</Template>
 			<Player>0</Player>
-			<Position x="166" z="134"/>
+			<Position x="167.88657" z="105.75907"/>
 			<Orientation y="4.07158"/>
 		</Entity>
 		<Entity uid="427">
 			<Template>gaia/flora_tree_aleppo_pine</Template>
 			<Player>0</Player>
-			<Position x="162" z="118"/>
+			<Position x="215.30237" z="173.32822"/>
 			<Orientation y="2.09733"/>
 		</Entity>
 		<Entity uid="428">
 			<Template>gaia/flora_tree_aleppo_pine</Template>
 			<Player>0</Player>
-			<Position x="174" z="142"/>
+			<Position x="171.38663" z="115.2684"/>
 			<Orientation y="4.46534"/>
 		</Entity>
 		<Entity uid="429">
 			<Template>gaia/flora_tree_aleppo_pine</Template>
 			<Player>0</Player>
-			<Position x="166" z="126"/>
+			<Position x="233.46076" z="87.5446"/>
 			<Orientation y="1.9806"/>
 		</Entity>
 		<Entity uid="430">
 			<Template>gaia/flora_tree_aleppo_pine</Template>
 			<Player>0</Player>
-			<Position x="166" z="122"/>
+			<Position x="181.05991" z="83.1833"/>
 			<Orientation y="1.71798"/>
 		</Entity>
 		<Entity uid="431">
 			<Template>gaia/flora_tree_aleppo_pine</Template>
 			<Player>0</Player>
-			<Position x="174" z="130"/>
+			<Position x="173.01047" z="88.92782"/>
 			<Orientation y="0.92602"/>
 		</Entity>
 		<Entity uid="432">
 			<Template>gaia/flora_tree_aleppo_pine</Template>
 			<Player>0</Player>
-			<Position x="170" z="102"/>
+			<Position x="248.68934" z="51.48761"/>
 			<Orientation y="0.62487"/>
 		</Entity>
 		<Entity uid="433">
 			<Template>gaia/flora_tree_aleppo_pine</Template>
 			<Player>0</Player>
-			<Position x="174" z="102"/>
+			<Position x="172.39423" z="95.31238"/>
 			<Orientation y="5.89889"/>
 		</Entity>
 		<Entity uid="434">
@@ -1344,7 +1329,7 @@
 		<Entity uid="435">
 			<Template>gaia/flora_tree_aleppo_pine</Template>
 			<Player>0</Player>
-			<Position x="174" z="94"/>
+			<Position x="251.0084" z="57.9404"/>
 			<Orientation y="0.9343"/>
 		</Entity>
 		<Entity uid="436">
@@ -1356,43 +1341,43 @@
 		<Entity uid="437">
 			<Template>gaia/flora_tree_aleppo_pine</Template>
 			<Player>0</Player>
-			<Position x="298" z="118"/>
+			<Position x="178.05408" z="133.65955"/>
 			<Orientation y="4.48147"/>
 		</Entity>
 		<Entity uid="438">
 			<Template>gaia/flora_tree_aleppo_pine</Template>
 			<Player>0</Player>
-			<Position x="302" z="110"/>
+			<Position x="176.9188" z="119.04581"/>
 			<Orientation y="1.60453"/>
 		</Entity>
 		<Entity uid="439">
 			<Template>gaia/flora_tree_aleppo_pine</Template>
 			<Player>0</Player>
-			<Position x="290" z="114"/>
+			<Position x="186.29563" z="144.47727"/>
 			<Orientation y="4.61995"/>
 		</Entity>
 		<Entity uid="440">
 			<Template>gaia/flora_tree_aleppo_pine</Template>
 			<Player>0</Player>
-			<Position x="294" z="114"/>
+			<Position x="308.5171" z="146.17203"/>
 			<Orientation y="1.61644"/>
 		</Entity>
 		<Entity uid="441">
 			<Template>gaia/flora_tree_aleppo_pine</Template>
 			<Player>0</Player>
-			<Position x="298" z="114"/>
+			<Position x="176.49793" z="128.91028"/>
 			<Orientation y="5.05245"/>
 		</Entity>
 		<Entity uid="442">
 			<Template>gaia/flora_tree_aleppo_pine</Template>
 			<Player>0</Player>
-			<Position x="286" z="106"/>
-			<Orientation y="3.04664"/>
+			<Position x="261.58664" z="178.61716"/>
+			<Orientation y="2.97863"/>
 		</Entity>
 		<Entity uid="443">
 			<Template>gaia/flora_tree_aleppo_pine</Template>
 			<Player>0</Player>
-			<Position x="298" z="110"/>
+			<Position x="171.7928" z="122.04688"/>
 			<Orientation y="2.0408"/>
 		</Entity>
 		<Entity uid="444">
@@ -1698,49 +1683,43 @@
 		<Entity uid="500">
 			<Template>gaia/flora_tree_poplar_lombardy</Template>
 			<Player>0</Player>
-			<Position x="202" z="78"/>
+			<Position x="286.90409" z="98.64225"/>
 			<Orientation y="4.05114"/>
 		</Entity>
 		<Entity uid="501">
 			<Template>gaia/flora_tree_poplar_lombardy</Template>
 			<Player>0</Player>
-			<Position x="206" z="70"/>
+			<Position x="257.47825" z="79.43323"/>
 			<Orientation y="0.92566"/>
 		</Entity>
 		<Entity uid="505">
 			<Template>gaia/flora_tree_poplar_lombardy</Template>
 			<Player>0</Player>
-			<Position x="286" z="174"/>
+			<Position x="298.14173" z="179.08408"/>
 			<Orientation y="3.27135"/>
 		</Entity>
 		<Entity uid="506">
 			<Template>gaia/flora_tree_poplar_lombardy</Template>
 			<Player>0</Player>
-			<Position x="294" z="178"/>
+			<Position x="279.71857" z="173.9279"/>
 			<Orientation y="4.76174"/>
-		</Entity>
-		<Entity uid="507">
-			<Template>gaia/flora_tree_poplar_lombardy</Template>
-			<Player>0</Player>
-			<Position x="290" z="186"/>
-			<Orientation y="4.50034"/>
 		</Entity>
 		<Entity uid="508">
 			<Template>gaia/flora_tree_poplar_lombardy</Template>
 			<Player>0</Player>
-			<Position x="278" z="174"/>
+			<Position x="308.21723" z="167.55713"/>
 			<Orientation y="2.77587"/>
 		</Entity>
 		<Entity uid="509">
 			<Template>gaia/flora_tree_poplar_lombardy</Template>
 			<Player>0</Player>
-			<Position x="274" z="162"/>
-			<Orientation y="1.67995"/>
+			<Position x="284.97425" z="144.48023"/>
+			<Orientation y="1.69283"/>
 		</Entity>
 		<Entity uid="510">
 			<Template>gaia/flora_tree_poplar_lombardy</Template>
 			<Player>0</Player>
-			<Position x="278" z="166"/>
+			<Position x="302.88801" z="174.11066"/>
 			<Orientation y="3.40777"/>
 		</Entity>
 		<Entity uid="511">
@@ -1800,55 +1779,43 @@
 		<Entity uid="523">
 			<Template>gaia/flora_tree_poplar_lombardy</Template>
 			<Player>0</Player>
-			<Position x="186" z="174"/>
+			<Position x="274.12253" z="169.6395"/>
 			<Orientation y="0.9495"/>
 		</Entity>
 		<Entity uid="524">
 			<Template>gaia/flora_tree_poplar_lombardy</Template>
 			<Player>0</Player>
-			<Position x="198" z="158"/>
+			<Position x="286.35114" z="179.84003"/>
 			<Orientation y="1.65767"/>
 		</Entity>
 		<Entity uid="525">
 			<Template>gaia/flora_tree_poplar_lombardy</Template>
 			<Player>0</Player>
-			<Position x="198" z="162"/>
+			<Position x="290.5648" z="152.15485"/>
 			<Orientation y="5.97257"/>
 		</Entity>
 		<Entity uid="526">
 			<Template>gaia/flora_tree_poplar_lombardy</Template>
 			<Player>0</Player>
-			<Position x="202" z="178"/>
+			<Position x="292.08927" z="185.5558"/>
 			<Orientation y="0.16544"/>
-		</Entity>
-		<Entity uid="527">
-			<Template>gaia/flora_tree_poplar_lombardy</Template>
-			<Player>0</Player>
-			<Position x="190" z="174"/>
-			<Orientation y="4.04024"/>
 		</Entity>
 		<Entity uid="528">
 			<Template>gaia/flora_tree_poplar_lombardy</Template>
 			<Player>0</Player>
-			<Position x="302" z="74"/>
+			<Position x="295.12842" z="95.70638"/>
 			<Orientation y="1.52997"/>
-		</Entity>
-		<Entity uid="529">
-			<Template>gaia/flora_tree_poplar_lombardy</Template>
-			<Player>0</Player>
-			<Position x="306" z="74"/>
-			<Orientation y="2.87591"/>
 		</Entity>
 		<Entity uid="530">
 			<Template>gaia/flora_tree_poplar_lombardy</Template>
 			<Player>0</Player>
-			<Position x="286" z="66"/>
+			<Position x="303.17151" z="94.23134"/>
 			<Orientation y="6.16831"/>
 		</Entity>
 		<Entity uid="531">
 			<Template>gaia/flora_tree_poplar_lombardy</Template>
 			<Player>0</Player>
-			<Position x="310" z="78"/>
+			<Position x="311.3011" z="93.41308"/>
 			<Orientation y="2.46232"/>
 		</Entity>
 		<Entity uid="532">
@@ -1918,25 +1885,25 @@
 		<Entity uid="542">
 			<Template>gaia/flora_tree_poplar_lombardy</Template>
 			<Player>0</Player>
-			<Position x="266" z="190"/>
+			<Position x="245.85303" z="84.513"/>
 			<Orientation y="4.13585"/>
 		</Entity>
 		<Entity uid="543">
 			<Template>gaia/flora_tree_poplar_lombardy</Template>
 			<Player>0</Player>
-			<Position x="262" z="178"/>
+			<Position x="297.28214" z="157.93708"/>
 			<Orientation y="2.04162"/>
 		</Entity>
 		<Entity uid="544">
 			<Template>gaia/flora_tree_poplar_lombardy</Template>
 			<Player>0</Player>
-			<Position x="262" z="182"/>
+			<Position x="303.70752" z="163.80948"/>
 			<Orientation y="0.99343"/>
 		</Entity>
 		<Entity uid="545">
 			<Template>gaia/flora_tree_poplar_lombardy</Template>
 			<Player>0</Player>
-			<Position x="258" z="178"/>
+			<Position x="267.85007" z="163.7912"/>
 			<Orientation y="0.18938"/>
 		</Entity>
 		<Entity uid="546">
@@ -2098,13 +2065,13 @@
 		<Entity uid="572">
 			<Template>gaia/flora_tree_euro_beech</Template>
 			<Player>0</Player>
-			<Position x="202" z="134"/>
+			<Position x="285.9687" z="48.00356"/>
 			<Orientation y="3.98186"/>
 		</Entity>
 		<Entity uid="573">
 			<Template>gaia/flora_tree_euro_beech</Template>
 			<Player>0</Player>
-			<Position x="194" z="122"/>
+			<Position x="171.85569" z="108.10524"/>
 			<Orientation y="2.73748"/>
 		</Entity>
 		<Entity uid="574">
@@ -2543,12 +2510,6 @@
 			<Position x="273.7917" z="310.17298"/>
 			<Orientation y="0.2449"/>
 		</Entity>
-		<Entity uid="665">
-			<Template>gaia/fauna_fish</Template>
-			<Player>0</Player>
-			<Position x="326.97681" z="133.68952"/>
-			<Orientation y="-0.3093"/>
-		</Entity>
 		<Entity uid="666">
 			<Template>gaia/fauna_fish</Template>
 			<Player>0</Player>
@@ -2711,12 +2672,6 @@
 			<Position x="540.20502" z="267.01722"/>
 			<Orientation y="-4.54004"/>
 		</Entity>
-		<Entity uid="694">
-			<Template>gaia/fauna_fish</Template>
-			<Player>0</Player>
-			<Position x="590.36664" z="237.82648"/>
-			<Orientation y="-3.70905"/>
-		</Entity>
 		<Entity uid="695">
 			<Template>gaia/fauna_fish</Template>
 			<Player>0</Player>
@@ -2777,41 +2732,11 @@
 			<Position x="510.18354" z="282.05243"/>
 			<Orientation y="-0.4053"/>
 		</Entity>
-		<Entity uid="705">
-			<Template>gaia/fauna_whale_humpback</Template>
-			<Player>0</Player>
-			<Position x="396.74299" z="269.03827"/>
-			<Orientation y="-0.51876"/>
-		</Entity>
 		<Entity uid="706">
 			<Template>gaia/fauna_whale_humpback</Template>
 			<Player>0</Player>
 			<Position x="442.22907" z="719.63093"/>
 			<Orientation y="-0.33701"/>
-		</Entity>
-		<Entity uid="707">
-			<Template>gaia/fauna_whale_humpback</Template>
-			<Player>0</Player>
-			<Position x="402.25922" z="334.42072"/>
-			<Orientation y="1.04787"/>
-		</Entity>
-		<Entity uid="708">
-			<Template>gaia/fauna_whale_humpback</Template>
-			<Player>0</Player>
-			<Position x="651.83307" z="535.38318"/>
-			<Orientation y="-1.01876"/>
-		</Entity>
-		<Entity uid="709">
-			<Template>gaia/fauna_whale_humpback</Template>
-			<Player>0</Player>
-			<Position x="342.48957" z="696.68036"/>
-			<Orientation y="-2.69065"/>
-		</Entity>
-		<Entity uid="710">
-			<Template>gaia/fauna_whale_humpback</Template>
-			<Player>0</Player>
-			<Position x="362.70582" z="742.51661"/>
-			<Orientation y="0.94056"/>
 		</Entity>
 		<Entity uid="711">
 			<Template>gaia/fauna_whale_humpback</Template>
@@ -2819,47 +2744,23 @@
 			<Position x="350.3119" z="258.39258"/>
 			<Orientation y="1.38248"/>
 		</Entity>
-		<Entity uid="712">
-			<Template>gaia/fauna_whale_humpback</Template>
-			<Player>0</Player>
-			<Position x="194.15845" z="426.29316"/>
-			<Orientation y="-4.14382"/>
-		</Entity>
-		<Entity uid="713">
-			<Template>gaia/fauna_whale_humpback</Template>
-			<Player>0</Player>
-			<Position x="621.18726" z="217.55329"/>
-			<Orientation y="0.84163"/>
-		</Entity>
 		<Entity uid="714">
 			<Template>gaia/treasure/shipwreck</Template>
 			<Player>0</Player>
-			<Position x="43.99195" z="264.39838"/>
-			<Orientation y="-2.0315"/>
+			<Position x="80.29029" z="291.40986"/>
+			<Orientation y="-3.16485"/>
 		</Entity>
 		<Entity uid="715">
 			<Template>gaia/treasure/shipwreck</Template>
 			<Player>0</Player>
-			<Position x="417.91346" z="217.02961"/>
+			<Position x="370.60245" z="182.29603"/>
 			<Orientation y="0.59118"/>
-		</Entity>
-		<Entity uid="716">
-			<Template>gaia/treasure/shipwreck</Template>
-			<Player>0</Player>
-			<Position x="352.82123" z="102.16413"/>
-			<Orientation y="0.54291"/>
-		</Entity>
-		<Entity uid="718">
-			<Template>gaia/treasure/shipwreck</Template>
-			<Player>0</Player>
-			<Position x="262.52576" z="59.14283"/>
-			<Orientation y="-4.456"/>
 		</Entity>
 		<Entity uid="719">
 			<Template>gaia/treasure/shipwreck</Template>
 			<Player>0</Player>
-			<Position x="321.10962" z="275.42951"/>
-			<Orientation y="-4.38353"/>
+			<Position x="281.22236" z="219.74445"/>
+			<Orientation y="-6.23644"/>
 		</Entity>
 		<Entity uid="720">
 			<Template>gaia/treasure/shipwreck_debris</Template>
@@ -2879,29 +2780,11 @@
 			<Position x="476.04175" z="737.94111"/>
 			<Orientation y="-0.39708"/>
 		</Entity>
-		<Entity uid="723">
-			<Template>gaia/treasure/shipwreck_debris</Template>
-			<Player>0</Player>
-			<Position x="321.99158" z="209.59321"/>
-			<Orientation y="-1.63253"/>
-		</Entity>
 		<Entity uid="724">
 			<Template>gaia/treasure/shipwreck_debris</Template>
 			<Player>0</Player>
 			<Position x="323.40638" z="200.32154"/>
 			<Orientation y="-3.83953"/>
-		</Entity>
-		<Entity uid="725">
-			<Template>gaia/treasure/shipwreck_debris</Template>
-			<Player>0</Player>
-			<Position x="375.11646" z="318.87964"/>
-			<Orientation y="-0.68506"/>
-		</Entity>
-		<Entity uid="726">
-			<Template>gaia/treasure/shipwreck_debris</Template>
-			<Player>0</Player>
-			<Position x="382.66285" z="307.01557"/>
-			<Orientation y="-1.36602"/>
 		</Entity>
 		<Entity uid="727">
 			<Template>gaia/treasure/shipwreck_debris</Template>
@@ -2914,6 +2797,944 @@
 			<Player>0</Player>
 			<Position x="139.62006" z="494.76581"/>
 			<Orientation y="-4.61979"/>
+		</Entity>
+		<Entity uid="730">
+			<Template>structures/rome_defense_tower</Template>
+			<Player>1</Player>
+			<Position x="323.37687" z="145.32453"/>
+			<Orientation y="4.69204"/>
+			<Actor seed="19278"/>
+		</Entity>
+		<Entity uid="731">
+			<Template>structures/rome_defense_tower</Template>
+			<Player>1</Player>
+			<Position x="391.00736" z="273.36054"/>
+			<Orientation y="4.44175"/>
+			<Actor seed="14526"/>
+		</Entity>
+		<Entity uid="732">
+			<Template>structures/rome_defense_tower</Template>
+			<Player>1</Player>
+			<Position x="333.80356" z="229.88944"/>
+			<Orientation y="1.96404"/>
+			<Actor seed="19245"/>
+		</Entity>
+		<Entity uid="733">
+			<Template>structures/rome_defense_tower</Template>
+			<Player>1</Player>
+			<Position x="362.21885" z="167.98887"/>
+			<Orientation y="4.58544"/>
+			<Actor seed="9363"/>
+		</Entity>
+		<Entity uid="734">
+			<Template>structures/rome_defense_tower</Template>
+			<Player>1</Player>
+			<Position x="350.96421" z="109.24431"/>
+			<Orientation y="3.5637"/>
+			<Actor seed="43370"/>
+		</Entity>
+		<Entity uid="735">
+			<Template>structures/rome_defense_tower</Template>
+			<Player>1</Player>
+			<Position x="322.0716" z="105.23893"/>
+			<Orientation y="-0.9465"/>
+			<Actor seed="64555"/>
+		</Entity>
+		<Entity uid="736">
+			<Template>structures/rome_defense_tower</Template>
+			<Player>1</Player>
+			<Position x="322.30182" z="65.72783"/>
+			<Orientation y="-2.434"/>
+			<Actor seed="30936"/>
+		</Entity>
+		<Entity uid="737">
+			<Template>structures/rome_defense_tower</Template>
+			<Player>1</Player>
+			<Position x="306.68641" z="41.47672"/>
+			<Orientation y="5.86246"/>
+			<Actor seed="6204"/>
+		</Entity>
+		<Entity uid="738">
+			<Template>structures/rome_defense_tower</Template>
+			<Player>1</Player>
+			<Position x="277.61576" z="37.87897"/>
+			<Orientation y="-0.02233"/>
+			<Actor seed="62064"/>
+		</Entity>
+		<Entity uid="740">
+			<Template>structures/rome_defense_tower</Template>
+			<Player>1</Player>
+			<Position x="319.48179" z="186.34195"/>
+			<Orientation y="4.18671"/>
+			<Actor seed="35982"/>
+		</Entity>
+		<Entity uid="741">
+			<Template>structures/rome_defense_tower</Template>
+			<Player>1</Player>
+			<Position x="309.08399" z="196.06171"/>
+			<Orientation y="3.20572"/>
+			<Actor seed="46822"/>
+		</Entity>
+		<Entity uid="742">
+			<Template>structures/rome_defense_tower</Template>
+			<Player>1</Player>
+			<Position x="267.33173" z="194.87446"/>
+			<Orientation y="3.00943"/>
+			<Actor seed="1989"/>
+		</Entity>
+		<Entity uid="743">
+			<Template>structures/rome_defense_tower</Template>
+			<Player>1</Player>
+			<Position x="226.79075" z="187.02381"/>
+			<Orientation y="2.77839"/>
+			<Actor seed="54156"/>
+		</Entity>
+		<Entity uid="744">
+			<Template>structures/rome_defense_tower</Template>
+			<Player>1</Player>
+			<Position x="186.30695" z="177.02964"/>
+			<Orientation y="2.35621"/>
+			<Actor seed="63350"/>
+		</Entity>
+		<Entity uid="745">
+			<Template>structures/rome_fortress</Template>
+			<Player>1</Player>
+			<Position x="205.13495" z="158.14362"/>
+			<Orientation y="2.0078"/>
+			<Actor seed="39141"/>
+		</Entity>
+		<Entity uid="746">
+			<Template>structures/rome_dock</Template>
+			<Player>1</Player>
+			<Position x="378.50348" z="243.20151"/>
+			<Orientation y="2.35621"/>
+			<Actor seed="32948"/>
+		</Entity>
+		<Entity uid="747">
+			<Template>structures/rome_range</Template>
+			<Player>1</Player>
+			<Position x="232.88593" z="66.87916"/>
+			<Orientation y="2.12276"/>
+			<Actor seed="23590"/>
+		</Entity>
+		<Entity uid="748">
+			<Template>structures/rome_market</Template>
+			<Player>1</Player>
+			<Position x="267.0063" z="59.64541"/>
+			<Orientation y="0.11344"/>
+			<Actor seed="25973"/>
+		</Entity>
+		<Entity uid="750">
+			<Template>structures/rome_house</Template>
+			<Player>1</Player>
+			<Position x="306.18186" z="131.15961"/>
+			<Orientation y="4.61457"/>
+			<Actor seed="45554"/>
+		</Entity>
+		<Entity uid="752">
+			<Template>structures/rome_house</Template>
+			<Player>1</Player>
+			<Position x="290.62186" z="112.54395"/>
+			<Orientation y="1.44195"/>
+			<Actor seed="34195"/>
+		</Entity>
+		<Entity uid="754">
+			<Template>structures/rome_house</Template>
+			<Player>1</Player>
+			<Position x="289.49415" z="130.25623"/>
+			<Orientation y="-3.2803"/>
+			<Actor seed="9911"/>
+		</Entity>
+		<Entity uid="755">
+			<Template>structures/rome_house</Template>
+			<Player>1</Player>
+			<Position x="308.39316" z="111.84177"/>
+			<Orientation y="3.03502"/>
+			<Actor seed="26217"/>
+		</Entity>
+		<Entity uid="757">
+			<Template>structures/rome_house</Template>
+			<Player>1</Player>
+			<Position x="302.38254" z="59.99891"/>
+			<Orientation y="6.37195"/>
+			<Actor seed="40050"/>
+		</Entity>
+		<Entity uid="758">
+			<Template>structures/rome_stable</Template>
+			<Player>1</Player>
+			<Position x="244.09592" z="171.28257"/>
+			<Orientation y="2.91733"/>
+			<Actor seed="65121"/>
+		</Entity>
+		<Entity uid="759">
+			<Template>structures/rome_storehouse</Template>
+			<Player>1</Player>
+			<Position x="212.59293" z="85.22823"/>
+			<Orientation y="2.35621"/>
+			<Actor seed="24918"/>
+		</Entity>
+		<Entity uid="760">
+			<Template>structures/rome_temple</Template>
+			<Player>1</Player>
+			<Position x="286.32963" z="163.58915"/>
+			<Orientation y="3.9646"/>
+			<Actor seed="42633"/>
+		</Entity>
+		<Entity uid="761">
+			<Template>structures/rome_wall_gate</Template>
+			<Player>1</Player>
+			<Position x="320.15592" z="84.207"/>
+			<Orientation y="-1.59533"/>
+			<Actor seed="11945"/>
+		</Entity>
+		<Entity uid="762">
+			<Template>structures/rome_wall_medium</Template>
+			<Player>1</Player>
+			<Position x="313.98993" z="53.1741"/>
+			<Orientation y="2.17197"/>
+			<Actor seed="52249"/>
+		</Entity>
+		<Entity uid="763">
+			<Template>structures/rome_wall_medium</Template>
+			<Player>1</Player>
+			<Position x="292.34842" z="38.55259"/>
+			<Orientation y="3.02796"/>
+			<Actor seed="54746"/>
+		</Entity>
+		<Entity uid="777">
+			<Template>structures/rome_wall_short</Template>
+			<Player>0</Player>
+			<Position x="315.04236" z="191.97416"/>
+			<Orientation y="3.86907"/>
+			<Actor seed="43542"/>
+		</Entity>
+		<Entity uid="788">
+			<Template>structures/rome_defense_tower</Template>
+			<Player>1</Player>
+			<Position x="239.56095" z="41.25402"/>
+			<Orientation y="0.26276"/>
+			<Actor seed="31530"/>
+		</Entity>
+		<Entity uid="789">
+			<Template>structures/rome_wall_long</Template>
+			<Player>0</Player>
+			<Position x="227.47034" z="39.26371"/>
+			<Orientation y="2.35621"/>
+			<Actor seed="57306"/>
+		</Entity>
+		<Entity uid="790">
+			<Template>structures/rome_wall_long</Template>
+			<Player>1</Player>
+			<Position x="287.9704" z="196.02192"/>
+			<Orientation y="3.10685"/>
+			<Actor seed="10341"/>
+		</Entity>
+		<Entity uid="791">
+			<Template>structures/rome_wall_long</Template>
+			<Player>1</Player>
+			<Position x="246.68625" z="191.91892"/>
+			<Orientation y="2.94425"/>
+			<Actor seed="59929"/>
+		</Entity>
+		<Entity uid="792">
+			<Template>structures/rome_defense_tower</Template>
+			<Player>1</Player>
+			<Position x="168.8122" z="82.33202"/>
+			<Orientation y="0.66153"/>
+			<Actor seed="65483"/>
+		</Entity>
+		<Entity uid="793">
+			<Template>structures/rome_defense_tower</Template>
+			<Player>1</Player>
+			<Position x="202.85499" z="59.12537"/>
+			<Orientation y="0.59163"/>
+			<Actor seed="16534"/>
+		</Entity>
+		<Entity uid="798">
+			<Template>structures/rome_wall_medium</Template>
+			<Player>1</Player>
+			<Position x="159.7681" z="92.8134"/>
+			<Orientation y="4.06388"/>
+			<Actor seed="6988"/>
+		</Entity>
+		<Entity uid="799">
+			<Template>structures/rome_wall_long</Template>
+			<Player>1</Player>
+			<Position x="323.08948" z="124.65964"/>
+			<Orientation y="1.5892"/>
+			<Actor seed="38527"/>
+		</Entity>
+		<Entity uid="800">
+			<Template>structures/rome_wall_long</Template>
+			<Player>1</Player>
+			<Position x="321.91764" z="165.60853"/>
+			<Orientation y="1.48647"/>
+			<Actor seed="12246"/>
+		</Entity>
+		<Entity uid="801">
+			<Template>structures/rome_wall_long</Template>
+			<Player>1</Player>
+			<Position x="206.10914" z="182.41037"/>
+			<Orientation y="-3.41938"/>
+			<Actor seed="14466"/>
+		</Entity>
+		<Entity uid="802">
+			<Template>structures/rome_wall_long</Template>
+			<Player>1</Player>
+			<Position x="158.09198" z="123.04642"/>
+			<Orientation y="1.87851"/>
+			<Actor seed="57515"/>
+		</Entity>
+		<Entity uid="804">
+			<Template>structures/rome_wall_long</Template>
+			<Player>1</Player>
+			<Position x="221.0503" z="49.42327"/>
+			<Orientation y="3.60526"/>
+			<Actor seed="43882"/>
+		</Entity>
+		<Entity uid="805">
+			<Template>structures/rome_wall_long</Template>
+			<Player>1</Player>
+			<Position x="185.70344" z="70.8879"/>
+			<Orientation y="3.7308"/>
+			<Actor seed="33365"/>
+		</Entity>
+		<Entity uid="806">
+			<Template>structures/rome_wall_long</Template>
+			<Player>1</Player>
+			<Position x="258.77308" z="38.855"/>
+			<Orientation y="3.22133"/>
+			<Actor seed="12709"/>
+		</Entity>
+		<Entity uid="807">
+			<Template>structures/rome_wall_long</Template>
+			<Player>1</Player>
+			<Position x="175.38767" z="159.34137"/>
+			<Orientation y="2.04175"/>
+			<Actor seed="57490"/>
+		</Entity>
+		<Entity uid="808">
+			<Template>structures/rome_defense_tower</Template>
+			<Player>1</Player>
+			<Position x="165.51496" z="141.34253"/>
+			<Orientation y="1.95838"/>
+			<Actor seed="36450"/>
+		</Entity>
+		<Entity uid="809">
+			<Template>structures/rome_defense_tower</Template>
+			<Player>1</Player>
+			<Position x="153.11121" z="103.8261"/>
+			<Orientation y="1.539"/>
+			<Actor seed="36452"/>
+		</Entity>
+		<Entity uid="812">
+			<Template>gaia/flora_tree_poplar_lombardy</Template>
+			<Player>0</Player>
+			<Position x="341.45484" z="171.36396"/>
+			<Orientation y="2.35621"/>
+			<Actor seed="39635"/>
+		</Entity>
+		<Entity uid="823">
+			<Template>gaia/flora_tree_poplar_lombardy</Template>
+			<Player>0</Player>
+			<Position x="352.53766" z="169.28354"/>
+			<Orientation y="2.35621"/>
+			<Actor seed="4669"/>
+		</Entity>
+		<Entity uid="827">
+			<Template>gaia/flora_tree_poplar_lombardy</Template>
+			<Player>0</Player>
+			<Position x="358.71698" z="210.27527"/>
+			<Orientation y="2.35621"/>
+			<Actor seed="10805"/>
+		</Entity>
+		<Entity uid="829">
+			<Template>gaia/flora_tree_poplar_lombardy</Template>
+			<Player>0</Player>
+			<Position x="340.53443" z="212.91929"/>
+			<Orientation y="2.35621"/>
+			<Actor seed="54288"/>
+		</Entity>
+		<Entity uid="830">
+			<Template>gaia/flora_tree_poplar_lombardy</Template>
+			<Player>0</Player>
+			<Position x="350.67978" z="119.52356"/>
+			<Orientation y="2.35621"/>
+			<Actor seed="48016"/>
+		</Entity>
+		<Entity uid="833">
+			<Template>gaia/flora_tree_poplar_lombardy</Template>
+			<Player>0</Player>
+			<Position x="338.77848" z="122.13619"/>
+			<Orientation y="2.35621"/>
+			<Actor seed="24903"/>
+		</Entity>
+		<Entity uid="834">
+			<Template>gaia/treasure/food_persian_big</Template>
+			<Player>0</Player>
+			<Position x="286.97245" z="50.82537"/>
+			<Orientation y="2.35621"/>
+			<Actor seed="65395"/>
+		</Entity>
+		<Entity uid="835">
+			<Template>gaia/treasure/food_jars</Template>
+			<Player>0</Player>
+			<Position x="287.37095" z="61.29171"/>
+			<Orientation y="2.35621"/>
+			<Actor seed="37286"/>
+		</Entity>
+		<Entity uid="836">
+			<Template>gaia/treasure/food_jars</Template>
+			<Player>0</Player>
+			<Position x="251.62735" z="78.15644"/>
+			<Orientation y="2.35621"/>
+			<Actor seed="34474"/>
+		</Entity>
+		<Entity uid="841">
+			<Template>gaia/flora_tree_poplar_lombardy</Template>
+			<Player>0</Player>
+			<Position x="238.98075" z="94.98563"/>
+			<Orientation y="2.35621"/>
+			<Actor seed="34912"/>
+		</Entity>
+		<Entity uid="843">
+			<Template>gaia/ruins/stone_statues_roman</Template>
+			<Player>1</Player>
+			<Position x="188.73127" z="79.67345"/>
+			<Orientation y="0.80904"/>
+			<Actor seed="8293"/>
+		</Entity>
+		<Entity uid="850">
+			<Template>gaia/ruins/stone_statues_roman</Template>
+			<Player>0</Player>
+			<Position x="261.59974" z="115.61055"/>
+			<Orientation y="4.71145"/>
+			<Actor seed="62118"/>
+		</Entity>
+		<Entity uid="851">
+			<Template>gaia/ruins/stone_statues_roman</Template>
+			<Player>1</Player>
+			<Position x="227.67402" z="163.68833"/>
+			<Orientation y="2.54552"/>
+			<Actor seed="10476"/>
+		</Entity>
+		<Entity uid="853">
+			<Template>other/bench</Template>
+			<Player>0</Player>
+			<Position x="280.76676" z="126.90964"/>
+			<Orientation y="2.35621"/>
+			<Actor seed="64125"/>
+		</Entity>
+		<Entity uid="854">
+			<Template>other/bench</Template>
+			<Player>0</Player>
+			<Position x="303.72608" z="141.42408"/>
+			<Orientation y="2.35621"/>
+			<Actor seed="51796"/>
+		</Entity>
+		<Entity uid="855">
+			<Template>other/bench</Template>
+			<Player>0</Player>
+			<Position x="264.99476" z="176.15091"/>
+			<Orientation y="2.35621"/>
+			<Actor seed="50688"/>
+		</Entity>
+		<Entity uid="856">
+			<Template>other/bench</Template>
+			<Player>0</Player>
+			<Position x="190.9195" z="81.76281"/>
+			<Orientation y="2.2274"/>
+			<Actor seed="6944"/>
+		</Entity>
+		<Entity uid="858">
+			<Template>units/rome_legionnaire_marian</Template>
+			<Player>1</Player>
+			<Position x="227.83497" z="158.88395"/>
+			<Orientation y="2.09798"/>
+			<Actor seed="48236"/>
+		</Entity>
+		<Entity uid="859">
+			<Template>units/rome_legionnaire_marian</Template>
+			<Player>1</Player>
+			<Position x="228.64521" z="151.37061"/>
+			<Orientation y="2.27343"/>
+			<Actor seed="26687"/>
+		</Entity>
+		<Entity uid="860">
+			<Template>units/rome_legionnaire_marian</Template>
+			<Player>1</Player>
+			<Position x="220.85148" z="139.19495"/>
+			<Orientation y="1.97309"/>
+			<Actor seed="25317"/>
+		</Entity>
+		<Entity uid="861">
+			<Template>units/rome_legionnaire_marian</Template>
+			<Player>1</Player>
+			<Position x="222.71073" z="143.72745"/>
+			<Orientation y="2.13344"/>
+			<Actor seed="21930"/>
+		</Entity>
+		<Entity uid="862">
+			<Template>units/rome_legionnaire_marian</Template>
+			<Player>1</Player>
+			<Position x="224.97101" z="153.04371"/>
+			<Orientation y="2.00777"/>
+			<Actor seed="5606"/>
+		</Entity>
+		<Entity uid="863">
+			<Template>units/rome_legionnaire_marian</Template>
+			<Player>1</Player>
+			<Position x="227.63651" z="153.65934"/>
+			<Orientation y="2.32764"/>
+			<Actor seed="21456"/>
+		</Entity>
+		<Entity uid="864">
+			<Template>units/rome_legionnaire_marian</Template>
+			<Player>1</Player>
+			<Position x="225.76001" z="154.66929"/>
+			<Orientation y="-4.19713"/>
+			<Actor seed="1655"/>
+		</Entity>
+		<Entity uid="866">
+			<Template>units/rome_legionnaire_marian</Template>
+			<Player>1</Player>
+			<Position x="226.98258" z="157.36646"/>
+			<Orientation y="1.86158"/>
+			<Actor seed="20855"/>
+		</Entity>
+		<Entity uid="867">
+			<Template>units/rome_legionnaire_marian</Template>
+			<Player>1</Player>
+			<Position x="226.54493" z="156.18046"/>
+			<Orientation y="2.2196"/>
+			<Actor seed="15385"/>
+		</Entity>
+		<Entity uid="868">
+			<Template>units/rome_legionnaire_marian</Template>
+			<Player>1</Player>
+			<Position x="222.89777" z="145.48661"/>
+			<Orientation y="2.0842"/>
+			<Actor seed="56957"/>
+		</Entity>
+		<Entity uid="870">
+			<Template>units/rome_legionnaire_marian</Template>
+			<Player>1</Player>
+			<Position x="220.61176" z="144.4781"/>
+			<Orientation y="1.93403"/>
+			<Actor seed="7400"/>
+		</Entity>
+		<Entity uid="871">
+			<Template>units/rome_legionnaire_marian</Template>
+			<Player>1</Player>
+			<Position x="221.52533" z="140.65024"/>
+			<Orientation y="-4.32183"/>
+			<Actor seed="23588"/>
+		</Entity>
+		<Entity uid="872">
+			<Template>units/rome_legionnaire_marian</Template>
+			<Player>1</Player>
+			<Position x="219.04938" z="139.8408"/>
+			<Orientation y="-4.22036"/>
+			<Actor seed="9976"/>
+		</Entity>
+		<Entity uid="873">
+			<Template>units/rome_legionnaire_marian</Template>
+			<Player>1</Player>
+			<Position x="222.1728" z="142.16626"/>
+			<Orientation y="-4.32261"/>
+			<Actor seed="49532"/>
+		</Entity>
+		<Entity uid="875">
+			<Template>units/rome_legionnaire_marian</Template>
+			<Player>1</Player>
+			<Position x="220.45286" z="142.76038"/>
+			<Orientation y="1.86075"/>
+			<Actor seed="44350"/>
+		</Entity>
+		<Entity uid="876">
+			<Template>units/rome_legionnaire_marian</Template>
+			<Player>1</Player>
+			<Position x="223.79233" z="141.19999"/>
+			<Orientation y="1.98577"/>
+			<Actor seed="9635"/>
+		</Entity>
+		<Entity uid="877">
+			<Template>units/rome_legionnaire_marian</Template>
+			<Player>1</Player>
+			<Position x="224.37427" z="142.65033"/>
+			<Orientation y="2.11738"/>
+			<Actor seed="52969"/>
+		</Entity>
+		<Entity uid="878">
+			<Template>units/rome_legionnaire_marian</Template>
+			<Player>1</Player>
+			<Position x="229.92954" z="154.05637"/>
+			<Orientation y="2.31054"/>
+			<Actor seed="28758"/>
+		</Entity>
+		<Entity uid="879">
+			<Template>units/rome_legionnaire_marian</Template>
+			<Player>1</Player>
+			<Position x="229.12317" z="156.55851"/>
+			<Orientation y="2.19152"/>
+			<Actor seed="1772"/>
+		</Entity>
+		<Entity uid="880">
+			<Template>units/rome_legionnaire_marian</Template>
+			<Player>1</Player>
+			<Position x="226.82425" z="152.23853"/>
+			<Orientation y="2.07311"/>
+			<Actor seed="8594"/>
+		</Entity>
+		<Entity uid="881">
+			<Template>units/rome_legionnaire_marian</Template>
+			<Player>1</Player>
+			<Position x="229.63144" z="157.76359"/>
+			<Orientation y="-4.2762"/>
+			<Actor seed="61858"/>
+		</Entity>
+		<Entity uid="882">
+			<Template>units/rome_legionnaire_marian</Template>
+			<Player>1</Player>
+			<Position x="231.28635" z="156.80433"/>
+			<Orientation y="2.14032"/>
+			<Actor seed="11022"/>
+		</Entity>
+		<Entity uid="883">
+			<Template>units/rome_legionnaire_marian</Template>
+			<Player>1</Player>
+			<Position x="228.30057" z="155.11619"/>
+			<Orientation y="2.25579"/>
+			<Actor seed="7647"/>
+		</Entity>
+		<Entity uid="884">
+			<Template>units/rome_legionnaire_marian</Template>
+			<Player>1</Player>
+			<Position x="225.08213" z="144.2464"/>
+			<Orientation y="-4.02736"/>
+			<Actor seed="7680"/>
+		</Entity>
+		<Entity uid="885">
+			<Template>units/rome_legionnaire_marian</Template>
+			<Player>1</Player>
+			<Position x="223.2447" z="139.84086"/>
+			<Orientation y="-4.18982"/>
+			<Actor seed="56969"/>
+		</Entity>
+		<Entity uid="886">
+			<Template>units/rome_legionnaire_marian</Template>
+			<Player>1</Player>
+			<Position x="222.61966" z="138.37226"/>
+			<Orientation y="2.10108"/>
+			<Actor seed="55114"/>
+		</Entity>
+		<Entity uid="887">
+			<Template>units/rome_legionnaire_marian</Template>
+			<Player>1</Player>
+			<Position x="219.42054" z="141.32322"/>
+			<Orientation y="2.00161"/>
+			<Actor seed="26692"/>
+		</Entity>
+		<Entity uid="888">
+			<Template>units/rome_legionnaire_marian</Template>
+			<Player>1</Player>
+			<Position x="221.07102" z="146.15403"/>
+			<Orientation y="1.99006"/>
+			<Actor seed="11317"/>
+		</Entity>
+		<Entity uid="889">
+			<Template>units/rome_legionnaire_marian</Template>
+			<Player>1</Player>
+			<Position x="229.38105" z="152.74445"/>
+			<Orientation y="2.2778"/>
+			<Actor seed="6100"/>
+		</Entity>
+		<Entity uid="890">
+			<Template>units/rome_legionnaire_marian</Template>
+			<Player>1</Player>
+			<Position x="230.71985" z="155.456"/>
+			<Orientation y="2.22747"/>
+			<Actor seed="28281"/>
+		</Entity>
+		<Entity uid="891">
+			<Template>units/rome_infantry_swordsman_b</Template>
+			<Player>1</Player>
+			<Position x="276.4503" z="118.09543"/>
+			<Orientation y="-7.9658"/>
+			<Actor seed="11098"/>
+		</Entity>
+		<Entity uid="892">
+			<Template>units/rome_infantry_swordsman_b</Template>
+			<Player>1</Player>
+			<Position x="276.79587" z="113.98241"/>
+			<Orientation y="-7.9658"/>
+			<Actor seed="23711"/>
+		</Entity>
+		<Entity uid="893">
+			<Template>units/rome_infantry_swordsman_b</Template>
+			<Player>1</Player>
+			<Position x="277.51597" z="106.0904"/>
+			<Orientation y="-7.9658"/>
+			<Actor seed="3585"/>
+		</Entity>
+		<Entity uid="894">
+			<Template>units/rome_infantry_swordsman_b</Template>
+			<Player>1</Player>
+			<Position x="278.90528" z="110.53678"/>
+			<Orientation y="-14.23913"/>
+			<Actor seed="33184"/>
+		</Entity>
+		<Entity uid="895">
+			<Template>units/rome_infantry_swordsman_b</Template>
+			<Player>1</Player>
+			<Position x="276.85868" z="111.81652"/>
+			<Orientation y="-7.9658"/>
+			<Actor seed="18102"/>
+		</Entity>
+		<Entity uid="896">
+			<Template>units/rome_infantry_swordsman_b</Template>
+			<Player>1</Player>
+			<Position x="276.58838" z="116.17052"/>
+			<Orientation y="-13.84574"/>
+			<Actor seed="36809"/>
+		</Entity>
+		<Entity uid="897">
+			<Template>units/rome_infantry_swordsman_b</Template>
+			<Player>1</Player>
+			<Position x="277.3722" z="108.03418"/>
+			<Orientation y="-7.76587"/>
+			<Actor seed="58532"/>
+		</Entity>
+		<Entity uid="898">
+			<Template>units/rome_infantry_swordsman_b</Template>
+			<Player>1</Player>
+			<Position x="278.55875" z="116.61867"/>
+			<Orientation y="-7.9658"/>
+			<Actor seed="57647"/>
+		</Entity>
+		<Entity uid="899">
+			<Template>units/rome_infantry_swordsman_b</Template>
+			<Player>1</Player>
+			<Position x="278.56901" z="114.57132"/>
+			<Orientation y="-7.84308"/>
+			<Actor seed="51129"/>
+		</Entity>
+		<Entity uid="901">
+			<Template>units/rome_infantry_swordsman_b</Template>
+			<Player>1</Player>
+			<Position x="278.42487" z="118.43892"/>
+			<Orientation y="-7.71085"/>
+			<Actor seed="21666"/>
+		</Entity>
+		<Entity uid="902">
+			<Template>units/rome_infantry_swordsman_b</Template>
+			<Player>1</Player>
+			<Position x="279.27942" z="106.66536"/>
+			<Orientation y="-8.21929"/>
+			<Actor seed="55569"/>
+		</Entity>
+		<Entity uid="903">
+			<Template>units/rome_infantry_swordsman_b</Template>
+			<Player>1</Player>
+			<Position x="279.56745" z="108.56061"/>
+			<Orientation y="-13.96064"/>
+			<Actor seed="32535"/>
+		</Entity>
+		<Entity uid="904">
+			<Template>units/rome_infantry_swordsman_b</Template>
+			<Player>1</Player>
+			<Position x="277.17524" z="109.90128"/>
+			<Orientation y="-7.9658"/>
+			<Actor seed="26814"/>
+		</Entity>
+		<Entity uid="905">
+			<Template>units/rome_infantry_spearman_b</Template>
+			<Player>1</Player>
+			<Position x="327.58021" z="77.28248"/>
+			<Orientation y="2.35621"/>
+			<Actor seed="6484"/>
+		</Entity>
+		<Entity uid="906">
+			<Template>units/rome_infantry_spearman_b</Template>
+			<Player>1</Player>
+			<Position x="326.73795" z="89.73124"/>
+			<Orientation y="2.35621"/>
+			<Actor seed="52877"/>
+		</Entity>
+		<Entity uid="907">
+			<Template>units/rome_infantry_spearman_e</Template>
+			<Player>1</Player>
+			<Position x="350.35846" z="122.8061"/>
+			<Orientation y="-0.16283"/>
+			<Actor seed="32902"/>
+		</Entity>
+		<Entity uid="908">
+			<Template>units/rome_infantry_spearman_a</Template>
+			<Player>1</Player>
+			<Position x="341.98331" z="174.52643"/>
+			<Orientation y="0.25475"/>
+			<Actor seed="32112"/>
+		</Entity>
+		<Entity uid="909">
+			<Template>units/rome_infantry_spearman_a</Template>
+			<Player>1</Player>
+			<Position x="340.05198" z="224.74827"/>
+			<Orientation y="2.35621"/>
+			<Actor seed="43911"/>
+		</Entity>
+		<Entity uid="910">
+			<Template>units/rome_infantry_spearman_a</Template>
+			<Player>1</Player>
+			<Position x="340.99793" z="230.43351"/>
+			<Orientation y="2.35621"/>
+			<Actor seed="62737"/>
+		</Entity>
+		<Entity uid="911">
+			<Template>units/rome_infantry_spearman_a</Template>
+			<Player>1</Player>
+			<Position x="352.10724" z="173.15705"/>
+			<Orientation y="6.01278"/>
+			<Actor seed="65202"/>
+		</Entity>
+		<Entity uid="912">
+			<Template>units/rome_infantry_spearman_a</Template>
+			<Player>1</Player>
+			<Position x="339.17167" z="123.885"/>
+			<Orientation y="0.19391"/>
+			<Actor seed="60886"/>
+		</Entity>
+		<Entity uid="913">
+			<Template>units/rome_infantry_javelinist_a</Template>
+			<Player>1</Player>
+			<Position x="269.24305" z="74.67563"/>
+			<Orientation y="-0.60065"/>
+			<Actor seed="7023"/>
+		</Entity>
+		<Entity uid="914">
+			<Template>units/rome_infantry_javelinist_a</Template>
+			<Player>1</Player>
+			<Position x="272.51795" z="74.13382"/>
+			<Orientation y="-0.60065"/>
+			<Actor seed="5762"/>
+		</Entity>
+		<Entity uid="915">
+			<Template>units/rome_infantry_javelinist_a</Template>
+			<Player>1</Player>
+			<Position x="257.79902" z="76.65751"/>
+			<Orientation y="0.31576"/>
+			<Actor seed="22801"/>
+		</Entity>
+		<Entity uid="916">
+			<Template>units/rome_infantry_javelinist_a</Template>
+			<Player>1</Player>
+			<Position x="265.4166" z="75.40233"/>
+			<Orientation y="0.00869"/>
+			<Actor seed="1318"/>
+		</Entity>
+		<Entity uid="917">
+			<Template>units/rome_infantry_javelinist_a</Template>
+			<Player>1</Player>
+			<Position x="237.2309" z="90.29868"/>
+			<Orientation y="1.03722"/>
+			<Actor seed="32302"/>
+		</Entity>
+		<Entity uid="918">
+			<Template>units/rome_infantry_javelinist_a</Template>
+			<Player>1</Player>
+			<Position x="239.23636" z="85.2997"/>
+			<Orientation y="1.07415"/>
+			<Actor seed="1639"/>
+		</Entity>
+		<Entity uid="919">
+			<Template>units/rome_infantry_javelinist_a</Template>
+			<Player>1</Player>
+			<Position x="261.66391" z="76.11471"/>
+			<Orientation y="-0.22602"/>
+			<Actor seed="51705"/>
+		</Entity>
+		<Entity uid="920">
+			<Template>units/rome_infantry_javelinist_a</Template>
+			<Player>1</Player>
+			<Position x="282.7303" z="72.09122"/>
+			<Orientation y="-0.60065"/>
+			<Actor seed="4323"/>
+		</Entity>
+		<Entity uid="921">
+			<Template>units/rome_infantry_javelinist_a</Template>
+			<Player>1</Player>
+			<Position x="279.01676" z="72.95472"/>
+			<Orientation y="-0.4503"/>
+			<Actor seed="53103"/>
+		</Entity>
+		<Entity uid="922">
+			<Template>units/rome_infantry_javelinist_a</Template>
+			<Player>1</Player>
+			<Position x="275.48322" z="73.77004"/>
+			<Orientation y="-0.6049"/>
+			<Actor seed="56576"/>
+		</Entity>
+		<Entity uid="923">
+			<Template>units/rome_infantry_spearman_a</Template>
+			<Player>1</Player>
+			<Position x="315.2912" z="77.44927"/>
+			<Orientation y="-1.45269"/>
+			<Actor seed="42849"/>
+		</Entity>
+		<Entity uid="924">
+			<Template>units/rome_infantry_spearman_a</Template>
+			<Player>1</Player>
+			<Position x="313.88526" z="90.55977"/>
+			<Orientation y="-1.464"/>
+			<Actor seed="55833"/>
+		</Entity>
+		<Entity uid="925">
+			<Template>units/rome_infantry_spearman_a</Template>
+			<Player>1</Player>
+			<Position x="261.64856" z="119.38474"/>
+			<Orientation y="1.38216"/>
+			<Actor seed="37317"/>
+		</Entity>
+		<Entity uid="926">
+			<Template>units/rome_infantry_spearman_a</Template>
+			<Player>1</Player>
+			<Position x="261.75031" z="112.00239"/>
+			<Orientation y="1.25182"/>
+			<Actor seed="7198"/>
+		</Entity>
+		<Entity uid="927">
+			<Template>units/rome_infantry_spearman_a</Template>
+			<Player>1</Player>
+			<Position x="234.55665" z="102.4032"/>
+			<Orientation y="1.47193"/>
+			<Actor seed="36391"/>
+		</Entity>
+		<Entity uid="928">
+			<Template>units/rome_infantry_spearman_a</Template>
+			<Player>1</Player>
+			<Position x="235.0384" z="131.87046"/>
+			<Orientation y="1.54348"/>
+			<Actor seed="24864"/>
+		</Entity>
+		<Entity uid="929">
+			<Template>units/rome_infantry_spearman_a</Template>
+			<Player>1</Player>
+			<Position x="219.64603" z="155.30805"/>
+			<Orientation y="2.35621"/>
+			<Actor seed="62761"/>
+		</Entity>
+		<Entity uid="930">
+			<Template>units/rome_infantry_spearman_a</Template>
+			<Player>1</Player>
+			<Position x="216.1633" z="147.9375"/>
+			<Orientation y="2.35621"/>
+			<Actor seed="53348"/>
+		</Entity>
+		<Entity uid="931">
+			<Template>units/rome_ship_trireme</Template>
+			<Player>1</Player>
+			<Position x="420.73023" z="303.5453"/>
+			<Orientation y="-10.39824"/>
+			<Actor seed="22020"/>
 		</Entity>
 	</Entities>
 	<Paths/>
