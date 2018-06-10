@@ -224,7 +224,6 @@ void main()
     //vec3 fff = texture2D(refractionMap, uv).rgb;
     //gl_FragColor = vec4(fff, 1.0);
 	////gl_FragColor = color * losMod;
-    //gl_FragColor = vec4(ComputeRefraction(n, v), 1.0);
 	//gl_FragColor = vec4(vec3(normalize(GetWorldFromHeightMap(vec2(intersectionPos.xz))).y), 1.0);
 
     vec3 P1 = intersectionPos;
@@ -235,6 +234,16 @@ void main()
     float rrr = normalize(K2-K1).y;
 
     float yyy = GetWorldPosFromDepth().y;
+
+    vec4 clip;
+    //vec2 texC = gl_FragCoord.xy/viewport;
+    vec2 texC = vec2(512, 384)/viewport;
+    clip.xy = texC * 2.0 - 1.0;
+    clip.z = texture2D(entireSceneDepth, texC).r * 2.0 - 1.0;
+    clip.w = 1.0;
+
+    vec4 homoL = invFullMVP * clip;
+    yyy = (homoL.xyz / homoL.w).y;
 
     float epsilon = 5.0;
 
@@ -250,6 +259,8 @@ void main()
 	//gl_FragColor = color * losMod;
 	//gl_FragColor = vec4(1,0,0,1);
 	//gl_FragColor = vec4(vec3(delta), 1.0);
+    gl_FragColor = vec4(ComputeRefraction(n, v), 1.0);
+    gl_FragColor = vec4(vec3(0.0), 0.0);
 }
 
 vec3 CalculateNormal(vec2 uv, float variation) {
@@ -372,6 +383,7 @@ vec3 ComputeRefraction(vec3 n, vec3 v)
     float d_tilde = mix(d_V, d_N, theta_ratio);
     vec3 P2 = P1 + d_V * normalize(K1-K2);
     P2 = P1 + d_N * 0.5 * d_V;
+    P2 = P1 + d_tilde * normalize(T1);
     //if(true) return vec3(theta_ratio);
 
     vec4 I = refractionMVP * vec4(P2, 1.0);
@@ -385,7 +397,7 @@ vec3 ComputeRefraction(vec3 n, vec3 v)
 
 	if(refraction.r > 0.9 && refraction.g < 0.1 && refraction.b < 0.1) refraction = vec3(0, 0, 0);
 
-    waterDepth = length(d_N);
+    waterDepth = length(P2 - P1);
     return refraction;
 }
 
@@ -400,26 +412,28 @@ vec3 LightAttenuation(vec3 color, float depth)
 
 vec3 GetWorldPosFromDepth()
 {
-    //vec2 uv = vec2(gl_FragCoord.x/screenWidth, gl_FragCoord.y/screenHeight);
-    ////float depth = texture2D(refractionMapDepth, uv).r;
-    ////vec3 windowSpace = vec3(gl_FragCoord.x, gl_FragCoord.y, depth);
-    ////vec4 eyePos = CalcEyeFromWindow(windowSpace);
-    ////vec3 worldPos = vec3(invV * eyePos);
-    //vec4 eyePos = vec4(CalcPos(uv), 1.0);
-    //vec3 worldPos = vec3(invV * eyePos);
+    vec4 coordsCS;
+    //vec2 texC = gl_FragCoord.xy/viewport;
+    vec2 uv = gl_FragCoord.xy/viewport;
+    coordsCS.xy = uv * 2.0 - 1.0;
+    coordsCS.z = texture2D(entireSceneDepth, uv).r * 2.0 - 1.0;
+    coordsCS.w = 1.0;
 
-    vec3 viewRay = vec3(positionCS.xy/positionCS.z, 1.0);
+    vec4 coordsHS = invFullMVP * coordsCS;
+    return coordsHS.xyz / coordsHS.w;
 
-    //vec2 uv = vec2(gl_FragCoord.xy/viewport);
-    vec2 uv = vec2(512, 384)/viewport;
-    float depth = texture2D(entireSceneDepth, uv).r;
+    //vec3 viewRay = vec3(positionCS.xy/positionCS.z, 1.0);
 
-    float linearDepth = projectionAB.x / (depth - projectionAB.y);
+    ////vec2 uv = vec2(gl_FragCoord.xy/viewport);
+    //vec2 uv = vec2(512, 384)/viewport;
+    //float depth = texture2D(entireSceneDepth, uv).r;
 
-    vec3 positionCS2 = viewRay * linearDepth;
-    vec3 positionWS = vec3(invV * vec4(positionCS2,1.0));
+    //float linearDepth = projectionAB.x / (depth - projectionAB.y);
 
-    return positionWS;
+    //vec3 positionCS2 = viewRay * linearDepth;
+    //vec3 positionWS = vec3(invV * vec4(positionCS2,1.0));
+
+    //return positionWS;
 }
 
 vec3 CalcPos(vec2 c)
