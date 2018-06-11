@@ -108,7 +108,6 @@ float determinant(mat3 m);
 vec3 GetWorldFromHeightMap(vec2 worldXZ);
 vec3 GetPosOnTerrain(vec3 p);
 vec4 CalcEyeFromWindow(vec3 windowSpace);
-vec3 CalcPos(vec2 c);
 
 float waterDepth;
 
@@ -165,6 +164,7 @@ void main()
 
     vec4 reflection = ComputeReflection(n); // Using the normal 0 1 0 works
     vec4 refraction = vec4(LightAttenuation(ComputeRefraction(n, v), waterDepth), 1.0);
+    //vec4 refraction = vec4(ComputeRefraction(n, v), 1.0);
 
     vec3 reflected = reflect(v, n);
     vec3 reflectedV = vec3(invV * vec4(reflected, 0));
@@ -172,6 +172,7 @@ void main()
     float factor = max(0, exp(0.1*waterDepth-3));
 	//vec4 refractionColor = refraction + shallowColor * exp(0.01*deepColor);
 	vec4 refractionColor = mix(refraction, shallowColor, factor);
+    refractionColor = refraction;
 	vec4 reflectionColor = vec4(mix(skyReflection, reflection.rgb, reflection.a), 1.0);
 	vec4 amb = mix(refractionColor, reflectionColor, F(F0, v, n));
  
@@ -260,7 +261,8 @@ void main()
 	//gl_FragColor = vec4(1,0,0,1);
 	//gl_FragColor = vec4(vec3(delta), 1.0);
     gl_FragColor = vec4(ComputeRefraction(n, v), 1.0);
-    gl_FragColor = vec4(vec3(0.0), 0.0);
+    //gl_FragColor = vec4(vec3(0.0), 0.0);
+    //gl_FragColor = amb;
 }
 
 vec3 CalculateNormal(vec2 uv, float variation) {
@@ -379,23 +381,26 @@ vec3 ComputeRefraction(vec3 n, vec3 v)
 
     float d_V = length(K1 - P1);
     float d_N = length(K2 - P1);
-    //vec3 P2 = theta_ratio * d_V + (1 - theta_ratio) * d_N;
     float d_tilde = mix(d_V, d_N, theta_ratio);
     vec3 P2 = P1 + d_V * normalize(K1-K2);
     P2 = P1 + d_N * 0.5 * d_V;
     P2 = P1 + d_tilde * normalize(T1);
-    //if(true) return vec3(theta_ratio);
 
     vec4 I = refractionMVP * vec4(P2, 1.0);
 
     float refractionShiftUp = 1/screenHeight;
     vec2 uv = vec2(0.5 * (I.x / I.w + 1), 0.5 * (I.y / I.w + 1) +
             refractionShiftUp);
-    //uv = vec2(gl_FragCoord.x/screenWidth, gl_FragCoord.y/screenHeight);
     vec3 refraction = texture2D(refractionMap, uv).rgb;
-    //refraction = vec3(uv, 0.0);
 
-	if(refraction.r > 0.9 && refraction.g < 0.1 && refraction.b < 0.1) refraction = vec3(0, 0, 0);
+	if((refraction.r > 0.9 && refraction.g < 0.1 && refraction.b < 0.1) ||
+       (refraction.r < 0.1 && refraction.g < 0.1 && refraction.b < 0.1))
+    {
+        I = refractionMVP * vec4(P1, 1.0);
+        uv = vec2(0.5 * (I.x / I.w + 1), 0.5 * (I.y / I.w + 1) +
+                refractionShiftUp);
+        refraction = texture2D(refractionMap, uv).rgb;
+    }
 
     waterDepth = length(P2 - P1);
     return refraction;
@@ -422,30 +427,6 @@ vec3 GetWorldPosFromDepth()
     vec4 coordsHS = invFullMVP * coordsCS;
     return coordsHS.xyz / coordsHS.w;
 
-    //vec3 viewRay = vec3(positionCS.xy/positionCS.z, 1.0);
-
-    ////vec2 uv = vec2(gl_FragCoord.xy/viewport);
-    //vec2 uv = vec2(512, 384)/viewport;
-    //float depth = texture2D(entireSceneDepth, uv).r;
-
-    //float linearDepth = projectionAB.x / (depth - projectionAB.y);
-
-    //vec3 positionCS2 = viewRay * linearDepth;
-    //vec3 positionWS = vec3(invV * vec4(positionCS2,1.0));
-
-    //return positionWS;
-}
-
-vec3 CalcPos(vec2 c)
-{
-    float dstored = texture2D(entireSceneDepth, c).r;
-
-    float z_eye = unproject.x * unproject.y / ((unproject.y - unproject.x) *
-            dstored - unproject.y);
-
-    return vec3((2.0*c.x - 1.0) * (-z_eye) / unproject.z * unproject.w,
-                (2.0*c.y - 1.0) * (-z_eye) / unproject.z,
-                z_eye);
 }
 
 //vec3 GetPosOnTerrain(vec3 p)
