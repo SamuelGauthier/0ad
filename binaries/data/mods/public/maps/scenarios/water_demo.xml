@@ -33,8 +33,8 @@
 		</Postproc>
 	</Environment>
 	<Camera>
-		<Position x="393.428" y="236.62" z="151.537"/>
-		<Rotation angle="0"/>
+		<Position x="467.344" y="276.151" z="127.094"/>
+		<Rotation angle="-1.0922"/>
 		<Declination angle="0.610865"/>
 	</Camera>
 	<ScriptSettings><![CDATA[
@@ -49,6 +49,7 @@
   "Name": "Water Demo  ",
   "Nomad": false,
   "PlayerData": [
+    null,
     {
       "Civ": "rome",
       "Resources": {
@@ -2801,7 +2802,7 @@
 		<Entity uid="730">
 			<Template>structures/rome_defense_tower</Template>
 			<Player>1</Player>
-			<Position x="323.37687" z="145.32453"/>
+			<Position x="323.3805" z="145.31849"/>
 			<Orientation y="4.69204"/>
 			<Actor seed="19278"/>
 		</Entity>
@@ -3144,14 +3145,14 @@
 		<Entity uid="827">
 			<Template>gaia/flora_tree_poplar_lombardy</Template>
 			<Player>0</Player>
-			<Position x="358.71698" z="210.27527"/>
+			<Position x="355.36747" z="211.15049"/>
 			<Orientation y="2.35621"/>
 			<Actor seed="10805"/>
 		</Entity>
 		<Entity uid="829">
 			<Template>gaia/flora_tree_poplar_lombardy</Template>
 			<Player>0</Player>
-			<Position x="340.53443" z="212.91929"/>
+			<Position x="342.08774" z="212.67417"/>
 			<Orientation y="2.35621"/>
 			<Actor seed="54288"/>
 		</Entity>
@@ -3735,6 +3736,62 @@
 			<Position x="420.73023" z="303.5453"/>
 			<Orientation y="-10.39824"/>
 			<Actor seed="22020"/>
+		</Entity>
+		<Entity uid="932">
+			<Template>units/rome_infantry_spearman_e</Template>
+			<Player>1</Player>
+			<Position x="384.98441" z="274.28037"/>
+			<Orientation y="4.67055"/>
+			<Actor seed="27843"/>
+		</Entity>
+		<Entity uid="933">
+			<Template>units/rome_infantry_spearman_e</Template>
+			<Player>1</Player>
+			<Position x="386.28266" z="269.89386"/>
+			<Orientation y="-1.83622"/>
+			<Actor seed="4974"/>
+		</Entity>
+		<Entity uid="934">
+			<Template>units/rome_infantry_spearman_e</Template>
+			<Player>1</Player>
+			<Position x="377.14329" z="258.25513"/>
+			<Orientation y="-0.07262"/>
+			<Actor seed="12330"/>
+		</Entity>
+		<Entity uid="935">
+			<Template>units/rome_infantry_spearman_e</Template>
+			<Player>1</Player>
+			<Position x="363.31745" z="244.586"/>
+			<Orientation y="5.5163"/>
+			<Actor seed="40745"/>
+		</Entity>
+		<Entity uid="936">
+			<Template>units/rome_infantry_spearman_e</Template>
+			<Player>1</Player>
+			<Position x="356.58826" z="170.08973"/>
+			<Orientation y="4.76296"/>
+			<Actor seed="7882"/>
+		</Entity>
+		<Entity uid="937">
+			<Template>units/rome_infantry_spearman_e</Template>
+			<Player>1</Player>
+			<Position x="357.31678" z="165.40915"/>
+			<Orientation y="4.8774"/>
+			<Actor seed="1738"/>
+		</Entity>
+		<Entity uid="946">
+			<Template>structures/rome_sentry_tower</Template>
+			<Player>1</Player>
+			<Position x="334.33344" z="190.84693"/>
+			<Orientation y="1.55767"/>
+			<Actor seed="55171"/>
+		</Entity>
+		<Entity uid="947">
+			<Template>structures/rome_sentry_tower</Template>
+			<Player>1</Player>
+			<Position x="364.5294" z="235.91062"/>
+			<Orientation y="-0.78304"/>
+			<Actor seed="34183"/>
 		</Entity>
 	</Entities>
 	<Paths/>
