@@ -45,8 +45,9 @@ uniform float minTerrainElevation;
 uniform float waterH;
 
 uniform mat4 P;
-uniform mat4 invP;
+uniform mat4 V;
 uniform mat4 MVP;
+uniform mat4 invP;
 uniform mat4 invV;
 uniform mat4 invMVP;
 uniform mat4 projectorMVP;
@@ -70,6 +71,7 @@ uniform samplerCube skyCube;
 uniform vec3 screenCenter;
 
 varying vec3 normal;
+varying vec3 tangent;
 varying vec2 losCoords;
 varying vec4 waterCoords;
 varying float waterHeight;
@@ -92,7 +94,7 @@ varying float amplitude3;
 
 varying vec3 positionCS;
 
-vec3 CalculateNormal(vec2 uv, float variation);
+vec3 CalculateNormal(vec2 uv);
 vec3 CalculateHeight(vec2 uv, float variation);
 float F(float F_0, vec3 v, vec3 h);
 float G_smith(float nx, float k);
@@ -125,7 +127,7 @@ void main()
     //float variation = texture2D(heightMap1, 0.001 * waterCoords.xz + variationWind * variationTS * time).g;
     vec3 normalAttenuation = vec3(0.1, 1, 0.1);
 	vec3 n = normalize(normal);
-    n = CalculateNormal(waterCoords.xz, variation);
+    n = CalculateNormal(waterCoords.xz);
     n = vec3(0, 1, 0);
     //n = texture2D(heightMap1, 0.01*waterCoords.xz).rgb;
 
@@ -176,115 +178,142 @@ void main()
 	vec4 reflectionColor = vec4(mix(skyReflection, reflection.rgb, reflection.a), 1.0);
 	vec4 amb = mix(refractionColor, reflectionColor, F(F0, v, n));
  
-    //vec3 i = GetPosOnTerrain(intersectionPos);
-    //i = GetWorldFromHeightMap(intersectionPos.xz);
-    //vec4 t = refractionMVP * vec4(i, 1.0);
-    //float reflShiftUp = 1 / screenHeight;
-	//vec2 uv = vec2(0.5 * (t.x / t.w + 1), 0.5 * (t.y / t.w + 1) + reflShiftUp);
-    //vec3 e = texture2D(refractionMap, uv).rgb;
+    ////vec3 i = GetPosOnTerrain(intersectionPos);
+    ////i = GetWorldFromHeightMap(intersectionPos.xz);
+    ////vec4 t = refractionMVP * vec4(i, 1.0);
+    ////float reflShiftUp = 1 / screenHeight;
+	////vec2 uv = vec2(0.5 * (t.x / t.w + 1), 0.5 * (t.y / t.w + 1) + reflShiftUp);
+    ////vec3 e = texture2D(refractionMap, uv).rgb;
 
-    //float u = (i.y - minTerrainElevation) * 1 / (maxTerrainElevation -
-    //        minTerrainElevation);
-    //uv = intersectionPos.xz / terrainWorldSize;
-	//float w = texture2D(terrain, uv).r;
+    ////float u = (i.y - minTerrainElevation) * 1 / (maxTerrainElevation -
+    ////        minTerrainElevation);
+    ////uv = intersectionPos.xz / terrainWorldSize;
+	////float w = texture2D(terrain, uv).r;
 
-    //color = vec4(texture2D(reflectionMap, 0.01 * intersectionPos.xz).rgb, 1.0);
+    ////color = vec4(texture2D(reflectionMap, 0.01 * intersectionPos.xz).rgb, 1.0);
 
-    // In case reflections do not work
-    //vec2 reflCoords = (0.5*reflectionCoords.xy) / reflectionCoords.z + 0.5;
-    //vec4 refTex = texture2D(reflectionMap, reflCoords);
-    //color = vec4(refTex.rgb, 1.0);
-    
-    color = vec4(reflection.rgb, 1.0);
-    color = amb + specular2;
-    //color = vec4(1.0, 0.0, 0.0, 1.0);
-    //color = vec4(ComputeRefraction(n, v), 1.0);
-
-    //--------------------------------------------------------------------------
-
-
-    //vec2 uv = vec2(gl_FragCoord.xy/viewport);
-    //float depth = 2.0 * texture2D(refractionMapDepth, uv).r - 1.0;
-    //float linear = (2.0 * nearPlane * farPlane) / (farPlane + nearPlane - depth * (farPlane - nearPlane));
-    //float kkk = linear / farPlane;
-    //gl_FragColor = vec4(vec3(texture2D(refractionMapDepth, uv).r), 1.0);
-    //--------------------------------------------------------------------------
+    //// In case reflections do not work
+    ////vec2 reflCoords = (0.5*reflectionCoords.xy) / reflectionCoords.z + 0.5;
+    ////vec4 refTex = texture2D(reflectionMap, reflCoords);
+    ////color = vec4(refTex.rgb, 1.0);
     //
-    //vec3 viewRay = vec3(positionCS.xy/positionCS.z, 1.0);
-    //vec2 uv = vec2(gl_FragCoord.xy/viewport);
-    //float depth = texture2D(refractionMapDepth, uv).r;
-    //float linearDepth = projectionAB.x / (depth - projectionAB.y);
-    //vec3 positionCS2 = viewRay * linearDepth;
-    //vec3 positionWS = vec3(invV * vec4(positionCS2,1.0));
+    //color = vec4(reflection.rgb, 1.0);
+    //color = amb + specular2;
+    ////color = vec4(1.0, 0.0, 0.0, 1.0);
+    ////color = vec4(ComputeRefraction(n, v), 1.0);
 
-    //vec4 I = refractionMVP * vec4(positionWS, 1.0);
+    ////--------------------------------------------------------------------------
 
-    //float refractionShiftUp = 1/screenHeight;
-    //uv = vec2(0.5 * (I.x / I.w + 1), 0.5 * (I.y / I.w + 1) +
-    //        refractionShiftUp);
-    //vec3 fff = texture2D(refractionMap, uv).rgb;
-    //gl_FragColor = vec4(fff, 1.0);
+
+    ////vec2 uv = vec2(gl_FragCoord.xy/viewport);
+    ////float depth = 2.0 * texture2D(refractionMapDepth, uv).r - 1.0;
+    ////float linear = (2.0 * nearPlane * farPlane) / (farPlane + nearPlane - depth * (farPlane - nearPlane));
+    ////float kkk = linear / farPlane;
+    ////gl_FragColor = vec4(vec3(texture2D(refractionMapDepth, uv).r), 1.0);
+    ////--------------------------------------------------------------------------
+    ////
+    ////vec3 viewRay = vec3(positionCS.xy/positionCS.z, 1.0);
+    ////vec2 uv = vec2(gl_FragCoord.xy/viewport);
+    ////float depth = texture2D(refractionMapDepth, uv).r;
+    ////float linearDepth = projectionAB.x / (depth - projectionAB.y);
+    ////vec3 positionCS2 = viewRay * linearDepth;
+    ////vec3 positionWS = vec3(invV * vec4(positionCS2,1.0));
+
+    ////vec4 I = refractionMVP * vec4(positionWS, 1.0);
+
+    ////float refractionShiftUp = 1/screenHeight;
+    ////uv = vec2(0.5 * (I.x / I.w + 1), 0.5 * (I.y / I.w + 1) +
+    ////        refractionShiftUp);
+    ////vec3 fff = texture2D(refractionMap, uv).rgb;
+    ////gl_FragColor = vec4(fff, 1.0);
+	//////gl_FragColor = color * losMod;
+	////gl_FragColor = vec4(vec3(normalize(GetWorldFromHeightMap(vec2(intersectionPos.xz))).y), 1.0);
+
+    //vec3 P1 = intersectionPos;
+    //vec3 K1 = GetWorldPosFromDepth();
+    //vec3 K2 = GetWorldFromHeightMap(K1.xz);
+    //K2.y += 186.5;
+
+    //float rrr = normalize(K2-K1).y;
+
+    //float yyy = GetWorldPosFromDepth().y;
+
+    //vec4 clip;
+    ////vec2 texC = gl_FragCoord.xy/viewport;
+    //vec2 texC = vec2(512, 384)/viewport;
+    //clip.xy = texC * 2.0 - 1.0;
+    //clip.z = texture2D(entireSceneDepth, texC).r * 2.0 - 1.0;
+    //clip.w = 1.0;
+
+    //vec4 homoL = invFullMVP * clip;
+    //yyy = (homoL.xyz / homoL.w).y;
+
+    //float epsilon = 5.0;
+
+    //if(screenCenter.y > (yyy - epsilon) && screenCenter.y < (yyy + epsilon)) {
+    //    gl_FragColor = vec4(0, 1, 0, 1);
+    //}
+
+    //else {
+    //    gl_FragColor = vec4(1, 0, 0, 1);
+    //}
+    ////gl_FragColor = vec4(vec3(texture2D(entireSceneDepth,
+    ////                gl_FragCoord.xy/viewport)), 1.0);
 	////gl_FragColor = color * losMod;
-	//gl_FragColor = vec4(vec3(normalize(GetWorldFromHeightMap(vec2(intersectionPos.xz))).y), 1.0);
-
-    vec3 P1 = intersectionPos;
-    vec3 K1 = GetWorldPosFromDepth();
-    vec3 K2 = GetWorldFromHeightMap(K1.xz);
-    K2.y += 186.5;
-
-    float rrr = normalize(K2-K1).y;
-
-    float yyy = GetWorldPosFromDepth().y;
-
-    vec4 clip;
-    //vec2 texC = gl_FragCoord.xy/viewport;
-    vec2 texC = vec2(512, 384)/viewport;
-    clip.xy = texC * 2.0 - 1.0;
-    clip.z = texture2D(entireSceneDepth, texC).r * 2.0 - 1.0;
-    clip.w = 1.0;
-
-    vec4 homoL = invFullMVP * clip;
-    yyy = (homoL.xyz / homoL.w).y;
-
-    float epsilon = 5.0;
-
-    if(screenCenter.y > (yyy - epsilon) && screenCenter.y < (yyy + epsilon)) {
-        gl_FragColor = vec4(0, 1, 0, 1);
-    }
-
-    else {
-        gl_FragColor = vec4(1, 0, 0, 1);
-    }
-    //gl_FragColor = vec4(vec3(texture2D(entireSceneDepth,
-    //                gl_FragCoord.xy/viewport)), 1.0);
-	//gl_FragColor = color * losMod;
-	//gl_FragColor = vec4(1,0,0,1);
-	//gl_FragColor = vec4(vec3(delta), 1.0);
-    gl_FragColor = vec4(ComputeRefraction(n, v), 1.0);
-    //gl_FragColor = vec4(vec3(0.0), 0.0);
-    //gl_FragColor = amb;
+	////gl_FragColor = vec4(1,0,0,1);
+	////gl_FragColor = vec4(vec3(delta), 1.0);
+    //gl_FragColor = vec4(ComputeRefraction(n, v), 1.0);
+    ////gl_FragColor = vec4(vec3(0.0), 0.0);
+    ////gl_FragColor = amb;
+    gl_FragColor = vec4((n.xzy + 1)*0.5, 1.0);
+    //gl_FragColor = vec4(vec3(dot(tangent, normal)), 1.0);
+    gl_FragColor = refraction;
 }
 
-vec3 CalculateNormal(vec2 uv, float variation) {
-    //vec3 n = texture2D(normalMap1, scale.x * uv).rgb;
-    float t = time;
-    //t = 1;
+vec3 CalculateNormal(vec2 uv) {
+    ////vec3 n = texture2D(normalMap1, scale.x * uv).rgb;
+    float ts = time;
+    ////t = 1;
 
-    vec3 n = texture2D(normalMap1, scale.x * uv +
-            wind1 * timeScale1 * t).rgb * amplitude1;
-    n += texture2D(normalMap2, scale.x * uv +
-            wind2 * timeScale2 * t).rgb * amplitude2;
-    n += texture2D(normalMap3, scale.x * uv +
-            wind3 * timeScale3 * t).rgb * amplitude3;
+    vec3 bn = texture2D(normalMap1, scale.x * uv +
+            wind1 * timeScale1 * ts).rgb * amplitude1;
+    bn += texture2D(normalMap2, scale.x * uv +
+            wind2 * timeScale2 * ts).rgb * amplitude2;
+    bn += texture2D(normalMap3, scale.x * uv +
+            wind3 * timeScale3 * ts).rgb * amplitude3;
+    //bn.yz = bn.zy;
 
-    //return normalAttenuation * (2.0 * normalize(n * variation) - 1.0);
-    //return (2.0 * normalize(n * variation) - 1.0);
-	vec3 normal = n;
-	normal.yz = n.zy;
-    //return normalize(2.0 * normal - 1.0);
-    return normalize(2.0 * normal - 3.0);
-    //return normalize(normal);
+    ////return normalAttenuation * (2.0 * normalize(n * variation) - 1.0);
+    ////return (2.0 * normalize(n * variation) - 1.0);
+	//vec3 normal = n;
+	//normal.yz = n.zy;
+    ////return normalize(2.0 * normal - 1.0);
+    //return normalize(2.0 * normal - 3.0);
+    ////return normalize(normal);
+    
+        // Gram-Schmidt process to re-orthogonalize the vectors
+    vec3 n = normalize(normal);
+    vec3 t = normalize(tangent);
+    t = normalize(t - dot(t, n) * n);
+
+    // Fetch the normal from the normal map
+    vec3 bitangent = cross(t, n);
+    //vec3 bumpMapNormal = texture(normalMap, intersectionPos.xz + t_cst *
+    //        vec2(t)).xyz;
+    vec3 bumpMapNormal = 2.0 * bn - 3.0;
+
+    // Create TBN matrix
+    mat3 tbn = mat3(t, bitangent, n);
+
+    // Transform the bumped normal int local space, dampen it and transform it
+    // into the eye space.
+    vec3 newNormal = tbn * bumpMapNormal;
+    newNormal = normalize(newNormal);//normalize(a * newNormal);
+    newNormal.yz = newNormal.zy;
+    return vec3(V * vec4(newNormal, 0));
 }
+
+
 
 vec3 CalculateHeight(vec2 uv, float variation) {
     float t = time;
@@ -386,7 +415,7 @@ vec3 ComputeRefraction(vec3 n, vec3 v)
     P2 = P1 + d_N * 0.5 * d_V;
     P2 = P1 + d_tilde * normalize(T1);
 
-    vec4 I = refractionMVP * vec4(P2, 1.0);
+    vec4 I = refractionMVP * vec4(P1, 1.0);
 
     float refractionShiftUp = 1/screenHeight;
     vec2 uv = vec2(0.5 * (I.x / I.w + 1), 0.5 * (I.y / I.w + 1) +
@@ -408,9 +437,9 @@ vec3 ComputeRefraction(vec3 n, vec3 v)
 
 vec3 LightAttenuation(vec3 color, float depth)
 {
-    float red = exp(-depth*0.3);
+    float red = exp(-depth*0.55);
     float green = exp(-depth*0.051);
-    float blue = exp(-depth*0.046);
+    float blue = exp(-depth*0.02);
 
     return color * vec3(red, green, blue);
 }

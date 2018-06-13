@@ -247,7 +247,7 @@ void CFFTWaterModel::ComputePhillipsSpectrum(SFFTWaterProperties waterProp, VecC
 
             float factor = waterProp.m_amplitude * exp(-lengthK2 * l * l) *
             exp(-1 /(lengthK2 * L2)) / (lengthK2 * lengthK2);
-            float p = factor * pow(normK.Dot(waterProp.m_windDirection), 2);
+            float p = factor * pow(normK.Dot(waterProp.m_windDirection), 2); // Forgot absolute value!!!!
 
             float xi_r = normal_dist(generator);
             float xi_i = normal_dist(generator);

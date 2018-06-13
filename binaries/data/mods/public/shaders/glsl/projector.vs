@@ -21,6 +21,7 @@ uniform sampler2D normalMap3;
 uniform sampler2D variationMap;
 
 varying vec3 normal;
+varying vec3 tangent;
 varying vec2 losCoords;
 varying vec4 waterCoords;
 varying float waterHeight;
@@ -47,6 +48,11 @@ vec4 FindLineSegIntersection(vec4 start, vec4 end);
 float DistanceToPlane(vec4 point);
 vec3 computeDisplacement(vec2 uv, float variation);
 vec3 computeNormal(vec2 uv, float variation);
+vec3 computeTangent(float y_0, vec2 x0z0);
+float f_x(vec2 x0z0);
+float f_z(vec2 x0z0);
+
+float variation;
 
 void main()
 {
@@ -94,9 +100,10 @@ void main()
     amplitude3 = 1.5;
 
     //float variation = texture2D(variationMap, 0.0001 * waterCoords.xz).r;
-    float variation = texture2D(heightMap1, 0.0001 * waterCoords.xz).g;
+    variation = texture2D(heightMap1, 0.0001 * waterCoords.xz).g;
     normal = computeNormal(intersection.xz, variation);
     vec3 h = computeDisplacement(intersection.xz, variation);
+    tangent = computeTangent(h.y, intersection.xz);
 
     //vec3 h = texture2D(heightMap1, scale.x * intersection.xz + wind1 *
     //        timeScale1 * time).rgb * amplitude1 - 0.5;
@@ -109,7 +116,7 @@ void main()
 
     //h *= variation;
 	losCoords = (losMatrix * vec4(intersection.xyz, 1.0)).rg;
-    //intersection.xyz += h;
+    intersection.xyz += h;
 
     intersectionPos = intersection.xyz;
 
@@ -176,7 +183,54 @@ vec3 computeNormal(vec2 uv, float variation)
             wind3 * timeScale3 * t).rgb * amplitude3;
 
 	vec3 normal = n;
-	normal.yz = n.zy;
+	//normal.yz = n.zy;
     //return normalize(2.0 * normal - 1.0);
     return normalize(2.0 * normal - 3.0);
+}
+
+vec3 computeTangent(float y_0, vec2 x0z0)
+{
+    float L00 = y_0 - f_x(x0z0)*x0z0.x - f_z(x0z0)*x0z0.y;
+    float L10 = y_0 + f_z(x0z0)*(1 - x0z0.x) + f_z(x0z0)*(1 - x0z0.y);
+
+    vec3 T0 = vec3(0, L00, 0);
+    vec3 T1 = vec3(1, L10, 0);
+
+    return normalize(T1-T0);
+}
+
+// +--+--+--+
+// |a1|a4|a7|
+// +--+--+--+
+// |a2|a5|a8| a5 is the current center
+// +--+--+--+
+// |a3|a6|a9|
+// +--+--+--+
+
+float f_x(vec2 x0z0)
+{
+    vec2 s = vec2(1, 1)/2048;
+    float a1 = computeDisplacement(x0z0 + s*vec2(-1,1), variation).y;
+    float a2 = computeDisplacement(x0z0 + s*vec2(-1,0), variation).y;
+    float a3 = computeDisplacement(x0z0 + s*vec2(-1,-1), variation).y;
+
+    float a7 = computeDisplacement(x0z0 + s*vec2(1,1), variation).y;
+    float a8 = computeDisplacement(x0z0 + s*vec2(1,0), variation).y;
+    float a9 = computeDisplacement(x0z0 + s*vec2(1,-1), variation).y;
+
+    return a1 + 2*a2 + a3 - (a7 + 2*a8 + a9);
+}
+
+float f_z(vec2 x0z0)
+{
+    vec2 s = vec2(1, 1)/2048;
+    float a1 = computeDisplacement(x0z0 + s*vec2(-1,1), variation).y;
+    float a4 = computeDisplacement(x0z0 + s*vec2(0,1), variation).y;
+    float a7 = computeDisplacement(x0z0 + s*vec2(1,1), variation).y;
+
+    float a3 = computeDisplacement(x0z0 + s*vec2(-1,-1), variation).y;
+    float a6 = computeDisplacement(x0z0 + s*vec2(0,-1), variation).y;
+    float a9 = computeDisplacement(x0z0 + s*vec2(1,-1), variation).y;
+
+    return a1 + 2*a4 + a7 - (a3+ 2*a6 + a9);
 }
