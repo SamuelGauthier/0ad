@@ -1184,7 +1184,7 @@ void CRenderer::ComputeRefractionCamera(CCamera& camera, const CBoundingBoxAlign
 	// the whole screen despite being rendered into a square, and cover slightly more
 	// of the view so we can see wavy refractions of slightly off-screen objects.
 	camera.UpdateFrustum(scissor);
-	camera.ClipFrustum(CVector4D(0, -1, 0, wm.m_WaterHeight + 1.5f));	// add some to avoid artifacts near steep shores.
+	camera.ClipFrustum(CVector4D(0, -1, 0, wm.m_WaterHeight + 3.5f));	// add some to avoid artifacts near steep shores.
 
 	SViewPort vp;
 	//vp.m_Height = wm.m_RefTextureSize;

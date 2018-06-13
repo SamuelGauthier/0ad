@@ -146,8 +146,8 @@ void CGridProjector::Initialize()
     // ATM only possible to have a grid of 65526 vertices
     // Limitation due to constraints 16 bit indices constraints
     // TODO: split the grid into the right amount of sub-grids
-    m_resolutionX = 128;//g_Renderer.GetWidth()/4;
-    m_resolutionY = 512;//g_Renderer.GetHeight()/2;
+	m_resolutionX = 128;//g_Renderer.GetWidth()/4;
+	m_resolutionY = 512;//g_Renderer.GetHeight()/2;
     m_totalResolution = m_resolutionX * m_resolutionY;
     
 	GenerateVertices();
@@ -570,6 +570,12 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
 	CLOSTexture& losTexture = g_Renderer.GetScene().GetLOSTexture();
 	shader->BindTexture(str_losMap, losTexture.GetTextureSmooth());
 	shader->Uniform(str_losMatrix, losTexture.GetTextureMatrix());
+
+	//const CLightEnv& lightEnv = g_Renderer.GetLightEnv();
+	CMatrix3D skyBoxRotation;
+	skyBoxRotation.SetIdentity();
+	skyBoxRotation.RotateY(M_PI - 0.3f + lightEnv.GetRotation());
+	shader->Uniform(str_skyBoxRot, skyBoxRotation);
 
 #if DEBUG_Y_WORLD_POS
 	shader->Uniform(str_screenCenter, camera.GetWorldCoordinates(512, 384));
