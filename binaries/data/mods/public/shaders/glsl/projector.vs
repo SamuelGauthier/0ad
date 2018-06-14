@@ -149,7 +149,7 @@ vec3 computeDisplacement(vec2 uv, float variation)
 {
     //float variation = texture2D(heightMap1, 0.0001 * waterCoords.xz).g;
     float t = time;
-    t = 1;
+    //t = 1;
 
     vec3 h = texture2D(heightMap1, scale.x * uv + wind1 *
             timeScale1 * t).rgb * amplitude1 - 0.5;
@@ -173,19 +173,19 @@ vec3 computeDisplacement(vec2 uv, float variation)
 vec3 computeNormal(vec2 uv, float variation)
 {
     float t = time;
-    t = 1;
-    vec3 n = texture2D(normalMap1, scale.x * uv).rgb;
-    //vec3 n = texture2D(normalMap1, scale.x * uv +
-    //        wind1 * timeScale1 * t).rgb;// * amplitude1;
-    //n += texture2D(normalMap2, scale.x * uv +
-    //        wind2 * timeScale2 * t).rgb;// * amplitude2;
-    //n += texture2D(normalMap3, scale.x * uv +
-    //        wind3 * timeScale3 * t).rgb;// * amplitude3;
+    //t = 1;
+    //vec3 n = texture2D(normalMap1, scale.x * uv).rgb;
+    vec3 n = texture2D(normalMap1, scale.x * uv +
+            wind1 * timeScale1 * t).rgb;// * amplitude1;
+    n += texture2D(normalMap2, scale.x * uv +
+            wind2 * timeScale2 * t).rgb;// * amplitude2;
+    n += texture2D(normalMap3, scale.x * uv +
+            wind3 * timeScale3 * t).rgb;// * amplitude3;
 
-	vec3 normal = n;
+	//vec3 normal = n;
 	//normal.yz = n.zy;
-    return normalize(2.0 * normal - 1.0);
-    //return normalize(2.0 * normal - 3.0);
+    //return normalize(2.0 * normal - 1.0);
+    return normalize(2.0 * n - 3.0);
 }
 
 vec3 computeTangent(float y_0, vec2 x0z0)

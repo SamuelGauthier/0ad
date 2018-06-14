@@ -5,8 +5,8 @@
 #define PI 3.14159265358979
 
 // air/water = 1/1.333
-#define RATIO 0.7501875469
-//#define RATIO 0.909
+//#define RATIO 0.7501875469
+#define RATIO 0.909
 
 uniform sampler2D losMap;
 
@@ -130,7 +130,7 @@ void main()
 	vec3 n = normalize(normal);
 	//n.yz = n.zy;
     n = CalculateNormal(waterCoords.xz);
-    n = vec3(0, 1, 0);
+    //n = vec3(0, 1, 0);
     //n = texture2D(heightMap1, 0.01*waterCoords.xz).rgb;
 
     vec3 l = normalize(sunDir);
@@ -151,6 +151,7 @@ void main()
 
     vec4 shallowColor = vec4(0.0, 0.64, 0.68, 1.0);
     shallowColor = vec4(0.27, 0.69, 0.68, 1.0);
+    shallowColor = vec4(0.1, 0.39, 0.48, 1.0);
     vec4 deepColor = vec4(0.02, 0.05, 0.10, 1.0);
 	vec4 ambient = mix(shallowColor, deepColor, CalculateHeight(intersectionPos.xz, variation).y);
 
@@ -168,27 +169,46 @@ void main()
 
     vec4 reflection = ComputeReflection(n); // Using the normal 0 1 0 works
     vec4 refraction = vec4(LightAttenuation(ComputeRefraction(n, v), waterDepth), 1.0);
-    //vec4 refraction = vec4(ComputeRefraction(n, v), 1.0);
+    refraction = vec4(ComputeRefraction(n, v), 1.0) * shallowColor;
 
     vec3 reflected = reflect(v, n);
     vec3 reflectedV = vec3(invV * vec4(reflected, 0));
     vec3 skyReflection = textureCube(skyCube, reflectedV).rgb;
-    float factor = max(0, exp(0.1*waterDepth-3));
+    float factor = max(0, exp(0.1*waterDepth));// mix using the relative depth
 	//vec4 refractionColor = refraction + shallowColor * exp(0.01*deepColor);
 	vec4 refractionColor = mix(refraction, shallowColor, factor);
     refractionColor = refraction;
 	vec4 reflectionColor = vec4(mix(skyReflection, reflection.rgb, reflection.a), 1.0);
-	vec4 amb = mix(refractionColor, reflectionColor, F(F0, v, n));
+	//vec4 amb = mix(refractionColor, reflectionColor, 3*F(F0, v, n));
+	vec4 amb = mix(refractionColor, reflectionColor, F(F0, v, n)) + 0.01 *
+        ambient;
  
     gl_FragColor = vec4(skyReflection.rgb, 1.0);
     //gl_FragColor = vec4(n.rgb, 1.0);
 
+    gl_FragColor = amb;
+    //gl_FragColor = vec4(specular, specular, specular, 1.0);
 	gl_FragColor = vec4(gl_FragColor.rgb * losMod, 1.0);
 }
 
 vec3 CalculateNormal(vec2 uv) {
-    vec3 n = texture2D(normalMap1, scale.x * uv).rgb;
-	return 2.0*n - 1.0;
+    //vec3 n = texture2D(normalMap1, scale.x * uv).rgb;
+	//return 2.0*n - 1.0;
+
+    float t = time;
+    //t = 1;
+    //vec3 n = texture2D(normalMap1, scale.x * uv).rgb;
+    vec3 n = texture2D(normalMap1, scale.x * uv +
+            wind1 * timeScale1 * t).rgb;// * amplitude1;
+    n += texture2D(normalMap2, scale.x * uv +
+            wind2 * timeScale2 * t).rgb;// * amplitude2;
+    n += texture2D(normalMap3, scale.x * uv +
+            wind3 * timeScale3 * t).rgb;// * amplitude3;
+
+	//vec3 normal = n;
+	//normal.yz = n.zy;
+    //return normalize(2.0 * normal - 1.0);
+    return normalize(2.0 * n - 3.0);
 
 	// --------------------------------------------------------------------------------------
 	/*
@@ -338,7 +358,7 @@ vec3 ComputeRefraction(vec3 n, vec3 v)
     P2 = P1 + d_N * 0.5 * d_V;
     P2 = P1 + d_tilde * normalize(T1);
 
-    vec4 I = refractionMVP * vec4(P1, 1.0);
+    vec4 I = refractionMVP * vec4(P2, 1.0);
 
     float refractionShiftUp = 1/screenHeight;
     vec2 uv = vec2(0.5 * (I.x / I.w + 1), 0.5 * (I.y / I.w + 1) +
