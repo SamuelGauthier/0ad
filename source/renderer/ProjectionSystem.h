@@ -21,13 +21,25 @@
 #include "graphics/Camera.h"
 #include "graphics/ShaderProgramPtr.h"
 
+/**
+ *
+ */
 class CProjectionSystem
 {
 public:
+
 	virtual ~CProjectionSystem() {}
 
+	/**
+	 *  Render the projected system
+	 *
+	 *  @param shader The shader program
+	 */
 	virtual void Render(CShaderProgramPtr& shader) = 0;
-	
+
+	/**
+	 *	Intialization of the projection system.
+	 */
 	virtual void Initialize() = 0;
 };
 

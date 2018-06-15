@@ -44,7 +44,7 @@ varying float amplitude3;
 
 varying vec3 positionCS;
 
-vec4 FindLineSegIntersection(vec4 start, vec4 end);
+vec4 FindLinePlaneIntersection(vec4 start, vec4 end);
 float DistanceToPlane(vec4 point);
 vec3 computeDisplacement(vec2 uv, float variation);
 vec3 computeNormal(vec2 uv, float variation);
@@ -66,35 +66,18 @@ void main()
 	end = projectorMVP * end;
 	end /= end.w;
 
-	vec4 intersection = FindLineSegIntersection(start, end);
+	vec4 intersection = FindLinePlaneIntersection(start, end);
     waterCoords = intersection;
 
     intersectionPos = intersection.xyz;
-    /*
-    vec3 scale = vec3(0.01, 0.01, 0.01);
-    vec2 wind1 = vec2(1, 3);
-    vec2 wind2 = vec2(-3, 1);
-    vec2 wind3 = vec2(0, 1);
-    float timeScale1 = 0.006;
-    float timeScale2 = 0.006;
-    float timeScale3 = 0.005;
-    float amplitude1 = 0.8;
-    float amplitude2 = 1.2;
-    float amplitude3 = 0.5;
-    vec3 amplitude = vec3(0.8, 1.2, 0.5);
-    */
+
     scale = vec3(0.01, 0.01, 0.01);
     wind1 = vec2(1, 3);
-    wind2 = vec2(-3, -2);
-    //wind2 = vec2(-1, -3);
-    //wind3 = vec2(0, 1);
-    wind3 = vec2(3, -1);
-    timeScale1 = 0.006;
-    timeScale2 = 0.006;
-    timeScale3 = 0.005;
-    //amplitude1 = 0.8;
-    //amplitude2 = 1.2;
-    //amplitude3 = 0.5;
+    wind2 = vec2(-3, -2);//vec2(-1, -3);
+    wind3 = vec2(3, -1);//vec2(0, 1);
+    timeScale1 = 0.006;//0.8
+    timeScale2 = 0.006;//1.2
+    timeScale3 = 0.005;//0.5
     amplitude1 = 1.8;
     amplitude2 = 2.2;
     amplitude3 = 1.5;
@@ -105,16 +88,6 @@ void main()
     vec3 h = computeDisplacement(intersection.xz, variation);
     tangent = vec3(1, 0, 0);//computeTangent(h.y, intersection.xz);
 
-    //vec3 h = texture2D(heightMap1, scale.x * intersection.xz + wind1 *
-    //        timeScale1 * time).rgb * amplitude1 - 0.5;
-
-    //h += texture2D(heightMap2, scale.x * intersection.xz + wind2 *
-    //        timeScale2 * time).rgb * amplitude2 - 0.5;
-
-    //h += texture2D(heightMap3, scale.x * intersection.xz + wind3 *
-    //        timeScale3 * time).rgb * amplitude3 - 0.5;
-
-    //h *= variation;
 	losCoords = (losMatrix * vec4(intersection.xyz, 1.0)).rg;
     intersection.xyz += h;
 
@@ -129,7 +102,7 @@ void main()
 }
 
 
-vec4 FindLineSegIntersection(vec4 start, vec4 end)
+vec4 FindLinePlaneIntersection(vec4 start, vec4 end)
 {
 	float dist1 = DistanceToPlane(start);
 	float dist2 = DistanceToPlane(end);
@@ -145,6 +118,8 @@ float DistanceToPlane(vec4 p)
 	return waterNormal.x * p.x + waterNormal.y * p.y + waterNormal.z * p.z + waterD;
 }
 
+
+// Compute the displacement vector
 vec3 computeDisplacement(vec2 uv, float variation)
 {
     //float variation = texture2D(heightMap1, 0.0001 * waterCoords.xz).g;
@@ -161,14 +136,8 @@ vec3 computeDisplacement(vec2 uv, float variation)
     h += texture2D(heightMap3, scale.x * uv + wind3 *
             timeScale3 * t).rgb * amplitude3 - 0.5;
 
-	return h;//* variation;
+	return h* variation;
 }
-
-//vec2 sobel(vec2 uv)
-//{
-
-//}
-//
 
 vec3 computeNormal(vec2 uv, float variation)
 {
@@ -188,6 +157,7 @@ vec3 computeNormal(vec2 uv, float variation)
     return normalize(2.0 * n - 3.0);
 }
 
+// Calculate the tangent with the sobel filter
 vec3 computeTangent(float y_0, vec2 x0z0)
 {
     float L00 = y_0 - f_x(x0z0)*x0z0.x - f_z(x0z0)*x0z0.y;

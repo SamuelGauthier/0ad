@@ -110,7 +110,6 @@ vec3 LineLineIntersection(vec3 o1, vec3 d1, vec3 o2, vec3 d2);
 float determinant(mat3 m);
 vec3 GetWorldFromHeightMap(vec2 worldXZ);
 vec3 GetPosOnTerrain(vec3 p);
-vec4 CalcEyeFromWindow(vec3 windowSpace);
 
 float waterDepth;
 
@@ -167,9 +166,9 @@ void main()
 	float specular2 = max(0, pow(dot(r,v), 8));
 	//color.rgb += specular;
 
-    vec4 reflection = ComputeReflection(n); // Using the normal 0 1 0 works
+    vec4 reflection = ComputeReflection(n*vec3(0.1,1,0.1)); // Using the normal 0 1 0 works
     vec4 refraction = vec4(LightAttenuation(ComputeRefraction(n, v), waterDepth), 1.0);
-    refraction = vec4(ComputeRefraction(n, v), 1.0) * shallowColor;
+    //refraction = vec4(ComputeRefraction(n, v), 1.0) * shallowColor;
 
     vec3 reflected = reflect(v, n);
     vec3 reflectedV = vec3(invV * vec4(reflected, 0));
@@ -180,17 +179,21 @@ void main()
     refractionColor = refraction;
 	vec4 reflectionColor = vec4(mix(skyReflection, reflection.rgb, reflection.a), 1.0);
 	//vec4 amb = mix(refractionColor, reflectionColor, 3*F(F0, v, n));
-	vec4 amb = mix(refractionColor, reflectionColor, F(F0, v, n)) + 0.01 *
+	//vec4 amb = mix(refractionColor, reflectionColor, F(F0, v, n)) + 0.1 *
+    //    ambient;
+	vec4 amb = mix(refractionColor, reflectionColor, F(F0, n*vec3(0.2,1,0.2), n)) + 0.1 *
         ambient;
  
     gl_FragColor = vec4(skyReflection.rgb, 1.0);
     //gl_FragColor = vec4(n.rgb, 1.0);
 
-    gl_FragColor = amb;
+    gl_FragColor = amb + specular;
+    //gl_FragColor = refractionColor;
     //gl_FragColor = vec4(specular, specular, specular, 1.0);
 	gl_FragColor = vec4(gl_FragColor.rgb * losMod, 1.0);
 }
 
+// Compute the normal given the world position coordinates xz
 vec3 CalculateNormal(vec2 uv) {
     //vec3 n = texture2D(normalMap1, scale.x * uv).rgb;
 	//return 2.0*n - 1.0;
@@ -276,7 +279,8 @@ vec3 CalculateHeight(vec2 uv, float variation) {
     //vec3 h = texture2D(heightMap1, scale.x * uv).rgb - 0.5;
     //h.y *= 2;
     //h.xz *= 3;
-    return h;
+    return h * variation;
+    //return h;
 }
 
 // Shlick approximation
@@ -358,7 +362,7 @@ vec3 ComputeRefraction(vec3 n, vec3 v)
     P2 = P1 + d_N * 0.5 * d_V;
     P2 = P1 + d_tilde * normalize(T1);
 
-    vec4 I = refractionMVP * vec4(P2, 1.0);
+    vec4 I = refractionMVP * vec4(P1, 1.0);
 
     float refractionShiftUp = 1/screenHeight;
     vec2 uv = vec2(0.5 * (I.x / I.w + 1), 0.5 * (I.y / I.w + 1) +
@@ -378,6 +382,7 @@ vec3 ComputeRefraction(vec3 n, vec3 v)
     return refraction;
 }
 
+// Exponential light attenuation function
 vec3 LightAttenuation(vec3 color, float depth)
 {
     float red = exp(-depth*0.55);
@@ -387,6 +392,8 @@ vec3 LightAttenuation(vec3 color, float depth)
     return color * vec3(red, green, blue);
 }
 
+// From https://stackoverflow.com/questions/22360810/
+// Reconstruct the world position from the depth buffer
 vec3 GetWorldPosFromDepth()
 {
     vec4 coordsCS;
@@ -400,47 +407,6 @@ vec3 GetWorldPosFromDepth()
     return coordsHS.xyz / coordsHS.w;
 
 }
-
-//vec3 GetPosOnTerrain(vec3 p)
-//{
-//    vec4 t = refractionMVP * vec4(p, 1.0);
-//    vec2 uv = t.xy/t.w;
-//    uv = (uv + 1) * 0.5;
-//    uv.y += 1/screenHeight;
-//
-//    return GetWorldPosFromDepth(refractionMapDepth, uv);
-//}
-//
-//// From https://stackoverflow.com/questions/22360810/
-//vec3 GetWorldPosFromDepth(sampler2D depthTex, vec2 uv)
-//{
-//    vec4 clipSpaceLocation;
-//    clipSpaceLocation.xy = uv * 2.0f - 1.0f;
-//    clipSpaceLocation.z = texture2D(depthTex, uv).r * 2.0f - 1.0f;
-//    clipSpaceLocation.w = 1.0f;
-//    //vec4 homogenousLocation = invMVP * clipSpaceLocation;
-//    vec4 homogenousLocation = invMVP * clipSpaceLocation;
-//    return homogenousLocation.xyz / homogenousLocation.w;
-//}
-
-// From https://www.khronos.org/opengl/wiki/Compute_eye_space_from_window_space
-vec4 CalcEyeFromWindow(vec3 windowSpace)
-{
-    vec4 viewport = vec4(0, 0, screenWidth, screenHeight);
-    vec2 depthrange = vec2(0, 1);
-
-	vec3 ndcPos;
-	ndcPos.xy = ((2.0 * windowSpace.xy) - (2.0 * viewport.xy)) / (viewport.zw) - 1;
-	ndcPos.z = (2.0 * windowSpace.z - depthrange.x - depthrange.y) /
-    (depthrange.y - depthrange.x);
-
-	vec4 clipPos;
-	clipPos.w = P[3][2] / (ndcPos.z - (P[2][2] / P[2][3]));
-	clipPos.xyz = ndcPos * clipPos.w;
-
-	return invP * clipPos;
-}
-
 
 // Compute the terrain world elevation at a world point (x, z) based on the
 // terrain height map
