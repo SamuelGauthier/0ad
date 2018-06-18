@@ -26,64 +26,156 @@
 #include "ps/CLogger.h"
 
 #include "renderer/FFTWaterModel.h"
-//#include "renderer/VertexArray.h"
 #include "renderer/VertexBuffer.h"
 #include "renderer/OceanWater.h"
 #include "renderer/ProjectionSystem.h"
-//#include "renderer/Water.h"
 
 class CGridProjector : public CProjectionSystem
 {
 public:
 	using WaterProperties = CFFTWaterModel::SFFTWaterProperties;
 
+    /** @brief Creates a grid projector */
 	CGridProjector();
+
+    /** @brief Destructor */
 	~CGridProjector();
 
+	/**
+	 *  @brief Render the projected grid
+	 *  @param shader the shader program
+	 */
 	void Render(CShaderProgramPtr& shader) override;
 
+	/**
+	 *	@brief Intializes the projected grid.
+	 */
 	void Initialize() override;
 
-	//void SetReflectionMatrix(CMatrix3D reflectionMatrix) { m_reflectionMatrix = reflectionMatrix; }
-    //void SetReflectionTransMatrix(CMatrix3D reflectionTransMatrix)
-    //void SetReflectionCamPos(CVector3D position) { m_reflectionCamPos = position; }
-    //void SetReflectionLookAt(CVector3D lookAt) { m_reflectionLookAt = lookAt; }
-    //void SetReflectionFarClip(CPlane farClippingPlane) { m_reflectionFarClip = farClippingPlane; }
+    /**
+     * @brief Sets the refelction camera to the one given in arguments.
+     * * @param reflectionCamera the reflection camera
+     */
     void SetReflectionCamera(CCamera reflectionCamera) { m_reflectionCam = reflectionCamera; }
+
+    /**
+     * @brief Sets the refraction camera to the one given in arguments.
+     * @param refractionCamera the refraction camera
+     */
     void SetRefractionCamera(CCamera refractionCamera) { m_refractionCam = refractionCamera; }
+
+    /**
+     * @brief Sets the camera for the entire scene capture
+     * @param entireSceneCamera the entire scene camera
+     */
     void SetEntireSceneCamera(CCamera entireSceneCamera) { m_entireSceneCam = entireSceneCamera; }
     
-    float GetMaxWaterHeight() { return m_water.GetMaxWaterHeight(); }
-    float GetMinWaterHeight() { return m_water.GetMinWaterHeight(); }
+    /**
+     * @brief Get the height of the water
+     * @return returns the height of the water
+     */
     float GetWaterHeight() { return m_water.GetWaterHeight(); }
 
+    /**
+     * @brief Get the width of the reflection texture
+     * @return returns the width of the reflection texture
+     */
     int GetReflectionTexWidth() { return m_reflectionTexSizeW; }
+
+    /**
+     * @brief Get the height of the reflection texture
+     * @return returns the height of the reflection texture
+     */
     int GetReflectionTexHeight() { return m_reflectionTexSizeH; }
+
+    /**
+     * @brief Get the width of the refraction texture
+     * @return returns the width of the refraction texture
+     */
 	int GetRefractionTexWidth() { return m_reflectionTexSizeW; }
+
+    /**
+     * @brief Get the height of the refraction texture
+     * @return returns the height of the refraction texture
+     */
 	int GetRefractionTexHeight() { return m_reflectionTexSizeH; }
 
+    /**
+     * @brief 
+     * @return 
+     */
 	GLuint GetReflectionFBOID() { return m_reflectionFBOID; }
-    //CVector3D GetReflectionLookAt() { return m_reflectionLookAt; }
-    CPlane GetReflectionFarClip() { return m_reflectionFarClip; }
+
+    /**
+     * @brief 
+     * @return 
+     */
 	GLuint GetRefractionFBOID() { return m_refractionFBOID; }
+
+    /**
+     * @brief 
+     * @return 
+     */
 	GLuint GetEntireSceneFBOID() { return m_entireSceneFBOID; }
 
 private:
+
+    /**
+     * @brief Generates a grid of vertices in screen space
+     */
 	void GenerateVertices();
+
+    /**
+     * @brief Generates the indices corresponding to the grid
+     */
 	void GenerateIndices();
+
+    /**
+     * @brief Updates the transformation matrices used by the grid projector.
+     */
 	void UpdateMatrices();
+
+    /**
+     * @brief Computes the intersection between the camera frustum and the min
+     * max water planes. Adds the intersection to the \p span_buffer
+     * @param cam_frustrum the camera frustum
+     * @param span_buffer buffer where the intersections are added
+     * @param maxWater max water plane
+     * @param minWater min water plane
+     * @param start start index
+     * @param end end index
+     */
 	void ComputeIntersection(std::vector<CVector4D>& cam_frustrum, std::vector<CVector4D>& span_buffer, CPlane& maxWater, CPlane& minWater, int start, int end);
+
+    /**
+     * @brief Creates all the textures need by the grid projector
+     */
     void CreateTextures();
+
+    /**
+     * @brief Updates the reflection far plane needed for the shader
+     */
     void UpdateReflectionFarPlane();
+
+    /**
+     * @brief Updates the refraction far plane needed for the shader
+     */
     void UpdateRefractionFarPlane();
+
+    /**
+     * @brief Updates the refraction far plane needed for the shader
+     */
 	void UpdateFarPlane();
+
+    /**
+     * @brief Creates a texture holding the height of the entire terrain.
+     */
 	void CreateTerrainTexture();
 
 
 	float m_time;
 	uint m_resolutionX;
 	uint m_resolutionY;
-	uint m_totalResolution;
 	COceanWater m_water;
 
 	CCamera m_PCamera;
@@ -99,7 +191,7 @@ private:
 	std::vector<CVector4D> m_vertices;
 	std::vector<CVector4D> m_verticesModel;
 	
-	std::vector<GLuint> m_heightMapsID;
+	std::vector<GLuint> m_vectorDisplacementFieldsID;
 	std::vector<GLuint> m_normalMapsID;
     GLuint m_variationMapID;
     GLuint m_flowMapID;

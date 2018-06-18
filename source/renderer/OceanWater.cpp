@@ -26,30 +26,58 @@
 #include "renderer/Renderer.h"
 #include "renderer/WaterManager.h"
 
-
+/**
+ * @brief Constructs an OceanWater with a given water model.
+ *
+ * @param waterModel the water model
+ */
 COceanWater::COceanWater(CFFTWaterModel waterModel) : m_waterModel(waterModel)
 {
 }
 
+/**
+ * @brief Destructor
+ */
 COceanWater::~COceanWater() {}
 
+/**
+ * @brief Get the maximum height of the water
+ *
+ * @return Returns the maximum height of the water
+ */
 float COceanWater::GetMaxWaterHeight()
 {
     // TODO: Temporary, should compute the max from the
     return 5.0f;
 }
 
+/**
+ * @brief Get the minimum height of the water
+ *
+ * @return Returns the minimum height of the water
+ */
 float COceanWater::GetMinWaterHeight()
 {
     // Id. as in COceanWater::GetMaxWaterHeight()
     return -5.0f;
 }
 
+/**
+ * @brief Get the height of the water
+ *
+ * @return Returns height of the water
+ */
 float COceanWater::GetWaterHeight()
 {
     return -m_waterBase.m_Dist;
 }
 
+/**
+ * @brief Updates the base height of the water. Depends on the WaterManager for
+ * maps with changing water height.
+ *
+ * @todo remove dependency with WaterManager
+ */
 void COceanWater::UpdateWaterHeight()
 {
     // TODO: Remove dependency to WaterManager
@@ -57,11 +85,17 @@ void COceanWater::UpdateWaterHeight()
     m_waterBase.Set(CVector3D(0.f, 1.f, 0.f), CVector3D(0.f, waterHeight, 0.f));
 }
 
+/**
+ * @brief Creates the vector displacement fields and normal maps
+ */
 void COceanWater::GenerateWaterWaves()
 {
-    m_waterModel.GenerateHeightAndNormalMaps(&m_heightMaps, &m_normalMaps);
+    m_waterModel.GenerateHeightAndNormalMaps(&m_vectorDisplacementFields, &m_normalMaps);
 }
 
+/**
+ * @brief Generates a variation map 
+ */
 void COceanWater::GenerateVariationMap()
 {
     int size = 2048;
@@ -75,9 +109,4 @@ void COceanWater::GenerateVariationMap()
             m_variationMap[i*size + j] = (GLfloat) noise(i*0.01, j*0.01);
         }
     }
-}
-
-void COceanWater::GenerateFlowMap()
-{
-    // TODO: implement
 }

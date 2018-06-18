@@ -66,6 +66,9 @@
 #define DEBUG_Y_WORLD_POS 1
 
 
+/**
+ *  Properties for the IFFT water generation
+ */
 double TIME = 3.2;
 //CGridProjector::WaterProperties coarseWaves = CGridProjector::WaterProperties(3e-7f, 43, CVector2D(1.0f, 5.0f), 1.0f, 0.1f, 2048, 4000, TIME);
 //CGridProjector::WaterProperties mediumWaves = CGridProjector::WaterProperties(6e-7f, 20, CVector2D(4.0f, 1.5f), 2.0f, 0.1f, 2048, 5000, TIME);
@@ -76,13 +79,15 @@ CGridProjector::WaterProperties detailedWaves = CGridProjector::WaterProperties(
 std::vector<CGridProjector::WaterProperties> wps = { coarseWaves, mediumWaves, detailedWaves };
 //std::vector<CGridProjector::WaterProperties> wps = { coarseWaves};
 
+/**
+ * @brief Creates a projected grid with an ocean water and the above parameters
+ */
 CGridProjector::CGridProjector() : m_water(CFFTWaterModel(wps)), m_gridVBIndices(0), m_gridVBVertices(0)
 {
 	m_time = 0.0;
 
     m_resolutionX = 0;
     m_resolutionY = 0;
-    m_totalResolution = 0;
 
 	m_PCamera = CCamera();
 
@@ -92,7 +97,7 @@ CGridProjector::CGridProjector() : m_water(CFFTWaterModel(wps)), m_gridVBIndices
 	m_Mprojector = CMatrix3D();
     
     m_normalMapsID = std::vector<GLuint>(3);
-    m_heightMapsID = std::vector<GLuint>(3);
+    m_vectorDisplacementFieldsID = std::vector<GLuint>(3);
 	m_reflectionFBOID = 0;
     m_reflectionDepthBufferID = 0;
 	m_reflectionID = 0;
@@ -107,13 +112,15 @@ CGridProjector::CGridProjector() : m_water(CFFTWaterModel(wps)), m_gridVBIndices
 	m_reflectionTexSizeW = 0;
     m_reflectionTexSizeH = 0;
 }
-
+/**
+ * @brief Destructor
+ */
 CGridProjector::~CGridProjector()
 {
 	if (m_gridVBIndices) g_VBMan.Release(m_gridVBIndices);
 	if (m_gridVBVertices) g_VBMan.Release(m_gridVBVertices);
     
-    glDeleteTextures((GLsizei)m_heightMapsID.size(), &m_heightMapsID[0]);
+    glDeleteTextures((GLsizei)m_vectorDisplacementFieldsID.size(), &m_vectorDisplacementFieldsID[0]);
     glDeleteTextures((GLsizei)m_normalMapsID.size(), &m_normalMapsID[0]);
     glDeleteTextures(1, &m_variationMapID);
     glDeleteTextures(1, &m_flowMapID);
@@ -130,6 +137,9 @@ CGridProjector::~CGridProjector()
 	pglDeleteFramebuffersEXT(1, &m_entireSceneFBOID);
 }
 
+/**
+ *	@brief Intializes the projected grid.
+ */
 void CGridProjector::Initialize()
 {
 	if(m_gridVBIndices)
@@ -148,8 +158,7 @@ void CGridProjector::Initialize()
     // TODO: split the grid into the right amount of sub-grids
 	m_resolutionX = 128;//g_Renderer.GetWidth()/4;
 	m_resolutionY = 512;//g_Renderer.GetHeight()/2;
-    m_totalResolution = m_resolutionX * m_resolutionY;
-    
+
 	GenerateVertices();
 	
 	m_gridVBVertices = g_VBMan.Allocate(sizeof(CVector4D), m_vertices.size(), GL_STATIC_DRAW, GL_ARRAY_BUFFER);
@@ -174,6 +183,9 @@ void CGridProjector::Initialize()
 	CreateTerrainTexture();
 }
 
+/**
+ * @brief Generates a grid of vertices in screen space
+ */
 void CGridProjector::GenerateVertices()
 {
 	PROFILE3_GPU("generate vertices");
@@ -193,6 +205,9 @@ void CGridProjector::GenerateVertices()
 	m_vertices = m_verticesModel;
 }
 
+/**
+ * @brief Generates the indices corresponding to the grid
+ */
 void CGridProjector::GenerateIndices()
 {
 	m_indices.clear();
@@ -218,6 +233,9 @@ void CGridProjector::GenerateIndices()
 	}
 }
 
+/**
+ * @brief Updates the transformation matrices used by the grid projector.
+ */
 void CGridProjector::UpdateMatrices()
 {
 	PROFILE3_GPU("update matrices");
@@ -340,7 +358,7 @@ void CGridProjector::UpdateMatrices()
 #if DEBUG_UPDATE_MATRICES_FRUSTRUM_SPAN_BUFFER
 	LOGWARNING("span_buffer size %u", span_buffer.size());
 #endif
-	
+
 #if DEBUG_UPDATE_MATRICES_FRUSTRUM_POINTS_INFO
 	for (size_t i = 0; i < cam_frustrum.size(); i++)
 	{
@@ -422,7 +440,6 @@ void CGridProjector::UpdateMatrices()
 						 0,				y_max - y_min, 0, y_min,
 						 0,				0,			   1, 0,
 						 0,				0,			   0, 1);
-	//m_Mrange.SetIdentity();
 
 	m_Mprojector = m_Mpiview * m_Miperspective * m_Mrange;
 	
@@ -435,6 +452,17 @@ void CGridProjector::UpdateMatrices()
 #endif
 }
 
+/**
+ * @brief Computes the intersection between the camera frustum and the min
+ * max water planes. Adds the intersection to the \p span_buffer
+ *
+ * @param cam_frustrum the camera frustum
+ * @param span_buffer buffer where the intersections are added
+ * @param maxWater max water plane
+ * @param minWater min water plane
+ * @param start start index
+ * @param end end index
+ */
 void CGridProjector::ComputeIntersection(std::vector<CVector4D>& cam_frustrum, std::vector<CVector4D>& span_buffer, CPlane& maxWater, CPlane& minWater, int startIndice, int endIndice)
 {
 	CVector3D intMax;
@@ -459,6 +487,10 @@ void CGridProjector::ComputeIntersection(std::vector<CVector4D>& cam_frustrum, s
 	}
 }
 
+/**
+ *  @brief Render the projected grid
+ *  @param shader the shader program
+ */
 void CGridProjector::Render(CShaderProgramPtr& shader)
 {
 	if (g_Renderer.m_SkipSubmit)
@@ -468,6 +500,7 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
 	LOGWARNING("[S] Screen space [W] world space");
 #endif
 
+    // Update all the needed values before passing them to the shader
 	m_time = (float)timer_Time();
 	UpdateMatrices();
     UpdateReflectionFarPlane();
@@ -516,9 +549,9 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
     shader->Uniform(str_sunDir, lightEnv.GetSunDir());
     shader->Uniform(str_sunColor, lightEnv.m_SunColor);
     
-    shader->BindTexture(str_heightMap1, m_heightMapsID.at(0));
-    shader->BindTexture(str_heightMap2, m_heightMapsID.at(1));
-    shader->BindTexture(str_heightMap3, m_heightMapsID.at(2));
+    shader->BindTexture(str_heightMap1, m_vectorDisplacementFieldsID.at(0));
+    shader->BindTexture(str_heightMap2, m_vectorDisplacementFieldsID.at(1));
+    shader->BindTexture(str_heightMap3, m_vectorDisplacementFieldsID.at(2));
 
     shader->BindTexture(str_normalMap1, m_normalMapsID.at(0));
     shader->BindTexture(str_normalMap2, m_normalMapsID.at(1));
@@ -591,23 +624,25 @@ void CGridProjector::Render(CShaderProgramPtr& shader)
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
-
+/**
+ * @brief Creates all the textures need by the grid projector
+ */
 void CGridProjector::CreateTextures()
 {
     std::vector<CGridProjector::WaterProperties> waterProperties = m_water.GetWaterModel().GetWaterProperties();
     
-    m_heightMapsID = std::vector<GLuint>(waterProperties.size());
+    m_vectorDisplacementFieldsID = std::vector<GLuint>(waterProperties.size());
     m_normalMapsID = std::vector<GLuint>(waterProperties.size());
    
 	// Create the mipmapped height textures
 	// Note: the information when looking towards the horizon becomes wrong when using mipmaps
 	// see http://www.gdcvault.com/play/1025404/-World-of-Warships-Technical
-    std::vector<std::vector<u8>> heightMaps = m_water.GetHeightMaps();
+    std::vector<std::vector<u8>> heightMaps = m_water.GetVectorDisplacementFields();
     
-    glGenTextures((GLsizei)m_heightMapsID.size(), &m_heightMapsID[0]);
+    glGenTextures((GLsizei)m_vectorDisplacementFieldsID.size(), &m_vectorDisplacementFieldsID[0]);
     for (size_t i = 0; i < heightMaps.size(); i++)
     {
-        g_Renderer.BindTexture(i, m_heightMapsID.at(i));
+        g_Renderer.BindTexture(i, m_vectorDisplacementFieldsID.at(i));
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, waterProperties.at(i).m_resolution, waterProperties.at(i).m_resolution, 0, GL_RGB, GL_UNSIGNED_BYTE, &heightMaps.at(i)[0]);
         pglGenerateMipmapEXT(GL_TEXTURE_2D);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -758,22 +793,23 @@ void CGridProjector::CreateTextures()
     glGenTextures(1, &m_flowMapID);
 }
 
+/**
+ * @brief Updates the reflection far plane needed for the shader
+ */
 void CGridProjector::UpdateReflectionFarPlane()
 {
     CVector3D reflectionCamPos = m_reflectionCam.GetOrientation().GetTranslation();
     CVector3D reflectionLookAt = m_reflectionCam.GetOrientation().GetIn();
-    //m_ProjMat * m_Orientation.GetInverse();
-    //LOGWARNING("ratio = %f", m_Height / float(std::max(1, m_Width)));
-    //LOGWARNING("[W,H] = [%u, %u]", m_Width, m_Height);
-    
-    //CVector3D camPosition = m_reflectionCam.GetOrientation().GetTranslation();
-    //CVector3D camDirection = m_reflectionCam.GetOrientation().GetIn();
+
     CVector3D frustrumPoint = reflectionCamPos + reflectionLookAt.Normalized() * m_reflectionCam.GetFarPlane();
     CPlane farClipPlane;
     farClipPlane.Set(-reflectionLookAt.Normalized(), frustrumPoint);
     m_reflectionFarClip = farClipPlane;
 }
 
+/**
+ * @brief Updates the refraction far plane needed for the shader
+ */
 void CGridProjector::UpdateRefractionFarPlane()
 {
     CVector3D refractionCamPos = m_refractionCam.GetOrientation().GetTranslation();
@@ -785,6 +821,9 @@ void CGridProjector::UpdateRefractionFarPlane()
     m_refractionFarClip = farClipPlane;
 }
 
+/**
+ * @brief Updates the refraction far plane needed for the shader
+ */
 void CGridProjector::UpdateFarPlane()
 {
 	CCamera camera = g_Renderer.GetViewCamera();
@@ -797,6 +836,9 @@ void CGridProjector::UpdateFarPlane()
     m_farClip = farClipPlane;
 }
 
+/**
+ * @brief Creates a texture holding the height of the entire terrain.
+ */
 void CGridProjector::CreateTerrainTexture()
 {
 	CTerrain* terrain = g_Game->GetWorld()->GetTerrain();

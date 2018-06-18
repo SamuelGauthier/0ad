@@ -23,46 +23,89 @@
 
 #include "renderer/FFTWaterModel.h"
 
+/**
+ * Class which holds the vector displacment maps, the normal maps, the variation
+ * map.
+ */
 class COceanWater
 {
 public:
-    
+
+    /**
+     * @brief Constructs an OceanWater with a given water model.
+     * @param waterModel the water model
+     */ 
     COceanWater(CFFTWaterModel waterModel);
+
+    /**
+     * @brief Destructor
+     */
     ~COceanWater();
     
+    /**
+     * @return Returns the maximum height of the water
+     */
     float GetMaxWaterHeight();
+
+    /**
+     * @return Returns the minimum height of the water
+     */
     float GetMinWaterHeight();
+
+    /**
+     * @return Returns height of the water
+     */
     float GetWaterHeight();
     
+    /**
+     * @brief Updates the base height of the water
+     */
     void UpdateWaterHeight();
+
+    /**
+     * @brief Creates the vector displacement fields and normal maps.
+     */
     void GenerateWaterWaves();
+
+    /**
+     * @brief Generates a variation map.
+     */
     void GenerateVariationMap();
 
+    /**
+     * @return Returns all the vector displacment fields of the water.
+     */
+    std::vector<std::vector<u8>> GetVectorDisplacementFields() { return m_vectorDisplacementFields; }
 
-    std::vector<std::vector<u8>> GetHeightMaps () { return m_heightMaps; }
+    /**
+     * @return Returns all the normal maps of the water.
+     */
     std::vector<std::vector<u8>> GetNormalMaps () { return m_normalMaps; }
-    std::vector<GLfloat> GetVariationMap () { return m_variationMap; }
-    std::vector<u8> GetFlowMap () { return m_flowMap; }
-    
-    CPlane GetWaterBase() { return m_waterBase; }
-    //void SetWaterHeight(float height);
 
-    
+    /**
+     * @return Returns the variation map.
+     */
+    std::vector<GLfloat> GetVariationMap () { return m_variationMap; }
+
+    /**
+     * @return Returns the plane description of the water.
+     */
+    CPlane GetWaterBase() { return m_waterBase; }
+
+    /**
+     * @return Returns the water model.
+     */
     CFFTWaterModel GetWaterModel() { return m_waterModel; }
     
 private:
     
-    void GenerateFlowMap();
-        
-    std::vector<std::vector<u8>> m_heightMaps;
+    std::vector<std::vector<u8>> m_vectorDisplacementFields;
     std::vector<std::vector<u8>> m_normalMaps;
     std::vector<GLfloat> m_variationMap;
-    std::vector<u8> m_flowMap;
     
     CPlane m_waterBase;
     CFFTWaterModel m_waterModel;
     
-    static u8 perm[];
 };
 
 #endif //INCLUDED_OCEANWATER

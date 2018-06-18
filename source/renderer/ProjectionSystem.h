@@ -22,7 +22,7 @@
 #include "graphics/ShaderProgramPtr.h"
 
 /**
- *
+ *  @brief Interface for projection systems
  */
 class CProjectionSystem
 {
@@ -33,7 +33,7 @@ public:
 	/**
 	 *  Render the projected system
 	 *
-	 *  @param shader The shader program
+	 *  @param shader the shader program
 	 */
 	virtual void Render(CShaderProgramPtr& shader) = 0;
 

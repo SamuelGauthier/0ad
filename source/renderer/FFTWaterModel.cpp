@@ -31,18 +31,29 @@
 #include <memory>
 
 #include "ps/CLogger.h"
-//#include "renderer/Renderer.h"
 
 #define G 9.81
 #define SQRT_0_5 0.7071067 // 0.707106781186547524
 #define K_VEC(n, m, N, L) CVector2D(2 * M_PI * (n - N / 2) / L, 2 * M_PI * (m  - N / 2) / L)
 
+/**
+ * @brief Creates a water model with the given set of properties.
+ *
+ * @param waterProperties the set of water properties
+ */
 CFFTWaterModel::CFFTWaterModel(std::vector<SFFTWaterProperties> waterProperties) : m_WaterProperties(waterProperties)
 {
 }
 
 CFFTWaterModel::~CFFTWaterModel() {}
 
+/**
+ * @brief Populates the 2d arrays given in argument with the vector
+ *
+ * displacment fields and the normal maps.
+ * @param heightMaps an empty vector displacment field container
+ * @param normalMaps an empty normal map container
+ */
 void CFFTWaterModel::GenerateHeightAndNormalMaps(VecVecU8* heightMaps, VecVecU8* normalMaps)
 {
     heightMaps->clear();
@@ -66,6 +77,19 @@ void CFFTWaterModel::GenerateHeightAndNormalMaps(VecVecU8* heightMaps, VecVecU8*
     }
 }
 
+/**
+ * @brief Generates a vector displacement field and normal map given a set
+ * of parameters and the given fourier amplitudes. The values are converted
+ * into RGB. Erases and populates the \p pixelHeightMap and \p
+ * pixelNormalMap
+ *
+ * @param time the time
+ * @param waterProps the water properties
+ * @param h_0 the precomputed fourier amplitudes
+ * @param h_0_star the complex conjugate of the fourier amplitudes
+ * @param pixelHeightMap empty array with size specified /p waterProps
+ * @param pixelNormalMap empty array with size specified /p waterProps
+ */
 void CFFTWaterModel::GetHeightAndNormalMapAtTime(double time, SFFTWaterProperties waterProps, VecComplexF* h_0, VecComplexF* h_0_star, std::vector<u8>* pixelHeightMap, std::vector<u8>* pixelNormalMap)
 {
     fftwf_complex* in_height;
@@ -101,6 +125,7 @@ void CFFTWaterModel::GetHeightAndNormalMapAtTime(double time, SFFTWaterPropertie
     std::vector<CVector3D> heightField(resolution);
     std::vector<CVector3D> normalMap(resolution);
 
+    // Populate and prepare the arrays for the IFFT
     for (int i = 0; i < waterProps.m_resolution; i++) {
         for (int j = 0; j < waterProps.m_resolution; j++) {
             
@@ -145,11 +170,6 @@ void CFFTWaterModel::GetHeightAndNormalMapAtTime(double time, SFFTWaterPropertie
     fftwf_execute(p_ifft_D_x);
     fftwf_execute(p_ifft_D_z);
     
-    //float min_slope = std::numeric_limits<float>().max();
-    //float max_slope = -min_slope;
-    //float min_height = min_slope;
-    //float max_height = -min_slope;
-
     float min_height_x = std::numeric_limits<float>().max();
     float max_height_x = -min_height_x;
     float min_height_y = std::numeric_limits<float>().max();
@@ -161,6 +181,7 @@ void CFFTWaterModel::GetHeightAndNormalMapAtTime(double time, SFFTWaterPropertie
     float min_slope_z = std::numeric_limits<float>().max();
     float max_slope_z = -min_slope_z;
     
+    // Build the vector displacement field
     for (int i = 0; i < waterProps.m_resolution; i++) {
         for (int j = 0; j < waterProps.m_resolution; j++) {
             int index = j * waterProps.m_resolution + i;
@@ -220,6 +241,14 @@ void CFFTWaterModel::GetHeightAndNormalMapAtTime(double time, SFFTWaterPropertie
     fftw_free(out_D_z);
 }
 
+/**
+ * @brief Precomputes Phillips' spectrum given a set of parameters.
+ *
+ * Populates the \p h_0 and \p h_0_star
+ * @param waterProps the water properties
+ * @param h_0 empty array which will be populated.
+ * @param h_0_star empty array which will be populated.
+ */
 void CFFTWaterModel::ComputePhillipsSpectrum(SFFTWaterProperties waterProp, VecComplexF* h_0, VecComplexF* h_0_star)
 {
     float L = (waterProp.m_windSpeed * waterProp.m_windSpeed) / G;
@@ -247,7 +276,7 @@ void CFFTWaterModel::ComputePhillipsSpectrum(SFFTWaterProperties waterProp, VecC
 
             float factor = waterProp.m_amplitude * exp(-lengthK2 * l * l) *
             exp(-1 /(lengthK2 * L2)) / (lengthK2 * lengthK2);
-            float p = factor * pow(normK.Dot(waterProp.m_windDirection), 2); // Forgot absolute value!!!!
+            float p = factor * pow(normK.Dot(waterProp.m_windDirection), 2);
 
             float xi_r = normal_dist(generator);
             float xi_i = normal_dist(generator);
@@ -262,6 +291,18 @@ void CFFTWaterModel::ComputePhillipsSpectrum(SFFTWaterProperties waterProp, VecC
     }
 }
 
+/**
+ * @brief Computes the sum of two Fourier amplitudes at a point (\p n, \p m) 
+ *
+ * @param n width index
+ * @param m height index
+ * @param time the time
+ * @param waterProperty the water property
+ * @param h_0 the precomputed Fourier amplitudes
+ * @param h_0_star the complex conjugate of the Fourier amplitudes
+ *
+ * @return The sum of the two Fourier amplitudes
+ */
 std::complex<float> CFFTWaterModel::GetHTildeAt(u16 n, u16 m, double time, SFFTWaterProperties waterProperty, CFFTWaterModel::VecComplexF* h_0, CFFTWaterModel::VecComplexF* h_0_star)
 {
     int index = n * waterProperty.m_resolution + m;
