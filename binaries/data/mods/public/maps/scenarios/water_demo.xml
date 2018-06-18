@@ -33,8 +33,8 @@
 		</Postproc>
 	</Environment>
 	<Camera>
-		<Position x="301.319" y="372.454" z="309.533"/>
-		<Rotation angle="0.261297"/>
+		<Position x="393.428" y="236.62" z="151.537"/>
+		<Rotation angle="0"/>
 		<Declination angle="0.610865"/>
 	</Camera>
 	<ScriptSettings><![CDATA[
@@ -2545,7 +2545,7 @@
 		<Entity uid="672">
 			<Template>gaia/fauna_fish</Template>
 			<Player>0</Player>
-			<Position x="387.58326" z="236.05707"/>
+			<Position x="372.57245" z="34.20868"/>
 			<Orientation y="-1.97565"/>
 		</Entity>
 		<Entity uid="673">
@@ -2727,18 +2727,6 @@
 			<Player>0</Player>
 			<Position x="510.18354" z="282.05243"/>
 			<Orientation y="-0.4053"/>
-		</Entity>
-		<Entity uid="706">
-			<Template>gaia/fauna_whale_humpback</Template>
-			<Player>0</Player>
-			<Position x="442.22907" z="719.63093"/>
-			<Orientation y="-0.33701"/>
-		</Entity>
-		<Entity uid="711">
-			<Template>gaia/fauna_whale_humpback</Template>
-			<Player>0</Player>
-			<Position x="350.3119" z="258.39258"/>
-			<Orientation y="1.38248"/>
 		</Entity>
 		<Entity uid="714">
 			<Template>gaia/treasure/shipwreck</Template>
@@ -4158,6 +4146,13 @@
 			<Position x="305.16425" z="561.03711"/>
 			<Orientation y="-0.50876"/>
 			<Actor seed="52219"/>
+		</Entity>
+		<Entity uid="1012">
+			<Template>gaia/fauna_whale_humpback</Template>
+			<Player>0</Player>
+			<Position x="434.83869" z="258.55515"/>
+			<Orientation y="2.35621"/>
+			<Actor seed="5598"/>
 		</Entity>
 	</Entities>
 	<Paths/>
