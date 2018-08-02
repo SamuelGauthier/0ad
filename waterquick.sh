@@ -1,8 +1,5 @@
 #!/bin/sh
 
-#$args='-quickstart -autostart\"scenarios/Water_Only\"'
-
-#/Users/gas/Documents/gamedev/0ad/binaries/system/pyrogenesis $args
 MAPNAME="water_demo"
 MAPTYPE="scenarios"
 
