@@ -132,7 +132,8 @@ void main()
     //n = vec3(0, 1, 0);
     //n = texture2D(heightMap1, 0.01*waterCoords.xz).rgb;
 
-    vec3 l = normalize(sunDir);
+    vec3 l = sunDir;
+    //l = normalize(reflect(sunDir, n));
     vec3 r = reflect(l, n);
 	vec3 p = cameraPos;
 	p.yz = cameraPos.zy;
@@ -362,7 +363,7 @@ vec3 ComputeRefraction(vec3 n, vec3 v)
     P2 = P1 + d_N * 0.5 * d_V;
     P2 = P1 + d_tilde * normalize(T1);
 
-    vec4 I = refractionMVP * vec4(P1, 1.0);
+    vec4 I = refractionMVP * vec4(P2, 1.0);
 
     float refractionShiftUp = 1/screenHeight;
     vec2 uv = vec2(0.5 * (I.x / I.w + 1), 0.5 * (I.y / I.w + 1) +

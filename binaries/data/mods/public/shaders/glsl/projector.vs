@@ -136,7 +136,7 @@ vec3 computeDisplacement(vec2 uv, float variation)
     h += texture2D(heightMap3, scale.x * uv + wind3 *
             timeScale3 * t).rgb * amplitude3 - 0.5;
 
-	return h* variation;
+	return 2*h* variation;
 }
 
 vec3 computeNormal(vec2 uv, float variation)
