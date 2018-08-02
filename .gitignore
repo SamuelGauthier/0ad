@@ -81,3 +81,9 @@ long.*.po
 
 # OSX specific data
 .DS_Store
+
+# pyenv
+.python-version
+
+# uncrustify
+.uncrustify
