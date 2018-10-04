@@ -84,8 +84,9 @@ If you want to develop, the only supported IDEs are:
 Acquiring the code
 ------------------
 
-.. caution:: In order to get the current source code use either git or download
-             the zip file from https://github.com/samuelgauthier/0ad
+.. caution:: In order to get the current source code use either git with
+             ``https://github.com/samuelgauthier/0ad.git`` or download the zip
+             file from https://github.com/samuelgauthier/0ad
 
 The game's code, data and build environment are stored on a Subversion server.
 The recommended way to get an up-to-date copy is with TortoiseSVN:
@@ -178,7 +179,7 @@ After you've set everything up, the process for staying up to date is:
   the root directory of the checkout.
 
   .. caution:: In order to get the current source code use git
-               (https://github.com/samuelgauthier/0ad.git)
+               with the ``https://github.com/samuelgauthier/0ad.git``
 
 * Close the solution in Visual Studio if you've got it open. Run
   ``update-workspaces.bat`` again. (This is only needed if any source files have
@@ -247,7 +248,7 @@ Debian / Ubuntu
 * On **Debian 8/jessie or Ubuntu 14.04/trusty or later** install the required
   dependencies with:
 
-.. code:: bash
+  .. code:: bash
 
    sudo apt-get install build-essential libboost-dev libboost-filesystem-dev \
    libcurl4-gnutls-dev libenet-dev libgloox-dev libicu-dev \
@@ -255,8 +256,8 @@ Debian / Ubuntu
    libpng-dev libsdl2-dev libvorbis-dev libwxgtk3.0-dev libxcursor-dev \
    libxml2-dev subversion zlib1g-dev fftw
 
-  * With these dependencies you have to run:
-    * ``./update-workspaces.sh --with-system-nvtt``
+  * With these dependencies you have to run: ``./update-workspaces.sh
+    --with-system-nvtt``
 
 * On all versions **except Ubuntu 18.04**, you will need to `install libsodium
   manually <https://download.libsodium.org/doc/installation/>`_.
@@ -354,7 +355,7 @@ Getting the code
 ----------------
 
 .. caution:: In order to get the current source code use git
-             (https://github.com/samuelgauthier/0ad.git)
+             with ``https://github.com/samuelgauthier/0ad.git``
 
 0 A.D. is primarily developed on SVN. To checkout the latest code from SVN, run this command:
 
@@ -440,7 +441,7 @@ Keeping up to Date
 ------------------
 
 .. caution:: In order to get the current source code use git
-             (https://github.com/samuelgauthier/0ad.git)
+             with ``https://github.com/samuelgauthier/0ad.git``
 
 If you want to rebuild quickly after updating from SVN, you can usually get away
 with:
@@ -512,8 +513,8 @@ New Way
 
    ./waterquick br
 
-  The script will launch the default demo map. If you would like to launch it
-  without a map run the following instead:
+  The script will launch the default demo map. If you would like to build and
+  launch it without a map run the following instead:
 
   .. code:: bash
 
@@ -521,6 +522,8 @@ New Way
 
   If you want to change the default loaded map, edit the ``waterquick.sh``
   script and change the variables ``MAPNAME`` and ``MAPTYPE`` accordingly.
+
+  If you just want to run the game use ``./waterquick r`` or ``./waterquick rn``
 
 Old Way
 -------
@@ -596,7 +599,7 @@ The process on OS X is similar to Linux:
 * Obtain the game's source code:
 
   .. caution:: In order to get the current source code use git
-             (https://github.com/samuelgauthier/0ad.git)
+               with ``https://github.com/samuelgauthier/0ad.git``
 
 
   * 0 A.D. is primarily developed on SVN. To checkout the latest code from SVN, run this command:
