@@ -30,7 +30,7 @@ Compilation
 -----------
 
 The full build instructions are found in the file
-`BuildInstructions <BuildInstructions.txt>`_
+`BuildInstructions <BuildInstructions.rst>`_
 
 
 Execution

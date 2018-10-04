@@ -23,7 +23,8 @@ else
         make clean;
         #make -j3 -C build/workspaces/gcc;
         make -j3;
-    elif [ $1 == rn ]; then
+    elif [ $1 == brn ]; then
+        make -j3 -C build/workspaces/gcc;
         ./binaries/system/pyrogenesis;
     elif [ $1 == rn ]; then
         ./binaries/system/pyrogenesis;
