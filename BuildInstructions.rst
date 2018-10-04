@@ -179,7 +179,7 @@ After you've set everything up, the process for staying up to date is:
   the root directory of the checkout.
 
   .. caution:: In order to get the current source code use git
-               with the ``https://github.com/samuelgauthier/0ad.git``
+               with ``https://github.com/samuelgauthier/0ad.git``
 
 * Close the solution in Visual Studio if you've got it open. Run
   ``update-workspaces.bat`` again. (This is only needed if any source files have
@@ -495,7 +495,7 @@ New Way
   .. code:: bash
 
    brew install lzlib curl libiconv libxml12 sdl2 boost wxwidgets libpng \
-   libogg libvorbis nspr icu4c enet miniupnpc libsodium fftw git
+   libogg libvorbis nspr icu4c enet miniupnpc libsodium fftw git cmake
 
 * Get the game source code, build the libraries and update the workspaces:
 
@@ -590,9 +590,9 @@ The process on OS X is similar to Linux:
        sudo "/Applications/CMake.app/Contents/bin/cmake-gui" --install
 
   * If the install command fails, you can manually add the following line to
-     the end of ``/etc/paths``:
+    the end of ``/etc/paths``:
 
-     .. code:: bash
+    .. code:: bash
      
         /Applications/CMake.app/Contents/bin
 
